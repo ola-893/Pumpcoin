@@ -1,5 +1,5 @@
 {
-  "name": "proofline",
+  "name": "pumpcoin",
   "private": true,
   "type": "module",
   "scripts": {
@@ -14,7 +14,18 @@
     "eligibility:demo": "node --import tsx eligibility/local-demo.ts",
     "cre:compile": "cre-compile cre/eligibility/main.ts .local/eligibility.wasm",
     "cre:test": "bun test cre/eligibility/workflow.test.ts",
-    "cre:simulate:fixture": "cre workflow simulate ./cre/eligibility --target fixture --env ./cre/fixture.env --non-interactive --trigger-index 0 --http-payload @./cre/eligibility/trigger.fixture.json"
+    "cre:simulate:fixture": "cre workflow simulate ./cre/eligibility --target fixture --env ./cre/fixture.env --non-interactive --trigger-index 0 --http-payload ./cre/eligibility/trigger.fixture.json",
+    "cre:simulate:localexec": "cre workflow simulate ./cre/eligibility --target localexec --env ./cre/localexec.env --non-interactive --trigger-index 0 --http-payload ./cre/eligibility/trigger.localexec.json",
+    "cre:broadcast:localexec": "cre workflow simulate ./cre/eligibility --target localexec-broadcast --env ./cre/localexec.env --non-interactive --trigger-index 0 --http-payload ./cre/eligibility/trigger.localexec.json --broadcast",
+    "cre:approve-report": "node --import tsx cre/approve-report.ts",
+    "cre:report:local": "node --import tsx cre/report-local.ts",
+    "cre:deliver-report": "node --import tsx cre/deliver-report.ts",
+    "cre:delivery:local": "node --import tsx cre/simulation-delivery.ts",
+    "cre:cli-check": "node --import tsx cre/cli-check.ts",
+    "agent:run": "node --import tsx agent-credit/worker.ts",
+    "agent:demo": "node --import tsx agent-credit/local-demo.ts",
+    "sdk:build": "node node_modules/typescript/bin/tsc -p sdk/tsconfig.json",
+    "preagent:demo": "npm run sdk:build"
   },
   "dependencies": {
     "@chainlink/cre-sdk": "1.22.0",

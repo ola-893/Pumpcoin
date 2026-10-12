@@ -1,0 +1,556 @@
+{
+  "network": "DISPOSABLE LOCAL ANVIL — NOT MONAD TESTNET",
+  "chainId": 31337,
+  "authenticReclaim": false,
+  "creCliDelivery": false,
+  "meraOnboarding": false,
+  "rpcRunningAfterScript": false,
+  "blockClock": "Immediate transaction mining plus periodic empty blocks; worker timers use chain time",
+  "human": "0xC7dF60B48A4F09F7B98591c7dE3F86Ba93236290",
+  "agent": "0xB3F98535D6B42b7fEa25890AA54668A7703269fa",
+  "contracts": {
+    "collateralToken": "0x04a3fc38e6b31ef079ce38908caa8c8e40d4fad4",
+    "loanToken": "0xeca89f2f2f7fd799e7af5f98b4133ed89b7e0aba",
+    "attestationRegistry": "0xa1f45c28260bfa6da079a18fe6db4a81b0adcb0d",
+    "creditLine": "0xd91dd2c33280ecb76706ad87acc4cfeca61420a0",
+    "repaymentVault": "0x3a2f228be6a15d5632fb42ff867d0165ec066f5a",
+    "agentCreditMandate": "0x40db7fd08c87ddb8654bdb070b6ea4ec95c8b898",
+    "eligibilityReceiver": "0x5c38db674fda9efcc7bd108f40a64e3d6ce8845f"
+  },
+  "receipts": [
+    {
+      "hash": "0xb1addc623b212e70ed15ee3b2e9bcf3b11ab176b42f173cff8132c73966731d9",
+      "action": "deploy:DemoToken",
+      "signer": "0xcC65E6105145E913b653Ddd757E07693D32E8360",
+      "status": "success",
+      "block": "1"
+    },
+    {
+      "hash": "0xaf4e63751b988b7d7d5c8f847532353e4c97a6af61ffc2cb293de3dc833fa02d",
+      "action": "deploy:DemoToken",
+      "signer": "0xcC65E6105145E913b653Ddd757E07693D32E8360",
+      "status": "success",
+      "block": "2"
+    },
+    {
+      "hash": "0x28bdf76052b5ce378d84e8e6e495d452fe474d1b929a174ddd6ebc66e66945d6",
+      "action": "deploy:AttestationRegistry",
+      "signer": "0xcC65E6105145E913b653Ddd757E07693D32E8360",
+      "status": "success",
+      "block": "3"
+    },
+    {
+      "hash": "0xc10b5f44fe9f30961d167a20a18a312fbbdd1160b8dc8128d77f15d26f5b004a",
+      "action": "deploy:CreditLine",
+      "signer": "0xcC65E6105145E913b653Ddd757E07693D32E8360",
+      "status": "success",
+      "block": "4"
+    },
+    {
+      "hash": "0x9d855a7543b9bf754491d03a140e4ea63ba26e404556e27d162e3c9051707288",
+      "action": "deploy:RepaymentVault",
+      "signer": "0xcC65E6105145E913b653Ddd757E07693D32E8360",
+      "status": "success",
+      "block": "5"
+    },
+    {
+      "hash": "0x837d0da444e8d4c6d0347cba73c97b158f80cd0d63d964f7d44d26893f2b5cbe",
+      "action": "deploy:AgentCreditMandate",
+      "signer": "0xcC65E6105145E913b653Ddd757E07693D32E8360",
+      "status": "success",
+      "block": "6"
+    },
+    {
+      "hash": "0x7df198f5a2b4269b80d41a7609d324bdd3a6d185c449ff46bd62bf7732f3e7a9",
+      "action": "deploy:SimulationEligibilityReceiver",
+      "signer": "0xcC65E6105145E913b653Ddd757E07693D32E8360",
+      "status": "success",
+      "block": "7"
+    },
+    {
+      "hash": "0x5fcf661f6cec74ae204ad3c99de569d6134ba4a43929bffd295371daf0c1095d",
+      "signer": "0xcC65E6105145E913b653Ddd757E07693D32E8360",
+      "action": "pinAgentCreditMandate",
+      "block": "8",
+      "status": "success"
+    },
+    {
+      "hash": "0x56ca2c54ca9d8c9524c229cf44853828dc2754dac93b3fe3181b154bbbca6563",
+      "signer": "0xcC65E6105145E913b653Ddd757E07693D32E8360",
+      "action": "enableEvidenceMode",
+      "block": "9",
+      "status": "success"
+    },
+    {
+      "hash": "0x9ca124beb7665594c992932c6e315930a582f677856e578d47ddc82960a70d74",
+      "signer": "0xcC65E6105145E913b653Ddd757E07693D32E8360",
+      "action": "rotateOracle",
+      "block": "10",
+      "status": "success"
+    },
+    {
+      "hash": "0x46864d9d991ede48eb91db7802ca5fe82e0e66ea1e97ccaac73a594bac48bb0b",
+      "signer": "0xcC65E6105145E913b653Ddd757E07693D32E8360",
+      "action": "mint",
+      "block": "11",
+      "status": "success"
+    },
+    {
+      "hash": "0xcf410e5d26e194af1b824dc4b628001805a09dfd568e9870dc173aa624a33135",
+      "signer": "0xcC65E6105145E913b653Ddd757E07693D32E8360",
+      "action": "approve",
+      "block": "12",
+      "status": "success"
+    },
+    {
+      "hash": "0xf7966e9ad5c5b5a4d3a4266f4c399f56164dd797aae816620e2f2ad93cb0a9c1",
+      "signer": "0xcC65E6105145E913b653Ddd757E07693D32E8360",
+      "action": "fundLiquidity",
+      "block": "13",
+      "status": "success"
+    },
+    {
+      "hash": "0x67e170ee5b0fc5c886b805b83dc15a69ace6036721ba984f19e2fa8227b05406",
+      "signer": "0xcC65E6105145E913b653Ddd757E07693D32E8360",
+      "action": "mint",
+      "block": "14",
+      "status": "success"
+    },
+    {
+      "hash": "0x33da8f42da31fe54590aba9dbceef5754ebc88315486bf5b4a66ae4e80c38631",
+      "signer": "0xC7dF60B48A4F09F7B98591c7dE3F86Ba93236290",
+      "action": "approve",
+      "block": "15",
+      "status": "success"
+    },
+    {
+      "hash": "0x567dd647d8ab8873889a8909ab7b69a8bdaf5f1ecabfb50fbeda3f4b651c834c",
+      "signer": "0xC7dF60B48A4F09F7B98591c7dE3F86Ba93236290",
+      "action": "deposit",
+      "block": "16",
+      "status": "success"
+    },
+    {
+      "hash": "0xea3ccdd6487eee753652d1beb6c347eaef3e1fe1468300b302bba0bf661da58f",
+      "signer": "0xcC65E6105145E913b653Ddd757E07693D32E8360",
+      "action": "approveReport",
+      "block": "17",
+      "status": "success"
+    },
+    {
+      "hash": "0x4466e42d4221eeb83a320de644ed4fb4db81c16ab02e228b0f593f024848d29e",
+      "signer": "0xcC65E6105145E913b653Ddd757E07693D32E8360",
+      "action": "onReport",
+      "block": "18",
+      "status": "success"
+    },
+    {
+      "hash": "0x6573889a823551a865b7773b6190f51012e1de05eb7f81dda175df1de4ecb66c",
+      "signer": "0xC7dF60B48A4F09F7B98591c7dE3F86Ba93236290",
+      "action": "grantMandate",
+      "block": "19",
+      "status": "success"
+    },
+    {
+      "hash": "0x1434f2797b9fc6b940c6befc6de57f1a0ac39c15bfe220c4c284654c064ec87b",
+      "signer": "0xC7dF60B48A4F09F7B98591c7dE3F86Ba93236290",
+      "action": "grantMandate",
+      "block": "27",
+      "status": "success"
+    },
+    {
+      "hash": "0x9304802517c98f6b34cb0cd114a93296aba075b656ec804ca068876ca7935993",
+      "signer": "0xC7dF60B48A4F09F7B98591c7dE3F86Ba93236290",
+      "action": "revokeMandate",
+      "block": "28",
+      "status": "success"
+    }
+  ],
+  "workerEvents": [
+    {
+      "chainId": 31337,
+      "agent": "0xB3F98535D6B42b7fEa25890AA54668A7703269fa",
+      "event": "started",
+      "mode": "SYNTHETIC_LOCAL_NOT_RECLAIM_OR_CRE",
+      "human": "0xC7dF60B48A4F09F7B98591c7dE3F86Ba93236290",
+      "rule": {
+        "lowBalance": "10000000",
+        "drawAmount": "20000000",
+        "repayAfterSeconds": "2"
+      }
+    },
+    {
+      "chainId": 31337,
+      "agent": "0xB3F98535D6B42b7fEa25890AA54668A7703269fa",
+      "event": "decision",
+      "balance": "0",
+      "humanDebt": "0",
+      "cap": "20000000",
+      "drawn": "0",
+      "agentOutstanding": "0",
+      "holderDebt": "0",
+      "migratedOut": false,
+      "migratedIn": false,
+      "action": "borrow",
+      "amount": "20000000"
+    },
+    {
+      "chainId": 31337,
+      "agent": "0xB3F98535D6B42b7fEa25890AA54668A7703269fa",
+      "event": "submitted",
+      "action": "agentBorrow",
+      "amount": "20000000",
+      "hash": "0xba4f331554c0083e2df3f5099c13a4b7711d3388d0e9e26114bb0bd7e61b9e07",
+      "diagnostic": false
+    },
+    {
+      "chainId": 31337,
+      "agent": "0xB3F98535D6B42b7fEa25890AA54668A7703269fa",
+      "event": "confirmed",
+      "action": "agentBorrow",
+      "amount": "20000000",
+      "hash": "0xba4f331554c0083e2df3f5099c13a4b7711d3388d0e9e26114bb0bd7e61b9e07",
+      "signer": "0xb3f98535d6b42b7fea25890aa54668a7703269fa",
+      "human": "0xC7dF60B48A4F09F7B98591c7dE3F86Ba93236290",
+      "block": "20",
+      "diagnostic": false
+    },
+    {
+      "chainId": 31337,
+      "agent": "0xB3F98535D6B42b7fEa25890AA54668A7703269fa",
+      "event": "decision",
+      "balance": "20000000",
+      "humanDebt": "20000000",
+      "cap": "20000000",
+      "drawn": "20000000",
+      "agentOutstanding": "20000000",
+      "holderDebt": "20000000",
+      "migratedOut": false,
+      "migratedIn": false,
+      "action": "wait",
+      "reason": "Repayment interval pending"
+    },
+    {
+      "chainId": 31337,
+      "agent": "0xB3F98535D6B42b7fEa25890AA54668A7703269fa",
+      "event": "decision",
+      "balance": "20000000",
+      "humanDebt": "20000000",
+      "cap": "20000000",
+      "drawn": "20000000",
+      "agentOutstanding": "20000000",
+      "holderDebt": "20000000",
+      "migratedOut": false,
+      "migratedIn": false,
+      "action": "wait",
+      "reason": "Repayment interval pending"
+    },
+    {
+      "chainId": 31337,
+      "agent": "0xB3F98535D6B42b7fEa25890AA54668A7703269fa",
+      "event": "decision",
+      "balance": "20000000",
+      "humanDebt": "20000000",
+      "cap": "20000000",
+      "drawn": "20000000",
+      "agentOutstanding": "20000000",
+      "holderDebt": "20000000",
+      "migratedOut": false,
+      "migratedIn": false,
+      "action": "wait",
+      "reason": "Repayment interval pending"
+    },
+    {
+      "chainId": 31337,
+      "agent": "0xB3F98535D6B42b7fEa25890AA54668A7703269fa",
+      "event": "decision",
+      "balance": "20000000",
+      "humanDebt": "20000000",
+      "cap": "20000000",
+      "drawn": "20000000",
+      "agentOutstanding": "20000000",
+      "holderDebt": "20000000",
+      "migratedOut": false,
+      "migratedIn": false,
+      "action": "wait",
+      "reason": "Repayment interval pending"
+    },
+    {
+      "chainId": 31337,
+      "agent": "0xB3F98535D6B42b7fEa25890AA54668A7703269fa",
+      "event": "decision",
+      "balance": "20000000",
+      "humanDebt": "20000000",
+      "cap": "20000000",
+      "drawn": "20000000",
+      "agentOutstanding": "20000000",
+      "holderDebt": "20000000",
+      "migratedOut": false,
+      "migratedIn": false,
+      "action": "wait",
+      "reason": "Repayment interval pending"
+    },
+    {
+      "chainId": 31337,
+      "agent": "0xB3F98535D6B42b7fEa25890AA54668A7703269fa",
+      "event": "decision",
+      "balance": "20000000",
+      "humanDebt": "20000000",
+      "cap": "20000000",
+      "drawn": "20000000",
+      "agentOutstanding": "20000000",
+      "holderDebt": "20000000",
+      "migratedOut": false,
+      "migratedIn": false,
+      "action": "wait",
+      "reason": "Repayment interval pending"
+    },
+    {
+      "chainId": 31337,
+      "agent": "0xB3F98535D6B42b7fEa25890AA54668A7703269fa",
+      "event": "decision",
+      "balance": "20000000",
+      "humanDebt": "20000000",
+      "cap": "20000000",
+      "drawn": "20000000",
+      "agentOutstanding": "20000000",
+      "holderDebt": "20000000",
+      "migratedOut": false,
+      "migratedIn": false,
+      "action": "wait",
+      "reason": "Repayment interval pending"
+    },
+    {
+      "chainId": 31337,
+      "agent": "0xB3F98535D6B42b7fEa25890AA54668A7703269fa",
+      "event": "decision",
+      "balance": "20000000",
+      "humanDebt": "20000000",
+      "cap": "20000000",
+      "drawn": "20000000",
+      "agentOutstanding": "20000000",
+      "holderDebt": "20000000",
+      "migratedOut": false,
+      "migratedIn": false,
+      "action": "wait",
+      "reason": "Repayment interval pending"
+    },
+    {
+      "chainId": 31337,
+      "agent": "0xB3F98535D6B42b7fEa25890AA54668A7703269fa",
+      "event": "decision",
+      "balance": "20000000",
+      "humanDebt": "20000000",
+      "cap": "20000000",
+      "drawn": "20000000",
+      "agentOutstanding": "20000000",
+      "holderDebt": "20000000",
+      "migratedOut": false,
+      "migratedIn": false,
+      "action": "wait",
+      "reason": "Repayment interval pending"
+    },
+    {
+      "chainId": 31337,
+      "agent": "0xB3F98535D6B42b7fEa25890AA54668A7703269fa",
+      "event": "decision",
+      "balance": "20000000",
+      "humanDebt": "20000000",
+      "cap": "20000000",
+      "drawn": "20000000",
+      "agentOutstanding": "20000000",
+      "holderDebt": "20000000",
+      "migratedOut": false,
+      "migratedIn": false,
+      "action": "repay",
+      "amount": "20000000"
+    },
+    {
+      "chainId": 31337,
+      "agent": "0xB3F98535D6B42b7fEa25890AA54668A7703269fa",
+      "event": "approval-confirmed",
+      "hash": "0x7afdb7176f16072bb54a30e07e064791a4a0737c85f5a8dc8c3ce017a82d8423",
+      "spender": "0x40DB7fd08c87DdB8654bdB070b6EA4Ec95c8B898",
+      "amount": "20000000"
+    },
+    {
+      "chainId": 31337,
+      "agent": "0xB3F98535D6B42b7fEa25890AA54668A7703269fa",
+      "event": "submitted",
+      "action": "agentRepay",
+      "amount": "20000000",
+      "hash": "0xec6deaea64d4798aef49eca6b3cfc1cc9bb3a913bf618f6a1a8289f378bf03bb",
+      "diagnostic": false
+    },
+    {
+      "chainId": 31337,
+      "agent": "0xB3F98535D6B42b7fEa25890AA54668A7703269fa",
+      "event": "confirmed",
+      "action": "agentRepay",
+      "amount": "20000000",
+      "hash": "0xec6deaea64d4798aef49eca6b3cfc1cc9bb3a913bf618f6a1a8289f378bf03bb",
+      "signer": "0xb3f98535d6b42b7fea25890aa54668a7703269fa",
+      "human": "0xC7dF60B48A4F09F7B98591c7dE3F86Ba93236290",
+      "block": "25",
+      "diagnostic": false
+    },
+    {
+      "chainId": 31337,
+      "agent": "0xB3F98535D6B42b7fEa25890AA54668A7703269fa",
+      "event": "started",
+      "mode": "SYNTHETIC_LOCAL_NOT_RECLAIM_OR_CRE",
+      "human": "0xC7dF60B48A4F09F7B98591c7dE3F86Ba93236290",
+      "rule": {
+        "lowBalance": "10000000",
+        "drawAmount": "20000000",
+        "repayAfterSeconds": "2"
+      }
+    },
+    {
+      "chainId": 31337,
+      "agent": "0xB3F98535D6B42b7fEa25890AA54668A7703269fa",
+      "event": "submitted",
+      "action": "agentBorrow",
+      "amount": "1",
+      "hash": "0x6f51e2fce09058673de0861510b46093d058b4bad7f70bdba292b18b4bb590f5",
+      "diagnostic": true
+    },
+    {
+      "chainId": 31337,
+      "agent": "0xB3F98535D6B42b7fEa25890AA54668A7703269fa",
+      "event": "reverted",
+      "action": "agentBorrow",
+      "amount": "1",
+      "hash": "0x6f51e2fce09058673de0861510b46093d058b4bad7f70bdba292b18b4bb590f5",
+      "signer": "0xb3f98535d6b42b7fea25890aa54668a7703269fa",
+      "human": "0xC7dF60B48A4F09F7B98591c7dE3F86Ba93236290",
+      "block": "26",
+      "diagnostic": true
+    },
+    {
+      "chainId": 31337,
+      "agent": "0xB3F98535D6B42b7fEa25890AA54668A7703269fa",
+      "event": "started",
+      "mode": "SYNTHETIC_LOCAL_NOT_RECLAIM_OR_CRE",
+      "human": "0xC7dF60B48A4F09F7B98591c7dE3F86Ba93236290",
+      "rule": {
+        "lowBalance": "10000000",
+        "drawAmount": "20000000",
+        "repayAfterSeconds": "2"
+      }
+    },
+    {
+      "chainId": 31337,
+      "agent": "0xB3F98535D6B42b7fEa25890AA54668A7703269fa",
+      "event": "submitted",
+      "action": "agentBorrow",
+      "amount": "1",
+      "hash": "0x526ef9b273c0818b4b4bf0f939c5a6245b094fbb58ec13ab87da9e1ef57221df",
+      "diagnostic": true
+    },
+    {
+      "chainId": 31337,
+      "agent": "0xB3F98535D6B42b7fEa25890AA54668A7703269fa",
+      "event": "reverted",
+      "action": "agentBorrow",
+      "amount": "1",
+      "hash": "0x526ef9b273c0818b4b4bf0f939c5a6245b094fbb58ec13ab87da9e1ef57221df",
+      "signer": "0xb3f98535d6b42b7fea25890aa54668a7703269fa",
+      "human": "0xC7dF60B48A4F09F7B98591c7dE3F86Ba93236290",
+      "block": "30",
+      "diagnostic": true
+    }
+  ],
+  "sdkObservationAfterRepayment": {
+    "blockNumber": "25",
+    "blockHash": "0x32f18cf44d092252f8893d97fdc54ab19107f5153c3aa13ea95824387b8dc915",
+    "timestamp": "1791493317",
+    "owner": "0xC7dF60B48A4F09F7B98591c7dE3F86Ba93236290",
+    "boundToHuman": true,
+    "cap": "20000000",
+    "drawn": "20000000",
+    "expiresAt": "1791496914",
+    "revoked": false,
+    "balance": "0",
+    "humanDebt": "0",
+    "available": "80000000",
+    "agentOutstanding": "0",
+    "migratedOut": false,
+    "migratedIn": false,
+    "historyConsistent": true,
+    "issues": [],
+    "lastDrawAt": "1791493315",
+    "events": [
+      {
+        "tx": "0xba4f331554c0083e2df3f5099c13a4b7711d3388d0e9e26114bb0bd7e61b9e07",
+        "block": "20",
+        "logIndex": 4,
+        "kind": "agentBorrow",
+        "human": "0xC7dF60B48A4F09F7B98591c7dE3F86Ba93236290",
+        "agentKey": "0xB3F98535D6B42b7fEa25890AA54668A7703269fa",
+        "amount": "20000000"
+      },
+      {
+        "tx": "0xec6deaea64d4798aef49eca6b3cfc1cc9bb3a913bf618f6a1a8289f378bf03bb",
+        "block": "25",
+        "logIndex": 4,
+        "kind": "agentRepay",
+        "human": "0xC7dF60B48A4F09F7B98591c7dE3F86Ba93236290",
+        "agentKey": "0xB3F98535D6B42b7fEa25890AA54668A7703269fa",
+        "amount": "20000000"
+      }
+    ]
+  },
+  "sdkObservation": {
+    "blockNumber": "30",
+    "blockHash": "0xba59bc252b1da992c6eb1b778f73360ec64c1c59d6b463a2682d2a164c4ee89b",
+    "timestamp": "1791493318",
+    "owner": "0xC7dF60B48A4F09F7B98591c7dE3F86Ba93236290",
+    "boundToHuman": true,
+    "cap": "50000000",
+    "drawn": "0",
+    "expiresAt": "1791496914",
+    "revoked": true,
+    "balance": "0",
+    "humanDebt": "0",
+    "available": "80000000",
+    "agentOutstanding": "0",
+    "migratedOut": false,
+    "migratedIn": false,
+    "historyConsistent": true,
+    "issues": [],
+    "lastDrawAt": "1791493315",
+    "events": [
+      {
+        "tx": "0xba4f331554c0083e2df3f5099c13a4b7711d3388d0e9e26114bb0bd7e61b9e07",
+        "block": "20",
+        "logIndex": 4,
+        "kind": "agentBorrow",
+        "human": "0xC7dF60B48A4F09F7B98591c7dE3F86Ba93236290",
+        "agentKey": "0xB3F98535D6B42b7fEa25890AA54668A7703269fa",
+        "amount": "20000000"
+      },
+      {
+        "tx": "0xec6deaea64d4798aef49eca6b3cfc1cc9bb3a913bf618f6a1a8289f378bf03bb",
+        "block": "25",
+        "logIndex": 4,
+        "kind": "agentRepay",
+        "human": "0xC7dF60B48A4F09F7B98591c7dE3F86Ba93236290",
+        "agentKey": "0xB3F98535D6B42b7fEa25890AA54668A7703269fa",
+        "amount": "20000000"
+      }
+    ]
+  },
+  "verified": {
+    "sdkReadbackReconciled": true,
+    "compiledSdkExampleVerified": true,
+    "repaymentPreservedGrossCap": true,
+    "autonomousSeparateProcess": true,
+    "agentSignedDrawAndRepayment": true,
+    "noHumanSubmissionBetweenDrawAndRepayment": true,
+    "capRevertMined": true,
+    "revokeRevertMined": true,
+    "finalHumanDebt": "0",
+    "collateralPreserved": "100000000"
+  }
+}

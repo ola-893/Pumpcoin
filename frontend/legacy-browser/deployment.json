@@ -1,0 +1,13 @@
+{
+  "chainId": 10143,
+  "mode": "manual",
+  "deploymentStartBlock": 63709337,
+  "contracts": {
+    "collateralToken": "0x8DA26C2b004f5962c0846f57d193de12f2F62612",
+    "loanToken": "0x62E0EC7483E779DA0fCa9B701872e4af8a0FEd87",
+    "attestationRegistry": "0x7Da0baBc8F5690A61f8FC63Df40aA5aF7eb33F75",
+    "creditLine": "0xe91EF9C06aDD6b030bfb22cbf7dfF51904DEaC10",
+    "repaymentVault": "0x092C790d51CBf208a47edaB20d1e9c4C73737081"
+  },
+  "provenance": "deployments/monad-testnet.json; legacy synthetic manual deployment"
+}

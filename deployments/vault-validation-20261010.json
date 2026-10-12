@@ -1,0 +1,49 @@
+{
+  "date": "2026-10-10",
+  "baseCommit": "bc14033",
+  "environment": "local simulation; no production acceptance claim",
+  "solidity": {
+    "passed": 108,
+    "failed": 0,
+    "historicalBaseline": 78,
+    "vault": 30
+  },
+  "node": {
+    "passed": 95,
+    "failed": 0,
+    "vaultUnit": 18,
+    "vaultIntegration": 6
+  },
+  "typechecks": {
+    "root": "passed",
+    "creEligibility": "passed"
+  },
+  "sourceHashes": {
+    "contracts/src/vault/UnoraVault.sol": "a9807e6b647d3fc8708049c15ee1f001b4d843a098f46eb081f0a4c4cca184b6",
+    "contracts/src/vault/ServiceExpenseStream.sol": "0b502ec137ef371ce8fe881de75ff6838f5b30b5dfcdcf06af5d44f2e766e9d8",
+    "contracts/src/vault/MockERC8004Registry.sol": "1aa3e71074f120915ca67866a38fa8ba81e7c35c0b43242e91c92501c0a4eab4",
+    "contracts/src/vault/VaultValuationSource.sol": "143bcc57f8b0c2964b4552062e2c198a73c0a2470e5ad4ed6e585172d2728a93",
+    "contracts/src/vault/MockSpotVenue.sol": "e8e2b8896044dd26d90d93fa2e11ca5019c1720d868e456a6b842910594d7928",
+    "contracts/src/vault/RestrictedSpotAdapter.sol": "cfdd8d7421e529b38ab2652477c8db00dd6aa2105d2f2b5241ac11bf848173e9",
+    "contracts/test/vault/VaultRegression.t.sol": "f0bd256df9f4c2975290b13046cb1a05cac38a37c5b65939e64861c76f6219c2",
+    "contracts/test/vault/UnoraVaultIdPerf.t.sol": "f678b41eabd5243539eb682896b46bc80acdd3ec9a201a2c3d036aa340a2cde6",
+    "contracts/test/vault/UnoraVaultOwn.t.sol": "c166e770e6e94b6b47e300e33b770b44368f81a8201377eb82da93cd03d7b9a7",
+    "contracts/test/vault/VaultFixture.sol": "e133ec16571e65ff9f03b1396bfc8d2d292ef45406f7ec39302033849a3e5467",
+    "contracts/test/vault/UnoraVaultMan.t.sol": "1a9e06bda216cc1600b1aff8d8ce16cdfe9128494552138e9a3a0c78aa143bed",
+    "vault/chain-history.ts": "e52e5f697fb7a68ca35e148d508a4e9df2b22dfaeeec0666dc00e53b442bb760",
+    "vault/nav.ts": "e9d223e2b8b1a19f59d82f64f3fea067d239476dc9dc7df0378e576c58e22dca",
+    "vault/record-grants.ts": "188cd266379f4e3642975e4bbb66cd5fe426425282a9a133c3596b7d7a37d18b",
+    "vault/ledger.ts": "89d7df371fbeb89f56fe6ce5e1c5e23052ed8d306bd0627a98fc42c17fa2f634",
+    "vault/records.ts": "03ed624032735e305d7c02a7a3cb95ba6e48d01ab5f76d0debd88dd8c9728dec",
+    "tests/vault-records.test.ts": "0a2b0a06767b12abe20f0b7bf843cb0d448005708ac3601f9b4ebc76b23ab2b7",
+    "tests/vault-ledger.test.ts": "9b7ab91a8007bde12b05600e907a83777891566e5f237971403dd07f563bc903",
+    "tests/vault-chain-history.test.ts": "804a6781080af18224dee4ef19242b3531fa976d80b0dd417dfa527bd1a04594",
+    "docs/VAULT-EVIDENCE.md": "5e20c727f50677eaee5b8aaa95c56bf591c7f6f3753d68ac1069b38674907221",
+    "docs/VAULT-RECORDS-DESIGN.md": "6b7ae244847a6c87058c7d42f5e93f2c7dac66a60cc40f040a4f80f7a0ddf20c",
+    "docs/VAULT-ACCESS-CONTROL.md": "76a9ef555ab44754653a4e723cfe7a1d1d5818f1aa25e4f062ed2451dfbc5853",
+    "docs/VAULT-DEMO.md": "9015f119cf7f002724ce836ca0bb51b5772e48044e5b3cb20123ef75bff2e48a",
+    "docs/VAULT-NAV-POLICY.md": "5331e27bccba39890846759ad3d442c9ff54f0200d9f27c6e7f8e5b423d53e94",
+    "docs/AGENT-VAULT-ACCEPTANCE.md": "7666b13d79d9d0fa438dd8648856a43b3bced865ac032645d6278397af908c7e",
+    "tsconfig.json": "3b5c408658a8fd84ec061a3c794193adabdbe816d1e8fc7217d632951c52c64d"
+  }
+}

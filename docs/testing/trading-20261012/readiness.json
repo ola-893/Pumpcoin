@@ -1,0 +1,33 @@
+{
+  "chainId": 10143,
+  "vault": "0xE97847558DDEd18Fc6208cE47eeEc7ab73c09D9D",
+  "blockNumber": "70387991",
+  "blockHash": "0x505c43338509ba79cb514e18557c4f38efddb0d068c515f8a9b120d5e38a5e85",
+  "checkedAt": "2026-10-12T11:40:39.597Z",
+  "paused": true,
+  "configured": false,
+  "valuation": false,
+  "ready": false,
+  "blockers": [
+    "MON price is stale, missing or outside the confidence policy.",
+    "USDC price is stale, missing or outside the confidence policy.",
+    "DEX active liquidity is below the 100 test-USDC reserve screen.",
+    "Trading infrastructure has not been deployed.",
+    "The complete trading configuration has not been applied through notice.",
+    "Vault is paused."
+  ],
+  "poolId": "0x5e65fc6c6777578390f275a30690331f2f3bd3a51bf63fdaeaaea7087ed836b7",
+  "poolManager": "0x451D64ab3b650040d2aE1886602b97ed6eDc643d",
+  "monPublishedAt": "1790697761",
+  "usdPublishedAt": "1791803097",
+  "spotPrice": "4004594",
+  "virtualQuoteLiquidity": "2531268",
+  "cash": "0",
+  "position": "0",
+  "totalSupply": "0",
+  "controller": "0xe26468ae02368a75DBDBea58F367B7313942ad26",
+  "manager": "0x01B674Bf5032F3F90BC6DBc0069db679f6a8c371",
+  "quote": "0x534b2f3A21130d7a60830c2Df862319e593943A3",
+  "positionToken": "0xFb8bf4c1CC7a94c73D209a149eA2AbEa852BC541",
+  "configHash": "0xb92c308a98a22047e1b13fafbfd012f0e0c3a54e604908def260664239c2be69"
+}

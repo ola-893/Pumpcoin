@@ -1,0 +1,15 @@
+{
+  "chainId": 10143,
+  "rpcUrl": "https://testnet-rpc.monad.xyz",
+  "human": "REPLACE_WITH_BACKING_HUMAN_WALLET",
+  "creditLine": "REPLACE_WITH_FRESH_CREDIT_LINE",
+  "loanToken": "REPLACE_WITH_FRESH_PUSD",
+  "mandate": "REPLACE_WITH_FRESH_AGENT_CREDIT_MANDATE",
+  "fromBlock": "REPLACE_WITH_MANDATE_DEPLOYMENT_BLOCK",
+  "pollMs": 5000,
+  "rule": {
+    "lowBalance": "10000000",
+    "drawAmount": "20000000",
+    "repayAfterSeconds": "60"
+  }
+}

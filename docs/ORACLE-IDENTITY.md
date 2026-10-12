@@ -8,6 +8,12 @@ The durable identity belongs to `AttestationRegistry.rootController()`. Changing
 
 The registration JSON is embedded in a data URI stored on-chain, avoiding an IPFS upload dependency. It includes the current `walletAddress`, registry, root, explicit privacy mode, and HTTPS status endpoint. The card describes the actual plaintext baseline, not a working ZK range proof. Revocation publishes `active: false` and a zero writer. The status endpoint is supplied configuration; this patch does not deploy a status web service or fabricate reputation feedback.
 
+## Borrower identity stretch goal
+
+Human-operated borrower registration is a possible application of the generic registration/ownership interfaces, not a claim that the standard verifies human identity. Oracle service identity is implemented; borrower registration, reputation feedback and transfer detection are deferred. AttestationRegistry and CreditLine remain authoritative for source eligibility and debt respectively; ERC-8004 is not a replacement SBT or borrowing entitlement.
+
+The [ERC-8004 draft](https://eips.ethereum.org/EIPS/eip-8004) uses transferable ERC-721 identities. Transfer retains the identity handle and associated feedback; it clears `agentWallet`, requiring new-owner wallet verification. Selling the identity can therefore carry its reputation to another owner. A future borrower integration must detect transfers/ownership drift, suspend reliance on inherited credit reputation and require fresh source/wallet verification without erasing or reassigning debt. Detection mitigates reliance; it does not make the NFT nontransferable. Neither unique personhood nor resistance to feedback manipulation follows from registration.
+
 ## Wallet consent and root signing
 
 ERC-8004's reserved `agentWallet` is a verified payment wallet, not arbitrary metadata. The [standard](https://eips.ethereum.org/EIPS/eip-8004) requires consent from a new wallet. When possible, the synchronizer binds the current EOA writer using its consent signature or local demo key. Otherwise it clears a stale verified wallet and reports `walletProofPending`, while the public card still states the actual writer. A CRE receiver contract is published as the writer but is not automatically bound as an EOA payment wallet.

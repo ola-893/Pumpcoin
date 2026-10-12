@@ -1,5 +1,5 @@
 {
-  "name": "app",
+  "name": "pumpcoin",
   "private": true,
   "version": "0.0.0",
   "type": "module",
@@ -10,8 +10,11 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@category-labs/mera": "0.2.0",
     "@privy-io/react-auth": "^3.43.0",
     "@privy-io/wagmi": "^4.0.17",
+    "@scure/bip32": "2.0.1",
+    "@scure/bip39": "2.0.1",
     "@tailwindcss/vite": "^4.3.3",
     "@tanstack/react-query": "^5.103.1",
     "@web3icons/core": "^4.0.56",

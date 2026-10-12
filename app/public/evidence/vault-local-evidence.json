@@ -1,0 +1,1053 @@
+{
+  "environment": "simulation",
+  "managerExecution": "scripted signed transactions; not an LLM or an autonomous worker claim",
+  "navPolicyVersion": "UNORA-VAULT-NAV-v1.0.0",
+  "navPolicyHash": "0x7ffdbbe0e0c81a6d8ca04553a58f112d11df02416ea7622aa8e89b23e4e86460",
+  "sourceHashes": {
+    "contracts/src/vault/UnoraVault.sol": "a9807e6b647d3fc8708049c15ee1f001b4d843a098f46eb081f0a4c4cca184b6",
+    "contracts/src/vault/RestrictedSpotAdapter.sol": "cfdd8d7421e529b38ab2652477c8db00dd6aa2105d2f2b5241ac11bf848173e9",
+    "contracts/src/vault/ServiceExpenseStream.sol": "0b502ec137ef371ce8fe881de75ff6838f5b30b5dfcdcf06af5d44f2e766e9d8",
+    "contracts/src/vault/VaultValuationSource.sol": "143bcc57f8b0c2964b4552062e2c198a73c0a2470e5ad4ed6e585172d2728a93",
+    "contracts/src/vault/MockERC8004Registry.sol": "1aa3e71074f120915ca67866a38fa8ba81e7c35c0b43242e91c92501c0a4eab4",
+    "vault/nav.ts": "e9d223e2b8b1a19f59d82f64f3fea067d239476dc9dc7df0378e576c58e22dca",
+    "vault/ledger.ts": "89d7df371fbeb89f56fe6ce5e1c5e23052ed8d306bd0627a98fc42c17fa2f634",
+    "vault/chain-history.ts": "e52e5f697fb7a68ca35e148d508a4e9df2b22dfaeeec0666dc00e53b442bb760",
+    "vault/records.ts": "03ed624032735e305d7c02a7a3cb95ba6e48d01ab5f76d0debd88dd8c9728dec",
+    "vault/record-grants.ts": "188cd266379f4e3642975e4bbb66cd5fe426425282a9a133c3596b7d7a37d18b"
+  },
+  "addresses": {
+    "vault": "0x56037d27a2da962d590ce2e1512c5d1562102076",
+    "quote": "0x9d689fb207e5711daf8d2e61c0851d64b289ec85",
+    "position": "0xcb2eba3de184e1e5d103f7fc3886fcf10ec0eb60",
+    "source": "0xd02ea501692efbb451f2e1675002eb54415635e7",
+    "adapter": "0x33ed17c710bd1a4eddac2cfeb01d730f358c0f4e",
+    "venue": "0x64597ebad9b0ad81d5abd2f4bf9c7a29622d9951",
+    "stream": "0x8225bd1462e84a74eccdcc6f11db49533f4cbf11",
+    "registry": "0xf96bcf1e0e3dd1cd5d55df997a8bcd012f438271"
+  },
+  "receipts": [
+    {
+      "action": "register",
+      "hash": "0x8440174178f008858977ae4ac7c1e5377fa66e009efa0442b59829fb3d660125",
+      "status": "success",
+      "block": "5"
+    },
+    {
+      "action": "setRecipient",
+      "hash": "0x297b44a0e6cb97bd4970089fa5c192df9e826104321f8f8687f39d477be1dc71",
+      "status": "success",
+      "block": "10"
+    },
+    {
+      "action": "proposeConfig",
+      "hash": "0xba9e5397067fe166c342c46d4b759dbc86da93cd6d31cd81451f5e17daeab62e",
+      "status": "success",
+      "block": "11"
+    },
+    {
+      "action": "updatePrice",
+      "hash": "0x9ed0663ae430b86fbec46305b0befdf0bdb50cddd18f1ccf9d599ed005622cba",
+      "status": "success",
+      "block": "12"
+    },
+    {
+      "action": "applyConfig",
+      "hash": "0xfe70ae0cec4c62f76da852148618ab755811c9ab189d962a6a09ed99ca08e0ac",
+      "status": "success",
+      "block": "13"
+    },
+    {
+      "action": "mint",
+      "hash": "0x53bf52b285fc1ca8eb6bab880027aa3b01c18b4c730152641568966ac1f4a2b6",
+      "status": "success",
+      "block": "14"
+    },
+    {
+      "action": "mint",
+      "hash": "0xaa4fa7e39d481639c8af81067ee1aae957b76e44a4f567dc27738865a89a348e",
+      "status": "success",
+      "block": "15"
+    },
+    {
+      "action": "mint",
+      "hash": "0x696d6c366714208da9c5d49f7a64873a956d63f4b560990be7374f9d5e30a107",
+      "status": "success",
+      "block": "16"
+    },
+    {
+      "action": "approve",
+      "hash": "0x78886ea9b0cddfc47dbe536cd0096a573b2ee468173322a840c0695b3705358f",
+      "status": "success",
+      "block": "17"
+    },
+    {
+      "action": "mint",
+      "hash": "0x3bda64b3b4f185e2cdf965b64822fd74e137a0d3ccaa5a056c921f550e69ce7d",
+      "status": "success",
+      "block": "18"
+    },
+    {
+      "action": "approve",
+      "hash": "0x3547b649cb29783df878ee287737310338e7a4a2cd1f11b2a0685d155fc809f5",
+      "status": "success",
+      "block": "19"
+    },
+    {
+      "action": "deposit",
+      "hash": "0xee54ed22576b1baede9c6332262f0cd55eca0a056eead84efc4080dac0cc9cd3",
+      "status": "success",
+      "block": "20"
+    },
+    {
+      "action": "transfer",
+      "hash": "0x6e8604d602f78b7e89484894182ed53e8dee91a4255bc7a2bb828c0204a42796",
+      "status": "success",
+      "block": "21"
+    },
+    {
+      "action": "mint",
+      "hash": "0xa0173fb85e3468e7a6c672d06df9bbb1524c2926b9d46fc4738968cd213f8d6a",
+      "status": "success",
+      "block": "22"
+    },
+    {
+      "action": "managerTrade",
+      "hash": "0x654e59c87a5d800902955aa4edd227d9858c7e4b808121f4a9db947cd1bbfbea",
+      "status": "success",
+      "block": "23"
+    },
+    {
+      "action": "managerTrade",
+      "hash": "0x8c6a5fb92ea4bcc25f24cf2701b4443857fb343e574f4a3744320d06f96760b7",
+      "status": "reverted",
+      "block": "24"
+    },
+    {
+      "action": "updatePrice",
+      "hash": "0x6223de074dd23eaef174f9db9aa71d4e34bc59c33a853caf3e576b33e08fe80e",
+      "status": "success",
+      "block": "25"
+    },
+    {
+      "action": "deposit",
+      "hash": "0x1c79ece62827d8b67ab9d8611f91320f04b7b6ffcf4c9055045c8612283eab03",
+      "status": "success",
+      "block": "26"
+    },
+    {
+      "action": "updatePrice",
+      "hash": "0x7a8e5dd95326e0ee8514b2c9bac00c9ff1e8c1572a0a8760fb9ef6c18cd571dd",
+      "status": "success",
+      "block": "27"
+    },
+    {
+      "action": "fundServiceExpense",
+      "hash": "0xb5e9f47b1c4c783195a0bfed1eb1e9533e5f1143d3fdecbe4e6290e05fe091ef",
+      "status": "success",
+      "block": "28"
+    },
+    {
+      "action": "accrueServiceExpense",
+      "hash": "0x5baa5f6a74b53532e92d43879a266cbabffdcb5bd952e5bd8af915675ec19933",
+      "status": "success",
+      "block": "29"
+    },
+    {
+      "action": "settleServiceExpense",
+      "hash": "0x736aa090202ba1992065f476712cd96eba41a1f791da818b67e9b0f365d1d152",
+      "status": "success",
+      "block": "30"
+    },
+    {
+      "action": "refundServiceExpense",
+      "hash": "0xb0d0f6ffbc5810e7bf4c8724f7614ccb2fad46d2a2b3f06c5fa61fa1d9a7c5b2",
+      "status": "success",
+      "block": "31"
+    },
+    {
+      "action": "proposeConfig",
+      "hash": "0x97203535621ad653ac677ae00ac0fdaf65f4e3531ed410adffead647e894167b",
+      "status": "success",
+      "block": "32"
+    },
+    {
+      "action": "updatePrice",
+      "hash": "0x30cbed1087de8ea86fef3d6c0039e113903407006c69a50402336461deb616bf",
+      "status": "success",
+      "block": "33"
+    },
+    {
+      "action": "applyConfig",
+      "hash": "0x6adc81ff9c89650580c784ec7a66373738c6bb78a415bc74d5ec876b26c31c2a",
+      "status": "success",
+      "block": "34"
+    },
+    {
+      "action": "transferFrom",
+      "hash": "0x11bce56988a1d3639b63aa1f41edacaf80a4615acfcf4363049c198e2a60e814",
+      "status": "success",
+      "block": "35"
+    },
+    {
+      "action": "rotateController",
+      "hash": "0x498bac0ba53856a789ac6ddca4fc95d3217b5ce6e4f917fdf4db64e1b6eedeb0",
+      "status": "success",
+      "block": "36"
+    },
+    {
+      "action": "managerTrade",
+      "hash": "0x57945ad77f0890062ca889ba409564216fff72032322e3d32c41d65fe3fd016f",
+      "status": "reverted",
+      "block": "37"
+    },
+    {
+      "action": "redeem",
+      "hash": "0xc14a1eb7edd821bf1c2c318c54393c1ac675a97ad227581ddbfbe6c11256a0a6",
+      "status": "success",
+      "block": "38"
+    }
+  ],
+  "bundle": {
+    "events": [
+      {
+        "block": 20,
+        "logIndex": 0,
+        "tx": "0xee54ed22576b1baede9c6332262f0cd55eca0a056eead84efc4080dac0cc9cd3",
+        "blockHash": "0x95b15ca79b68f90dda4da08d169c4a0decc28bd844a8d662ceec8ce5765312a9",
+        "emitter": "0x9d689fb207e5711daf8d2e61c0851d64b289ec85",
+        "kind": "transfer",
+        "amount": "1000000000",
+        "from": "0x9Cd4e20B21b079ff84B6d09fa48C5E6A1b9c2efa",
+        "to": "0x56037D27a2Da962d590CE2e1512C5D1562102076"
+      },
+      {
+        "block": 20,
+        "logIndex": 1,
+        "tx": "0xee54ed22576b1baede9c6332262f0cd55eca0a056eead84efc4080dac0cc9cd3",
+        "blockHash": "0x95b15ca79b68f90dda4da08d169c4a0decc28bd844a8d662ceec8ce5765312a9",
+        "emitter": "0x56037d27a2da962d590ce2e1512c5d1562102076",
+        "kind": "transfer",
+        "amount": "1000000000000000",
+        "from": "0x0000000000000000000000000000000000000000",
+        "to": "0x9Cd4e20B21b079ff84B6d09fa48C5E6A1b9c2efa"
+      },
+      {
+        "block": 20,
+        "logIndex": 2,
+        "tx": "0xee54ed22576b1baede9c6332262f0cd55eca0a056eead84efc4080dac0cc9cd3",
+        "blockHash": "0x95b15ca79b68f90dda4da08d169c4a0decc28bd844a8d662ceec8ce5765312a9",
+        "emitter": "0x56037d27a2da962d590ce2e1512c5d1562102076",
+        "kind": "deposit",
+        "amount": "1000000000",
+        "shares": "1000000000000000",
+        "from": "0x9Cd4e20B21b079ff84B6d09fa48C5E6A1b9c2efa",
+        "to": "0x9Cd4e20B21b079ff84B6d09fa48C5E6A1b9c2efa"
+      },
+      {
+        "block": 23,
+        "logIndex": 1,
+        "tx": "0x654e59c87a5d800902955aa4edd227d9858c7e4b808121f4a9db947cd1bbfbea",
+        "blockHash": "0x6ab3ca5543c57224a585e835a08d89558562ceb5e293fad2daa6ec09778ae6e0",
+        "emitter": "0x9d689fb207e5711daf8d2e61c0851d64b289ec85",
+        "kind": "transfer",
+        "amount": "400000000",
+        "from": "0x56037D27a2Da962d590CE2e1512C5D1562102076",
+        "to": "0x33Ed17c710bd1a4EdDac2CFeB01D730F358C0F4e"
+      },
+      {
+        "block": 23,
+        "logIndex": 4,
+        "tx": "0x654e59c87a5d800902955aa4edd227d9858c7e4b808121f4a9db947cd1bbfbea",
+        "blockHash": "0x6ab3ca5543c57224a585e835a08d89558562ceb5e293fad2daa6ec09778ae6e0",
+        "emitter": "0xcb2eba3de184e1e5d103f7fc3886fcf10ec0eb60",
+        "kind": "transfer",
+        "amount": "400000000",
+        "from": "0x64597ebAd9B0AD81D5abd2F4BF9C7A29622d9951",
+        "to": "0x56037D27a2Da962d590CE2e1512C5D1562102076"
+      },
+      {
+        "block": 23,
+        "logIndex": 9,
+        "tx": "0x654e59c87a5d800902955aa4edd227d9858c7e4b808121f4a9db947cd1bbfbea",
+        "blockHash": "0x6ab3ca5543c57224a585e835a08d89558562ceb5e293fad2daa6ec09778ae6e0",
+        "emitter": "0x56037d27a2da962d590ce2e1512c5d1562102076",
+        "kind": "trade",
+        "amount": "400000000",
+        "amountOut": "400000000",
+        "tokenIn": "0x9d689fB207e5711DaF8D2e61C0851d64b289EC85",
+        "tokenOut": "0xCb2eBA3dE184E1E5D103f7FC3886fcf10EC0Eb60"
+      },
+      {
+        "block": 26,
+        "logIndex": 0,
+        "tx": "0x1c79ece62827d8b67ab9d8611f91320f04b7b6ffcf4c9055045c8612283eab03",
+        "blockHash": "0x4071698f9eac3c4d74e65250ea8db028e52262ff81da700f3996bc2010040f47",
+        "emitter": "0x9d689fb207e5711daf8d2e61c0851d64b289ec85",
+        "kind": "transfer",
+        "amount": "108000000",
+        "from": "0x0Ae556b281f2B567c6a4E3DDA47a0862204964a5",
+        "to": "0x56037D27a2Da962d590CE2e1512C5D1562102076"
+      },
+      {
+        "block": 26,
+        "logIndex": 1,
+        "tx": "0x1c79ece62827d8b67ab9d8611f91320f04b7b6ffcf4c9055045c8612283eab03",
+        "blockHash": "0x4071698f9eac3c4d74e65250ea8db028e52262ff81da700f3996bc2010040f47",
+        "emitter": "0x56037d27a2da962d590ce2e1512c5d1562102076",
+        "kind": "transfer",
+        "amount": "100000000007407",
+        "from": "0x0000000000000000000000000000000000000000",
+        "to": "0x0Ae556b281f2B567c6a4E3DDA47a0862204964a5"
+      },
+      {
+        "block": 26,
+        "logIndex": 2,
+        "tx": "0x1c79ece62827d8b67ab9d8611f91320f04b7b6ffcf4c9055045c8612283eab03",
+        "blockHash": "0x4071698f9eac3c4d74e65250ea8db028e52262ff81da700f3996bc2010040f47",
+        "emitter": "0x56037d27a2da962d590ce2e1512c5d1562102076",
+        "kind": "deposit",
+        "amount": "108000000",
+        "shares": "100000000007407",
+        "from": "0x0Ae556b281f2B567c6a4E3DDA47a0862204964a5",
+        "to": "0x0Ae556b281f2B567c6a4E3DDA47a0862204964a5"
+      },
+      {
+        "block": 28,
+        "logIndex": 0,
+        "tx": "0xb5e9f47b1c4c783195a0bfed1eb1e9533e5f1143d3fdecbe4e6290e05fe091ef",
+        "blockHash": "0x0138440e4cd9cafc8ba239e79d44c06034e793fc4c6745dc722c89c840544296",
+        "emitter": "0x9d689fb207e5711daf8d2e61c0851d64b289ec85",
+        "kind": "transfer",
+        "amount": "50000000",
+        "from": "0x56037D27a2Da962d590CE2e1512C5D1562102076",
+        "to": "0x8225bD1462E84a74ecCdCc6F11Db49533f4cBf11"
+      },
+      {
+        "block": 28,
+        "logIndex": 2,
+        "tx": "0xb5e9f47b1c4c783195a0bfed1eb1e9533e5f1143d3fdecbe4e6290e05fe091ef",
+        "blockHash": "0x0138440e4cd9cafc8ba239e79d44c06034e793fc4c6745dc722c89c840544296",
+        "emitter": "0x56037d27a2da962d590ce2e1512c5d1562102076",
+        "kind": "fund",
+        "amount": "50000000"
+      },
+      {
+        "block": 29,
+        "logIndex": 0,
+        "tx": "0x5baa5f6a74b53532e92d43879a266cbabffdcb5bd952e5bd8af915675ec19933",
+        "blockHash": "0xd3c61b3049d1bd3139a80e327da521a988d4aa0502f49d577ef4fcd5669cf83d",
+        "emitter": "0x56037d27a2da962d590ce2e1512c5d1562102076",
+        "kind": "accrue",
+        "amount": "30000000"
+      },
+      {
+        "block": 30,
+        "logIndex": 0,
+        "tx": "0x736aa090202ba1992065f476712cd96eba41a1f791da818b67e9b0f365d1d152",
+        "blockHash": "0x461aa106ce8f6db02a8c540f907eb5c5afe0ba08dee8836ca1d443711508eadb",
+        "emitter": "0x9d689fb207e5711daf8d2e61c0851d64b289ec85",
+        "kind": "transfer",
+        "amount": "30000000",
+        "from": "0x8225bD1462E84a74ecCdCc6F11Db49533f4cBf11",
+        "to": "0x40654839c4a9c443587f7d8684e03610A450504c"
+      },
+      {
+        "block": 30,
+        "logIndex": 2,
+        "tx": "0x736aa090202ba1992065f476712cd96eba41a1f791da818b67e9b0f365d1d152",
+        "blockHash": "0x461aa106ce8f6db02a8c540f907eb5c5afe0ba08dee8836ca1d443711508eadb",
+        "emitter": "0x56037d27a2da962d590ce2e1512c5d1562102076",
+        "kind": "settle",
+        "amount": "30000000"
+      },
+      {
+        "block": 31,
+        "logIndex": 0,
+        "tx": "0xb0d0f6ffbc5810e7bf4c8724f7614ccb2fad46d2a2b3f06c5fa61fa1d9a7c5b2",
+        "blockHash": "0xe2458ab89141becd843871a09573ade65712d31b7ff0b7f2ee9a262b9e3eab55",
+        "emitter": "0x9d689fb207e5711daf8d2e61c0851d64b289ec85",
+        "kind": "transfer",
+        "amount": "20000000",
+        "from": "0x8225bD1462E84a74ecCdCc6F11Db49533f4cBf11",
+        "to": "0x56037D27a2Da962d590CE2e1512C5D1562102076"
+      },
+      {
+        "block": 31,
+        "logIndex": 2,
+        "tx": "0xb0d0f6ffbc5810e7bf4c8724f7614ccb2fad46d2a2b3f06c5fa61fa1d9a7c5b2",
+        "blockHash": "0xe2458ab89141becd843871a09573ade65712d31b7ff0b7f2ee9a262b9e3eab55",
+        "emitter": "0x56037d27a2da962d590ce2e1512c5d1562102076",
+        "kind": "refund",
+        "amount": "20000000"
+      },
+      {
+        "block": 34,
+        "logIndex": 0,
+        "tx": "0x6adc81ff9c89650580c784ec7a66373738c6bb78a415bc74d5ec876b26c31c2a",
+        "blockHash": "0xc57b0160d8f417e70fc2cd189e4ae8dd1dbf7001ce6ca1583dc0f3a21c7e0c78",
+        "emitter": "0x56037d27a2da962d590ce2e1512c5d1562102076",
+        "kind": "period-close",
+        "periodId": "2",
+        "valued": true
+      },
+      {
+        "block": 34,
+        "logIndex": 2,
+        "tx": "0x6adc81ff9c89650580c784ec7a66373738c6bb78a415bc74d5ec876b26c31c2a",
+        "blockHash": "0xc57b0160d8f417e70fc2cd189e4ae8dd1dbf7001ce6ca1583dc0f3a21c7e0c78",
+        "emitter": "0x56037d27a2da962d590ce2e1512c5d1562102076",
+        "kind": "config",
+        "periodId": "3",
+        "configHash": "0x834caff9ef1d41c7a83c1af233fbe0a25725ff66f084ad344dcc38045eb1d726",
+        "strategyHash": "0x86fc01ba6f4e76b3b516063d577c674a91e14f34aabbbe8ebba81a14d7d4718a",
+        "manager": "0x0D830EA7d71c95E03A343AC1C95767B5710e8bC9",
+        "valued": true
+      },
+      {
+        "block": 34,
+        "logIndex": 7,
+        "tx": "0x6adc81ff9c89650580c784ec7a66373738c6bb78a415bc74d5ec876b26c31c2a",
+        "blockHash": "0xc57b0160d8f417e70fc2cd189e4ae8dd1dbf7001ce6ca1583dc0f3a21c7e0c78",
+        "emitter": "0x56037d27a2da962d590ce2e1512c5d1562102076",
+        "kind": "stream",
+        "stream": "0x8225bD1462E84a74ecCdCc6F11Db49533f4cBf11"
+      },
+      {
+        "block": 38,
+        "logIndex": 0,
+        "tx": "0xc14a1eb7edd821bf1c2c318c54393c1ac675a97ad227581ddbfbe6c11256a0a6",
+        "blockHash": "0xd2e3f51ceeb2c927aeffdd830f48316c475ecf4bd058cbdc4f9df259d19dfe59",
+        "emitter": "0x56037d27a2da962d590ce2e1512c5d1562102076",
+        "kind": "transfer",
+        "amount": "100000000000000",
+        "from": "0x9Cd4e20B21b079ff84B6d09fa48C5E6A1b9c2efa",
+        "to": "0x0000000000000000000000000000000000000000"
+      },
+      {
+        "block": 38,
+        "logIndex": 1,
+        "tx": "0xc14a1eb7edd821bf1c2c318c54393c1ac675a97ad227581ddbfbe6c11256a0a6",
+        "blockHash": "0xd2e3f51ceeb2c927aeffdd830f48316c475ecf4bd058cbdc4f9df259d19dfe59",
+        "emitter": "0x9d689fb207e5711daf8d2e61c0851d64b289ec85",
+        "kind": "transfer",
+        "amount": "90727272",
+        "from": "0x56037D27a2Da962d590CE2e1512C5D1562102076",
+        "to": "0x9Cd4e20B21b079ff84B6d09fa48C5E6A1b9c2efa"
+      },
+      {
+        "block": 38,
+        "logIndex": 2,
+        "tx": "0xc14a1eb7edd821bf1c2c318c54393c1ac675a97ad227581ddbfbe6c11256a0a6",
+        "blockHash": "0xd2e3f51ceeb2c927aeffdd830f48316c475ecf4bd058cbdc4f9df259d19dfe59",
+        "emitter": "0x56037d27a2da962d590ce2e1512c5d1562102076",
+        "kind": "redeem",
+        "amount": "90727272",
+        "shares": "100000000000000",
+        "from": "0x9Cd4e20B21b079ff84B6d09fa48C5E6A1b9c2efa",
+        "to": "0x9Cd4e20B21b079ff84B6d09fa48C5E6A1b9c2efa",
+        "owner": "0x9Cd4e20B21b079ff84B6d09fa48C5E6A1b9c2efa"
+      }
+    ],
+    "coverage": {
+      "chainId": 31337,
+      "vault": "0x56037d27a2da962d590ce2e1512c5d1562102076",
+      "quote": "0x9d689fB207e5711DaF8D2e61C0851d64b289EC85",
+      "position": "0xCb2eBA3dE184E1E5D103f7FC3886fcf10EC0Eb60",
+      "deploymentBlock": 6,
+      "fromBlock": 20,
+      "toBlock": 38,
+      "canonicalHashes": {
+        "19": "0x3b8f2c9f2af4739a4b8c07eddcf3fa0b309ae95a8ecd713c98e5635e2b85b4d8",
+        "20": "0x95b15ca79b68f90dda4da08d169c4a0decc28bd844a8d662ceec8ce5765312a9",
+        "21": "0xd7938d75578bbde39d196b3441908d5225aacd64113cd852651f83ce20fc34c6",
+        "22": "0xff4fbe3275a96d5523c57a06e120ef5d6d04e19e1815794a2efebb6cb2e4345d",
+        "23": "0x6ab3ca5543c57224a585e835a08d89558562ceb5e293fad2daa6ec09778ae6e0",
+        "24": "0xd6b181304fd5d5b039c1ee5792de8a81497f2058b479c19660441e774569e849",
+        "25": "0xffbee2776fa01a984761252692926660423cc0d8a451a4a25224dc36168c5a4e",
+        "26": "0x4071698f9eac3c4d74e65250ea8db028e52262ff81da700f3996bc2010040f47",
+        "27": "0x10f6235607453c1476a7a15ba74648e82c72d1ab3defba4240768ab7ad2ed936",
+        "28": "0x0138440e4cd9cafc8ba239e79d44c06034e793fc4c6745dc722c89c840544296",
+        "29": "0xd3c61b3049d1bd3139a80e327da521a988d4aa0502f49d577ef4fcd5669cf83d",
+        "30": "0x461aa106ce8f6db02a8c540f907eb5c5afe0ba08dee8836ca1d443711508eadb",
+        "31": "0xe2458ab89141becd843871a09573ade65712d31b7ff0b7f2ee9a262b9e3eab55",
+        "32": "0xf94698bf479c2dbe7d5128b4744b8ed2848195b40810971f2bf30e959f21d01f",
+        "33": "0x3c8a475f118b8699557746115aad45c36754f674896a378662f245eda13aef84",
+        "34": "0xc57b0160d8f417e70fc2cd189e4ae8dd1dbf7001ce6ca1583dc0f3a21c7e0c78",
+        "35": "0xe84e6cb94841b2e5d3f3f6a6229cc3cd8acd0286e103d2a6b254e2f4101ffe26",
+        "36": "0xa14d69edf8e186c4705b2023affb74cf5e2b08d1608761015c67a6a75fd0d9e1",
+        "37": "0x46eaed510b15af9363072d6cc6dd32026b70bc25bd03d8ff1f99cfe511f46927",
+        "38": "0xd2e3f51ceeb2c927aeffdd830f48316c475ecf4bd058cbdc4f9df259d19dfe59"
+      },
+      "reportVersion": "UNORA-RPC-REPLAY-v1",
+      "receiptEvents": [
+        {
+          "block": 20,
+          "logIndex": 0,
+          "tx": "0xee54ed22576b1baede9c6332262f0cd55eca0a056eead84efc4080dac0cc9cd3",
+          "blockHash": "0x95b15ca79b68f90dda4da08d169c4a0decc28bd844a8d662ceec8ce5765312a9",
+          "emitter": "0x9d689fb207e5711daf8d2e61c0851d64b289ec85",
+          "kind": "transfer",
+          "amount": "1000000000",
+          "from": "0x9Cd4e20B21b079ff84B6d09fa48C5E6A1b9c2efa",
+          "to": "0x56037D27a2Da962d590CE2e1512C5D1562102076"
+        },
+        {
+          "block": 20,
+          "logIndex": 1,
+          "tx": "0xee54ed22576b1baede9c6332262f0cd55eca0a056eead84efc4080dac0cc9cd3",
+          "blockHash": "0x95b15ca79b68f90dda4da08d169c4a0decc28bd844a8d662ceec8ce5765312a9",
+          "emitter": "0x56037d27a2da962d590ce2e1512c5d1562102076",
+          "kind": "transfer",
+          "amount": "1000000000000000",
+          "from": "0x0000000000000000000000000000000000000000",
+          "to": "0x9Cd4e20B21b079ff84B6d09fa48C5E6A1b9c2efa"
+        },
+        {
+          "block": 20,
+          "logIndex": 2,
+          "tx": "0xee54ed22576b1baede9c6332262f0cd55eca0a056eead84efc4080dac0cc9cd3",
+          "blockHash": "0x95b15ca79b68f90dda4da08d169c4a0decc28bd844a8d662ceec8ce5765312a9",
+          "emitter": "0x56037d27a2da962d590ce2e1512c5d1562102076",
+          "kind": "deposit",
+          "amount": "1000000000",
+          "shares": "1000000000000000",
+          "from": "0x9Cd4e20B21b079ff84B6d09fa48C5E6A1b9c2efa",
+          "to": "0x9Cd4e20B21b079ff84B6d09fa48C5E6A1b9c2efa"
+        },
+        {
+          "block": 23,
+          "logIndex": 1,
+          "tx": "0x654e59c87a5d800902955aa4edd227d9858c7e4b808121f4a9db947cd1bbfbea",
+          "blockHash": "0x6ab3ca5543c57224a585e835a08d89558562ceb5e293fad2daa6ec09778ae6e0",
+          "emitter": "0x9d689fb207e5711daf8d2e61c0851d64b289ec85",
+          "kind": "transfer",
+          "amount": "400000000",
+          "from": "0x56037D27a2Da962d590CE2e1512C5D1562102076",
+          "to": "0x33Ed17c710bd1a4EdDac2CFeB01D730F358C0F4e"
+        },
+        {
+          "block": 23,
+          "logIndex": 4,
+          "tx": "0x654e59c87a5d800902955aa4edd227d9858c7e4b808121f4a9db947cd1bbfbea",
+          "blockHash": "0x6ab3ca5543c57224a585e835a08d89558562ceb5e293fad2daa6ec09778ae6e0",
+          "emitter": "0xcb2eba3de184e1e5d103f7fc3886fcf10ec0eb60",
+          "kind": "transfer",
+          "amount": "400000000",
+          "from": "0x64597ebAd9B0AD81D5abd2F4BF9C7A29622d9951",
+          "to": "0x56037D27a2Da962d590CE2e1512C5D1562102076"
+        },
+        {
+          "block": 23,
+          "logIndex": 9,
+          "tx": "0x654e59c87a5d800902955aa4edd227d9858c7e4b808121f4a9db947cd1bbfbea",
+          "blockHash": "0x6ab3ca5543c57224a585e835a08d89558562ceb5e293fad2daa6ec09778ae6e0",
+          "emitter": "0x56037d27a2da962d590ce2e1512c5d1562102076",
+          "kind": "trade",
+          "amount": "400000000",
+          "amountOut": "400000000",
+          "tokenIn": "0x9d689fB207e5711DaF8D2e61C0851d64b289EC85",
+          "tokenOut": "0xCb2eBA3dE184E1E5D103f7FC3886fcf10EC0Eb60"
+        },
+        {
+          "block": 26,
+          "logIndex": 0,
+          "tx": "0x1c79ece62827d8b67ab9d8611f91320f04b7b6ffcf4c9055045c8612283eab03",
+          "blockHash": "0x4071698f9eac3c4d74e65250ea8db028e52262ff81da700f3996bc2010040f47",
+          "emitter": "0x9d689fb207e5711daf8d2e61c0851d64b289ec85",
+          "kind": "transfer",
+          "amount": "108000000",
+          "from": "0x0Ae556b281f2B567c6a4E3DDA47a0862204964a5",
+          "to": "0x56037D27a2Da962d590CE2e1512C5D1562102076"
+        },
+        {
+          "block": 26,
+          "logIndex": 1,
+          "tx": "0x1c79ece62827d8b67ab9d8611f91320f04b7b6ffcf4c9055045c8612283eab03",
+          "blockHash": "0x4071698f9eac3c4d74e65250ea8db028e52262ff81da700f3996bc2010040f47",
+          "emitter": "0x56037d27a2da962d590ce2e1512c5d1562102076",
+          "kind": "transfer",
+          "amount": "100000000007407",
+          "from": "0x0000000000000000000000000000000000000000",
+          "to": "0x0Ae556b281f2B567c6a4E3DDA47a0862204964a5"
+        },
+        {
+          "block": 26,
+          "logIndex": 2,
+          "tx": "0x1c79ece62827d8b67ab9d8611f91320f04b7b6ffcf4c9055045c8612283eab03",
+          "blockHash": "0x4071698f9eac3c4d74e65250ea8db028e52262ff81da700f3996bc2010040f47",
+          "emitter": "0x56037d27a2da962d590ce2e1512c5d1562102076",
+          "kind": "deposit",
+          "amount": "108000000",
+          "shares": "100000000007407",
+          "from": "0x0Ae556b281f2B567c6a4E3DDA47a0862204964a5",
+          "to": "0x0Ae556b281f2B567c6a4E3DDA47a0862204964a5"
+        },
+        {
+          "block": 28,
+          "logIndex": 0,
+          "tx": "0xb5e9f47b1c4c783195a0bfed1eb1e9533e5f1143d3fdecbe4e6290e05fe091ef",
+          "blockHash": "0x0138440e4cd9cafc8ba239e79d44c06034e793fc4c6745dc722c89c840544296",
+          "emitter": "0x9d689fb207e5711daf8d2e61c0851d64b289ec85",
+          "kind": "transfer",
+          "amount": "50000000",
+          "from": "0x56037D27a2Da962d590CE2e1512C5D1562102076",
+          "to": "0x8225bD1462E84a74ecCdCc6F11Db49533f4cBf11"
+        },
+        {
+          "block": 28,
+          "logIndex": 2,
+          "tx": "0xb5e9f47b1c4c783195a0bfed1eb1e9533e5f1143d3fdecbe4e6290e05fe091ef",
+          "blockHash": "0x0138440e4cd9cafc8ba239e79d44c06034e793fc4c6745dc722c89c840544296",
+          "emitter": "0x56037d27a2da962d590ce2e1512c5d1562102076",
+          "kind": "fund",
+          "amount": "50000000"
+        },
+        {
+          "block": 29,
+          "logIndex": 0,
+          "tx": "0x5baa5f6a74b53532e92d43879a266cbabffdcb5bd952e5bd8af915675ec19933",
+          "blockHash": "0xd3c61b3049d1bd3139a80e327da521a988d4aa0502f49d577ef4fcd5669cf83d",
+          "emitter": "0x56037d27a2da962d590ce2e1512c5d1562102076",
+          "kind": "accrue",
+          "amount": "30000000"
+        },
+        {
+          "block": 30,
+          "logIndex": 0,
+          "tx": "0x736aa090202ba1992065f476712cd96eba41a1f791da818b67e9b0f365d1d152",
+          "blockHash": "0x461aa106ce8f6db02a8c540f907eb5c5afe0ba08dee8836ca1d443711508eadb",
+          "emitter": "0x9d689fb207e5711daf8d2e61c0851d64b289ec85",
+          "kind": "transfer",
+          "amount": "30000000",
+          "from": "0x8225bD1462E84a74ecCdCc6F11Db49533f4cBf11",
+          "to": "0x40654839c4a9c443587f7d8684e03610A450504c"
+        },
+        {
+          "block": 30,
+          "logIndex": 2,
+          "tx": "0x736aa090202ba1992065f476712cd96eba41a1f791da818b67e9b0f365d1d152",
+          "blockHash": "0x461aa106ce8f6db02a8c540f907eb5c5afe0ba08dee8836ca1d443711508eadb",
+          "emitter": "0x56037d27a2da962d590ce2e1512c5d1562102076",
+          "kind": "settle",
+          "amount": "30000000"
+        },
+        {
+          "block": 31,
+          "logIndex": 0,
+          "tx": "0xb0d0f6ffbc5810e7bf4c8724f7614ccb2fad46d2a2b3f06c5fa61fa1d9a7c5b2",
+          "blockHash": "0xe2458ab89141becd843871a09573ade65712d31b7ff0b7f2ee9a262b9e3eab55",
+          "emitter": "0x9d689fb207e5711daf8d2e61c0851d64b289ec85",
+          "kind": "transfer",
+          "amount": "20000000",
+          "from": "0x8225bD1462E84a74ecCdCc6F11Db49533f4cBf11",
+          "to": "0x56037D27a2Da962d590CE2e1512C5D1562102076"
+        },
+        {
+          "block": 31,
+          "logIndex": 2,
+          "tx": "0xb0d0f6ffbc5810e7bf4c8724f7614ccb2fad46d2a2b3f06c5fa61fa1d9a7c5b2",
+          "blockHash": "0xe2458ab89141becd843871a09573ade65712d31b7ff0b7f2ee9a262b9e3eab55",
+          "emitter": "0x56037d27a2da962d590ce2e1512c5d1562102076",
+          "kind": "refund",
+          "amount": "20000000"
+        },
+        {
+          "block": 34,
+          "logIndex": 0,
+          "tx": "0x6adc81ff9c89650580c784ec7a66373738c6bb78a415bc74d5ec876b26c31c2a",
+          "blockHash": "0xc57b0160d8f417e70fc2cd189e4ae8dd1dbf7001ce6ca1583dc0f3a21c7e0c78",
+          "emitter": "0x56037d27a2da962d590ce2e1512c5d1562102076",
+          "kind": "period-close",
+          "periodId": "2",
+          "valued": true
+        },
+        {
+          "block": 34,
+          "logIndex": 2,
+          "tx": "0x6adc81ff9c89650580c784ec7a66373738c6bb78a415bc74d5ec876b26c31c2a",
+          "blockHash": "0xc57b0160d8f417e70fc2cd189e4ae8dd1dbf7001ce6ca1583dc0f3a21c7e0c78",
+          "emitter": "0x56037d27a2da962d590ce2e1512c5d1562102076",
+          "kind": "config",
+          "periodId": "3",
+          "configHash": "0x834caff9ef1d41c7a83c1af233fbe0a25725ff66f084ad344dcc38045eb1d726",
+          "strategyHash": "0x86fc01ba6f4e76b3b516063d577c674a91e14f34aabbbe8ebba81a14d7d4718a",
+          "manager": "0x0D830EA7d71c95E03A343AC1C95767B5710e8bC9",
+          "valued": true
+        },
+        {
+          "block": 34,
+          "logIndex": 7,
+          "tx": "0x6adc81ff9c89650580c784ec7a66373738c6bb78a415bc74d5ec876b26c31c2a",
+          "blockHash": "0xc57b0160d8f417e70fc2cd189e4ae8dd1dbf7001ce6ca1583dc0f3a21c7e0c78",
+          "emitter": "0x56037d27a2da962d590ce2e1512c5d1562102076",
+          "kind": "stream",
+          "stream": "0x8225bD1462E84a74ecCdCc6F11Db49533f4cBf11"
+        },
+        {
+          "block": 38,
+          "logIndex": 0,
+          "tx": "0xc14a1eb7edd821bf1c2c318c54393c1ac675a97ad227581ddbfbe6c11256a0a6",
+          "blockHash": "0xd2e3f51ceeb2c927aeffdd830f48316c475ecf4bd058cbdc4f9df259d19dfe59",
+          "emitter": "0x56037d27a2da962d590ce2e1512c5d1562102076",
+          "kind": "transfer",
+          "amount": "100000000000000",
+          "from": "0x9Cd4e20B21b079ff84B6d09fa48C5E6A1b9c2efa",
+          "to": "0x0000000000000000000000000000000000000000"
+        },
+        {
+          "block": 38,
+          "logIndex": 1,
+          "tx": "0xc14a1eb7edd821bf1c2c318c54393c1ac675a97ad227581ddbfbe6c11256a0a6",
+          "blockHash": "0xd2e3f51ceeb2c927aeffdd830f48316c475ecf4bd058cbdc4f9df259d19dfe59",
+          "emitter": "0x9d689fb207e5711daf8d2e61c0851d64b289ec85",
+          "kind": "transfer",
+          "amount": "90727272",
+          "from": "0x56037D27a2Da962d590CE2e1512C5D1562102076",
+          "to": "0x9Cd4e20B21b079ff84B6d09fa48C5E6A1b9c2efa"
+        },
+        {
+          "block": 38,
+          "logIndex": 2,
+          "tx": "0xc14a1eb7edd821bf1c2c318c54393c1ac675a97ad227581ddbfbe6c11256a0a6",
+          "blockHash": "0xd2e3f51ceeb2c927aeffdd830f48316c475ecf4bd058cbdc4f9df259d19dfe59",
+          "emitter": "0x56037d27a2da962d590ce2e1512c5d1562102076",
+          "kind": "redeem",
+          "amount": "90727272",
+          "shares": "100000000000000",
+          "from": "0x9Cd4e20B21b079ff84B6d09fa48C5E6A1b9c2efa",
+          "to": "0x9Cd4e20B21b079ff84B6d09fa48C5E6A1b9c2efa",
+          "owner": "0x9Cd4e20B21b079ff84B6d09fa48C5E6A1b9c2efa"
+        }
+      ],
+      "opening": {
+        "cash": "0",
+        "positionBalance": "0",
+        "escrows": {
+          "0x8225bd1462e84a74eccdcc6f11db49533f4cbf11": "0"
+        },
+        "accrued": "0",
+        "totalShares": "0",
+        "priceE18": "1000000000000000000",
+        "valued": true,
+        "managedEscrow": "0"
+      },
+      "closing": {
+        "cash": "587272728",
+        "positionBalance": "400000000",
+        "escrows": {
+          "0x8225bd1462e84a74eccdcc6f11db49533f4cbf11": "0"
+        },
+        "accrued": "0",
+        "totalShares": "1000000000007407",
+        "priceE18": "800000000000000000",
+        "valued": true,
+        "managedEscrow": "0"
+      }
+    },
+    "report": {
+      "status": "ok",
+      "deposits": "1108000000",
+      "withdrawals": "90727272",
+      "donations": "0",
+      "netPnl": "-110000000",
+      "periods": 1,
+      "coverage": {
+        "chainId": 31337,
+        "vault": "0x56037d27a2da962d590ce2e1512c5d1562102076",
+        "quote": "0x9d689fB207e5711DaF8D2e61C0851d64b289EC85",
+        "position": "0xCb2eBA3dE184E1E5D103f7FC3886fcf10EC0Eb60",
+        "deploymentBlock": 6,
+        "fromBlock": 20,
+        "toBlock": 38,
+        "canonicalHashes": {
+          "19": "0x3b8f2c9f2af4739a4b8c07eddcf3fa0b309ae95a8ecd713c98e5635e2b85b4d8",
+          "20": "0x95b15ca79b68f90dda4da08d169c4a0decc28bd844a8d662ceec8ce5765312a9",
+          "21": "0xd7938d75578bbde39d196b3441908d5225aacd64113cd852651f83ce20fc34c6",
+          "22": "0xff4fbe3275a96d5523c57a06e120ef5d6d04e19e1815794a2efebb6cb2e4345d",
+          "23": "0x6ab3ca5543c57224a585e835a08d89558562ceb5e293fad2daa6ec09778ae6e0",
+          "24": "0xd6b181304fd5d5b039c1ee5792de8a81497f2058b479c19660441e774569e849",
+          "25": "0xffbee2776fa01a984761252692926660423cc0d8a451a4a25224dc36168c5a4e",
+          "26": "0x4071698f9eac3c4d74e65250ea8db028e52262ff81da700f3996bc2010040f47",
+          "27": "0x10f6235607453c1476a7a15ba74648e82c72d1ab3defba4240768ab7ad2ed936",
+          "28": "0x0138440e4cd9cafc8ba239e79d44c06034e793fc4c6745dc722c89c840544296",
+          "29": "0xd3c61b3049d1bd3139a80e327da521a988d4aa0502f49d577ef4fcd5669cf83d",
+          "30": "0x461aa106ce8f6db02a8c540f907eb5c5afe0ba08dee8836ca1d443711508eadb",
+          "31": "0xe2458ab89141becd843871a09573ade65712d31b7ff0b7f2ee9a262b9e3eab55",
+          "32": "0xf94698bf479c2dbe7d5128b4744b8ed2848195b40810971f2bf30e959f21d01f",
+          "33": "0x3c8a475f118b8699557746115aad45c36754f674896a378662f245eda13aef84",
+          "34": "0xc57b0160d8f417e70fc2cd189e4ae8dd1dbf7001ce6ca1583dc0f3a21c7e0c78",
+          "35": "0xe84e6cb94841b2e5d3f3f6a6229cc3cd8acd0286e103d2a6b254e2f4101ffe26",
+          "36": "0xa14d69edf8e186c4705b2023affb74cf5e2b08d1608761015c67a6a75fd0d9e1",
+          "37": "0x46eaed510b15af9363072d6cc6dd32026b70bc25bd03d8ff1f99cfe511f46927",
+          "38": "0xd2e3f51ceeb2c927aeffdd830f48316c475ecf4bd058cbdc4f9df259d19dfe59"
+        },
+        "reportVersion": "UNORA-RPC-REPLAY-v1",
+        "receiptEvents": [
+          {
+            "block": 20,
+            "logIndex": 0,
+            "tx": "0xee54ed22576b1baede9c6332262f0cd55eca0a056eead84efc4080dac0cc9cd3",
+            "blockHash": "0x95b15ca79b68f90dda4da08d169c4a0decc28bd844a8d662ceec8ce5765312a9",
+            "emitter": "0x9d689fb207e5711daf8d2e61c0851d64b289ec85",
+            "kind": "transfer",
+            "amount": "1000000000",
+            "from": "0x9Cd4e20B21b079ff84B6d09fa48C5E6A1b9c2efa",
+            "to": "0x56037D27a2Da962d590CE2e1512C5D1562102076"
+          },
+          {
+            "block": 20,
+            "logIndex": 1,
+            "tx": "0xee54ed22576b1baede9c6332262f0cd55eca0a056eead84efc4080dac0cc9cd3",
+            "blockHash": "0x95b15ca79b68f90dda4da08d169c4a0decc28bd844a8d662ceec8ce5765312a9",
+            "emitter": "0x56037d27a2da962d590ce2e1512c5d1562102076",
+            "kind": "transfer",
+            "amount": "1000000000000000",
+            "from": "0x0000000000000000000000000000000000000000",
+            "to": "0x9Cd4e20B21b079ff84B6d09fa48C5E6A1b9c2efa"
+          },
+          {
+            "block": 20,
+            "logIndex": 2,
+            "tx": "0xee54ed22576b1baede9c6332262f0cd55eca0a056eead84efc4080dac0cc9cd3",
+            "blockHash": "0x95b15ca79b68f90dda4da08d169c4a0decc28bd844a8d662ceec8ce5765312a9",
+            "emitter": "0x56037d27a2da962d590ce2e1512c5d1562102076",
+            "kind": "deposit",
+            "amount": "1000000000",
+            "shares": "1000000000000000",
+            "from": "0x9Cd4e20B21b079ff84B6d09fa48C5E6A1b9c2efa",
+            "to": "0x9Cd4e20B21b079ff84B6d09fa48C5E6A1b9c2efa"
+          },
+          {
+            "block": 23,
+            "logIndex": 1,
+            "tx": "0x654e59c87a5d800902955aa4edd227d9858c7e4b808121f4a9db947cd1bbfbea",
+            "blockHash": "0x6ab3ca5543c57224a585e835a08d89558562ceb5e293fad2daa6ec09778ae6e0",
+            "emitter": "0x9d689fb207e5711daf8d2e61c0851d64b289ec85",
+            "kind": "transfer",
+            "amount": "400000000",
+            "from": "0x56037D27a2Da962d590CE2e1512C5D1562102076",
+            "to": "0x33Ed17c710bd1a4EdDac2CFeB01D730F358C0F4e"
+          },
+          {
+            "block": 23,
+            "logIndex": 4,
+            "tx": "0x654e59c87a5d800902955aa4edd227d9858c7e4b808121f4a9db947cd1bbfbea",
+            "blockHash": "0x6ab3ca5543c57224a585e835a08d89558562ceb5e293fad2daa6ec09778ae6e0",
+            "emitter": "0xcb2eba3de184e1e5d103f7fc3886fcf10ec0eb60",
+            "kind": "transfer",
+            "amount": "400000000",
+            "from": "0x64597ebAd9B0AD81D5abd2F4BF9C7A29622d9951",
+            "to": "0x56037D27a2Da962d590CE2e1512C5D1562102076"
+          },
+          {
+            "block": 23,
+            "logIndex": 9,
+            "tx": "0x654e59c87a5d800902955aa4edd227d9858c7e4b808121f4a9db947cd1bbfbea",
+            "blockHash": "0x6ab3ca5543c57224a585e835a08d89558562ceb5e293fad2daa6ec09778ae6e0",
+            "emitter": "0x56037d27a2da962d590ce2e1512c5d1562102076",
+            "kind": "trade",
+            "amount": "400000000",
+            "amountOut": "400000000",
+            "tokenIn": "0x9d689fB207e5711DaF8D2e61C0851d64b289EC85",
+            "tokenOut": "0xCb2eBA3dE184E1E5D103f7FC3886fcf10EC0Eb60"
+          },
+          {
+            "block": 26,
+            "logIndex": 0,
+            "tx": "0x1c79ece62827d8b67ab9d8611f91320f04b7b6ffcf4c9055045c8612283eab03",
+            "blockHash": "0x4071698f9eac3c4d74e65250ea8db028e52262ff81da700f3996bc2010040f47",
+            "emitter": "0x9d689fb207e5711daf8d2e61c0851d64b289ec85",
+            "kind": "transfer",
+            "amount": "108000000",
+            "from": "0x0Ae556b281f2B567c6a4E3DDA47a0862204964a5",
+            "to": "0x56037D27a2Da962d590CE2e1512C5D1562102076"
+          },
+          {
+            "block": 26,
+            "logIndex": 1,
+            "tx": "0x1c79ece62827d8b67ab9d8611f91320f04b7b6ffcf4c9055045c8612283eab03",
+            "blockHash": "0x4071698f9eac3c4d74e65250ea8db028e52262ff81da700f3996bc2010040f47",
+            "emitter": "0x56037d27a2da962d590ce2e1512c5d1562102076",
+            "kind": "transfer",
+            "amount": "100000000007407",
+            "from": "0x0000000000000000000000000000000000000000",
+            "to": "0x0Ae556b281f2B567c6a4E3DDA47a0862204964a5"
+          },
+          {
+            "block": 26,
+            "logIndex": 2,
+            "tx": "0x1c79ece62827d8b67ab9d8611f91320f04b7b6ffcf4c9055045c8612283eab03",
+            "blockHash": "0x4071698f9eac3c4d74e65250ea8db028e52262ff81da700f3996bc2010040f47",
+            "emitter": "0x56037d27a2da962d590ce2e1512c5d1562102076",
+            "kind": "deposit",
+            "amount": "108000000",
+            "shares": "100000000007407",
+            "from": "0x0Ae556b281f2B567c6a4E3DDA47a0862204964a5",
+            "to": "0x0Ae556b281f2B567c6a4E3DDA47a0862204964a5"
+          },
+          {
+            "block": 28,
+            "logIndex": 0,
+            "tx": "0xb5e9f47b1c4c783195a0bfed1eb1e9533e5f1143d3fdecbe4e6290e05fe091ef",
+            "blockHash": "0x0138440e4cd9cafc8ba239e79d44c06034e793fc4c6745dc722c89c840544296",
+            "emitter": "0x9d689fb207e5711daf8d2e61c0851d64b289ec85",
+            "kind": "transfer",
+            "amount": "50000000",
+            "from": "0x56037D27a2Da962d590CE2e1512C5D1562102076",
+            "to": "0x8225bD1462E84a74ecCdCc6F11Db49533f4cBf11"
+          },
+          {
+            "block": 28,
+            "logIndex": 2,
+            "tx": "0xb5e9f47b1c4c783195a0bfed1eb1e9533e5f1143d3fdecbe4e6290e05fe091ef",
+            "blockHash": "0x0138440e4cd9cafc8ba239e79d44c06034e793fc4c6745dc722c89c840544296",
+            "emitter": "0x56037d27a2da962d590ce2e1512c5d1562102076",
+            "kind": "fund",
+            "amount": "50000000"
+          },
+          {
+            "block": 29,
+            "logIndex": 0,
+            "tx": "0x5baa5f6a74b53532e92d43879a266cbabffdcb5bd952e5bd8af915675ec19933",
+            "blockHash": "0xd3c61b3049d1bd3139a80e327da521a988d4aa0502f49d577ef4fcd5669cf83d",
+            "emitter": "0x56037d27a2da962d590ce2e1512c5d1562102076",
+            "kind": "accrue",
+            "amount": "30000000"
+          },
+          {
+            "block": 30,
+            "logIndex": 0,
+            "tx": "0x736aa090202ba1992065f476712cd96eba41a1f791da818b67e9b0f365d1d152",
+            "blockHash": "0x461aa106ce8f6db02a8c540f907eb5c5afe0ba08dee8836ca1d443711508eadb",
+            "emitter": "0x9d689fb207e5711daf8d2e61c0851d64b289ec85",
+            "kind": "transfer",
+            "amount": "30000000",
+            "from": "0x8225bD1462E84a74ecCdCc6F11Db49533f4cBf11",
+            "to": "0x40654839c4a9c443587f7d8684e03610A450504c"
+          },
+          {
+            "block": 30,
+            "logIndex": 2,
+            "tx": "0x736aa090202ba1992065f476712cd96eba41a1f791da818b67e9b0f365d1d152",
+            "blockHash": "0x461aa106ce8f6db02a8c540f907eb5c5afe0ba08dee8836ca1d443711508eadb",
+            "emitter": "0x56037d27a2da962d590ce2e1512c5d1562102076",
+            "kind": "settle",
+            "amount": "30000000"
+          },
+          {
+            "block": 31,
+            "logIndex": 0,
+            "tx": "0xb0d0f6ffbc5810e7bf4c8724f7614ccb2fad46d2a2b3f06c5fa61fa1d9a7c5b2",
+            "blockHash": "0xe2458ab89141becd843871a09573ade65712d31b7ff0b7f2ee9a262b9e3eab55",
+            "emitter": "0x9d689fb207e5711daf8d2e61c0851d64b289ec85",
+            "kind": "transfer",
+            "amount": "20000000",
+            "from": "0x8225bD1462E84a74ecCdCc6F11Db49533f4cBf11",
+            "to": "0x56037D27a2Da962d590CE2e1512C5D1562102076"
+          },
+          {
+            "block": 31,
+            "logIndex": 2,
+            "tx": "0xb0d0f6ffbc5810e7bf4c8724f7614ccb2fad46d2a2b3f06c5fa61fa1d9a7c5b2",
+            "blockHash": "0xe2458ab89141becd843871a09573ade65712d31b7ff0b7f2ee9a262b9e3eab55",
+            "emitter": "0x56037d27a2da962d590ce2e1512c5d1562102076",
+            "kind": "refund",
+            "amount": "20000000"
+          },
+          {
+            "block": 34,
+            "logIndex": 0,
+            "tx": "0x6adc81ff9c89650580c784ec7a66373738c6bb78a415bc74d5ec876b26c31c2a",
+            "blockHash": "0xc57b0160d8f417e70fc2cd189e4ae8dd1dbf7001ce6ca1583dc0f3a21c7e0c78",
+            "emitter": "0x56037d27a2da962d590ce2e1512c5d1562102076",
+            "kind": "period-close",
+            "periodId": "2",
+            "valued": true
+          },
+          {
+            "block": 34,
+            "logIndex": 2,
+            "tx": "0x6adc81ff9c89650580c784ec7a66373738c6bb78a415bc74d5ec876b26c31c2a",
+            "blockHash": "0xc57b0160d8f417e70fc2cd189e4ae8dd1dbf7001ce6ca1583dc0f3a21c7e0c78",
+            "emitter": "0x56037d27a2da962d590ce2e1512c5d1562102076",
+            "kind": "config",
+            "periodId": "3",
+            "configHash": "0x834caff9ef1d41c7a83c1af233fbe0a25725ff66f084ad344dcc38045eb1d726",
+            "strategyHash": "0x86fc01ba6f4e76b3b516063d577c674a91e14f34aabbbe8ebba81a14d7d4718a",
+            "manager": "0x0D830EA7d71c95E03A343AC1C95767B5710e8bC9",
+            "valued": true
+          },
+          {
+            "block": 34,
+            "logIndex": 7,
+            "tx": "0x6adc81ff9c89650580c784ec7a66373738c6bb78a415bc74d5ec876b26c31c2a",
+            "blockHash": "0xc57b0160d8f417e70fc2cd189e4ae8dd1dbf7001ce6ca1583dc0f3a21c7e0c78",
+            "emitter": "0x56037d27a2da962d590ce2e1512c5d1562102076",
+            "kind": "stream",
+            "stream": "0x8225bD1462E84a74ecCdCc6F11Db49533f4cBf11"
+          },
+          {
+            "block": 38,
+            "logIndex": 0,
+            "tx": "0xc14a1eb7edd821bf1c2c318c54393c1ac675a97ad227581ddbfbe6c11256a0a6",
+            "blockHash": "0xd2e3f51ceeb2c927aeffdd830f48316c475ecf4bd058cbdc4f9df259d19dfe59",
+            "emitter": "0x56037d27a2da962d590ce2e1512c5d1562102076",
+            "kind": "transfer",
+            "amount": "100000000000000",
+            "from": "0x9Cd4e20B21b079ff84B6d09fa48C5E6A1b9c2efa",
+            "to": "0x0000000000000000000000000000000000000000"
+          },
+          {
+            "block": 38,
+            "logIndex": 1,
+            "tx": "0xc14a1eb7edd821bf1c2c318c54393c1ac675a97ad227581ddbfbe6c11256a0a6",
+            "blockHash": "0xd2e3f51ceeb2c927aeffdd830f48316c475ecf4bd058cbdc4f9df259d19dfe59",
+            "emitter": "0x9d689fb207e5711daf8d2e61c0851d64b289ec85",
+            "kind": "transfer",
+            "amount": "90727272",
+            "from": "0x56037D27a2Da962d590CE2e1512C5D1562102076",
+            "to": "0x9Cd4e20B21b079ff84B6d09fa48C5E6A1b9c2efa"
+          },
+          {
+            "block": 38,
+            "logIndex": 2,
+            "tx": "0xc14a1eb7edd821bf1c2c318c54393c1ac675a97ad227581ddbfbe6c11256a0a6",
+            "blockHash": "0xd2e3f51ceeb2c927aeffdd830f48316c475ecf4bd058cbdc4f9df259d19dfe59",
+            "emitter": "0x56037d27a2da962d590ce2e1512c5d1562102076",
+            "kind": "redeem",
+            "amount": "90727272",
+            "shares": "100000000000000",
+            "from": "0x9Cd4e20B21b079ff84B6d09fa48C5E6A1b9c2efa",
+            "to": "0x9Cd4e20B21b079ff84B6d09fa48C5E6A1b9c2efa",
+            "owner": "0x9Cd4e20B21b079ff84B6d09fa48C5E6A1b9c2efa"
+          }
+        ],
+        "opening": {
+          "cash": "0",
+          "positionBalance": "0",
+          "escrows": {
+            "0x8225bd1462e84a74eccdcc6f11db49533f4cbf11": "0"
+          },
+          "accrued": "0",
+          "totalShares": "0",
+          "priceE18": "1000000000000000000",
+          "valued": true,
+          "managedEscrow": "0"
+        },
+        "closing": {
+          "cash": "587272728",
+          "positionBalance": "400000000",
+          "escrows": {
+            "0x8225bd1462e84a74eccdcc6f11db49533f4cbf11": "0"
+          },
+          "accrued": "0",
+          "totalShares": "1000000000007407",
+          "priceE18": "800000000000000000",
+          "valued": true,
+          "managedEscrow": "0"
+        }
+      },
+      "trustBoundary": "Complete only for the stated vault/block range under the selected RPC provider; canonical receipts and balance checkpoints are checked. No independent RPC quorum or runtime proof."
+    }
+  }
+}

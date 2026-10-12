@@ -1,0 +1,20 @@
+{
+  "date": "2026-10-11",
+  "checks": [
+    "Archive remains readable without wallet; no automatic signing or account RPC",
+    "IP preview explains passkey hostname limitation; wrong network cannot prepare ownership check",
+    "Explicit network switch and real ECDSA ownership check export a valid signature with separate simulation/performance scope",
+    "Expired ownership check removes verification/export and requires a fresh challenge",
+    "Wallet event clears ownership receipt even when selected network returns to the same chain",
+    "Account change during wallet prompt rejects late signature",
+    "Declined signature shows a retryable error without verification",
+    "ProofLine fits mobile viewport",
+    "Unsupported simulated authenticator exposes PRF failure and browser wallet fallback",
+    "Actual Mera derivation/signing runs against mocked PRF; storage contains credential metadata only",
+    "Selecting a different passkey during signing fails account binding"
+  ],
+  "pageErrors": [],
+  "realDevicePasskeyTest": false,
+  "passkeys": "Mocked WebAuthn PRF; actual installed Mera cryptography",
+  "transactionsBroadcast": false
+}

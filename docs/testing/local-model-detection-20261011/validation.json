@@ -1,0 +1,32 @@
+{
+  "date": "2026-10-11",
+  "checks": [
+    "Actual Qwen model, pinned source and locally calculated hashes automatically fill without manual entry",
+    "Public export includes scoped local measurements, excludes paths/endpoint, remains unsigned and unpublished",
+    "Saved draft reloads and receives a fresh local check",
+    "Hosted endpoint rejected by helper and cannot advance registration",
+    "Stopped or missing local server has an explicit error with retry",
+    "Manual edits invalidate the locally detected claim",
+    "Re-detection restores the actual digest",
+    "Detection UI fits a 390px mobile viewport"
+  ],
+  "pageErrors": [],
+  "realLocalModel": true,
+  "preview": "http://127.0.0.1:5189",
+  "nodeTests": 110,
+  "nodeSetup": "Temporary test-only forge wrapper adds --skip script; ordinary full suite retains the documented historical deployment-script compile blocker",
+  "typecheck": [
+    "root",
+    "CRE",
+    "frontend"
+  ],
+  "lint": "pass",
+  "productionBuild": "pass",
+  "scope": "locally detected, not independently attested",
+  "finalHardeningChecks": 15,
+  "finalBrowserChecks": 8,
+  "finalSafeguards": [
+    "split-GGUF rejection",
+    "filesystem-error path redaction"
+  ]
+}

@@ -1,0 +1,13 @@
+{
+  "chainId": 10143,
+  "rpcUrl": "https://testnet-rpc.monad.xyz",
+  "identityRegistry": "0x8004A818BFB912233c491871b3d84c89A494BD9e",
+  "identityCodeHash": "0xd0e45b1d89fa9b6cc7e97c1f155d64180e5c232aaccf9900ef9d4fd738c02b41",
+  "identityImplementation": "0x7274e874CA62410a93Bd8bf61c69d8045E399c02",
+  "identityImplementationCodeHash": "0xa5f9624ea85e45b3f4b8558581f03bfb3e6cefab278d7bf0500ec9bd065dc16f",
+  "quote": "0x534b2f3A21130d7a60830c2Df862319e593943A3",
+  "quoteCodeHash": "0x96215e6049ed615cdc22fea7701e85458a8e51a2df3e7d45e8f9fa1d521b5a78",
+  "position": "0xFb8bf4c1CC7a94c73D209a149eA2AbEa852BC541",
+  "positionCodeHash": "0xa32df4f1226f1bb0d6ce9b917752ed687857899a35ebf902c9992edb73b138b6",
+  "positionDecimals": 18
+}

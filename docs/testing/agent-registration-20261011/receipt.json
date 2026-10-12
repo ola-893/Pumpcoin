@@ -1,0 +1,160 @@
+{
+  "version": "PUMPCOIN-LOCAL-REGISTRATION-v1",
+  "id": "0xf9b8013308d7fe25bbcc38c8b2526d9d09306d493fac0f1a67501c74cd46c5ab",
+  "localAgentId": "0x074323f93d347d44f19dcfb8c342c2fe6d6df6220cda8d38433154c753eb1366",
+  "registeredAt": "2026-10-11T16:01:21.747Z",
+  "manifest": {
+    "version": "PUMPCOIN-DEPLOYMENT-DRAFT-v1",
+    "inferencePolicy": "PUMPCOIN-SELF-HOSTED-v1",
+    "evidenceLevel": "operator-declared",
+    "registrationStatus": "unpublished-draft",
+    "name": "PumpCoin disposable registration test",
+    "controller": "0x19E7E376E7C213B7E7e7e46cc70A5dD086DAff2A",
+    "executionKey": "0x1563915e194D8CfBA1943570603F7606A3115508",
+    "model": {
+      "id": "qwen3.8-27b",
+      "source": "https://huggingface.co/unsloth/Qwen3.8-27B-GGUF/resolve/4ca720788d1e01f1bff70c033e0d0028fd02e502/Qwen3.8-27B-UD-IQ4_XS.gguf",
+      "weightsDigest": "sha256:40fac4050e940397dbf13087afd50f4734a11805bf9d65ef8ddd7483470e6199",
+      "runtimeDigest": "sha256:41f2fdddcb093047df14f70f8904c686f2ea99043348032d2386d54241068461",
+      "localMeasurements": {
+        "evidence": "locally-detected-not-attested",
+        "checkedAt": "2026-10-11T15:47:51.204Z",
+        "quantization": "IQ4_XS - 4.25 bpw",
+        "context": 16384,
+        "weightsBytes": 14252845984,
+        "sourceStatus": "local-download-record-matched",
+        "runtimeManifest": {
+          "version": "PUMPCOIN-MAPPED-RUNTIME-v1",
+          "scope": "llama-server executable and mapped non-system native libraries; excludes OS, GPU driver, strategy and proof of execution",
+          "build": "b11429-d81235049",
+          "artifacts": [
+            {
+              "name": "libcrypto.3.dylib",
+              "sha256": "6c7139ae515b274286b2f62d662a173e32d34854e1fc26cca46ee08efe16ae45",
+              "bytes": 4874336
+            },
+            {
+              "name": "libggml-base.0.26.0.dylib",
+              "sha256": "0bb8b0aef84f3fe9d352e570ef58da97e736ecea15f9fba44ab4c3d4f951e324",
+              "bytes": 537424
+            },
+            {
+              "name": "libggml-blas.so",
+              "sha256": "b60f01874e149a4c67d9d171923cc28cb0add3ad9485de06d4a73f086bdb5a59",
+              "bytes": 59424
+            },
+            {
+              "name": "libggml-cpu-apple_m4.so",
+              "sha256": "46103dd30440b3eef9a54e732cb46e693fad148d58be587d3319f6c0e3e9c8a5",
+              "bytes": 589520
+            },
+            {
+              "name": "libggml-metal.so",
+              "sha256": "eb1ca2de17ea7663781b9b3012a95e39ecd9ae54db2c76968b346c9fc6fddac3",
+              "bytes": 5517520
+            },
+            {
+              "name": "libggml.0.26.0.dylib",
+              "sha256": "d9fdae8264f577300ecc8c3b634165dbac14b794a1399cdaa422b4ab8c925722",
+              "bytes": 61232
+            },
+            {
+              "name": "libllama-common.0.6.0.dylib",
+              "sha256": "fab2fde1a21bb9920b6f14cf39924b7379a3b789d1abcbeb3e9ca014fb145d33",
+              "bytes": 5060704
+            },
+            {
+              "name": "libllama-server-impl.dylib",
+              "sha256": "5fc7d59cc85e16adaa84211b63c60c17e33c0c8715624b23e2507a76e032b73a",
+              "bytes": 6538800
+            },
+            {
+              "name": "libllama.0.6.0.dylib",
+              "sha256": "810ad2c4e137dc75daa33297e1c8f32d1e35d72eccf4eaaa6fbf8793169253ab",
+              "bytes": 3130208
+            },
+            {
+              "name": "libmtmd.0.6.0.dylib",
+              "sha256": "5c503d28b9455466e85e20134b5febaa279a1cdf26a3850fd762c7f07aebab95",
+              "bytes": 1186816
+            },
+            {
+              "name": "libomp.dylib",
+              "sha256": "cb679440b0af57131274b6c0bcc11b8c18ef7ad45e2a6625ef57e90379fc2ae4",
+              "bytes": 725984
+            },
+            {
+              "name": "libssl.3.dylib",
+              "sha256": "2b343dc7a88d6e49720ae6b939a178b5e688912e682044250203770b8acc2a08",
+              "bytes": 890256
+            },
+            {
+              "name": "llama-server",
+              "sha256": "1579d2139003a9f1b5ddccbab0a019054859fa546f724657ca7c301819240cf5",
+              "bytes": 33616
+            }
+          ]
+        }
+      }
+    },
+    "strategy": {
+      "description": "Disposable paper-only onboarding test. Use local Qwen to propose spot actions under a 10 USDC trade cap and 50 USDC exposure cap. The deterministic guard forces HOLD on stale or unvalued inputs. No hosted fallback, network tools, keys or transactions. The declared paper strategy code is not executed by this capability check.",
+      "codeDigest": "sha256:b102ef6d3fc463e377496a660a1fddfaab74afb81860402bbf4937dd47ff0c09",
+      "pair": "WMON / USDC"
+    },
+    "proposedMandate": {
+      "quoteDecimals": 6,
+      "perTradeQuoteUnits": "10000000",
+      "maxPositionQuoteUnits": "50000000",
+      "slippageBps": 50,
+      "leverage": false
+    },
+    "dependencies": [
+      "Local llama-server",
+      "synthetic paper inputs",
+      "no live feed or DEX"
+    ]
+  },
+  "commitment": "0xf52950ff6070041a3566141aaf331e46fb13a03fea1af9be79652faee11b4626",
+  "authorization": {
+    "challenge": {
+      "id": "450c4202330462ea382d06af09d1226400eba3b4d19e51f6e34a7ac6d9c8ee95",
+      "origin": "http://127.0.0.1:5190",
+      "chainId": 10143,
+      "commitment": "0xf52950ff6070041a3566141aaf331e46fb13a03fea1af9be79652faee11b4626",
+      "runtimeConfigHash": "0x32f68d9159b0dbb16058ba45b4fc09238e8d3fd3c855fb0d8e3e3237b563f192",
+      "controller": "0x19E7E376E7C213B7E7e7e46cc70A5dD086DAff2A",
+      "executionKey": "0x1563915e194D8CfBA1943570603F7606A3115508",
+      "expiresAt": 1791735021778
+    },
+    "controllerSignature": "0x54aedff56a6eb0493a827a1b4e015c9844757c4809bfb7d6d6416350f11559b61419be454601cdd9737b4e7bf0af018bfa1b3548442085793ec19d0248658e6c1b",
+    "executionSignature": "0xad3c553c02f67c7b83405319073e9c5f2aed56d66d5659120c492710cea87c0804164f55f9fac1c90b9310d857f317bf73022de724b5d0e278996e4e21e5327b1b"
+  },
+  "worker": {
+    "version": "PUMPCOIN-LOCAL-WORKER-CHECK-v1",
+    "mode": "synthetic-paper-only",
+    "evidence": "locally-observed-not-attested",
+    "model": "qwen3.8-27b",
+    "weightsDigest": "sha256:40fac4050e940397dbf13087afd50f4734a11805bf9d65ef8ddd7483470e6199",
+    "runtimeDigest": "sha256:41f2fdddcb093047df14f70f8904c686f2ea99043348032d2386d54241068461",
+    "checkedAt": "2026-10-11T16:00:24.129Z",
+    "input": {
+      "fresh": false,
+      "valued": false,
+      "positionQuoteUnits": "0",
+      "cashQuoteUnits": "0"
+    },
+    "rawProposal": {
+      "action": "HOLD",
+      "quoteUnits": "0"
+    },
+    "guardedProposal": {
+      "action": "HOLD",
+      "quoteUnits": "0"
+    },
+    "receiptHash": "0x3a5f8447bb8a3e5390c4873a00dcc324659bce842f1a6600dad6a126b90666ae",
+    "scope": "One local inference and deterministic guard check. Does not prove execution of the declared strategy code, continuous operation, real prices or profitability."
+  },
+  "status": "registered-locally-vault-pending",
+  "investmentEligible": false
+}

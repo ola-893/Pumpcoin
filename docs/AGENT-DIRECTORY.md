@@ -1,0 +1,17 @@
+# Explore agents: signed registration integration
+
+Implemented 11 October 2026. `/agents` uses the same local registration helper as onboarding: GET `/api/agent-registration/status`, then authenticated GET `/api/agent-registration/records`. It requires the local dev/preview server. A hosted static build does not receive a global directory or silently substitute fixtures.
+
+Only completed local registrations appear. Unsigned browser drafts and archived Anvil demonstrations are excluded. No test registration is copied into the project store. The archived vault remains available at `/evidence/local-vault`; the old demonstrator URL redirects there.
+
+The helper revalidates stored manifest commitments and both EOA authorizations. The browser independently checks signed role/domain/chain/nonce/expiry commitments, local identifier derivation, artifact identities, worker receipt arithmetic/hash, supported paper-only evidence, binding receipt structure and disabled investment eligibility. Malformed data, duplicate IDs, substituted signatures or failed requests clear the visible results and produce an error instead of a cached trusted profile or a zero-agent success state.
+
+The latest configuration is selected by registration time, with deterministic ordering for ties. Versions with the same chain, controller and name group under one local identity. A changed name or controller creates another local ID; these IDs are not ERC-8004 token IDs. Profiles retain every signed version. A newer configuration never inherits a vault binding or claims performance from an older one.
+
+Search covers the latest version's name, model, strategy, pair and controller/execution addresses. Filters distinguish vault-pending and binding-recorded entries. Refresh and browser-focus events reread the source. Results paginate in groups of 20. Dates and quote units come from validated records, not invented values.
+
+Profiles show public declarations, actual addresses, proposed integer caps, artifact commitments, the recorded synthetic local-inference result and both-wallet authorization evidence. Public receipt export excludes the private runtime configuration. Binding receipts show their chain, block, identity registry, token ID, vault and configuration hash as historical snapshots. With a reviewed deployment configured, the latest version can request a fresh check using the existing `/verify-binding` route. Failed checks retain the old receipt's historical label and an explicit failure; no current-authority or investment badge is awarded.
+
+This integration is instance-local discovery, not a public ERC-8004 index, continuous worker monitor, performance oracle, live trading feed or investment enablement. NAV, returns, AUM, Pump token valuation and deposits remain unavailable without the corresponding verified infrastructure.
+
+Validation: six new adversarial directory tests plus the 35 existing registration, discovery, wallet and frontend tests passed (41 total). TypeScript checks, frontend lint and production build passed. An isolated browser preview read the earlier disposable-wallet signed registration through the real helper API, opened its profile, searched by model, rejected a binding filter mismatch, and cleared the profile when the temporary source JSON was corrupted. No user signatures, new on-chain registrations, funds or broadcasts were used. The live project store remains untouched.

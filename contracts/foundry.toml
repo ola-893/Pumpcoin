@@ -6,6 +6,9 @@ solc_version = "0.8.24"
 evm_version = "paris"
 optimizer = true
 optimizer_runs = 200
+# Required: vault configuration/period accounting exceeds legacy codegen stack
+# limits; via-IR preserves behavior while fitting the frames.
+via_ir = true
 remappings = ["forge-std/=lib/forge-std/src/", "@openzeppelin/contracts/=lib/openzeppelin-contracts/contracts/"]
 fs_permissions = [{ access = "read-write", path = "../deployments" }]
 

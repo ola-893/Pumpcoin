@@ -1,0 +1,18 @@
+{
+  "date": "2026-10-11",
+  "productionBuild": "pass",
+  "frontendLint": "pass",
+  "typescript": [
+    "frontend",
+    "root",
+    "CRE"
+  ],
+  "solidityTests": 108,
+  "browserChecks": 16,
+  "nodeTests": {
+    "passed": 102,
+    "setup": "temporary forge wrapper appends --skip script on build",
+    "ordinaryCommand": "blocked in two test files by pre-existing deployment-script via-IR Yul compiler failure",
+    "baselineReproduced": true
+  }
+}

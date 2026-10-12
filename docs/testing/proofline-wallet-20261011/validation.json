@@ -1,0 +1,11 @@
+{
+  "frontendTypeScript": "passed",
+  "rootNewTestTypeScript": "passed",
+  "frontendLint": "passed: no warnings",
+  "productionBuild": "passed",
+  "focusedNodeTests": 15,
+  "newWalletTests": 8,
+  "browserChecks": 11,
+  "realDevicePasskeyAcceptance": false,
+  "transactionsBroadcast": false
+}

@@ -1,8 +1,16 @@
 # Unora — architecture completion checklist
 
+> **Scope update · 10 October 2026:** [Agent-managed investment vault acceptance criteria](AGENT-VAULT-ACCEPTANCE.md) govern new implementation work. This checklist preserves the historical human-backed credit baseline and its evidence gates. Its mandatory human-eligibility/agent-borrowing direction is superseded for the new vault product; existing completion marks do not demonstrate investment-vault acceptance.
+
 Updated 28 September 2026; based on source and recorded results at `9e16c6e`, not fresh public-chain acceptance testing. See the [updated architecture](../app/Architecture/architecture-design.md).
 
 An unchecked task means the complete outcome is not demonstrated, even where part of its code already exists. Owners below are suggested roles, not assignments. P0 completes the honest hackathon vertical slice; P1 completes its supporting services; P2 is the much larger original product. P3 is a separate real-money readiness gate.
+
+Frontend progress on 2 October 2026 is recorded in [FRONTEND-RECONCILIATION.md](FRONTEND-RECONCILIATION.md). The main app now targets the existing manual deployment with real position/actions and separates future designs. This does not close the fresh evidence-mode deployment, authentic verification or end-to-end wallet acceptance criteria below.
+
+Confirmed by the user on 3 October 2026: the implementation checkout is `/Users/deonorla/Documents/Github/Monad/UNORA` (`ola-893/UNORA`), and the submission direction is **Track 04 — Trust, Identity & AI Infrastructure**. Keep implementation work in that checkout. Track selection does not close the organizer/integration-requirements acceptance task below. Migration authorization and its controller-configuration boundary are documented in [FRONTEND-RECONCILIATION.md](FRONTEND-RECONCILIATION.md#migration-authorization--committed-source-checked-3-october-2026).
+
+Scope authority: the [original architecture north star](../app/Architecture/roadmap/architecture-north-star.md) preserves Unora's long-term vision. ProofLine is its financial eligibility oracle; the original ScoreRegistry role is already served by AttestationRegistry. This checklist governs live hackathon work. Evidence-backed eligibility does not bring P2 tranches, sponsor graphs, streams or reserves into P0.
 
 ## Already implemented — do not rebuild these
 
@@ -17,6 +25,19 @@ An unchecked task means the complete outcome is not demonstrated, even where par
 - [x] Privy provider integration, default dashboard contract reads, faucet mint calls and live direct-repayment code.
 - [x] Local contract, policy, binding and mocked CRE tests; synthetic local-chain lifecycle and WASM compilation.
 
+## Agent-operated demo direction — additive P0 requirement (3 October 2026)
+
+The human eligibility pipeline below remains mandatory in full. The agent becomes the main demo character; its working-capital rule executes independently under human-backed credit. See [AGENT-CREDIT.md](AGENT-CREDIT.md) for local receipts and commands.
+
+- [x] New sibling `AgentCreditMandate`; restricted additive `borrowFor`; cumulative cap/expiry/revoke; funds to agent and debt to human. Original repayment vault is unchanged. Eighteen new mandate tests pass.
+- [x] Separate running worker signed draw and repayment without an intervening human submission, plus cap/revoke transactions mined as reverts. **Evidence is disposable local Anvil with synthetic facts**, not public acceptance.
+- [x] Agent-focused frontend code: Mera passkey session, real proof authorization/submission, digest-matched reload-safe receipt, fresh manifest validation, collateral setup, grant/revoke, real agent event reads and both-wallet migration. This check denotes implementation; device and fresh-chain browser acceptance remain open.
+- [ ] Complete original P0 authentic evidence/CRE/fresh Monad integration and failure cases below, including shared source-account/debt continuity. Nothing in the local agent run closes these.
+- [ ] Execute the Mera-onboarded human grant → unattended **Monad** agent draw/repay → agent-signed cap rejection → human revoke → agent-signed revoke rejection sequence. **Done when:** public receipts/readbacks establish signer, custody, human debt and bounds; no human click substitutes for agent execution.
+- [ ] Complete Mera device creation/recovery, rejection, reload, expiry and migration/grant cleanup against the fresh stack. **Done when:** real device signing works without a seed prompt and every displayed confirmation matches chain state.
+
+The mandate consumes eligibility; it does not need a second oracle ERC-8004 registration. Existing oracle identity tooling remains separate. No agent-native reputation, leverage, pricing or liquidation work enters this scope.
+
 ## P0 — complete the evidence-to-credit demo
 
 ### 1. Real evidence — backend / proof integration
@@ -27,7 +48,7 @@ An unchecked task means the complete outcome is not demonstrated, even where par
 
 ### 2. CRE and fresh testnet contracts — backend / contract integration
 
-- [ ] Retry CLI authentication and run the fixture workflow successfully. **Done when:** CLI execution, not only a mocked SDK test, produces the expected report. The previous HTTP 500 is historical and should be rechecked.
+- [x] CLI authentication and actual fixture execution completed on 8 October 2026 with CLI v1.37.0. Real local WASM execution produced the tier-2, 80-pUSD encoded report after fixing missing RPC configuration and payload-file syntax. Synthetic evidence, writes disabled; no public-chain delivery or DON. See `docs/CRE-REVIEW-2026-10-08.md`.
 - [ ] Deploy a fresh evidence-mode stack on Monad testnet using the explicit simulation receiver and documented mock forwarder. **Done when:** receipts, bytecode, root, receiver/oracle, designated credit line, tokens and vault wiring are independently read back and saved in a new manifest. Do not overwrite the legacy record without preserving its provenance.
 - [ ] Run the authentic receipt through CRE with writes disabled, approve its exact report digest, then rerun with broadcast enabled before evidence expires. **Done when:** a successful transaction and receiver/registry readbacks match the report and failed receiver execution is not displayed as success.
 - [ ] Fund only valueless pUSD test liquidity and demonstrate actual collateral deposit, borrowing, repayment and withdrawal against the new deployment. **Done when:** token balance deltas and debt match confirmed transactions, not UI timers.
@@ -87,8 +108,8 @@ Complete these only if retaining the original undercollateralized/sponsored-lend
 
 ## Explicit product decisions, not hidden implementation promises
 
-- [ ] Decide whether to keep the narrower evidence-backed credit product or commit to all of P2. Recommended near-term scope: finish P0 first.
-- [ ] Decide whether a score NFT adds utility beyond the current registry. It is not required for P0 and must not permit transferable debt-free identities.
+- [ ] Decide the timing and economics of P2 expansion while retaining Unora as the umbrella product and ProofLine as its eligibility foundation. The north star remains; finish P0 before expanding implementation scope.
+- [ ] **Borrower identity stretch only:** decide whether ERC-8004 reputation adds value beyond the current credential mapping. No separate ScoreRegistry/SBT is required for P0. Specify transfer detection, re-verification and source/debt continuity before implementation; detection alone does not prevent identity sale. See [identity boundaries](ORACLE-IDENTITY.md#borrower-identity-stretch-goal).
 - [ ] Decide whether lost-key recovery is required beyond consensual two-wallet migration; if so, specify authorization and debt continuity before building it.
 - [ ] Decide whether Unlink/ZK privacy research belongs in a later release. There is no integrated implementation here. Any privacy upgrade must retain account-use constraints and debt continuity and explicitly state what the verifier learns.
 

@@ -1,0 +1,16 @@
+{
+  "date": "2026-10-11",
+  "checks": [
+    "Actual Qwen model, pinned source and locally calculated hashes automatically fill without manual entry",
+    "Public export includes scoped local measurements, excludes paths/endpoint, remains unsigned and unpublished",
+    "Saved draft reloads and receives a fresh local check",
+    "Hosted endpoint rejected by helper and cannot advance registration",
+    "Stopped or missing local server has an explicit error with retry",
+    "Manual edits invalidate the locally detected claim",
+    "Re-detection restores the actual digest",
+    "Detection UI fits a 390px mobile viewport"
+  ],
+  "pageErrors": [],
+  "realLocalModel": true,
+  "preview": "http://127.0.0.1:5189"
+}

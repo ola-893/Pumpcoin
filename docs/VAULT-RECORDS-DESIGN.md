@@ -1,0 +1,11 @@
+# Unora prototype private records
+
+`vault/records.ts` separates AES-256-GCM encryption primitives from an authenticated record service. Encryption binds version, chain, vault, scope, period and owner in unambiguous authenticated metadata, using fresh 96-bit random nonces and 32-byte keys. Wrong keys, ciphertext changes and metadata substitutions fail authentication. Key possession permits decryption; caller-selected roles cannot protect a key already disclosed.
+
+The local service keeps copied ciphertext/keys in its trusted process and issues random one-use, 60-second wallet challenges bound to requester, chain, vault, record and operation. It recovers an EOA signer, rejects spoofed/expired/replayed challenges, and derives access from a trusted resolver. `vault/record-grants.ts` resolves current manager/admin at pinned on-chain blocks on each request and rejects a role-check reorg. NFT ownership and request-provided role strings grant nothing. Managers/admins can read strategy records only for their vault; personal statements are restricted to their owner. Authenticated exports omit all unauthorized records.
+
+Public serialization explicitly allows fields at root AND nested levels. Unexpected strategy notes, personal fields and keys cannot leak via object spread. The serializer labels itself unverified; metric verification uses the separate receipt/checkpoint verifier. Public trades and share balances are observable. Encryption does not hide those facts or hide plaintext from the trusted verifier/service receiving it.
+
+Selective reports verify EIP191 signer/message authenticity in a chain/vault/title/payload-hash domain, optionally verify provided payload bytes, and only then use `signature-verified`. That label does not establish complete or truthful performance, actual model execution, ZK or TEE privacy.
+
+Scope/limitations: local library service and current EOA signatures; no public HTTP transport, passkey/ERC1271 authentication, production database, KMS/HSM, persistent nonce registry, key rotation/backup/deletion policy or availability guarantee. Process restart invalidates challenges (safe rejection), not persistent access credentials. Production storage/rate limiting and key custody remain unverified acceptance gates. Tests demonstrate authorization and cryptography in this local boundary, not a deployed privacy product.

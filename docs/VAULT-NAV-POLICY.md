@@ -1,0 +1,19 @@
+# Unora prototype valuation and share policy
+
+Policy declaration: `UNORA-VAULT-NAV-v1.0.0`; commitment is `keccak256(UTF8(version))`, computed in `vault/nav.ts` and required by the constructor. This commits to the declaration, not a proof that code complies with it. Source hashes in the local evidence bundle identify actual code.
+
+Scope: disposable local simulation, one quote and one position token, **both exactly 6 decimals**, on-chain mock spot venue, no leverage or performance fees. Unsupported token behavior is excluded; exact-transfer checks cover the tested non-rebasing tokens. The administrative mark is an injected fixture, not a manipulation-resistant live oracle. Marks can differ from the mock venue's fixed 1:1 execution price; an unrealized mark gain is not evidence of realizable profit.
+
+NAV = vault quote cash + marked positions + controlled refundable escrow - accrued operating liabilities, floored at zero. Only recorded refundable obligations count as managed escrow. Unsolicited escrow-token donations cannot inflate NAV or block a reserve-free replacement. An underfunded obligation makes valuation unavailable. Funding escrow is a reserve transfer, not a cost. Accrual recognizes cost once; settlement clears the liability and reduces escrow, leaving NAV unchanged relative to the post-accrual state. Refund returns reserved value to vault cash. Independent receipt replay reconciles cash, positions, escrow balances, liabilities and share supply to historical block checkpoints.
+
+Normal issuance fails when gross assets do not exceed accrued liabilities, or when gross equity is zero with shares outstanding. `maxDeposit/maxMint` then return zero. Ordinary deposits cannot silently recapitalize an insolvent vault. Resolve actual liabilities or recover managed assets explicitly; a recapitalization facility is not implemented. Accrual reversal is a disclosed trusted-admin accounting power, not proof that a service debt was forgiven.
+
+Shares use OZ ERC4626 virtual shares (offset 6), floor deposit/redeem and ceiling mint/withdraw conversion, a minimum first deposit and rejection of zero-share operations. Shares therefore have 12 decimals; `perShare` reports quote base units per whole share with explicit scaling. Incoming capital is not profit. Unsolicited quote donations are disclosed separately and excluded from strategy P&L; unpriced position donations make a report inconsistent until accounted for.
+
+Redemption is synchronous in available quote liquidity only. There is no queue and no forced liquidation guarantee. Manager partial sells may reduce exposure even if market drift leaves it above the configured cap. Trade caps are quote notional in both directions, rounded up on position inputs. Direct market drift is not a continuously enforced exposure guarantee.
+
+Deposits/redemptions/trades reject stale, disputed or unavailable pricing and pause state. Max transaction limits return zero while unavailable. Views and previews intentionally reject unavailable pricing: this is an **ERC4626-derived prototype, not full ERC4626 conformance**. Adapters expecting non-reverting standard views must not assume compatibility.
+
+Manager revocation remains possible when valuation is unavailable. Period boundaries retain `startValued/endValued`, reasons and cash/position/escrow/liability checkpoints. The numeric NAV field of an unvalued boundary is not usable as zero equity. Reconciliation refuses performance across that boundary. A later fresh anchor can start a new scoped report; it does not reconstruct the missing historical valuation.
+
+Fee-free scoped P&L = closing NAV - opening NAV - investor deposits + investor redemptions - unissued quote donations. This is accounting P&L, not time-weighted return. Operating expenses are not capital flows. A complete return-series/per-period analytical engine is still a separate acceptance gate.

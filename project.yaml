@@ -1,5 +1,15 @@
 fixture:
-  rpcs: []
+  rpcs:
+    - chain-name: monad-testnet
+      url: ${MONAD_TESTNET_RPC_URL}
+localexec:
+  rpcs:
+    - chain-name: monad-testnet
+      url: ${MONAD_TESTNET_RPC_URL}
+localexec-broadcast:
+  rpcs:
+    - chain-name: monad-testnet
+      url: ${MONAD_TESTNET_RPC_URL}
 monad-testnet:
   rpcs:
     - chain-name: monad-testnet

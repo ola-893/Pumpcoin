@@ -14,3 +14,24 @@ monad-testnet:
     workflow-path: ./main.ts
     config-path: ./config.monad.local.json
     secrets-path: ../secrets.yaml
+# Local execution with authentic Stripe test-mode proofs: fixtures stay
+# disabled, test mode is allowed in BOTH verifier and workflow, and no writes
+# happen here (writeReport false). Copy the example to the ignored local file.
+localexec:
+  user-workflow:
+    workflow-name: proofline-eligibility-localexec
+    deployment-registry: private
+  workflow-artifacts:
+    workflow-path: ./main.ts
+    config-path: ./config.localexec.local.json
+    secrets-path: ../secrets.yaml
+# Same receipt as localexec, then operator approval of the exact report digest,
+# then broadcast. Only used with an explicit operator --broadcast decision.
+localexec-broadcast:
+  user-workflow:
+    workflow-name: proofline-eligibility-localexec-broadcast
+    deployment-registry: private
+  workflow-artifacts:
+    workflow-path: ./main.ts
+    config-path: ./config.localexec.broadcast.local.json
+    secrets-path: ../secrets.yaml

@@ -1,0 +1,29 @@
+{
+  "checks": [
+    "Desktop home: no page overflow",
+    "Agent search and status filters",
+    "Actual loss and NAV displayed; invalid quantities and funding blocked",
+    "Local-only onboarding, unsigned exports, draft save and restore",
+    "Evidence receipt filters and archived download links",
+    "Real captured provider data renders; rate limit shows unavailable, no invented prices",
+    "Wallet absence is explicit; accessible dialog closes with Escape",
+    "Mobile /: no page overflow",
+    "Mobile /agents: no page overflow",
+    "Mobile /agents/local-vault: no page overflow",
+    "Mobile /register: no page overflow",
+    "Mobile /portfolio: no page overflow",
+    "Mobile /evidence: no page overflow",
+    "Mobile /markets: no page overflow",
+    "Mobile /how-it-works: no page overflow",
+    "Mobile navigation opens, navigates and collapses"
+  ],
+  "pageErrors": [],
+  "marketFixture": "Actual public provider response captured 10 October; browser test intercept only",
+  "viewport": [
+    1440,
+    390
+  ],
+  "date": "2026-10-11",
+  "browserCheckCount": 16,
+  "preview": "http://127.0.0.1:5189"
+}

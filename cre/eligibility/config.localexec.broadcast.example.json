@@ -1,0 +1,12 @@
+{
+  "chainId": 10143,
+  "registry": "REPLACE_WITH_NEW_EVIDENCE_REGISTRY_ADDRESS",
+  "receiver": "REPLACE_WITH_NEW_SIMULATION_RECEIVER_ADDRESS",
+  "providerId": "REPLACE_WITH_REVIEWED_STRIPE_TEST_PROVIDER_ID",
+  "providerVersion": "REPLACE_WITH_PINNED_VERSION",
+  "allowFixtures": false,
+  "allowTestMode": true,
+  "verifierUrl": "http://127.0.0.1:8787",
+  "authorizedEVMAddress": "REPLACE_WITH_AUTHORIZED_TRIGGER_SIGNER",
+  "writeReport": true
+}

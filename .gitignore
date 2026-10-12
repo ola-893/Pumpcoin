@@ -12,6 +12,13 @@ node_modules/
 indexer/generated/
 indexer/config.yaml
 cre/eligibility/config.monad.local.json
+cre/eligibility/config.localexec.local.json
+cre/eligibility/config.localexec.broadcast.local.json
+cre/localexec.env
+eligibility/localexec.env
 cre/eligibility/*.wasm
 cre/eligibility/*.wasm.br
 cre/eligibility/*.js
+
+sdk/dist/
+sdk/*.tgz

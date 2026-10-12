@@ -1,0 +1,36 @@
+{
+  "date": "2026-10-12",
+  "scope": "Local fixture tests and live read-only Monad testnet readiness; no testnet transaction submitted",
+  "nodeTests": {
+    "passed": 143,
+    "failed": 0
+  },
+  "vaultTests": {
+    "passed": 47,
+    "failed": 0
+  },
+  "fullSoliditySuite": "passed",
+  "rootTypecheck": "passed",
+  "frontendTypecheck": "passed",
+  "productionBuild": "passed",
+  "newEndToEndTest": "tests/vault-trading-service.test.ts",
+  "sourceSha256": {
+    "agent-registration/trading.ts": "e3b5226e61bbc8851e7195182dc641073fb153e91f2b675f53043b5dbbb06348",
+    "agent-registration/types.ts": "13b431ee3708781241ae3b4e075072a06255d4ece8f8666f2ea63b712872a117",
+    "agent-registration/vite.ts": "a401150aece41ffcdfd08a40ba8cf0574af7bf385cab971005f0ec4f302ba2ec",
+    "app/src/components/AgentDirectory.tsx": "72d082ab7d662110e654a1d9536d7153e1f6ebf824055af20665955a60bd2aae",
+    "app/src/components/VaultTrading.tsx": "01ab023f1b9dff8580b14478247baec17182fb8c49a778b1e59ed3e2afc58899",
+    "app/src/components/WalletProvider.tsx": "e886f5acbcbff9e16b35dfb949c66abece1e92935eee9517b452081a556a178e",
+    "app/src/lib/wallet-context.ts": "fb41a45f7031ca5c9d991dd6275015d68807117be662b4dc0ebe8fc46c8f8f35",
+    "app/src/lib/wallet-core.ts": "e66f3690627eb6b38be7ddbcf9d600edd5167edb1867f82f7869e55213d8e87f",
+    "app/vite.config.ts": "2ecbebcf7db121859dc62c98d8176fbf73f2b53a92f9bb1247517dd05b11d4ce",
+    "contracts/src/vault/PythVaultValuationSource.sol": "e8eaaa4ce42228bbdbfb36a53b8b9e630d443460f9d4fadd72ef219dc487597c",
+    "contracts/src/vault/UniswapV4VaultVenue.sol": "94a8b90cc45d6e91c39e59adf1b59eb8a545b92e48afc27ae7a6021b3a52b79a",
+    "contracts/src/vault/VaultInvestorGateway.sol": "0d7ba33e00d6987de4a4a0bddd6106dc7b4de58c6cd940b1e1a5cbdb4e23158f",
+    "contracts/src/vault/VaultTradingBundle.sol": "61a5589240d1a2ff7eb4a046a29744a9569a5c0ad77f63954a2eb2d9a02fcd7c",
+    "contracts/test/vault/PythPoolGuard.t.sol": "920bad77b91ed275bc0114c103a93386f1402e0e330c056413ee0f14300e4417",
+    "contracts/test/vault/VaultTradingIntegration.t.sol": "9e5dc8ef95fad7b1e257f791ea3852f2050be0e79d764c66e616be58c9c36f86",
+    "tests/vault-trading-service.test.ts": "93e41a046214c183071959348dc56c0b38c810d19fbc6c952484aa5891fd9c22",
+    "tests/vault-trading.test.ts": "667aeff2031d06384ee3100fe91d08f5f731a07ac751edfd9ab009226c7eae22"
+  }
+}

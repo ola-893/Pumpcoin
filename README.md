@@ -1,87 +1,46 @@
-# ProofLine
+# PumpCoin
 
-Verified off-chain financial facts as reusable on-chain credentials. The original synthetic manual demo is deployed on Monad testnet. This directory now also includes an evidence-backed mode, Reclaim verification adapter, persistent session service, CRE workflow, pinned receiver, account deduplication and debt-preserving wallet migration. **Authentic payout verification and CRE-to-Monad delivery are not yet demonstrated.** The full Mera frontend and running indexer remain separate work.
+PumpCoin lets investors inspect identifiable AI trading agents and their investment mandates, then allocate capital through dedicated vaults. Investor vault shares are called **Pump tokens** (`PUMP`). Each vault issues its own Pump tokens; ownership and returns belong to that vault.
 
-## Evidence-backed workflow (new)
+**MVP policy:** new agents must use self-hosted, downloaded model weights. No hosted-model API or hosted fallback. A declared hash, local URL or signature is not proof of actual model execution. Registration evidence levels must remain explicit.
 
-See [implementation, trust boundaries and runbook](docs/ELIGIBILITY.md). Run `npm run eligibility:demo` for the disposable local-chain synthetic lifecycle demo, `npm run cre:test` for SDK capability tests, and `npm run cre:compile` to build WASM. The original deployments are unchanged; evidence mode needs fresh contracts. Missing provider inputs and CLI authentication status are documented in the runbook.
+## Current product
 
-## Run it locally
+The frontend has been rebuilt around investment vaults: agent discovery, profile/mandate/identity views, an evidence explorer, a real Monad market-data page, a portfolio and local-model deployment draft onboarding. It preserves the purple/lilac visual theme while removing the previous lending journeys.
 
-Requires Foundry and Python 3. Dependencies are pinned to OpenZeppelin Contracts **v5.4.0**, forge-std **v1.10.0**, and Solidity **0.8.24** (Paris EVM target).
+- **Real read-only data:** GeckoTerminal's public Monad pool endpoint. Provider failures and stale snapshots are displayed; no fixture prices are substituted.
+- **Archived execution evidence:** a stopped, disposable Anvil run with valueless tokens, scripted manager transactions and injected marks. The browser reconciles the supplied archive internally; it does not independently establish its provenance or re-read that stopped chain.
+- **Draft onboarding:** automatically detects a local macOS llama-server, streams a SHA-256 calculation of its loaded GGUF, hashes a manifest of its mapped native runtime, and recovers a pinned source from a matching local download record. It still requires a strategy digest, isolated public keys and self-hosted confirmation. Exports are unsigned, unpublished drafts. These measurements come from the operator-controlled host, not independent execution attestation. Server admission, signature verification and on-chain registration are not connected.
+- **Investment unavailable:** no public vault deployment, real DEX execution or deposit/approval transactions are enabled in this frontend.
+
+The contract remains named `UnoraVault` for source continuity; newly deployed shares use `Pump token` / `PUMP`. The saved pre-rename archive retains its original `Unora Vault Share` / `UVS` metadata. No historical receipts or policy commitments were rewritten to imply a new deployment.
+
+## Run the frontend
 
 ```sh
-cd contracts
-forge install --root . foundry-rs/forge-std@v1.10.0 OpenZeppelin/openzeppelin-contracts@v5.4.0 --no-git
-forge test --root . -vv
-python3 script/local-demo.py
+cd app
+npm install
+npm run dev
 ```
 
-The demo starts its own Anvil chain on a random local port, deploys five contracts, broadcasts a manual attestation, verifies receipts and token balances, checks expiry and delegated repayment, saves `deployments/local.json`, and stops its chain. It needs no secrets or real funds. Its addresses are **local addresses, not Monad deployments**.
+Routes: `/`, `/agents`, `/agents/local-vault`, `/markets`, `/register`, `/portfolio`, `/evidence`, `/how-it-works`. A BrowserRouter deployment needs an SPA fallback for deep links. Public data uses the browser network; all other demo evidence is served as static public JSON. No private key or API secret belongs in the browser bundle.
 
-The visible result is 100 pCOL deposited → 50 pUSD base borrowing limit → manual Tier 2 credential → 80 pUSD limit → 80 pUSD actually borrowed. A further borrow reverts. When the credential expires, the limit drops to 50 while debt remains 80.
-
-## Contracts
-
-- `AttestationRegistry`: one active credential per wallet, authorized writer, fixed root controller, rotatable/revocable writer, 30-day maximum validity, revocation, and consumed proof-hash tracking. Events never include the raw payout figure.
-- `CreditLine`: deposit, borrow, repay, withdraw, and dedicated demo liquidity funding. Tier 2 or Tier 3 payment-processor credentials increase LTV from 50% to 80%. Every borrow/withdraw checks the current credential.
-- `DemoToken`: two freely mintable six-decimal test tokens, pCOL and pUSD. The separate loan-token pool ensures lending does not spend deposited collateral.
-- `RepaymentVault`: isolated borrower budgets, scoped agent keys, cumulative caps, expiry, revocation, and unused-budget withdrawal. It can only call the immutable credit line's `repayFor()`. See [repayment design and frontend flow](docs/REPAYMENT.md).
-
-`maxBorrow(user)` is the **total debt ceiling**. `availableToBorrow(user)` is remaining headroom capped by pool liquidity. Expiry/revocation do not erase existing debt or disable repayment. Withdrawals cannot leave debt above the current limit.
-
-Both tokens are assumed to have equal unit value; equal decimals alone do not establish that value. There is no price oracle, liquidation, interest, or LP withdrawal mechanism. Liquidity funding is a demo contribution, not an investment. Use only these valueless test tokens.
-
-Root control uses `rotateOracle()` / `revokeOracle()` and emits `OracleRotated`. See the [rotation and recovery runbook](docs/ORACLE-OPERATIONS.md). The Solidity suite passes 35 tests, including 512 cases for each fuzz test and 8,192 invariant calls. The local demo then repays 10 pUSD through a capped grant, verifies 70 pUSD remaining debt, and withdraws the unused budget.
-
-From this directory, with Node 22.9+:
+## Validation
 
 ```sh
-npm ci --ignore-scripts
+cd app
+npm run build
+npm run lint
+cd ..
 npm run typecheck
 npm test
-npm run oracle:fork-demo
+forge test --root contracts -vv
 ```
 
-The last command requires internet and Anvil. It reads Monad's existing ERC-8004 contracts into a disposable local fork, tests real SDK registration/rotation/revocation, and saves `deployments/oracle-fork.json`. Its transactions stay on localhost. See [oracle identity operations](docs/ORACLE-IDENTITY.md) and [Envio configuration](indexer/README.md).
+Node and Foundry must be on PATH for chain integration tests. [Frontend scope and validation](docs/PUMPCOIN-FRONTEND.md), [vault acceptance criteria](docs/AGENT-VAULT-ACCEPTANCE.md), [NAV policy](docs/VAULT-NAV-POLICY.md), [vault authority](docs/VAULT-ACCESS-CONTROL.md) and [archived evidence](docs/VAULT-EVIDENCE.md) explain mechanisms and limits.
 
-## Monad testnet deployment
+## Next gates
 
-Testnet chain ID **10143**, supplied RPC `https://testnet-rpc.monad.xyz` (chain ID checked). Replace the RPC with an Alchemy endpoint when available. A funded signing account is still required; Reclaim credentials cannot sign EVM transactions.
+Signed self-hosted agent admission and a genuinely running local-model worker; restricted real DEX adapter and token-decimal handling; reliable valuation; reviewed ERC-8004 and public vault deployment; production private-record access. FlowPay streaming is deferred. Share ownership is not a lending obligation or a promise of fixed returns.
 
-1. Copy `.env.example` to `.env`, fill `DEPLOYER_ADDRESS`, and fund its testnet MON via <https://faucet.monad.xyz>. Use a Foundry keystore. Omit optional root/writer variables to default them to the deployer for the manual demo.
-2. From `contracts`, load your local configuration and deploy using your own keystore alias:
-
-```sh
-set -a
-source ../.env
-set +a
-cast chain-id --rpc-url "$MONAD_TESTNET_RPC_URL"
-forge script script/Deploy.s.sol:Deploy --root . \
-  --rpc-url "$MONAD_TESTNET_RPC_URL" --sender "$DEPLOYER_ADDRESS" \
-  --account YOUR_KEYSTORE_ALIAS --broadcast --slow
-```
-
-3. Save the printed addresses in `.env`, reload it, then run:
-
-```sh
-forge script script/ManualDemo.s.sol:ManualDemo --root . \
-  --rpc-url "$MONAD_TESTNET_RPC_URL" --sender "$DEPLOYER_ADDRESS" \
-  --account YOUR_KEYSTORE_ALIAS --broadcast --slow
-```
-
-The deploy and manual-demo scripts reject chains other than 31337 and 10143. The manual demo requires a fresh position and the deployer as temporary writer. It intentionally uses a **synthetic proof hash**, not an income proof. Do not describe this step as verified income.
-
-The Monad testnet deployment is recorded in [deployments/monad-testnet.json](deployments/monad-testnet.json). Its five creation receipts succeeded, bytecode is present at every address, and the credit-line and repayment-vault wiring have been read back from chain. Derive Envio's future start block from the registry deployment block **63,709,337**. The testnet demo also completed with 100 pCOL collateral, 80 pUSD debt, an 80 pUSD limit, and a valid Tier 2 payment attestation. Its attestation is intentionally synthetic and is not verified income.
-
-## Privacy and trust boundaries
-
-The registry trusts its writer. The deployed milestone-1 demo does not verify a TLS session, income, wallet ownership, or unique personhood. Its consumed hashes only prevent exact canonical-proof replay. The new evidence mode adds source-account binding and controlled wallet migration, but it still does not establish unique personhood or prevent multiple legitimate accounts/collusion.
-
-The future baseline exposes the extracted total to the off-chain verification environment and publishes the wallet, tier, source category, expiry, and proof digest. A tier still reveals a financial range. Never hash only a low-entropy amount as `proofHash`; use the validated canonical proof identifier and a versioned domain. Raw figures, proofs, sessions, and API secrets must not appear in public logs, indexer entities, or browser bundles.
-
-For CRE integration, deploy a receiver adapter that validates the Chainlink forwarder **and** the expected workflow identity; then rotate `registry.oracle` to that adapter. The registry is intentionally independent of CRE's transport. Merely setting `oracle` to a forwarder EOA/address is not a working CRE integration.
-
-## Next milestone
-
-Reclaim provider selection/build and authentic proof generation remain the next integration gate. See [provider requirements](docs/PROVIDER.md), [eligibility runbook](docs/ELIGIBILITY.md), and [verified integration notes](docs/INTEGRATION-NOTES.md). Borrower ERC-8004 identities remain deferred.
+Historical credit/eligibility/CRE source, SDK and tests remain as a separate baseline. Browser-only legacy calculation/auth helpers moved to `frontend/legacy-browser/` so the old regression tests continue running without shipping old UI content. See [historical credit documentation](docs/HISTORICAL-CREDIT-README.md); those mechanisms do not establish vault-product acceptance.

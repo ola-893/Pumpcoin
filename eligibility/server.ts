@@ -51,8 +51,9 @@ const server = createServer(async (req, res) => {
     const input = JSON.parse(body);
     if (pathname === "/sessions") {
       requireCondition(typeof input.subject === "string" && isAddress(input.subject), "Invalid wallet");
+      const createdAt = now();
       const s: Session = { id: randomUUID(), subject: input.subject.toLowerCase() as Address,
-        chainId: policy.chainId, registry, createdAt: now(), expiresAt: now() + 900 };
+        chainId: policy.chainId, registry, createdAt, expiresAt: createdAt + 900 };
       store.create(s);
       res.end(JSON.stringify({ sessionId: s.id, challenge: challenge(s, config), expiresAt: s.expiresAt }));
       return;
@@ -64,17 +65,18 @@ const server = createServer(async (req, res) => {
     if (match[2] === "authorize") {
       requireCondition(!authorized && typeof input.signature === "string", "Already authorized or missing signature");
       requireCondition(await verifyMessage({ address: s.subject, message: challenge(s, config), signature: input.signature as Hex }), "Invalid wallet signature");
-      const created = await sdkOperation<{ reclaimSessionId: string; request: string }>({ operation: "create", session: s, config });
+      const created = await sdkOperation<{ reclaimSessionId: string; request: string; requestUrl: string }>({ operation: "create", session: s, config });
       s.reclaimSessionId = created.reclaimSessionId;
       store.authorize(s);
-      res.end(JSON.stringify({ request: JSON.parse(created.request) }));
+      res.end(JSON.stringify({ request: JSON.parse(created.request), requestUrl: created.requestUrl }));
       return;
     }
     requireCondition(authorized, "Wallet authorization required");
     const facts = await sdkOperation<VerifiedFacts>({ operation: "verify", proof: input.proof, session: s, config, now: now() });
     deriveEligibility(facts, policy, now());
     store.consume(s.id, facts);
-    res.end(JSON.stringify({ receiptId: s.id, status: "verified" }));
+    // Public digest lets the frontend match this receipt to registry state without exposing facts.
+    res.end(JSON.stringify({ receiptId: s.id, proofHash: facts.proofHash, status: "verified" }));
   } catch {
     // SDK/proof errors may contain private financial data. Never return or log them.
     res.statusCode = 400;

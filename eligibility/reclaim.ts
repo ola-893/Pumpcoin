@@ -26,7 +26,7 @@ export async function createReclaimRequest(s: Session, c: VerifierConfig) {
   const pinned = request.getProviderVersion();
   requireCondition(pinned.providerId === c.providerId && pinned.providerVersion === c.providerVersion, "Provider version changed");
   request.setContext(s.subject.toLowerCase(), challenge(s, c));
-  return { reclaimSessionId: request.getSessionId(), request: request.toJsonString() };
+  return { reclaimSessionId: request.getSessionId(), request: request.toJsonString(), requestUrl: await request.getRequestUrl() };
 }
 
 /** Required custom provider schema, NOT an assertion that a compatible Stripe provider exists.

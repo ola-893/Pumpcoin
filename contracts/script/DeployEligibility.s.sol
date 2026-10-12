@@ -8,6 +8,7 @@ import {EligibilityReceiver} from "../src/EligibilityReceiver.sol";
 import {SimulationEligibilityReceiver} from "../src/mocks/SimulationEligibilityReceiver.sol";
 import {DemoToken} from "../src/mocks/DemoToken.sol";
 import {RepaymentVault} from "../src/RepaymentVault.sol";
+import {AgentCreditMandate} from "../src/AgentCreditMandate.sol";
 
 /// @dev Fresh test-only deployment. Never mutates the existing manual-demo addresses.
 contract DeployEligibility is Script {
@@ -23,6 +24,8 @@ contract DeployEligibility is Script {
         AttestationRegistry registry = new AttestationRegistry(deployer, address(0));
         CreditLine line = new CreditLine(registry, collateral, loan);
         RepaymentVault vault = new RepaymentVault(loan, address(line));
+        AgentCreditMandate mandate = new AgentCreditMandate(address(line), loan);
+        line.pinAgentCreditMandate(address(mandate));
         address receiver;
         if (simulation) {
             receiver = address(new SimulationEligibilityReceiver(registry, forwarder, deployer));
@@ -40,6 +43,7 @@ contract DeployEligibility is Script {
         console2.log("ELIGIBILITY_RECEIVER", address(receiver));
         console2.log("CREDIT_LINE_ADDRESS", address(line));
         console2.log("REPAYMENT_VAULT_ADDRESS", address(vault));
+        console2.log("AGENT_CREDIT_MANDATE_ADDRESS", address(mandate));
         console2.log("COLLATERAL_TOKEN_ADDRESS", address(collateral));
         console2.log("LOAN_TOKEN_ADDRESS", address(loan));
     }

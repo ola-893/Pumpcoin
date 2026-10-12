@@ -2,9 +2,9 @@
 
 ## Evidence-backed credit on Monad: implemented system and target architecture
 
-Updated: 28 September 2026. Reviewed against commit `9e16c6e` and the matching `origin/main` head. This is a code/deployment-record review, not a fresh live-chain or browser acceptance test.
+Backend review: 28 September 2026, against commit `9e16c6e`. Product framing and frontend status updated 3 October 2026 against the reconciled working tree at `bc14033`; see [frontend verification](../../docs/FRONTEND-RECONCILIATION.md). This remains distinct from authentic proof/public-network acceptance.
 
-Unora is the product. **ProofLine is its evidence, eligibility and credit-control subsystem**, not a separate competing application. The long-term goal remains undercollateralized lending; the implemented prototype is a **test-token, overcollateralized credit line** with evidence-dependent limits. It does not yet implement the original tranche, sponsor-loss or streaming-credit model.
+Unora is the product. **ProofLine is its financial eligibility oracle: the evidence, eligibility and credit-control subsystem**, not a separate competing application. The long-term goal remains undercollateralized lending; the implemented prototype is a **test-token, overcollateralized credit line** with evidence-dependent limits. It does not yet implement the original tranche, sponsor-loss or streaming-credit model.
 
 Status labels throughout:
 
@@ -13,7 +13,21 @@ Status labels throughout:
 - **Frontend integration:** contract calls or provider wiring exist in the app; this does not imply browser acceptance testing is complete.
 - **Preview / planned:** simulated UI or an architectural requirement, not an operational backend.
 
-The prioritized completion checklist is [ARCHITECTURE-CHECKLIST.md](../../docs/ARCHITECTURE-CHECKLIST.md).
+The prioritized completion checklist is [ARCHITECTURE-CHECKLIST.md](../../docs/ARCHITECTURE-CHECKLIST.md). It governs hackathon implementation and acceptance. The [original north star](roadmap/architecture-north-star.md) is preserved as long-term product vision, not a build list; its old Track 01 heading is historical. The confirmed direction is Track 04 — Trust, Identity & AI Infrastructure.
+
+### Product relationship and scope authority
+
+ProofLine strengthens the original design by grounding eligibility in authenticated offchain source evidence rather than wallet age, transaction activity or small-loan repayment history alone. A future risk engine should treat the evidence tier as a distinct source of facts and enforce source binding, expiry and exposure constraints; it is not another decorative behavior-score input. No combined behavioral scoring or underwriting engine is implemented today.
+
+Cryptographic verification can authenticate a supported source claim under the provider/verifier trust model; it does not make that claim an ungameable credit score. Genuine accounts, circular or manipulated payouts, source-account sale and multiple accounts remain relevant risks. The current authentic provider and CRE delivery gates are still open, and the deployed manual demo does not demonstrate authenticated earnings.
+
+The original `ScoreRegistry` describes the same credential-registry role now fulfilled by `AttestationRegistry`, using a mapping rather than an NFT. It is not a second contract to add alongside ProofLine. ERC-8004 adds service identity/reputation separately; the oracle implementation exists, while borrower identity remains a deferred stretch goal (see [identity boundaries](../../docs/ORACLE-IDENTITY.md#borrower-identity-stretch-goal)).
+
+The tranche pool, sponsor graph, streams and reserves remain P2 ambition. ProofLine's value does not move them into the hackathon build scope. Finish the checklist's P0 evidence-to-credit acceptance path before any scope expansion.
+
+### Current demo direction: agent-operated, human-backed credit
+
+A new `AgentCreditMandate` sibling and an independent working-capital worker are locally verified; see [local agent receipts and remaining gates](../../docs/AGENT-CREDIT.md). Mera passkey/evidence/mandate frontend code exists, but real device acceptance and authentic Reclaim → CRE → fresh Monad delivery remain open. Human eligibility establishes the ceiling; a human-signed cap/expiry/revoke bounds agent draws. Proceeds reach the agent and all debt remains human-backed. The repayment vault remains unchanged. This adds to P0 and changes the main demo character; it does not replace any existing eligibility acceptance requirement.
 
 ## 1. Current system diagram
 
@@ -23,10 +37,10 @@ Solid arrows describe implemented interfaces. Dashed arrows are missing integrat
 flowchart TB
   subgraph UX[Unora application]
     Wallet["Privy email / external wallet\nFrontend integration"]
-    App["React + wagmi / viem\nDashboard reads, faucet, direct repayment"]
-    Preview["Get scored, borrow, lend, sponsor graph\nPreview flows; integration pending"]
+    App["React + wagmi / viem\nManual-demo position reads, faucet, collateral, borrow / repay, vault grants"]
+    Credential["Registry credential status\nAuthentic verification UI pending"]
     Wallet --> App
-    App --- Preview
+    App --- Credential
   end
 
   subgraph Evidence[ProofLine evidence and policy - implemented, local-tested]
@@ -46,7 +60,11 @@ flowchart TB
     Vault["RepaymentVault\nOpt-in budget + capped agent grants"]
     Transport --> Receiver --> Registry
     Registry -->|Eligibility / designated credit line| Credit
+    Mandate["AgentCreditMandate\nHuman cap, expiry, revoke; local-tested"]
+    Worker["Independent working-capital worker\nOwn-key local draw/repay verified"]
     Vault -->|repayFor with loan tokens| Credit
+    Worker -->|Own-key transactions| Mandate
+    Mandate -->|Restricted borrowFor / repayFor| Credit
   end
 
   subgraph Existing[Existing Monad testnet deployment - synthetic manual demo]
@@ -59,7 +77,10 @@ flowchart TB
     Indexer["Envio ABI-to-config generator exists\nHandlers / GraphQL service pending"]
   end
 
-  Preview -.->|Reclaim UI wiring pending| API
+  Mera["Mera agent-demo UI\nDevice/public acceptance pending"]
+  Mera -->|Wallet-bound proof session; code implemented| API
+  Mera -->|Human grant / revoke; code implemented| Mandate
+  Credential -.->|Legacy Privy-page migration pending| API
   CRE -.->|CLI broadcast / deployment pending| Transport
   App -->|Current configured addresses| Legacy
   App -.->|Fresh manifest + evidence UX pending| Credit
@@ -71,18 +92,18 @@ flowchart TB
   Indexer -.->|Real activity / history queries| App
 ```
 
-There are **two contract generations**, not one upgraded deployment. The old five-contract testnet manifest is in [deployments/monad-testnet.json](../../deployments/monad-testnet.json). The app still uses those addresses. Evidence-mode changes require a fresh deployment; modifying Solidity source does not upgrade those old contracts.
+There are **two contract generations**, not one upgraded deployment. The old five-contract testnet manifest is in [deployments/monad-testnet.json](../../deployments/monad-testnet.json). The manual pages still use those addresses. The agent route requires a separate validated fresh evidence-mode manifest and stays financially disabled without it. Evidence-mode changes require a fresh deployment; modifying Solidity source does not upgrade those old contracts.
 
 ## 2. What changed from the original design
 
 | Original concept | What actually exists now | What remains |
 | --- | --- | --- |
-| `ScoreRegistry` soulbound NFT | `AttestationRegistry`: address-indexed credentials and eligibility reports; no NFT | Decide whether an NFT wrapper is useful; do not represent it as implemented |
+| `ScoreRegistry` soulbound NFT | Same credential-registry role fulfilled by `AttestationRegistry`: address-indexed credentials/reports; no NFT | No parallel SBT needed; borrower ERC-8004 reputation is a separate, deferred stretch goal |
 | Scoring engine | Deterministic verified-payout tier/ceiling policy | Behavioral scoring, repayment-based growth and calibrated underwriting |
 | CRE oracle relay | Workflow fetches verifier facts, applies policy, produces EVM report; two receiver designs | Authentic proof, successful CLI execution and public testnet receipt |
 | `LendingPool` with tranches | `CreditLine` with separate demo-token liquidity, deposit/borrow/repay/withdraw | LP shares, redemption, rates, tranches, asset valuation, loss allocation |
 | `StreamManager` | `RepaymentVault` with borrower-funded, revocable agent budgets | Scheduler, installment/default semantics; continuous streams only if retained |
-| `SponsorGraph` | Frontend graph with sample data | Contract capacity reservation, consent, exposure and default-loss enforcement |
+| `SponsorGraph` | Archived frontend graph design with sample data | Contract capacity reservation, consent, exposure and default-loss enforcement |
 | `ReservePool` | Not implemented | Funding source, reserves, insolvency rules and payout waterfall |
 | Cross-chain Envio indexer | ABI-derived Monad event configuration generator | Entities, handlers, GraphQL, reorg handling and cross-chain adapters |
 | Wallet onboarding | Privy email/external-wallet integration | Browser acceptance tests; Mera/passkey root remains a separate optional integration |
@@ -159,32 +180,32 @@ Example: 100 pCOL collateral supports at most 80 pUSD of Tier 2 debt. With the d
 
 The old wallet calls `requestMigration(newWallet)`; the new wallet calls `acceptMigration(oldWallet)`. Registry identity, all collateral and all debt move atomically. Destination must have no existing position/source; the old address is retired for eligibility. Migration works after expiry without renewing the credential or reducing debt.
 
-This is consensual migration, **not lost-key recovery**. Already-borrowed wallet tokens, vault budgets/grants and ERC-20 approvals do not move automatically. The user must separately close or revoke old delegations, recover unused budgets and establish new approvals/grants. No production recovery authority exists.
+Consent is enforced by the committed CreditLine request/accept path when the registry controller is pinned to that CreditLine; the registry itself checks only its configured controller. See [authorization and configuration boundaries](../../docs/ELIGIBILITY.md). This is consensual migration, **not lost-key recovery**. Already-borrowed wallet tokens, vault budgets/grants and ERC-20 approvals do not move automatically. The user must separately close or revoke old delegations, recover unused budgets and establish new approvals/grants. No production recovery authority exists.
 
 ### 4.4 Delegated repayment, not a continuous stream
 
 `RepaymentVault` holds separate pUSD budgets per borrower. Agent grants have a borrower binding, cumulative spending cap, expiry and revocation. Agent keys cannot be reassigned to another borrower. The agent can only repay that borrower's debt through the immutable `CreditLine.repayFor`; it cannot make arbitrary transfers. Anyone may also repay another borrower's debt using their own tokens directly.
 
-A reusable [AutoRepayToggle](../../frontend/components/AutoRepayToggle.tsx) performs approval, confirmed budget funding and delegation in order. It is separate from the main app; no scheduled repayment worker is running. Grants do not renew themselves, and a budget is not proof of future repayment income.
+The main app repayment-budget UI and reusable [AutoRepayToggle](../../frontend/components/AutoRepayToggle.tsx) share tested approval, confirmed budget funding and delegation orchestration. The main app exposes cap/expiry, revocation and unused-budget withdrawal; no scheduled repayment worker is running. Grants do not renew themselves, and a budget is not proof of future repayment income.
 
-## 5. Frontend: implemented integration versus preview
+## 5. Frontend: reconciled manual deployment versus future scope
 
-The main application is in `app/`: React, Vite, Privy, wagmi/viem and React Query. Privy is configured for email and external wallets on Monad testnet. This replaces the original undecided “Dynamic or Privy” architecture; Mera root-account support is not integrated.
+The main application in `app/` uses React, Vite, Privy, wagmi/viem and React Query. Privy is configured for email and external wallets on Monad testnet; Mera root-account support is not integrated. Current frontend changes remain uncommitted. Detailed evidence and limits are in [FRONTEND-RECONCILIATION.md](../../docs/FRONTEND-RECONCILIATION.md).
 
-| Surface | Observed implementation |
+| Surface | Current implementation / boundary |
 | --- | --- |
-| Default dashboard | `useOnchainPosition` reads collateral, debt, limits, token balances, vault budget and attestation from the old testnet addresses |
-| Faucet | `FaucetButton` submits real demo-token mint calls |
-| Direct repayment | `RepayDialog` has a live approval/repay/receipt flow and a separate simulated mode |
-| Get scored | Timed simulated verification/mint, random transaction hash; no verifier/CRE integration. NFT/success wording exceeds backend capabilities |
-| Borrow flow | Simulated collateral confirmation and transaction hash; not a live `CreditLine` borrow UI |
-| Lend/deposit/withdraw | Product previews; tranche deposits and withdrawals are not backed by a LendingPool |
-| Sponsor graph, score ladder, markets | Sample data and planned product mechanics |
-| Activity feed | Timer-generated sample events, not Envio events |
-| Dashboard `?state=` views | Explicit product-demo scenarios rather than wallet state |
-| Auto-repay and wallet migration | Backend/component support exists; main-app integration pending |
+| Dashboard | Contract-backed credential, collateral, debt, limits, separate token balances and repayment budget |
+| Faucet | Actual demo-token mint call; successful receipt precedes refresh |
+| Collateral, borrowing and repayment | Actual approval/deposit/borrow/repay/withdraw calls, integer token amounts and successful receipt checks |
+| Credential onboarding | Actual registry status; authentic verification visibly unavailable pending integration |
+| Repayment budget | Shared tested funding/delegation orchestration, cap/expiry, revoke and unused-budget withdrawal; no scheduler |
+| Market | Single manifest-configured pCOL/pUSD pair with contract-read token metadata, liquidity and totals |
+| Former lending tranches and sponsor graph | Preserved future design outside the app build; no live LP or sponsor actions |
+| Activity and history | No generated live activity; explorer links while the indexer is pending; capacity is a current snapshot |
+| Legacy demo URLs / parameters | Sponsor routes reach the future roadmap; unrelated asset routes are unavailable; `?state=` / `?demo=` do not select fake positions/activity |
+| Evidence-mode ceilings, renewal and migration | Backend code exists; fresh deployment and main-app integration remain open |
 
-The app currently hardcodes the five old deployment addresses in `app/src/lib/onchain.ts`. Replace that with a checked deployment manifest before enabling new evidence-mode features. Never treat preview transaction hashes, advertised market yields or “USDC live” labels in fixture data as proof of a deployed pool.
+The app uses a validated manual-deployment manifest in `app/src/lib/deployment.json`. Reads and writes pin the intended chain and check contract wiring. Evidence-mode ABI/source changes do not upgrade these legacy addresses. Public browser reads have been inspected; signed wallet transaction acceptance and authentic source → CRE → credit remain open checklist tasks.
 
 ## 6. Operational services and accountability
 
@@ -202,7 +223,7 @@ This diagram preserves the original full-product ambition without presenting it 
 flowchart TB
   Facts["ProofLine verified facts + eligibility\nImplemented subsystem; integration gates remain"]
   History["Cross-chain history and liabilities\nPlanned indexer adapters"]
-  Sponsors["SponsorGraph + funded loss backing\nPlanned; frontend preview only"]
+  Sponsors["SponsorGraph + funded loss backing\nPlanned; archived frontend design only"]
   Risk["Risk engine + velocity / aggregate exposure caps\nPlanned"]
   Report["Versioned policy report through CRE\nWorkflow foundation implemented"]
   Terms["Registry / per-loan terms\nExtend current eligibility model"]
@@ -226,7 +247,7 @@ flowchart TB
 
 The original `max(prior loan × multiplier, sponsor capacity)` formula is not implemented and should not be treated as a proven Sybil defense. Specify aggregate outstanding exposure, genuinely reserved sponsor capacity, recycling/collusion defenses and who bears losses before adopting a formula. Small successful loans alone do not establish safety for a much larger unsecured one.
 
-An optional score NFT should not become an independent transferable path around source/debt binding. Unlink can remain a separate privacy research track; no integration is shown because none exists here. Any future private identity representation must preserve anti-replay, account-use and debt-continuity invariants. Hiding linkability is not itself a credit-risk solution.
+No separate score NFT is required to fulfill the original registry role. Any deferred borrower ERC-8004 identity must preserve current source/debt binding and treat ownership changes as a re-verification boundary, not a transfer of eligibility or debt. Unlink can remain a separate privacy research track; no integration is shown because none exists here. Any future private identity representation must preserve anti-replay, account-use and debt-continuity invariants. Hiding linkability is not itself a credit-risk solution.
 
 ## 8. Completion boundary and recommended scope
 
