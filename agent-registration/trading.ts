@@ -115,7 +115,8 @@ export function tradingService(network:VaultNetwork,n:TradingNetwork,directory:s
   const s=await snapshot(id,account),{r,v,view,block,read}=s;const from=getAddress(account);let to:Address|undefined,data:Hex,output:bigint|undefined,quote:TradingQuote|undefined,value=0n;
   if(!view.vaultRuntimeCompatible)throw new Error('Deployed vault differs from the current reviewed trading-permission contract. A compatible vault is required before activation.');
   if(['deploy','propose','apply','unpause','pause'].includes(action)&&from!==v.admin)throw new Error('Connect this vault’s controller.');
-  const amountValue=/^[1-9][0-9]{0,30}$/.test(amount)?BigInt(amount):0n;const deadline=block.timestamp+(action==='buy'||action==='sell'?30n:300n);
+  const amountValue=/^[1-9][0-9]{0,30}$/.test(amount)?BigInt(amount):0n;// Leave RPC preparation and an already-open wallet time to finish; the browser quote still expires in 30 seconds.
+  const deadline=block.timestamp+(action==='buy'||action==='sell'?120n:300n);
   const encode=(a:any,name:string,args:unknown[]=[])=>encodeFunctionData({abi:a,functionName:name,args});
   if(action==='update-prices'){
    if(n.oracle==='chainlink')throw new Error('Chainlink Price Feeds update automatically. No API key or price-update transaction is needed.');

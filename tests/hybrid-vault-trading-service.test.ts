@@ -61,7 +61,7 @@ for(const oracle of ['supra-pyth'] as ('pyth'|'chainlink'|'supra-pyth')[]) test(
   const hash=await send('deploy');await service.confirm(id,hash);await service.confirm(id,hash);await assert.rejects(service.plan(id,'deploy',account.address),/already/);
   hybridSource=(await service.inspect(id)).bundle!.source;await fresh();
   const restarted=tradingService(network,n,directory,async()=>[record],client);assert.ok((await restarted.inspect(id)).bundle);
-  await send('propose');await assert.rejects(service.plan(id,'apply',account.address),/one-day/);
+  await send('propose');await assert.rejects(service.plan(id,'apply',account.address),/configuration.*ready/);
   await client.request({method:'evm_increaseTime' as any,params:[86401] as any});await client.request({method:'evm_mine' as any,params:[] as any});await fresh();
   await send('apply');assert.equal((await service.inspect(id)).paused,true);await send('unpause');assert.equal((await service.inspect(id)).ready,true);
   await write(quote,'RegistrationTokenFixture','mint',[account.address,20_000000n]);await send('approve-deposit','20000000');const deposited=await send('deposit','20000000');assert.equal((await service.receipt(id,deposited)).status,'success');
@@ -82,7 +82,10 @@ for(const oracle of ['supra-pyth'] as ('pyth'|'chainlink'|'supra-pyth')[]) test(
   if(oracle==='chainlink'&&process.env.PUMPCOIN_QUOTE_EVIDENCE_FILE)await writeFile(process.env.PUMPCOIN_QUOTE_EVIDENCE_FILE,JSON.stringify({mode:'local-anvil-fixture',plan:feeQuote},null,2));
   // The encoded deadline expires independently of the browser countdown.
   const checkpoint=await client.request({method:'evm_snapshot' as any,params:[] as any});
+  assert.ok(buyQuote.quote!.expiresAt<=Date.now()+30000,'browser review remains bounded to 30 seconds');
   await client.request({method:'evm_increaseTime' as any,params:[31] as any});await client.request({method:'evm_mine' as any,params:[] as any});
+  assert.ok(await client.estimateGas({account:manager.address,to:buyQuote.to,data:buyQuote.data}),'RPC preparation does not consume the entire on-chain deadline');
+  await client.request({method:'evm_increaseTime' as any,params:[90] as any});await client.request({method:'evm_mine' as any,params:[] as any});
   await assert.rejects(client.estimateGas({account:manager.address,to:buyQuote.to,data:buyQuote.data}));
   await client.request({method:'evm_revert' as any,params:[checkpoint] as any});
   // A previously reviewed swap cannot execute after the pool moves through its minimum.
