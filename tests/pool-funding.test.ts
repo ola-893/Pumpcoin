@@ -26,7 +26,7 @@ test('controller pool plans are bounded, recoverable and verified against exact 
   await assert.rejects(service.plan(id,'seed-pool',owner),/Approve exactly/);
   const approval=await service.plan(id,'approve-pool-funding',owner);assert.equal(approval.to,network.quote);assert.equal(approval.value,'0x0');
   allowance=200000n;price=0n;await assert.rejects(service.plan(id,'seed-pool',owner),/fresh Supra/);price=25000n;
-  const plan=await service.plan(id,'seed-pool',owner);assert.equal(BigInt(plan.value),3n*10n**18n);assert.equal(plan.funding!.maxQuote,'200000');assert.equal(plan.funding!.upper-plan.funding!.lower,10);assert.ok(plan.range!.minimumMonPrice<0.025&&plan.range!.maximumMonPrice>=0.025);
+  const plan=await service.plan(id,'seed-pool',owner);assert.equal(BigInt(plan.value),3n*10n**18n);assert.equal(plan.funding!.maxQuote,'200000');assert.equal(plan.funding!.upper-plan.funding!.lower,20);assert.ok(plan.range!.minimumMonPrice<0.025&&plan.range!.maximumMonPrice>=0.025);
   validatePoolFundingTransaction(plan,owner);assert.throws(()=>validatePoolFundingTransaction({...plan,value:'0x1'},owner),/Invalid bounded/);assert.throws(()=>validatePoolFundingTransaction({...plan,data:approval.data},owner),/calldata/);assert.throws(()=>validatePoolFundingTransaction({...plan,funding:{...plan.funding!,maxQuote:'200001'}},owner),/amount/);assert.throws(()=>validatePoolFundingTransaction({...plan,to:source},owner),/Invalid bounded/);assert.throws(()=>validatePoolFundingTransaction({...plan,quote:{expiresAt:Date.now()-1}},owner),/Invalid bounded/);
   changed=true;await assert.rejects(service.inspect(id,owner),/bindings changed/);
  }finally{await rm(dir,{recursive:true,force:true});}

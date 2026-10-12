@@ -40,7 +40,7 @@ export function poolFundingService(network:VaultNetwork,n:TradingNetwork,directo
    else if(action==='remove-pool-liquidity'){if(state.liquidity==='0')throw new Error('This controller has no demo liquidity to remove.');data=encodeFunctionData({abi:funderAbi,functionName:'remove',args:[BigInt(deadline)]});}
    else{if(state.liquidity!=='0')throw new Error('Remove the existing demo position before choosing a new range.');if(!state.referencePrice||BigInt(state.referencePrice)<=0n)throw new Error('Relay fresh Supra MON and Pyth USDC prices before funding the pool.');if(BigInt(state.allowance)<MAX_QUOTE)throw new Error('Approve exactly 0.2 test-USDC before reviewing pool funding.');
     const mark=BigInt(state.referencePrice),[existing,tick]=await client.readContract({address:n.stateView,abi:slotAbi,functionName:'getSlot0',args:[v.poolId],blockNumber:b});const price=existing===0n?sqrt(10n**18n*(1n<<192n)/mark):existing;
-    const currentTick=existing===0n?Math.floor(2*Math.log(Number(price)/Number(Q96))/Math.log(1.0001)):Number(tick);const lower=Math.floor(currentTick/n.tickSpacing)*n.tickSpacing,upper=lower+n.tickSpacing;
+    const currentTick=existing===0n?Math.floor(2*Math.log(Number(price)/Number(Q96))/Math.log(1.0001)):Number(tick);const lower=Math.floor(currentTick/n.tickSpacing)*n.tickSpacing,upper=lower+2*n.tickSpacing;
     const l=(125000000n*price+Q96-1n)/Q96;funding={funder:state.funder,liquidity:String(l),lower,upper,maxQuote:String(MAX_QUOTE),deadline};range={minimumMonPrice:1e12/Math.pow(1.0001,upper),maximumMonPrice:1e12/Math.pow(1.0001,lower)};value=MAX_MON;data=encodeFunctionData({abi:funderAbi,functionName:'seed',args:[l,lower,upper,MAX_QUOTE,BigInt(deadline)]});
    }
   }
