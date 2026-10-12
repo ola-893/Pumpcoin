@@ -1,0 +1,194 @@
+{
+  "chainId": 10143,
+  "blockNumber": "70421272",
+  "blockHash": "0x538c6daedb29fbd89df7a0b0a16942adfbdfe322cd29f5a2a9ad9742d7639ece",
+  "blockTimestamp": "1791815282",
+  "checkedAt": "2026-10-12T14:28:03.359Z",
+  "scope": "Read-only bounded scan: all five listed Chainlink feeds and four standard hook-free WETH/USDC v4 fee tiers. No transactions.",
+  "feeds": [
+    {
+      "directoryName": "USDT / USD",
+      "description": "USDT / USD",
+      "proxy": "0xc8a72485e68af06308A8C888eB376AB322310Fa6",
+      "aggregator": "0x046eB184D683bb55eF3C4BEa0D6857309e12C114",
+      "proxyCodeHash": "0xbd6f524cdc4268b6bd1bb6f77a8821faeea9c52ee9e0afa0b6d948ce82c966c2",
+      "aggregatorCodeHash": "0x16f41184f797cb8f8918680df0ebf2a97cc3192aa6b104615f61096fc674f2aa",
+      "decimals": 8,
+      "round": [
+        "18446744073709551679",
+        "99894691",
+        "1791732955",
+        "1791733027",
+        "18446744073709551679"
+      ],
+      "ageSeconds": "82255",
+      "heartbeatSeconds": 86400,
+      "passesCurrent300SecondPolicy": false
+    },
+    {
+      "directoryName": "USDC / USD",
+      "description": "USDC / USD",
+      "proxy": "0x39820e7965e29DC86b94F20eD04e9c5cCf9aFf95",
+      "aggregator": "0x56395e94c93DE46598537C4A81811a7a743D0826",
+      "proxyCodeHash": "0xbd6f524cdc4268b6bd1bb6f77a8821faeea9c52ee9e0afa0b6d948ce82c966c2",
+      "aggregatorCodeHash": "0x16f41184f797cb8f8918680df0ebf2a97cc3192aa6b104615f61096fc674f2aa",
+      "decimals": 8,
+      "round": [
+        "18446744073709551679",
+        "99987568",
+        "1791733182",
+        "1791733194",
+        "18446744073709551679"
+      ],
+      "ageSeconds": "82088",
+      "heartbeatSeconds": 86400,
+      "passesCurrent300SecondPolicy": false
+    },
+    {
+      "directoryName": "BTC / USD",
+      "description": "BTC / USD",
+      "proxy": "0x12C0F44368a02081ce58a936d1C1F606BB301715",
+      "aggregator": "0x5dEDB0E2674748e6c83179c316a2fd01BdA8d70B",
+      "proxyCodeHash": "0xbd6f524cdc4268b6bd1bb6f77a8821faeea9c52ee9e0afa0b6d948ce82c966c2",
+      "aggregatorCodeHash": "0x16f41184f797cb8f8918680df0ebf2a97cc3192aa6b104615f61096fc674f2aa",
+      "decimals": 8,
+      "round": [
+        "18446744073709552354",
+        "8262263000000",
+        "1791808785",
+        "1791808857",
+        "18446744073709552354"
+      ],
+      "ageSeconds": "6425",
+      "heartbeatSeconds": 86400,
+      "passesCurrent300SecondPolicy": false
+    },
+    {
+      "directoryName": "LINK / USD",
+      "description": "LINK / USD",
+      "proxy": "0x2A9FBFbf392594c4Dd7593C8a91cdEbc02e5b884",
+      "aggregator": "0x70227F651bdC5e126cEfCF2b543cB01A83474BBF",
+      "proxyCodeHash": "0xbd6f524cdc4268b6bd1bb6f77a8821faeea9c52ee9e0afa0b6d948ce82c966c2",
+      "aggregatorCodeHash": "0x16f41184f797cb8f8918680df0ebf2a97cc3192aa6b104615f61096fc674f2aa",
+      "decimals": 8,
+      "round": [
+        "18446744073709554281",
+        "1311662149",
+        "1791814706",
+        "1791814779",
+        "18446744073709554281"
+      ],
+      "ageSeconds": "503",
+      "heartbeatSeconds": 86400,
+      "passesCurrent300SecondPolicy": false
+    },
+    {
+      "directoryName": "ETH / USD",
+      "description": "ETH / USD",
+      "proxy": "0x5c8c8482f064049248F86D9F4aFa4B1f2F5b6d31",
+      "aggregator": "0xF648D8F0ed894c99A12de5Df3020Cd273e841Bd4",
+      "proxyCodeHash": "0xbd6f524cdc4268b6bd1bb6f77a8821faeea9c52ee9e0afa0b6d948ce82c966c2",
+      "aggregatorCodeHash": "0x16f41184f797cb8f8918680df0ebf2a97cc3192aa6b104615f61096fc674f2aa",
+      "decimals": 8,
+      "round": [
+        "18446744073709552773",
+        "252828650000",
+        "1791814723",
+        "1791814735",
+        "18446744073709552773"
+      ],
+      "ageSeconds": "547",
+      "heartbeatSeconds": 86400,
+      "passesCurrent300SecondPolicy": false
+    }
+  ],
+  "tokens": [
+    {
+      "chainId": 10143,
+      "address": "0x534b2f3A21130d7a60830c2Df862319e593943A3",
+      "name": "USDC",
+      "symbol": "USDC",
+      "decimals": 6,
+      "logoURI": "https://raw.githubusercontent.com/monad-crypto/token-list/refs/heads/main/mainnet/USDC/logo.svg",
+      "onchainDecimals": 6,
+      "codeHash": "0x96215e6049ed615cdc22fea7701e85458a8e51a2df3e7d45e8f9fa1d521b5a78"
+    },
+    {
+      "chainId": 10143,
+      "address": "0x45477f4709771331db81944A5E20eF95Bc7BA2D7",
+      "name": "Wrapped Ether",
+      "symbol": "WETH",
+      "decimals": 18,
+      "logoURI": "https://raw.githubusercontent.com/monad-crypto/token-list/refs/heads/main/mainnet/WETH/logo.svg",
+      "onchainDecimals": 18,
+      "codeHash": "0xd0a06b12ac47863b5c7be4185c2deaad1c61557033f56c7d4ea74429cbb25e23"
+    }
+  ],
+  "pools": [
+    {
+      "poolId": "0xa57b2976527ea8966b169a3378366586515d1fe5e498fe18cbe6186af137c8cf",
+      "currency0": "0x45477f4709771331db81944A5E20eF95Bc7BA2D7",
+      "currency1": "0x534b2f3A21130d7a60830c2Df862319e593943A3",
+      "fee": 100,
+      "tickSpacing": 1,
+      "hooks": "0x0000000000000000000000000000000000000000",
+      "sqrtPriceX96": "0",
+      "liquidity": "0",
+      "virtualQuoteReserveBaseUnits": "0",
+      "spotQuoteBaseUnitsPerWETH": "0",
+      "referenceQuoteBaseUnitsPerETH": "2528600855",
+      "passes100QuoteScreen": false,
+      "passes5PercentPriceScreen": false
+    },
+    {
+      "poolId": "0x71aa3c2ed16459854a8269da48f95dc6c519a814993a6052a1eca60f5fa1623d",
+      "currency0": "0x45477f4709771331db81944A5E20eF95Bc7BA2D7",
+      "currency1": "0x534b2f3A21130d7a60830c2Df862319e593943A3",
+      "fee": 500,
+      "tickSpacing": 10,
+      "hooks": "0x0000000000000000000000000000000000000000",
+      "sqrtPriceX96": "0",
+      "liquidity": "0",
+      "virtualQuoteReserveBaseUnits": "0",
+      "spotQuoteBaseUnitsPerWETH": "0",
+      "referenceQuoteBaseUnitsPerETH": "2528600855",
+      "passes100QuoteScreen": false,
+      "passes5PercentPriceScreen": false
+    },
+    {
+      "poolId": "0x233d2608ccc57643187063b184678d2acb44562c431d867ce9fa4e39f63659eb",
+      "currency0": "0x45477f4709771331db81944A5E20eF95Bc7BA2D7",
+      "currency1": "0x534b2f3A21130d7a60830c2Df862319e593943A3",
+      "fee": 3000,
+      "tickSpacing": 60,
+      "hooks": "0x0000000000000000000000000000000000000000",
+      "sqrtPriceX96": "0",
+      "liquidity": "0",
+      "virtualQuoteReserveBaseUnits": "0",
+      "spotQuoteBaseUnitsPerWETH": "0",
+      "referenceQuoteBaseUnitsPerETH": "2528600855",
+      "passes100QuoteScreen": false,
+      "passes5PercentPriceScreen": false
+    },
+    {
+      "poolId": "0x6ea9cebd05610d84d510e5f87eb7ce4699bb9d1e5facca2fc63da7c28dd1b062",
+      "currency0": "0x45477f4709771331db81944A5E20eF95Bc7BA2D7",
+      "currency1": "0x534b2f3A21130d7a60830c2Df862319e593943A3",
+      "fee": 10000,
+      "tickSpacing": 200,
+      "hooks": "0x0000000000000000000000000000000000000000",
+      "sqrtPriceX96": "0",
+      "liquidity": "0",
+      "virtualQuoteReserveBaseUnits": "0",
+      "spotQuoteBaseUnitsPerWETH": "0",
+      "referenceQuoteBaseUnitsPerETH": "2528600855",
+      "passes100QuoteScreen": false,
+      "passes5PercentPriceScreen": false
+    }
+  ],
+  "quoter": {
+    "address": "0x869834d127b230283fe63E0d0A9bEB67216a94C7",
+    "codeHash": "0xdc1a524cd6108e0d1d90c5de1b594b2f953feaf9dc6c2387ecd1b4232ea0e521",
+    "scope": "Registry-listed community test deployment; no independent source-bytecode verification yet"
+  }
+}

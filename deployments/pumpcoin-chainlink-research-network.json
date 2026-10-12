@@ -1,0 +1,28 @@
+{
+  "chainId": 10143,
+  "poolManager": "0x451D64ab3b650040d2aE1886602b97ed6eDc643d",
+  "stateView": "0xB639209539c61BaF67AC04876315786F8D0b153c",
+  "fee": 3000,
+  "tickSpacing": 60,
+  "minimumQuoteLiquidity": "100000000",
+  "maxDeviationBps": 500,
+  "maxStaleness": 300,
+  "maxConfidenceBps": 100,
+  "poolManagerCodeHash": "0x61199025286997b715457c68f86dbc42c847753f01e0773668394a405d53d579",
+  "stateViewCodeHash": "0xeedadde80f69c3b89437996025759b839a65e12db6c8379a7327a34aa269fa5e",
+  "observedAtBlock": "70406059",
+  "sources": [
+    "https://docs.chain.link/data-feeds/price-feeds/addresses",
+    "https://reference-data-directory.vercel.app/feeds-monad-testnet.json",
+    "https://github.com/monad-crypto/protocols/blob/main/testnet/uniswap_v4.jsonc"
+  ],
+  "oracle": "chainlink",
+  "monOracle": null,
+  "usdOracle": {
+    "proxy": "0x39820e7965e29DC86b94F20eD04e9c5cCf9aFf95",
+    "aggregator": "0x56395e94c93DE46598537C4A81811a7a743D0826",
+    "proxyCodeHash": "0xbd6f524cdc4268b6bd1bb6f77a8821faeea9c52ee9e0afa0b6d948ce82c966c2",
+    "aggregatorCodeHash": "0x16f41184f797cb8f8918680df0ebf2a97cc3192aa6b104615f61096fc674f2aa",
+    "decimals": 8
+  }
+}

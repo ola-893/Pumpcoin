@@ -6,7 +6,10 @@ export type WorkerReceipt = { version: string; mode: string; evidence: string; m
 export type BindingReceipt = { status: string; chainId: number; mode: string; vault: string; identityRegistry: string; agentId: string; blockNumber: string; blockHash: Hex; configHash: Hex; checkedAt: string; investmentEligible: boolean; evidence: string; scope: string; deploymentTransaction?: Hex; tradingReady?: false };
 export type RegistrationRecord = { version: 'PUMPCOIN-LOCAL-REGISTRATION-v1'; id: Hex; localAgentId: Hex; registeredAt: string; manifest: Prepared['manifest']; commitment: Hex; authorization: { challenge: Challenge; controllerSignature: Hex; executionSignature: Hex }; worker: WorkerReceipt; binding?: BindingReceipt; status: 'registered-locally-vault-pending' | 'registered-locally-binding-checked'; investmentEligible: false };
 
-export type TradeAction='update-prices'|'deploy'|'propose'|'apply'|'unpause'|'pause'|'approve-deposit'|'deposit'|'approve-redeem'|'redeem'|'buy'|'sell';
+export type TradeAction='update-prices'|'update-mon-price'|'deploy'|'propose'|'apply'|'unpause'|'pause'|'approve-deposit'|'deposit'|'approve-redeem'|'redeem'|'buy'|'sell';
+
+export type TradingQuote = { tokenIn: string; tokenOut: string; amountIn: string; expectedOutput: string; minimumOutput: string; oracleMinimumOutput: string; slippageBps: number; blockNumber: string; blockHash: Hex; checkedAt: string; expiresAt: number };
+
 
 export type RuntimeStatus = {
   configured: boolean; running: boolean; state: 'unconfigured' | 'stopped' | 'starting' | 'stopping' | 'error' | WorkerObservationState;

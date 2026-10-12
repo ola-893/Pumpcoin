@@ -1,5 +1,6 @@
+import { readClient } from './rpc.js';
 import { readFileSync } from 'node:fs';
-import { createPublicClient, encodeDeployData, getAddress, http, keccak256, parseAbi, type Abi, type Address, type Hex } from 'viem';
+import { encodeDeployData, getAddress, keccak256, parseAbi, type Abi, type Address, type Hex } from 'viem';
 import { identityURI } from './binding.js';
 import { riskBindingHash, strategyBindingHash, type Prepared } from './core.js';
 import type { BindingReceipt } from './types.js';
@@ -27,7 +28,7 @@ export function vaultArtifact(): VaultArtifact {
   try { return JSON.parse(readFileSync(new URL('../contracts/out/PumpCoinRegisteredVault.sol/PumpCoinRegisteredVault.json', import.meta.url), 'utf8')); }
   catch { throw new Error('Vault deployment artifact is unavailable. Build the reviewed contracts before registering on-chain.'); }
 }
-export const vaultClient = (c: VaultNetwork) => createPublicClient({ transport: http(c.rpcUrl, { timeout: 15000, retryCount: 0 }), cacheTime: 0 });
+export const vaultClient = (c: VaultNetwork) => readClient(c.rpcUrl);
 async function pin(client: any, address: Address, expected: Hex, blockNumber: bigint) {
   const code = await client.getCode({ address, blockNumber });
   if (!code || code === '0x' || keccak256(code) !== expected) throw new Error('Configured contract bytecode changed; deployment is blocked.');

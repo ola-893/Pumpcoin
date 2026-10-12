@@ -1,0 +1,32 @@
+{
+  "mode": "local-anvil-fixture",
+  "plan": {
+    "chainId": 31337,
+    "from": "0x70997970C51812dc3A010C7d01b50e0d17dc79C8",
+    "to": "0xCf7Ed3AccA5a467e9e704C703E8D87F634fB0Fc9",
+    "data": "0x24ee54170000000000000000000000005fbdb2315678afecb367f032d93f642f64180aa3000000000000000000000000e7f1725e7734ce288f8367e1bb143e90bb3f051200000000000000000000000000000000000000000000000000000000000f424000000000000000000000000000000000000000000000000006e7799d37c1c000000000000000000000000000000000000000000000000000000000006ace3bab00000000000000000000000005242d4ac717cdf38c36af290f2b0da99aa82c67",
+    "quote": {
+      "tokenIn": "0x5FbDB2315678afecb367f032d93F642f64180aa3",
+      "tokenOut": "0xe7f1725E7734CE288F8367e1Bb143E90bb3F0512",
+      "amountIn": "1000000",
+      "expectedOutput": "498750000000000000",
+      "minimumOutput": "497500000000000000",
+      "oracleMinimumOutput": "497500000000000000",
+      "slippageBps": 50,
+      "blockNumber": "24",
+      "blockHash": "0x170673a4cb6e12116ed15444b052b085ca8fa7f0864df925b0d6c783f4e9e179",
+      "checkedAt": "2026-10-12T14:09:16.088Z",
+      "expiresAt": 1791814186088
+    },
+    "value": "0x0",
+    "gas": "0xa5fec",
+    "balance": "10000000000000000000000",
+    "estimatedFee": "712278962688352",
+    "canSubmit": true,
+    "action": "buy",
+    "output": "498750000000000000",
+    "deadline": "1791900587",
+    "scope": "buy on this testnet vault only. Review amount, recipient and gas in your wallet.",
+    "blockers": []
+  }
+}

@@ -1,15 +1,16 @@
+import { readClient } from './rpc.js';
 import { readFileSync } from 'node:fs';
 import { mkdir, readFile, writeFile, rename } from 'node:fs/promises';
 import { randomBytes } from 'node:crypto';
 import { join } from 'node:path';
-import { createPublicClient, http, getAddress, encodeDeployData, encodeFunctionData, toHex, type Address, type Hex } from 'viem';
+import { getAddress, encodeDeployData, encodeFunctionData, toHex, type Address, type Hex } from 'viem';
 import { nativeGatewayAbi, nativeShareAbi, type NativeAction, type NativePlan, type NativeState } from './native-investment-types.js';
 import type { VaultNetwork } from './vault-setup.js';
 import type { TradingNetwork, tradingService } from './trading.js';
 import type { RegistrationRecord } from './types.js';
 
 // Exact prepared transactions are retained server-side. Receipt recovery never trusts a browser-supplied destination or calldata.
-export function nativeInvestmentService(network: VaultNetwork, n: TradingNetwork, directory: string, records: () => Promise<RegistrationRecord[]>, trading: Pick<ReturnType<typeof tradingService>, 'inspect'>, client: any = createPublicClient({transport:http(network.rpcUrl,{retryCount:0}),cacheTime:0})) {
+export function nativeInvestmentService(network: VaultNetwork, n: TradingNetwork, directory: string, records: () => Promise<RegistrationRecord[]>, trading: Pick<ReturnType<typeof tradingService>, 'inspect'>, client: any = readClient(network.rpcUrl)) {
  const confirming = new Set<string>();
  const artifact = (name='NativeVaultInvestorGateway') => JSON.parse(readFileSync(new URL(`../contracts/out/${name}.sol/${name}.json`,import.meta.url),'utf8'));
  const key = (id:string) => {if(!/^0x[a-f0-9]{64}$/.test(id))throw new Error('Invalid native investment identifier.');return id.slice(2);};

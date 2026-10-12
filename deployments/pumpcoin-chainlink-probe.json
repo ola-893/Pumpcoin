@@ -1,0 +1,131 @@
+{
+  "chainId": 10143,
+  "blockNumber": "70406059",
+  "timestamp": "1791810688",
+  "feeds": [
+    {
+      "name": "USDT / USD",
+      "address": "0xc8a72485e68af06308A8C888eB376AB322310Fa6",
+      "heartbeat": 86400,
+      "codeHash": "0xbd6f524cdc4268b6bd1bb6f77a8821faeea9c52ee9e0afa0b6d948ce82c966c2",
+      "decimals": 8,
+      "description": "USDT / USD",
+      "latestRoundData": [
+        "18446744073709551679",
+        "99894691",
+        "1791732955",
+        "1791733027",
+        "18446744073709551679"
+      ],
+      "aggregator": "0x046eB184D683bb55eF3C4BEa0D6857309e12C114",
+      "aggregatorCodeHash": "0x16f41184f797cb8f8918680df0ebf2a97cc3192aa6b104615f61096fc674f2aa"
+    },
+    {
+      "name": "USDC / USD",
+      "address": "0x39820e7965e29DC86b94F20eD04e9c5cCf9aFf95",
+      "heartbeat": 86400,
+      "codeHash": "0xbd6f524cdc4268b6bd1bb6f77a8821faeea9c52ee9e0afa0b6d948ce82c966c2",
+      "decimals": 8,
+      "description": "USDC / USD",
+      "latestRoundData": [
+        "18446744073709551679",
+        "99987568",
+        "1791733182",
+        "1791733194",
+        "18446744073709551679"
+      ],
+      "aggregator": "0x56395e94c93DE46598537C4A81811a7a743D0826",
+      "aggregatorCodeHash": "0x16f41184f797cb8f8918680df0ebf2a97cc3192aa6b104615f61096fc674f2aa"
+    },
+    {
+      "name": "BTC / USD",
+      "address": "0x12C0F44368a02081ce58a936d1C1F606BB301715",
+      "heartbeat": 86400,
+      "codeHash": "0xbd6f524cdc4268b6bd1bb6f77a8821faeea9c52ee9e0afa0b6d948ce82c966c2",
+      "decimals": 8,
+      "description": "BTC / USD",
+      "latestRoundData": [
+        "18446744073709552354",
+        "8262263000000",
+        "1791808785",
+        "1791808857",
+        "18446744073709552354"
+      ],
+      "aggregator": "0x5dEDB0E2674748e6c83179c316a2fd01BdA8d70B",
+      "aggregatorCodeHash": "0x16f41184f797cb8f8918680df0ebf2a97cc3192aa6b104615f61096fc674f2aa"
+    },
+    {
+      "name": "LINK / USD",
+      "address": "0x2A9FBFbf392594c4Dd7593C8a91cdEbc02e5b884",
+      "heartbeat": 86400,
+      "codeHash": "0xbd6f524cdc4268b6bd1bb6f77a8821faeea9c52ee9e0afa0b6d948ce82c966c2",
+      "decimals": 8,
+      "description": "LINK / USD",
+      "latestRoundData": [
+        "18446744073709554278",
+        "1318855623",
+        "1791808496",
+        "1791808568",
+        "18446744073709554278"
+      ],
+      "aggregator": "0x70227F651bdC5e126cEfCF2b543cB01A83474BBF",
+      "aggregatorCodeHash": "0x16f41184f797cb8f8918680df0ebf2a97cc3192aa6b104615f61096fc674f2aa"
+    },
+    {
+      "name": "ETH / USD",
+      "address": "0x5c8c8482f064049248F86D9F4aFa4B1f2F5b6d31",
+      "heartbeat": 86400,
+      "codeHash": "0xbd6f524cdc4268b6bd1bb6f77a8821faeea9c52ee9e0afa0b6d948ce82c966c2",
+      "decimals": 8,
+      "description": "ETH / USD",
+      "latestRoundData": [
+        "18446744073709552771",
+        "252770178331",
+        "1791808573",
+        "1791808585",
+        "18446744073709552771"
+      ],
+      "aggregator": "0xF648D8F0ed894c99A12de5Df3020Cd273e841Bd4",
+      "aggregatorCodeHash": "0x16f41184f797cb8f8918680df0ebf2a97cc3192aa6b104615f61096fc674f2aa"
+    },
+    {
+      "name": "MON / USD mainnet address checked on testnet",
+      "address": "0xBcD78f76005B7515837af6b50c7C52BCf73822fb",
+      "codeHash": null
+    }
+  ],
+  "pools": [
+    {
+      "fee": 100,
+      "tick": 1,
+      "pool": "0x1a822f4eee54668ce6fb6e9be73331cd138bf9f1cde716386be0be452711f27f",
+      "sqrt": "0",
+      "liquidity": "0",
+      "virtualQuote": "0"
+    },
+    {
+      "fee": 500,
+      "tick": 10,
+      "pool": "0x8bd734c49be0ac769780c5b74f71a5e334bd1b2ea1576c3592ebe02f73b13ed4",
+      "sqrt": "0",
+      "liquidity": "0",
+      "virtualQuote": "0"
+    },
+    {
+      "fee": 3000,
+      "tick": 60,
+      "pool": "0x5e65fc6c6777578390f275a30690331f2f3bd3a51bf63fdaeaaea7087ed836b7",
+      "sqrt": "39591349086202093368596202520574161",
+      "liquidity": "1264908000000",
+      "virtualQuote": "2531268"
+    },
+    {
+      "fee": 10000,
+      "tick": 200,
+      "pool": "0xa8a5b29f1789d8245d57a4b3cd5872dc0c2ca65c7e51f0bfc8f0fc1e16dabbc2",
+      "sqrt": "0",
+      "liquidity": "0",
+      "virtualQuote": "0"
+    }
+  ]
+}

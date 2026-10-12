@@ -1,0 +1,25 @@
+{
+  "date": "2026-10-12",
+  "scope": "Executable DEX quote preview; local simulations and read-only Monad market investigation",
+  "affectedTestsPassed": 20,
+  "rootTypeScript": "passed",
+  "frontendTypeScript": "passed",
+  "frontendProductionBuild": "passed",
+  "browser": {
+    "expectedOutput": "0.49875 WMON",
+    "minimumReceived": "0.4975 WMON",
+    "quoteExpiredSubmissionEnabled": false,
+    "mode": "local Anvil replay; sending disabled"
+  },
+  "regressions": [
+    "actual buy/sell return values",
+    "tighter controller slippage",
+    "no state mutation while quoting",
+    "below-minimum pool movement reverts",
+    "encoded onchain deadline expires",
+    "same-block simulation and canonical hash",
+    "invalid and changing quote returns fail",
+    "expired wallet previews rejected"
+  ],
+  "liveTransactionsSubmitted": 0
+}

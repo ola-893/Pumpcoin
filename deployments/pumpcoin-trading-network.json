@@ -3,10 +3,9 @@
   "pyth": "0x2880aB155794e7179c9eE2e38200202908C17B43",
   "poolManager": "0x451D64ab3b650040d2aE1886602b97ed6eDc643d",
   "stateView": "0xB639209539c61BaF67AC04876315786F8D0b153c",
-  "monFeed": "0x31491744e2dbf6df7fcf4ac0820d18a609b49076d45066d3568424e62f686cd1",
   "usdFeed": "0xeaa020c61cc479712813461ce153894a96a6c00b21ed0cfc2798d1f9a9e9c94a",
-  "fee": 3000,
-  "tickSpacing": 60,
+  "fee": 500,
+  "tickSpacing": 10,
   "minimumQuoteLiquidity": "100000000",
   "maxDeviationBps": 500,
   "maxStaleness": 300,
@@ -16,9 +15,15 @@
   "pythImplementationCodeHash": "0x03c6ea8da62780bfc5398c8374f0611710eb4e3d5c2d50f862ff157a997f2aff",
   "poolManagerCodeHash": "0x61199025286997b715457c68f86dbc42c847753f01e0773668394a405d53d579",
   "stateViewCodeHash": "0xeedadde80f69c3b89437996025759b839a65e12db6c8379a7327a34aa269fa5e",
-  "observedAtBlock": "70385904",
+  "observedAtBlock": "70479577",
   "sources": [
     "https://docs.monad.xyz/tooling-and-infra/oracles",
-    "https://github.com/monad-crypto/protocols/blob/main/testnet/uniswap_v4.jsonc"
-  ]
+    "https://github.com/monad-crypto/protocols/blob/main/testnet/uniswap_v4.jsonc",
+    "https://docs.supra.com/oracles/data-feeds/pull-oracle/networks",
+    "https://docs.supra.com/oracles/data-feeds/data-feeds-index",
+    "https://docs.pyth.network/price-feeds/core/fetch-price-updates"
+  ],
+  "oracle": "supra-pyth",
+  "supra": "0xF8522B7fcE37439b98A2be282d413A44269028bE",
+  "supraCodeHash": "0x6e3a6d42335ec651bf68b1ad923f7a3d7b2e81c8d7801f81ec9aa8c705ba320e"
 }
