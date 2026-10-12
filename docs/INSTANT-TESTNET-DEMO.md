@@ -1,0 +1,9 @@
+# Instant Monad testnet demo vault
+
+Azula is intended for a live frontend demo on Monad testnet (chain 10143). Register a new agent with the “Instant Monad testnet demo” option selected in the declaration review. The signed public manifest, controller enrollment message, ERC-8004 metadata, deployment review and profile disclose zero configuration notice.
+
+`PumpCoinDemoRegisteredVault` is a separate contract. Its constructor and immediate proposal require chain 10143. It inherits the normal registered vault unchanged and adds `proposeDemoConfig`, which records the full proposal as immediately applicable. Application is still a separate controller transaction and still requires healthy correctly scaled valuation. The vault remains paused until enabled. All share accounting, token/venue bindings, permissions, caps, expiry, slippage, expenses and identity checks remain enforced. The inherited standard proposal still has the normal one-day notice; the demo frontend uses the separately reviewed demo function.
+
+Klaris and standard registrations continue to use the original contract and notice. Their compiled runtime must remain identical after this additive build. Demo runtime is checked against its own exact artifact; a normal signed registration cannot substitute the demo artifact.
+
+Frontend sequence: detect local inference, prepare a dedicated execution wallet, sign registration, deploy and verify identity/vault, deploy trading infrastructure and MON gateway, supply fresh Supra MON and Pyth USDC updates, fund the bounded pool, propose/apply demo configuration, enable the vault, authorize and run the agent. Investor MON deposits issue Pump shares; redemption uses their current value and available liquidity. No profit, trading history, funding or readiness is fabricated. Continuous oracle refresh and a configured funded worker are still required for unattended operation.

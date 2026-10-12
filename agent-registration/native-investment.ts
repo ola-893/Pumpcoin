@@ -5,7 +5,7 @@ import { randomBytes } from 'node:crypto';
 import { join } from 'node:path';
 import { getAddress, encodeDeployData, encodeFunctionData, toHex, type Address, type Hex } from 'viem';
 import { nativeGatewayAbi, nativeShareAbi, type NativeAction, type NativePlan, type NativeState } from './native-investment-types.js';
-import type { VaultNetwork } from './vault-setup.js';
+import {registeredVaultName, type VaultNetwork} from './vault-setup.js';
 import type { TradingNetwork, tradingService } from './trading.js';
 import type { RegistrationRecord } from './types.js';
 
@@ -24,7 +24,7 @@ export function nativeInvestmentService(network: VaultNetwork, n: TradingNetwork
  async function snapshot(id:string,account?:Address){
   const r=await record(id),view=await trading.inspect(id,account),b=BigInt(view.blockNumber);
   if(![10143,31337].includes(network.chainId)||await client.getChainId()!==network.chainId)throw new Error('Wrong native investment RPC chain.');
-  const vaultArtifact=artifact('PumpCoinRegisteredVault'),vaultCode=await client.getCode({address:getAddress(r.binding!.vault),blockNumber:b});
+  const vaultArtifact=artifact(registeredVaultName(r.manifest)),vaultCode=await client.getCode({address:getAddress(r.binding!.vault),blockNumber:b});
   if(!vaultCode||vaultCode.length!==vaultArtifact.deployedBytecode.object.length||normalize(vaultCode,vaultArtifact)!==normalize(vaultArtifact.deployedBytecode.object,vaultArtifact))throw new Error('A compatible reviewed public vault is required for MON investment.');
   const deployment=await load<{address:Address;transactionHash:Hex;source:Address}>(file(id));
   const blockers=[...view.blockers];

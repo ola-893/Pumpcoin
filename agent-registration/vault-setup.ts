@@ -24,8 +24,9 @@ export function vaultNetwork(c: VaultNetwork): VaultNetwork {
   if (c.quote === c.position) throw new Error('Vault assets must differ.');
   return c;
 }
-export function vaultArtifact(): VaultArtifact {
-  try { return JSON.parse(readFileSync(new URL('../contracts/out/PumpCoinRegisteredVault.sol/PumpCoinRegisteredVault.json', import.meta.url), 'utf8')); }
+export function registeredVaultName(manifest: Prepared['manifest']) { return manifest.vaultPolicy?.mode === 'instant-testnet-demo' ? 'PumpCoinDemoRegisteredVault' : 'PumpCoinRegisteredVault'; }
+export function vaultArtifact(demo = false): VaultArtifact {
+  try { return JSON.parse(readFileSync(new URL(`../contracts/out/${demo?'PumpCoinDemoRegisteredVault':'PumpCoinRegisteredVault'}.sol/${demo?'PumpCoinDemoRegisteredVault':'PumpCoinRegisteredVault'}.json`, import.meta.url), 'utf8')); }
   catch { throw new Error('Vault deployment artifact is unavailable. Build the reviewed contracts before registering on-chain.'); }
 }
 export const vaultClient = (c: VaultNetwork) => readClient(c.rpcUrl);
@@ -49,7 +50,8 @@ export async function networkChecks(c: VaultNetwork, client: any, blockNumber: b
 function dataFor(p: Prepared, c: VaultNetwork, a: VaultArtifact): Hex {
   return encodeDeployData({ abi: a.abi, bytecode: a.bytecode.object, args: [{ quote: c.quote, position: c.position, controller: p.manifest.controller, manager: p.manifest.executionKey, strategy: strategyBindingHash(p), risk: riskBindingHash(p), tradeCap: BigInt(p.manifest.proposedMandate.perTradeQuoteUnits), positionCap: BigInt(p.manifest.proposedMandate.maxPositionQuoteUnits), registry: c.identityRegistry, uri: identityURI(p), commitment: p.commitment }] });
 }
-export async function prepareVault(p: Prepared, config: VaultNetwork, client: any = vaultClient(config), artifact = vaultArtifact()): Promise<VaultPlan> {
+export async function prepareVault(p: Prepared, config: VaultNetwork, client: any = vaultClient(config), artifact = vaultArtifact(!!p.manifest.vaultPolicy)): Promise<VaultPlan> {
+  if(p.manifest.vaultPolicy && config.chainId!==10143)throw new Error('Instant demo vaults can only deploy on Monad testnet.');
   const c = vaultNetwork(config), block = await client.getBlock({ blockTag: 'latest' });
   if (block.number === null || !block.hash) throw new Error('RPC could not anchor the deployment check.');
   await networkChecks(c, client, block.number);
@@ -59,7 +61,7 @@ export async function prepareVault(p: Prepared, config: VaultNetwork, client: an
   const gas = estimate * 12n / 10n, fee = gas * price * 2n;
   if ((await client.getBlock({ blockNumber: block.number })).hash !== block.hash) throw new Error('Chain changed during deployment preparation. Retry.');
   return { chainId: c.chainId, from, data, value: '0x0', gas: `0x${gas.toString(16)}`, balance: balance.toString(), estimatedFee: fee.toString(), canSubmit: balance >= fee, commitment: p.commitment,
-    scope: `Create a dedicated paused vault and ERC-8004 identity. Controller owns the identity and administers this vault; the declared execution key is its manager. This vault uses the six-decimal ERC-20 quote asset ${c.quote} for deposits, valuation and redemption. Native MON investment and redemption are not implemented by this deployment. No deposit, approval, swap or token transfer. Trading and investment stay blocked until live valuation and a restricted venue are configured through notice.`,
+    scope: `${p.manifest.vaultPolicy?'INSTANT TESTNET DEMO: configuration can be applied immediately by the controller, with zero notice. This contract only deploys on Monad testnet. ':''}Create a dedicated paused vault and ERC-8004 identity. Controller owns the identity and administers this vault; the declared execution key is its manager. This vault uses the six-decimal ERC-20 quote asset ${c.quote} for deposits, valuation and redemption. Native MON investment and redemption are not implemented by this deployment. No deposit, approval, swap or token transfer. Trading and investment stay blocked until live valuation and a restricted venue are configured${p.manifest.vaultPolicy?' through an immediate demo proposal and application':' through notice'}.`,
     blockers: balance < fee ? ['Fund the controller with testnet MON for deployment gas.'] : [] };
 }
 export function normalized(code: Hex, refs: VaultArtifact['deployedBytecode']['immutableReferences']) {
@@ -67,7 +69,8 @@ export function normalized(code: Hex, refs: VaultArtifact['deployedBytecode']['i
   for (const ranges of Object.values(refs ?? {})) for (const { start, length } of ranges) { if (start < 0 || start + length > bytes.length) throw new Error('Invalid runtime artifact references.'); bytes.fill(0, start, start + length); }
   return bytes.toString('hex');
 }
-export async function confirmVault(p: Prepared, txHash: Hex, config: VaultNetwork, client: any = vaultClient(config), artifact = vaultArtifact()): Promise<BindingReceipt> {
+export async function confirmVault(p: Prepared, txHash: Hex, config: VaultNetwork, client: any = vaultClient(config), artifact = vaultArtifact(!!p.manifest.vaultPolicy)): Promise<BindingReceipt> {
+  if(p.manifest.vaultPolicy && config.chainId!==10143)throw new Error('Instant demo vaults can only deploy on Monad testnet.');
   const c = vaultNetwork(config);
   if (!/^0x[0-9a-f]{64}$/i.test(txHash)) throw new Error('Enter a valid deployment transaction hash.');
   let receipt: any, tx: any;
@@ -79,6 +82,7 @@ export async function confirmVault(p: Prepared, txHash: Hex, config: VaultNetwor
   await networkChecks(c, client, receipt.blockNumber);
   const vault = getAddress(receipt.contractAddress), runtime = await client.getCode({ address: vault, blockNumber: receipt.blockNumber });
   if (!runtime || normalized(runtime, artifact.deployedBytecode.immutableReferences) !== normalized(artifact.deployedBytecode.object, artifact.deployedBytecode.immutableReferences)) throw new Error('Vault runtime differs from the compiled deployment artifact.');
+  if(p.manifest.vaultPolicy){const demo=await client.readContract({address:vault,abi:parseAbi(['function instantTestnetDemo() view returns(bool)']),functionName:'instantTestnetDemo',blockNumber:receipt.blockNumber});if(demo!==true)throw new Error('Demo vault marker is missing.');}
   const read = (address: Address, abi: Abi, functionName: string, args: unknown[] = []) => client.readContract({ address, abi, functionName, args, blockNumber: receipt.blockNumber });
   const names = ['admin', 'manager', 'identityRegistry', 'agentId', 'registrationCommitment', 'strategyHash', 'riskHash', 'perTradeCap', 'maxPositionValue', 'currentConfigHash', 'asset', 'positionAsset', 'adapter', 'valuationSource', 'paused', 'totalSupply'];
   const values = await Promise.all(names.map(n => read(vault, vaultAbi, n))), v = Object.fromEntries(names.map((n, i) => [n, values[i]]));
@@ -86,5 +90,5 @@ export async function confirmVault(p: Prepared, txHash: Hex, config: VaultNetwor
   const [owner, uri, sourceStatus, sourceDecimals] = await Promise.all([read(c.identityRegistry, registryAbi, 'ownerOf', [v.agentId]), read(c.identityRegistry, registryAbi, 'tokenURI', [v.agentId]), read(v.valuationSource, sourceAbi, 'status'), read(v.valuationSource, sourceAbi, 'positionDecimals')]);
   if (!same(v.admin, p.manifest.controller) || !same(v.manager, p.manifest.executionKey) || !same(owner, p.manifest.controller) || uri !== identityURI(p) || !same(v.identityRegistry, c.identityRegistry) || !same(v.registrationCommitment, p.commitment) || !same(v.strategyHash, strategyBindingHash(p)) || !same(v.riskHash, riskBindingHash(p)) || v.perTradeCap !== BigInt(p.manifest.proposedMandate.perTradeQuoteUnits) || v.maxPositionValue !== BigInt(p.manifest.proposedMandate.maxPositionQuoteUnits) || !same(v.asset, c.quote) || !same(v.positionAsset, c.position) || v.adapter !== ZERO || v.paused !== true || v.totalSupply !== 0n || sourceStatus[0] !== false || sourceDecimals !== c.positionDecimals) throw new Error('Created vault identity, authority, limits or safety state do not match this registration.');
   if ((await client.getBlock({ blockNumber: receipt.blockNumber })).hash !== receipt.blockHash) throw new Error('Chain changed during vault verification. Retry.');
-  return { status: 'binding-checked-at-block', chainId: c.chainId, mode: c.chainId === 10143 ? 'monad-testnet' : 'local-simulation', vault, identityRegistry: c.identityRegistry, agentId: String(v.agentId), blockNumber: String(receipt.blockNumber), blockHash: receipt.blockHash, configHash: v.currentConfigHash, checkedAt: new Date().toISOString(), investmentEligible: false, evidence: 'controller-deployment-receipt-and-runtime-verification', scope: 'Dedicated vault and ERC-8004 identity created and bound. Vault starts paused with unavailable valuation and no trading adapter. Trading and investment remain blocked. Historical deployment snapshot; configured RPC and registry implementation are trust boundaries.', deploymentTransaction: txHash, tradingReady: false };
+  return { ...(p.manifest.vaultPolicy?{instantTestnetDemo:true as const,configurationNoticeSeconds:0}:{}),status: 'binding-checked-at-block', chainId: c.chainId, mode: c.chainId === 10143 ? 'monad-testnet' : 'local-simulation', vault, identityRegistry: c.identityRegistry, agentId: String(v.agentId), blockNumber: String(receipt.blockNumber), blockHash: receipt.blockHash, configHash: v.currentConfigHash, checkedAt: new Date().toISOString(), investmentEligible: false, evidence: 'controller-deployment-receipt-and-runtime-verification', scope: 'Dedicated vault and ERC-8004 identity created and bound. Vault starts paused with unavailable valuation and no trading adapter. Trading and investment remain blocked. Historical deployment snapshot; configured RPC and registry implementation are trust boundaries.', deploymentTransaction: txHash, tradingReady: false };
 }

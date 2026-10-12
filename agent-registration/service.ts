@@ -31,6 +31,7 @@ export function registrationService(options: { directory: string; signer?: () =>
     if ((await stat(path)).size > 131072) throw new Error('Stored registration is too large.');
     const value = JSON.parse(await readFile(path, 'utf8')) as { public: RegistrationRecord; private: Prepared['privateRuntimeConfig'] };
     const p = checkedPrepared({ manifest: value.public.manifest, commitment: value.public.commitment, privateRuntimeConfig: value.private });
+    if (!!value.public.authorization.challenge.demoMode !== !!p.manifest.vaultPolicy) throw new Error('Signed demo policy differs from the registration.');
     if (value.public.id !== id || value.public.investmentEligible !== false || value.public.authorization.challenge.commitment !== p.commitment || value.public.authorization.challenge.runtimeConfigHash !== runtimeConfigHash(p) || value.public.authorization.challenge.controller !== p.manifest.controller || value.public.authorization.challenge.executionKey !== p.manifest.executionKey) throw new Error('Stored registration authorization does not match.');
     await checkAuthorizations(value.public.authorization.challenge, value.public.authorization.controllerSignature, value.public.authorization.executionSignature, value.public.authorization.challenge.expiresAt - 1);
     return { record: value.public, prepared: p };
@@ -55,9 +56,10 @@ export function registrationService(options: { directory: string; signer?: () =>
     vaultSetupConfigured: !!setup,
     challenge(value: unknown, origin: string) {
       const p = checkedPrepared(value); new URL(origin);
+      if (p.manifest.vaultPolicy && (setup?.chainId ?? config?.chainId ?? 10143) !== 10143) throw new Error('Instant demo registration is restricted to Monad testnet.');
       for (const [id, s] of sessions) if (s.consumed || s.challenge.expiresAt <= now()) sessions.delete(id);
       if (sessions.size >= 100) throw new Error('Too many pending registration sessions. Wait for them to expire.');
-      const c: Challenge = { id: randomBytes(32).toString('hex'), origin, chainId: setup?.chainId ?? config?.chainId ?? 10143, commitment: p.commitment, runtimeConfigHash: runtimeConfigHash(p), controller: p.manifest.controller, executionKey: p.manifest.executionKey, expiresAt: now() + 600000 };
+      const c: Challenge = { id: randomBytes(32).toString('hex'), origin, chainId: setup?.chainId ?? config?.chainId ?? 10143, commitment: p.commitment, runtimeConfigHash: runtimeConfigHash(p), controller: p.manifest.controller, executionKey: p.manifest.executionKey, expiresAt: now() + 600000, ...(p.manifest.vaultPolicy ? { demoMode: true as const } : {}) };
       sessions.set(c.id, { challenge: c, prepared: p, consumed: false }); return c;
     },
     check(id: string, origin: string) {

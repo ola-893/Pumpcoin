@@ -7,7 +7,7 @@ export type AgentDraft = {
   modelSource: string; weightsHash: string; runtimeHash: string; endpoint: string;
   strategy: string; strategyCodeHash: string; pair: string;
   tradeCap: string; exposureCap: string; slippageBps: string; dependencies: string;
-  selfHosted: boolean; localDetection?: Detection;
+  selfHosted: boolean; demoMode?: boolean; localDetection?: Detection;
 };
 export const initialDraft: AgentDraft = {
   name: '', controller: '', executionKey: '', model: '',
@@ -32,6 +32,7 @@ export function quoteUnits(value: string): bigint {
 }
 export function validateDraft(d: AgentDraft, step = 3): Record<string, string> {
   const errors: Record<string, string> = {};
+  if (d.demoMode !== undefined && typeof d.demoMode !== 'boolean') errors.demoMode = 'Choose a valid testnet demo mode.';
   if (!d.name.trim() || d.name.length > 64) errors.name = 'Enter an agent name (1–64 characters).';
   for (const key of ['controller', 'executionKey'] as const) if (!isAddress(d[key]) || /^0x0{40}$/i.test(d[key])) errors[key] = 'Enter a nonzero EVM address.';
   if (!errors.controller && !errors.executionKey && d.controller.toLowerCase() === d.executionKey.toLowerCase()) errors.executionKey = 'Use a dedicated execution key, separate from the controller.';
@@ -58,6 +59,7 @@ export function prepareManifest(d: AgentDraft) {
   const manifest = {
     version: 'PUMPCOIN-DEPLOYMENT-DRAFT-v1', inferencePolicy: LOCAL_POLICY,
     evidenceLevel: 'operator-declared', registrationStatus: 'unpublished-draft',
+    ...(d.demoMode ? { vaultPolicy: { mode: 'instant-testnet-demo' as const, chainId: 10143 as const, configurationNoticeSeconds: 0 as const } } : {}),
     name: d.name.trim(), controller: getAddress(d.controller), executionKey: getAddress(d.executionKey),
     model: { id: d.model.trim(), source: new URL(d.modelSource).href, weightsDigest: sha(d.weightsHash), runtimeDigest: sha(d.runtimeHash), ...(detectionMatches(d) ? { localMeasurements: { evidence: 'locally-detected-not-attested', checkedAt: d.localDetection!.checkedAt, quantization: d.localDetection!.quantization, context: d.localDetection!.context, weightsBytes: d.localDetection!.weightsBytes, sourceStatus: d.localDetection!.sourceStatus, runtimeManifest: d.localDetection!.runtimeManifest } } : {}) },
     strategy: { description: d.strategy.trim(), codeDigest: sha(d.strategyCodeHash), pair: d.pair },
