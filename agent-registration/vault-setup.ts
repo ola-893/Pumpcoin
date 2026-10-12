@@ -58,7 +58,7 @@ export async function prepareVault(p: Prepared, config: VaultNetwork, client: an
   const gas = estimate * 12n / 10n, fee = gas * price * 2n;
   if ((await client.getBlock({ blockNumber: block.number })).hash !== block.hash) throw new Error('Chain changed during deployment preparation. Retry.');
   return { chainId: c.chainId, from, data, value: '0x0', gas: `0x${gas.toString(16)}`, balance: balance.toString(), estimatedFee: fee.toString(), canSubmit: balance >= fee, commitment: p.commitment,
-    scope: 'Create a dedicated paused vault and ERC-8004 identity. Controller owns the identity and administers this vault; the declared execution key is its manager. No deposit, approval, swap or token transfer. Trading and investment stay blocked until live valuation and a restricted venue are configured through notice.',
+    scope: `Create a dedicated paused vault and ERC-8004 identity. Controller owns the identity and administers this vault; the declared execution key is its manager. This vault uses the six-decimal ERC-20 quote asset ${c.quote} for deposits, valuation and redemption. Native MON investment and redemption are not implemented by this deployment. No deposit, approval, swap or token transfer. Trading and investment stay blocked until live valuation and a restricted venue are configured through notice.`,
     blockers: balance < fee ? ['Fund the controller with testnet MON for deployment gas.'] : [] };
 }
 export function normalized(code: Hex, refs: VaultArtifact['deployedBytecode']['immutableReferences']) {
