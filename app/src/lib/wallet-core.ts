@@ -1,5 +1,8 @@
 import { decodeFunctionData, parseAbi, getAddress, isAddress, recoverMessageAddress, stringToHex, type Address, type Hex } from 'viem';
 
+import { validateNativeTransaction } from './native-wallet.js';
+import type { NativeAuthorization } from '../../../agent-registration/native-investment-types.js';
+
 export const PROOFLINE_CHAIN_ID = 10143;
 export type Provider = {
   request(args: { method: string; params?: unknown[] }): Promise<unknown>;
@@ -87,14 +90,20 @@ export async function sendBrowserVaultTransaction(provider: Provider, binding: W
   return hash as Hex;
 }
 
-export type TradingWalletTransaction = Omit<VaultWalletTransaction, 'value'> & { to?: Address; value: Hex };
+export type TradingWalletTransaction = Omit<VaultWalletTransaction, 'value'> & { to?: Address; value: Hex; native?: NativeAuthorization; quote?: { expiresAt: number } };
+export function validateTradingQuote(tx: TradingWalletTransaction) {
+  if (tx.quote && (!Number.isSafeInteger(tx.quote.expiresAt) || Date.now() >= tx.quote.expiresAt)) throw new Error('DEX quote expired. Review and simulate again.');
+}
 export function validateTradingTransaction(tx: TradingWalletTransaction, binding: WalletBinding) {
+  validateTradingQuote(tx);
+  if (tx.native) { validateNativeTransaction(tx, binding.address); return; }
   if (tx.chainId !== PROOFLINE_CHAIN_ID || (!/^0x[0-9a-f]+$/i.test(tx.value) || BigInt(tx.value) > 1000000000000000n || (BigInt(tx.value) > 0n && tx.to?.toLowerCase() !== '0x2880ab155794e7179c9ee2e38200202908c17b43')) || !/^0x[0-9a-f]+$/i.test(tx.data) || !/^0x[0-9a-f]+$/i.test(tx.gas) || tx.from.toLowerCase() !== binding.address.toLowerCase() || (tx.to !== undefined && walletAddress(tx.to) !== tx.to)) throw new Error('Invalid testnet vault transaction.');
 }
 export async function sendBrowserTradingTransaction(provider: Provider, binding: WalletBinding, current: () => WalletBinding | undefined, tx: TradingWalletTransaction): Promise<Hex> {
   validateTradingTransaction(tx, binding);
   const actual = await readBrowserBinding(provider);
   if (!sameWallet(current(), binding) || actual.address !== binding.address || actual.chainId !== tx.chainId) throw new Error('Wallet or network changed. Review this transaction again.');
+  validateTradingQuote(tx);
   const hash = await provider.request({ method: 'eth_sendTransaction', params: [{ from: binding.address, ...(tx.to ? { to: tx.to } : {}), data: tx.data, value: tx.value, gas: tx.gas, chainId: '0x279f' }] });
   if (typeof hash !== 'string' || !/^0x[0-9a-f]{64}$/i.test(hash)) throw new Error('Wallet did not return a transaction hash. Check wallet activity before retrying.');
   return hash as Hex;

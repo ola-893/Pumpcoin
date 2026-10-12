@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState, type ReactNode } from 'react';
 import { ArrowRight, Fingerprint } from 'lucide-react';
 import { Modal, Badge, CopyValue } from './UI';
-import { PROOFLINE_CHAIN_ID, sendBrowserTradingTransaction, type TradingWalletTransaction, sameWallet, validateVaultTransaction, validateTradingTransaction, readBrowserBinding, sendBrowserVaultTransaction, type VaultWalletTransaction, signBrowserMessage, signChecked, publicWalletError, walletAddress, walletChain, type Provider, type WalletBinding } from '../lib/wallet-core';
+import { PROOFLINE_CHAIN_ID, sendBrowserTradingTransaction, type TradingWalletTransaction, sameWallet, validateVaultTransaction, validateTradingTransaction, validateTradingQuote, readBrowserBinding, sendBrowserVaultTransaction, type VaultWalletTransaction, signBrowserMessage, signChecked, publicWalletError, walletAddress, walletChain, type Provider, type WalletBinding } from '../lib/wallet-core';
 import { Context, type Choice, useWallet } from '../lib/wallet-context';
 import { short } from '../lib/evidence';
 
@@ -94,6 +94,7 @@ export function WalletProvider({ children }: { children: ReactNode }) {
       if (!sameWallet(current.current, selected)) throw new Error('Controller changed before submission.');
       const serializedTransaction = await client.signTransaction(request);
       if (!sameWallet(current.current, selected)) throw new Error('Controller changed before broadcast.');
+      validateTradingQuote(transaction);
       return client.sendRawTransaction({ serializedTransaction });
     });
   }

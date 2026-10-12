@@ -1,0 +1,52 @@
+import test from 'node:test';
+import assert from 'node:assert/strict';
+import {spawn} from 'node:child_process';
+import {readFileSync} from 'node:fs';
+import {mkdtemp,rm} from 'node:fs/promises';
+import {tmpdir} from 'node:os';
+import {join} from 'node:path';
+import {createPublicClient,createWalletClient,http,getAddress,keccak256,type Address,type Hex} from 'viem';
+import {privateKeyToAccount} from 'viem/accounts';
+import {foundry} from 'viem/chains';
+import {nativeInvestmentService} from '../agent-registration/native-investment.js';
+import type {NativePlan} from '../agent-registration/native-investment-types.js';
+import type {RegistrationRecord} from '../agent-registration/types.js';
+import type {VaultNetwork} from '../agent-registration/vault-setup.js';
+import type {TradingNetwork} from '../agent-registration/trading.js';
+const artifact=(name:string)=>{const owner:Record<string,string>={RegistrationTokenFixture:'PumpCoinRegisteredVault.t',RegistrationRegistryFixture:'PumpCoinRegisteredVault.t',NativeWrappedFixture:'NativeVaultInvestorGateway.t',NativePriceFixture:'NativeVaultInvestorGateway.t',TradingRouterFixture:'VaultTradingIntegration.t'};return JSON.parse(readFileSync(new URL(`../contracts/out/${owner[name]??name}.sol/${name}.json`,import.meta.url),'utf8'));};
+test('native service simulates atomic entry and exit, retains reviewed receipts across restarts and blocks changed bindings', {timeout:90000},async()=>{
+ const port=20000+Math.floor(Math.random()*1000),directory=await mkdtemp(join(tmpdir(),'native-investment-')),child=spawn('/Users/deonorla/.foundry/bin/anvil',['--port',String(port),'--silent'],{stdio:'ignore'});
+ try{
+  const transport=http(`http://127.0.0.1:${port}`),client=createPublicClient({chain:foundry,transport,cacheTime:0}),account=privateKeyToAccount('0xac0974bec39a17e36ba4a6b4d238ff944bacb478cbed5efcae784d7bf4f2ff80'),wallet=createWalletClient({chain:foundry,transport,account});
+  for(let i=0;i<100;i++){try{await client.getChainId();break;}catch{await new Promise(r=>setTimeout(r,50));}}
+  const deploy=async(name:string,args:unknown[]=[])=>{const a=artifact(name),hash=await wallet.deployContract({abi:a.abi,bytecode:a.bytecode.object,args}),receipt=await client.waitForTransactionReceipt({hash});assert.equal(receipt.status,'success');return getAddress(receipt.contractAddress!);};
+  const write=async(address:Address,name:string,functionName:string,args:unknown[]=[])=>{const hash=await wallet.writeContract({address,abi:artifact(name).abi,functionName,args});assert.equal((await client.waitForTransactionReceipt({hash})).status,'success');return hash;};
+  const read=async(address:Address,name:string,functionName:string,args:unknown[]=[],blockNumber?:bigint)=>client.readContract({address,abi:artifact(name).abi,functionName,args,blockNumber}) as Promise<any>;
+  const quote=await deploy('RegistrationTokenFixture',[6]),position=await deploy('NativeWrappedFixture'),registry=await deploy('RegistrationRegistryFixture'),poolManager=await deploy('TradingRouterFixture');assert.ok(quote.toLowerCase()<position.toLowerCase());
+  await client.request({method:'anvil_setBalance' as any,params:[position,'0x3635c9adc5dea00000'] as any});
+  const source=await deploy('NativePriceFixture',[quote,position]),vault=await deploy('PumpCoinRegisteredVault',[{quote,position,controller:account.address,manager:getAddress('0x1111111111111111111111111111111111111111'),strategy:keccak256('0x01'),risk:keccak256('0x02'),tradeCap:10000000n,positionCap:50000000n,registry,uri:'data:application/json;base64,e30=',commitment:keccak256('0x03')}]);
+  const id=('0x'+'a'.repeat(64)) as Hex,r={id,binding:{vault},manifest:{controller:account.address,proposedMandate:{slippageBps:50}},authorization:{challenge:{controller:account.address}}} as unknown as RegistrationRecord;
+  const config={adapter:'0x0000000000000000000000000000000000000000',venue:'0x0000000000000000000000000000000000000000',stream:'0x0000000000000000000000000000000000000000',valuationSource:source,perTradeCap:10000000n,maxPositionValue:50000000n,expenseBudget:0n,strategyHash:keccak256('0x01'),riskHash:keccak256('0x02'),identityRegistry:registry,agentId:1n};
+  await write(vault,'PumpCoinRegisteredVault','proposeConfig',[config]);await client.request({method:'evm_increaseTime' as any,params:[86401] as any});await client.request({method:'evm_mine' as any,params:[] as any});await write(vault,'PumpCoinRegisteredVault','applyConfig');await write(vault,'PumpCoinRegisteredVault','unpause');await write(poolManager,'TradingRouterFixture','setHaircut',[25n]);
+  const network={chainId:31337,rpcUrl:`http://127.0.0.1:${port}`,quote,position,positionDecimals:18} as VaultNetwork,n={chainId:31337,poolManager,fee:3000,tickSpacing:60} as TradingNetwork;
+  let blockers:string[]=[],wrongSource=false;
+  const trading={inspect:async(_id:string,owner?:Address)=>{const block=await client.getBlock(),b=block.number;return{ready:!blockers.length,blockers,blockNumber:String(b),blockHash:block.hash,checkedAt:new Date().toISOString(),vaultRuntimeCompatible:true,controller:account.address,bundle:{source:wrongSource?poolManager:source},poolId:await read(source,'NativePriceFixture','poolId',[],b),nav:await read(vault,'PumpCoinRegisteredVault','totalAssets',[],b).then(String),balances:owner?{shares:String(await read(vault,'PumpCoinRegisteredVault','balanceOf',[owner],b)),maxRedeem:String(await read(vault,'PumpCoinRegisteredVault','maxRedeem',[owner],b))}:undefined};}};
+  const service=()=>nativeInvestmentService(network,n,directory,async()=>[r],trading as any,client);
+  const send=async(p:NativePlan)=>{const hash=await wallet.sendTransaction({to:p.to,data:p.data,value:BigInt(p.value),gas:BigInt(p.gas)});assert.equal((await client.waitForTransactionReceipt({hash})).status,'success');return hash;};
+  assert.equal((await service().inspect(id,account.address)).ready,false);
+  const deployment=await service().plan(id,'deploy-native',account.address,'0'),deployed=await send(deployment);assert.equal((await service().receipt(id,deployment.id,deployed)).status,'success');assert.equal((await service().inspect(id,account.address)).ready,true);
+  await assert.rejects(service().plan(id,'deploy-native',account.address,'0'),/already/);
+  blockers=['Price freshness and liquidity are unavailable.'];await assert.rejects(service().plan(id,'deposit-mon',account.address,'10000000000000000000'),/freshness and liquidity/);blockers=[];
+  const entry=await service().plan(id,'deposit-mon',account.address,'10000000000000000000');assert.equal(entry.quoteAssets,'19950000');assert.equal(entry.output,'19950000000000');assert.equal(BigInt(entry.value),10000000000000000000n);
+  const entered=await send(entry);await assert.rejects(service().receipt(id,deployment.id,entered),/exact reviewed/);assert.equal((await service().receipt(id,entry.id,entered)).status,'success');
+  const shares=(await service().inspect(id,account.address)).shares!;
+  await assert.rejects(service().plan(id,'redeem-mon',account.address,shares),/Approve this exact/);
+  const approval=await service().plan(id,'approve-native-exit',account.address,shares);await service().receipt(id,approval.id,await send(approval));
+  await write(quote,'RegistrationTokenFixture','mint',[vault,10000000n]);
+  const exit=await service().plan(id,'redeem-mon',account.address,shares);assert.ok(BigInt(exit.output!)>10000000000000000000n);const exited=await send(exit);assert.equal((await service().receipt(id,exit.id,exited)).status,'success');assert.equal((await service().inspect(id,account.address)).shares,'0');
+  wrongSource=true;await assert.rejects(service().inspect(id,account.address),/no longer matches/);wrongSource=false;
+  await assert.rejects(service().plan(id,'deposit-mon',account.address,'0'),/positive amount/);
+  const badCode={...client,getCode:async(args:any)=>args.address.toLowerCase()===(await service().inspect(id)).gateway?.toLowerCase()?'0x00':client.getCode(args)};
+  await assert.rejects(nativeInvestmentService(network,n,directory,async()=>[r],trading as any,badCode).inspect(id),/reviewed artifact/);
+ }finally{child.kill('SIGTERM');await rm(directory,{recursive:true,force:true});}
+});
