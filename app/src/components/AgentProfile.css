@@ -1,0 +1,186 @@
+/* Keep the profile readable without changing the rest of the application. */
+.agent-profile { max-width: 1320px; padding: 32px 48px 72px; font-size: 14px; --profile-muted: #655a70; }
+.agent-profile [hidden] { display: none !important; }
+.agent-profile .breadcrumb { margin-bottom: 26px; font-size: 13px; color: var(--profile-muted); }
+.agent-profile-hero { display: flex; align-items: center; justify-content: space-between; gap: 24px; }
+.agent-profile-identity { display: flex; align-items: center; gap: 20px; min-width: 0; }
+.agent-profile-identity > div:last-child { min-width: 0; }
+.agent-profile-identity .agent-avatar { width: 76px; height: 76px; border-radius: 23px; flex-shrink: 0; }
+.agent-profile-hero h1 { font-size: 48px; line-height: 1.12; margin: 10px 0; overflow-wrap: anywhere; }
+.agent-profile-hero p { font-size: 13px; color: var(--profile-muted); overflow-wrap: anywhere; }
+.agent-profile-hero p span { margin: 0 6px; }
+.agent-profile-hero-actions { display: flex; flex-wrap: wrap; gap: 10px; flex-shrink: 0; }
+.profile-tags { display: flex; gap: 8px; flex-wrap: wrap; }
+.agent-profile .badge { font-size: 11px; padding: 7px 10px; }
+.agent-profile .badge.neutral { color: #665773; }
+.agent-profile .badge.amber { color: #805411; }
+.agent-profile .eyebrow { font-size: 10px; letter-spacing: .1em; }
+.agent-profile .button { font-size: 13px; min-height: 44px; padding: 12px 18px; gap: 8px; }
+.agent-profile .button:disabled { opacity: .55; }
+.agent-profile .text-button,.agent-profile .text-link { font-size: 13px; }
+.agent-profile input,.agent-profile select { border: 1px solid #dbd2e3; border-radius: 10px; padding: 12px; background: white; color: var(--ink); min-height: 44px; max-width: 100%; min-width: 0; }
+.profile-version-row { display: flex; align-items: center; justify-content: space-between; gap: 18px; margin: 24px 0; color: var(--profile-muted); font-size: 12px; }
+.profile-version-row > div { display: flex; gap: 10px; align-items: center; min-width: 0; }
+.profile-version-row select { font-size: 12px; max-width: 290px; }
+.profile-refresh { border: 0; background: transparent; display: inline-flex; align-items: center; justify-content: center; gap: 7px; color: #694398; font-size: 12px; min-height: 44px; padding: 9px 6px; flex-shrink: 0; }
+.profile-refresh:hover:not(:disabled) { color: #4e1989; text-decoration: underline; }
+.profile-spinning { animation: profile-spin 1s linear infinite; }
+@keyframes profile-spin { to { transform: rotate(360deg); } }
+.profile-confidence { display: grid; grid-template-columns: repeat(3, minmax(0,1fr)); background: #f2edf7; border: 1px solid #e7dfef; border-radius: 16px; padding: 20px 8px; }
+.profile-confidence > div { display: flex; gap: 12px; align-items: flex-start; padding: 0 20px; border-right: 1px solid #ded4e8; min-width: 0; }
+.profile-confidence > div:last-child { border: 0; }
+.profile-confidence svg { color: #7b4ca9; flex-shrink: 0; margin-top: 2px; }
+.profile-confidence strong { display: block; font-weight: 600; font-size: 13px; margin-bottom: 5px; }
+.profile-confidence small { display: block; color: var(--profile-muted); font-size: 12px; line-height: 1.6; }
+.profile-tabs { display: flex; gap: 28px; margin: 24px 0; border-bottom: 1px solid #ded5e5; overflow-x: auto; }
+.profile-tabs button { border: 0; border-bottom: 2px solid transparent; padding: 15px 0; white-space: nowrap; background: transparent; color: var(--profile-muted); font-size: 14px; min-height: 48px; }
+.profile-tabs button[aria-selected=true] { color: #7132ae; border-bottom-color: #7c3aed; font-weight: 600; }
+.profile-tabs button:hover { color: #7132ae; }
+.agent-profile-layout { display: grid; grid-template-columns: minmax(0,1fr) 365px; gap: 24px; align-items: start; }
+.agent-profile-layout.profile-wide { grid-template-columns: minmax(0,1fr); }
+.agent-profile-content,.agent-profile-content > div { min-width: 0; }
+.agent-profile .panel { border-radius: 18px; padding: 28px; margin: 0 0 20px; box-shadow: 0 3px 18px #28183703; }
+.agent-profile .panel h2 { font-size: 29px; line-height: 1.2; margin: 10px 0 16px; }
+.agent-profile .panel h3 { font-size: 14px; font-weight: 600; margin: 22px 0 10px; }
+.agent-profile .panel p,.profile-evidence p { font-size: 14px; line-height: 1.8; color: var(--profile-muted); }
+.agent-profile .panel p strong { color: #392a49; font-weight: 600; }
+.agent-profile .small,.agent-profile .panel .small { font-size: 12px; color: var(--profile-muted); }
+.agent-profile .panel-heading { align-items: center; flex-wrap: wrap; margin-bottom: 12px; gap: 10px; }
+.agent-profile .panel-heading h2 { margin: 0; }
+.agent-profile .note { font-size: 13px; color: #62506f; line-height: 1.75; padding: 15px; overflow-wrap: anywhere; }
+.agent-profile .note p { color: inherit; }
+.agent-profile .note > div { min-width: 0; }
+.agent-profile .note ul { margin: 0; padding-left: 18px; }
+.agent-profile .note li + li { margin-top: 8px; }
+.profile-mandate { display: grid; grid-template-columns: 1fr 1fr; border: 1px solid var(--line); border-radius: 12px; margin: 22px 0; overflow: hidden; }
+.profile-mandate > div { padding: 18px; min-width: 0; }
+.profile-mandate > div:nth-child(odd) { border-right: 1px solid var(--line); }
+.profile-mandate > div:nth-child(-n+2) { border-bottom: 1px solid var(--line); }
+.profile-mandate small,.profile-performance-values small,.native-balances small { display: block; font-size: 12px; color: var(--profile-muted); margin-bottom: 8px; }
+.profile-mandate strong { font-size: 17px; font-weight: 600; }
+.profile-mandate strong span { font-size: 12px; font-weight: 400; color: var(--profile-muted); }
+.profile-strategy-details summary { display: flex; align-items: center; justify-content: space-between; gap: 12px; color: #694398; font-size: 13px; min-height: 44px; list-style: none; }
+.profile-strategy-details[open] summary svg { transform: rotate(90deg); }
+.profile-strategy-details .agent-strategy { margin-top: 14px; }
+.profile-section-title { display: flex; align-items: flex-start; gap: 14px; }
+.profile-section-icon { display: grid; place-items: center; background: #f4eef9; color: #8658aa; border-radius: 12px; width: 44px; height: 44px; flex-shrink: 0; }
+.profile-section-title h2 { margin-top: 6px !important; }
+.profile-performance-values { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; padding: 20px 0; margin-top: 4px; }
+.profile-performance-values strong { font-size: 20px; color: #51445f; font-weight: 500; }
+.agent-profile .panel .profile-caption { border-top: 1px solid var(--line); padding: 16px 0; font-size: 12px; }
+.profile-investment-explainer { padding: 8px 6px 18px; }
+.profile-investment-explainer h2 { font-size: 25px; margin: 0 0 22px; }
+.profile-investment-explainer > div { display: grid; grid-template-columns: 1fr 1fr; gap: 28px; }
+.profile-investment-explainer span > svg { color: #7e48aa; display: block; margin-bottom: 12px; }
+.profile-investment-explainer strong { font-size: 13px; font-weight: 600; }
+.profile-investment-explainer p { font-size: 13px; color: var(--profile-muted); margin-top: 8px; }
+.profile-investment-explainer > p { padding-top: 16px; }
+.agent-profile-investment { position: sticky; top: 108px; min-width: 0; scroll-margin-top: 112px; border-radius: 18px; }
+.agent-profile .native-investment { padding: 24px; border-color: #dac9eb; box-shadow: 0 8px 28px #6c41840a; }
+.native-heading { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 10px; margin-bottom: 14px; }
+.agent-profile .native-heading h2 { font-size: 27px; margin: 0; }
+.agent-profile .native-investment > p { font-size: 13px; }
+.native-unavailable { background: #fbf6eb; border: 1px solid #f0e2c7; padding: 15px; border-radius: 12px; margin: 20px 0; }
+.native-unavailable > strong { font-size: 13px; color: #76501e; font-weight: 600; }
+.agent-profile .native-unavailable p { font-size: 12px; margin-top: 6px; color: #7a633f; line-height: 1.7; }
+.native-unavailable summary { color: #76501e; display: flex; align-items: center; justify-content: space-between; font-size: 12px; min-height: 44px; }
+.native-unavailable summary span { background: #f3e7cf; border-radius: 20px; min-width: 24px; text-align: center; padding: 3px 6px; }
+.native-unavailable ul { padding-left: 18px; margin: 0 0 6px; font-size: 12px; line-height: 1.75; color: #76501e; }
+.native-unavailable li + li { margin-top: 10px; }
+.native-switch { display: grid; grid-template-columns: 1fr 1fr; gap: 4px; padding: 4px; background: #f2edf7; border-radius: 11px; margin: 20px 0; }
+.native-switch button { min-height: 44px; border: 0; background: transparent; font-size: 13px; border-radius: 8px; color: #6c5b7d; }
+.native-switch button[aria-pressed=true] { background: white; color: #6d2da2; font-weight: 600; box-shadow: 0 1px 5px #32213f10; }
+.native-amount label { display: block; font-size: 12px; margin-bottom: 10px; font-weight: 600; color: #51415f; }
+.native-amount > div { display: flex; align-items: center; border: 1px solid #dbd2e3; border-radius: 11px; padding-right: 14px; }
+.agent-profile .native-amount input { width: 100%; border: 0; background: transparent; font-size: 24px; padding: 14px; min-width: 0; border-radius: 11px; }
+.native-amount span { font-size: 13px; color: #695376; }
+.agent-profile .native-investment .native-help { font-size: 12px; margin: 9px 0 16px; line-height: 1.7; }
+.native-wallet { margin: 16px 0 10px; }
+.agent-profile .native-wallet .wallet-button { width: 100%; font-size: 13px; min-height: 44px; }
+.agent-profile .native-review-button { border-radius: 99px; margin: 0; }
+.native-balances { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin-top: 22px; padding-top: 20px; border-top: 1px solid var(--line); }
+.native-balances strong { font-size: 15px; font-weight: 600; overflow-wrap: anywhere; }
+.native-technical { border-top: 1px solid var(--line); margin-top: 6px; }
+.native-technical summary { color: var(--profile-muted); font-size: 12px; padding: 13px 0; min-height: 44px; }
+.native-technical p { margin-bottom: 12px; }
+.agent-profile .native-investment .native-risk { font-size: 11px; color: #6d5a78; border-top: 1px solid var(--line); padding-top: 16px; margin-top: 16px; line-height: 1.7; }
+.native-feedback { margin-top: 16px; }
+.native-plan { margin-top: 20px; padding-top: 4px; border-top: 1px solid var(--line); }
+.native-plan p { margin-bottom: 12px; overflow-wrap: anywhere; }
+.agent-profile .form-error { color: #a12c4d; font-size: 13px; overflow-wrap: anywhere; }
+.agent-profile .copy-value { margin: 8px 0 12px; padding: 10px 12px; border: 1px solid #e8def1; border-radius: 9px; min-width: 0; }
+.agent-profile .copy-value code { font-size: 12px; line-height: 1.7; color: #695078; overflow-wrap: anywhere; min-width: 0; }
+.agent-profile .copy-value button { min-width: 40px; min-height: 40px; flex-shrink: 0; }
+.profile-evidence { background: white; border: 1px solid var(--line); border-radius: 16px; margin-bottom: 16px; overflow: hidden; }
+.profile-evidence > summary { display: flex; align-items: center; justify-content: space-between; gap: 20px; padding: 22px 24px; list-style: none; }
+.profile-evidence > summary strong { font-size: 16px; font-weight: 600; display: block; margin-bottom: 6px; }
+.profile-evidence > summary span span { font-size: 12px; color: var(--profile-muted); line-height: 1.6; display: block; }
+.profile-evidence > summary svg { flex-shrink: 0; color: #7b4b9f; }
+.profile-evidence[open] > summary > svg { transform: rotate(90deg); }
+.profile-evidence-body { padding: 0 24px 24px; border-top: 1px solid #f0eaf5; }
+.profile-evidence-body > p { margin-top: 16px; }
+.profile-evidence-body > .badge { margin-top: 20px; }
+.profile-evidence h3 { font-size: 13px; font-weight: 600; margin: 20px 0 8px; }
+.profile-evidence .agent-dependencies { font-size: 13px; color: var(--profile-muted); }
+.profile-evidence .button { margin-top: 14px; }
+.agent-profile .definition-grid { gap: 20px; margin: 22px 0; }
+.agent-profile .definition-grid small { font-size: 12px; color: var(--profile-muted); }
+.agent-profile .definition-grid strong { font-size: 16px; overflow-wrap: anywhere; }
+.agent-profile .review-actions { display: flex; gap: 12px; flex-wrap: wrap; margin-top: 16px; }
+.agent-profile .form-grid label { font-size: 13px; color: var(--profile-muted); }
+.agent-profile .form-grid input { width: 100%; display: block; margin-top: 10px; }
+.agent-profile .panel > .button,.agent-profile .panel > .text-link { margin: 12px 12px 8px 0; }
+.agent-profile .native-investment > .button { margin: 0; }
+.profile-setup-steps { display: flex; flex-wrap: wrap; align-items: center; gap: 16px; margin-top: 24px; }
+.profile-setup-steps span { display: inline-flex; align-items: center; gap: 10px; font-size: 13px; }
+.profile-setup-steps b { width: 28px; height: 28px; border-radius: 50%; background: #f1e8fb; color: #75439f; display: grid; place-items: center; font-size: 12px; }
+.agent-profile .table-wrap { max-width: 100%; overflow-x: auto; margin: 20px 0; }
+.agent-profile .table-wrap td,.agent-profile .table-wrap th { font-size: 12px; }
+.agent-profile .table-wrap td small { overflow-wrap: anywhere; display: block; max-width: 250px; margin-top: 10px; }
+.agent-profile .table-wrap summary { min-height: 36px; }
+.agent-profile .table-wrap pre { font-size: 11px; }
+.agent-profile .native-investment .note input { width: 100%; margin: 12px 0; }
+@media (max-width: 1050px) {
+  .agent-profile { padding-left: 30px; padding-right: 30px; }
+  .agent-profile-layout { grid-template-columns: minmax(0,1fr) 330px; gap: 20px; }
+  .agent-profile-hero { align-items: flex-start; }
+  .agent-profile-hero-actions { flex-direction: column; }
+  .profile-version-row { align-items: flex-start; flex-direction: column; gap: 10px; }
+  .profile-confidence > div { padding: 0 14px; gap: 9px; }
+}
+@media (max-width: 800px) {
+  .agent-profile-layout { grid-template-columns: minmax(0,1fr); }
+  .agent-profile-investment { position: static; grid-row: 1; }
+  .profile-confidence { grid-template-columns: 1fr; padding: 0 18px; }
+  .profile-confidence > div { padding: 15px 0; border-right: 0; border-bottom: 1px solid #ded4e8; }
+  .agent-profile-hero { flex-wrap: wrap; }
+  .agent-profile-hero-actions { flex-direction: row; }
+  .profile-tabs { gap: 23px; }
+}
+@media (max-width: 520px) {
+  .agent-profile { padding: 24px 20px 48px; }
+  .agent-profile-identity { gap: 14px; align-items: flex-start; }
+  .agent-profile-identity .agent-avatar { width: 54px; height: 54px; border-radius: 16px; }
+  .agent-profile-hero h1 { font-size: 37px; margin: 8px 0; }
+  .agent-profile-hero p { font-size: 12px; }
+  .agent-profile-hero-actions { width: 100%; }
+  .agent-profile-hero-actions .button { flex: 1; font-size: 12px; padding: 12px; }
+  .profile-version-row > div { flex-wrap: wrap; width: 100%; }
+  .profile-version-row select { flex: 1; max-width: 100%; width: 100%; }
+  .profile-version-row label { width: 100%; }
+  .profile-tabs { margin-top: 18px; gap: 20px; }
+  .profile-tabs button { font-size: 13px; }
+  .agent-profile .panel { padding: 22px; }
+  .agent-profile .panel h2 { font-size: 26px; }
+  .profile-mandate > div { padding: 15px; }
+  .profile-mandate strong { font-size: 16px; }
+  .profile-mandate strong span { display: block; margin-top: 5px; }
+  .profile-performance-values strong { font-size: 17px; }
+  .profile-investment-explainer > div { gap: 20px; }
+  .profile-evidence > summary { padding: 20px; }
+  .profile-evidence-body { padding: 0 20px 20px; }
+  .profile-setup-steps { flex-direction: column; align-items: flex-start; gap: 12px; }
+  .profile-setup-steps > svg { display: none; }
+}
+@media (max-height: 900px) { .agent-profile-investment { position: static; } }
+@media (prefers-reduced-motion: reduce) { .profile-spinning { animation: none; } }

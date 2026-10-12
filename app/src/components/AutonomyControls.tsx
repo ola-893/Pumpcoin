@@ -10,7 +10,7 @@ import { AutonomousTrader } from './AutonomousTrader';
 import { LiveVaultEvidence } from './LiveVaultEvidence';
 
 type Status = { active: boolean; paused: boolean; adapterConfigured: boolean; validUntil: number; dailyQuoteCap: string; dailyQuoteTraded: string };
-export function AutonomyControls({ record }: { record: RegistrationRecord }) {
+export function AutonomyControls({ record, showEvidence = true }: { record: RegistrationRecord; showEvidence?: boolean }) {
   const wallet = useWallet(), [status, setStatus] = useState<Status>(), [days, setDays] = useState('7'), [daily, setDaily] = useState('100'), [plan, setPlan] = useState<VaultWalletTransaction & { scope: string }>(), [hash, setHash] = useState(''), [error, setError] = useState(''), [busy, setBusy] = useState(false);
   const active = useRef<AbortController | undefined>(undefined), lock = useRef(false);
   useEffect(() => () => active.current?.abort(), []);
@@ -32,7 +32,7 @@ export function AutonomyControls({ record }: { record: RegistrationRecord }) {
     setPlan(result.plan);
   });
   return <><section className="panel" style={{ marginTop: 20 }} aria-label="Autonomous trading permissions">
-    <h3>Autonomous trading</h3><p>The agent signs its own trades while your permission is active. Your controller wallet approves or revokes that permission.</p>
+    <h2>Trading permission</h2><p>The agent signs its own trades while your permission is active. Your controller wallet approves or revokes that permission.</p>
     <button type="button" className="button secondary" disabled={busy} onClick={() => void action(async (token, signal) => { const result = await registrationRequest(token, '/autonomy-status', { id: record.id }, signal); setStatus(result.status); })}>Refresh on-chain permission</button>
     {status && <><Badge tone={status.active ? 'purple' : 'neutral'}>{status.active ? 'Permission active' : 'Permission inactive'}</Badge><p className="small">UTC daily turnover: {formatUnits(BigInt(status.dailyQuoteTraded), 6)} / {formatUnits(BigInt(status.dailyQuoteCap), 6)} quote units. {status.validUntil ? `Expires ${new Date(status.validUntil * 1000).toLocaleString()}.` : 'No grant recorded.'}</p>{(!status.adapterConfigured || status.paused) && <p className="small muted">Activate the restricted venue and healthy valuation through the vault’s configuration notice before granting permission.</p>}</>}
     <div className="form-grid" style={{ marginTop: 16 }}><label>Permission duration · days<input type="number" min="1" max="30" value={days} onChange={e => { setDays(e.target.value); setPlan(undefined); }} /></label><label>Daily turnover cap · quote units<input value={daily} onChange={e => { setDaily(e.target.value); setPlan(undefined); }} /></label></div>
@@ -42,5 +42,5 @@ export function AutonomyControls({ record }: { record: RegistrationRecord }) {
     {hash && <><p className="small">Transaction submitted. Refresh on-chain permission after it is mined.</p><CopyValue value={hash} label="permission transaction" /></>}
     {record.binding.chainId === 10143 && <AutonomousTrader key={record.id} record={record} />}
     {error && <p className="form-error" role="alert">{error}</p>}
-  </section><LiveVaultEvidence key={record.id} record={record} /></>;
+  </section>{showEvidence && <LiveVaultEvidence key={record.id} record={record} />}</>;
 }
