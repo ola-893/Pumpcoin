@@ -6,6 +6,8 @@ import type { VaultWalletTransaction } from '../lib/wallet-core';
 import { useWallet } from '../lib/wallet-context';
 import { Badge, CopyValue } from './UI';
 import { WalletButton } from './WalletProvider';
+import { AutonomousTrader } from './AutonomousTrader';
+import { LiveVaultEvidence } from './LiveVaultEvidence';
 
 type Status = { active: boolean; paused: boolean; adapterConfigured: boolean; validUntil: number; dailyQuoteCap: string; dailyQuoteTraded: string };
 export function AutonomyControls({ record }: { record: RegistrationRecord }) {
@@ -29,7 +31,7 @@ export function AutonomyControls({ record }: { record: RegistrationRecord }) {
     const result = await registrationRequest(token, '/autonomy-plan', { id: record.id, action: operation, days: Number(days), dailyQuoteCap: operation === 'grant' ? quoteUnits(daily).toString() : '0' }, signal);
     setPlan(result.plan);
   });
-  return <section className="panel" style={{ marginTop: 20 }} aria-label="Autonomous trading permissions">
+  return <><section className="panel" style={{ marginTop: 20 }} aria-label="Autonomous trading permissions">
     <h3>Autonomous trading</h3><p>The agent signs its own trades while your permission is active. Your controller wallet approves or revokes that permission.</p>
     <button type="button" className="button secondary" disabled={busy} onClick={() => void action(async (token, signal) => { const result = await registrationRequest(token, '/autonomy-status', { id: record.id }, signal); setStatus(result.status); })}>Refresh on-chain permission</button>
     {status && <><Badge tone={status.active ? 'purple' : 'neutral'}>{status.active ? 'Permission active' : 'Permission inactive'}</Badge><p className="small">UTC daily turnover: {formatUnits(BigInt(status.dailyQuoteTraded), 6)} / {formatUnits(BigInt(status.dailyQuoteCap), 6)} quote units. {status.validUntil ? `Expires ${new Date(status.validUntil * 1000).toLocaleString()}.` : 'No grant recorded.'}</p>{(!status.adapterConfigured || status.paused) && <p className="small muted">Activate the restricted venue and healthy valuation through the vault’s configuration notice before granting permission.</p>}</>}
@@ -38,7 +40,7 @@ export function AutonomyControls({ record }: { record: RegistrationRecord }) {
     <div className="review-actions"><button type="button" className="button secondary" disabled={busy} onClick={() => void prepare('grant')}>Review trading permission</button><button type="button" className="button secondary" disabled={busy} onClick={() => void prepare('revoke')}>Review immediate revocation</button></div>
     {plan && <><p>{plan.scope}</p><WalletButton />{!controller && <p className="small muted">Connect this agent’s controller on the vault’s chain.</p>}<button type="button" className="button full" disabled={busy || wallet.busy || !controller || !!hash} onClick={() => void action(async () => { setHash(await wallet.sendVaultTransaction(plan)); setPlan(undefined); })}>Approve with controller wallet</button></>}
     {hash && <><p className="small">Transaction submitted. Refresh on-chain permission after it is mined.</p><CopyValue value={hash} label="permission transaction" /></>}
-    <p className="small muted">Permission does not start a worker or prove it is running. The configured headless worker needs gas and a healthy live venue and valuation.</p>
+    {record.binding.chainId === 10143 && <AutonomousTrader key={record.id} record={record} />}
     {error && <p className="form-error" role="alert">{error}</p>}
-  </section>;
+  </section><LiveVaultEvidence key={record.id} record={record} /></>;
 }

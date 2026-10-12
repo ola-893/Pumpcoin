@@ -7,3 +7,20 @@ export type BindingReceipt = { status: string; chainId: number; mode: string; va
 export type RegistrationRecord = { version: 'PUMPCOIN-LOCAL-REGISTRATION-v1'; id: Hex; localAgentId: Hex; registeredAt: string; manifest: Prepared['manifest']; commitment: Hex; authorization: { challenge: Challenge; controllerSignature: Hex; executionSignature: Hex }; worker: WorkerReceipt; binding?: BindingReceipt; status: 'registered-locally-vault-pending' | 'registered-locally-binding-checked'; investmentEligible: false };
 
 export type TradeAction='update-prices'|'deploy'|'propose'|'apply'|'unpause'|'pause'|'approve-deposit'|'deposit'|'approve-redeem'|'redeem'|'buy'|'sell';
+
+export type RuntimeStatus = {
+  configured: boolean; running: boolean; state: 'unconfigured' | 'stopped' | 'starting' | 'stopping' | 'error' | WorkerObservationState;
+  changedAt: string; observedAt?: string; transactionHash?: Hex; message: string;
+};
+
+export type LiveVaultObservation = {
+  chainId: 10143; vault: string; blockNumber: string; blockHash: Hex; checkedAt: string;
+  controller: string; manager: string; paused: boolean; configHash: Hex; cash: string; position: string; positionDecimals: number;
+  shares: string; shareDecimals: number; nav?: string; permissionSupported: boolean;
+  permission?: { active: boolean; validUntil: string; dailyQuoteCap: string; dailyQuoteTraded: string };
+  history: { fromBlock: string; toBlock: string; transactionLimit: number; completePerformanceHistory: false };
+  transactions: { hash: Hex; blockNumber: string; blockHash: Hex; sender: string; status: 'success' | 'reverted'; events: { name: string; values: Record<string, unknown> }[] }[];
+};
+
+export type WorkerObservationState = 'pending' | 'confirming' | 'success' | 'reverted' | 'submitted' | 'hold' | 'blocked';
+export type WorkerObservation = { state: WorkerObservationState; hash?: Hex; reason?: string };

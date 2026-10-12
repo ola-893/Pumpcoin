@@ -9,8 +9,12 @@ import { autonomousAbi, autonomousClient, autonomousDeployment, tradingSnapshot,
 type Pending = { hash: Hex; serialized: Hex; blockNumber: string };
 type Journal = { scope: string; lastBlock: string; pending?: Pending; lastReceipt?: { hash: Hex; status: string; blockNumber: string; blockHash: Hex } };
 export type WorkerConfig = { registrationId: Hex; deployment: AutonomousDeployment; pollIntervalMs?: number; maxFeePerGasWei?: string; confirmations?: number };
+import type { WorkerObservation } from "./types.js";
+export type { WorkerObservation } from "./types.js";
 
-export async function runAutonomous(config: WorkerConfig, options: { once?: boolean; directory?: string; registrations?: string; signal?: AbortSignal; propose?: typeof proposeTrade; client?: ReturnType<typeof autonomousClient> } = {}) {
+export async function runAutonomous(config: WorkerConfig, options: { once?: boolean; directory?: string; registrations?: string; signal?: AbortSignal; propose?: typeof proposeTrade; client?: ReturnType<typeof autonomousClient>; observe?: (event: WorkerObservation) => void } = {}) {
+  // Observability must never interrupt signing or durable receipt reconciliation.
+  const observe = (event: WorkerObservation) => { console.log(JSON.stringify(event)); try { options.observe?.(event); } catch { /* No effect on trading. */ } };
   if (options.signal?.aborted) return;
   const c = autonomousDeployment(config.deployment);
   const signer = await configuredSigner();
@@ -47,7 +51,6 @@ export async function runAutonomous(config: WorkerConfig, options: { once?: bool
       if (maxFee <= 0n) throw new Error('Operator gas price budget must be positive.');
       const confirmations = config.confirmations ?? 2;
       if (!Number.isSafeInteger(confirmations) || confirmations < 2 || confirmations > 64) throw new Error('Use 2–64 receipt confirmations.');
-      let blocked = false;
       do {
         try {
           if (state.lastReceipt) {
@@ -65,15 +68,15 @@ export async function runAutonomous(config: WorkerConfig, options: { once?: bool
             if (!receipt) {
               // Rebroadcast identical signed bytes only. An ambiguous send never causes a new nonce/trade.
               try { await client.sendRawTransaction({ serializedTransaction: pending.serialized }); } catch { /* Keep pending; reconcile on the next cycle. */ }
-              console.log(JSON.stringify({ state: 'pending', hash: pending.hash }));
+              observe({ state: 'pending', hash: pending.hash });
             } else if ((await client.getBlockNumber()) < receipt.blockNumber + BigInt(confirmations - 1)) {
-              console.log(JSON.stringify({ state: 'confirming', hash: pending.hash }));
+              observe({ state: 'confirming', hash: pending.hash });
             } else {
               if ((await client.getBlock({ blockNumber: receipt.blockNumber })).hash !== receipt.blockHash) throw new Error('Pending receipt is not canonical.');
               state.lastReceipt = { hash: pending.hash, status: receipt.status, blockNumber: receipt.blockNumber.toString(), blockHash: receipt.blockHash };
               // Skip the receipt block as well, avoiding a second action on unchanged market observations.
               state.lastBlock = receipt.blockNumber.toString(); delete state.pending; await persist();
-              console.log(JSON.stringify({ state: receipt.status, hash: receipt.transactionHash }));
+              observe({ state: receipt.status, hash: receipt.transactionHash });
             }
           } else {
             const snapshot = await tradingSnapshot(prepared, c, client);
@@ -82,14 +85,12 @@ export async function runAutonomous(config: WorkerConfig, options: { once?: bool
               if (options.signal?.aborted) break;
               const hash = await submitTrade(prepared, c, snapshot, proposal, account, async pending => { state.pending = pending; await persist(); }, client, maxFee, options.signal);
               if (!hash) { state.lastBlock = snapshot.blockNumber.toString(); await persist(); }
-              console.log(JSON.stringify({ state: hash ? 'submitted' : 'hold', ...(hash ? { hash } : {}) }));
+              observe({ state: hash ? 'submitted' : 'hold', ...(hash ? { hash } : {}) });
             }
           }
-          blocked = false;
         } catch (error) {
           if (options.once || !storageHealthy) throw error;
-          if (!blocked) console.log(JSON.stringify({ state: 'blocked', reason: 'Trading blocked. Check permission, valuation, runtime and pending journal; uncertain submissions remain journaled.' }));
-          blocked = true;
+          observe({ state: 'blocked', reason: 'Trading blocked. Check permission, valuation, runtime and pending journal; uncertain submissions remain journaled.' });
         }
         if (options.once || options.signal?.aborted) break;
         await new Promise<void>(done => { const finish = () => { clearTimeout(timer); options.signal?.removeEventListener('abort', finish); done(); }; const timer = setTimeout(finish, poll); options.signal?.addEventListener('abort', finish, { once: true }); });
