@@ -8,9 +8,11 @@ import { checkLocalWorker, matchingDetection } from './worker.js';
 import { detectLocalModel } from '../local-inference/discovery.js';
 import { prepareVault, confirmVault, vaultNetwork, type VaultNetwork } from './vault-setup.js';
 import type { RegistrationRecord, WorkerReceipt } from './types.js';
+import { permissionStatus, permissionPlan } from './permissions.js';
+import type { ExecutionSignerStore } from './signer.js';
 export type { RegistrationRecord } from './types.js';
 type Session = { challenge: Challenge; prepared: Prepared; job?: { status: 'running' | 'ready' | 'error'; result?: WorkerReceipt; error?: string }; checkedAt?: number; consumed: boolean };
-export function registrationService(options: { directory: string; config?: Deployment; vaultNetwork?: VaultNetwork; now?: () => number; worker?: typeof checkLocalWorker; detect?: typeof detectLocalModel; binding?: typeof verifyBinding; plan?: typeof identityPlan }) {
+export function registrationService(options: { directory: string; signer?: () => Promise<ExecutionSignerStore | undefined>; config?: Deployment; vaultNetwork?: VaultNetwork; now?: () => number; worker?: typeof checkLocalWorker; detect?: typeof detectLocalModel; binding?: typeof verifyBinding; plan?: typeof identityPlan }) {
   const sessions = new Map<string, Session>(), now = options.now ?? Date.now, worker = options.worker ?? checkLocalWorker, detect = options.detect ?? detectLocalModel;
   const config = options.config && deployment(options.config);
   const setup = options.vaultNetwork && vaultNetwork(options.vaultNetwork), confirming = new Set<string>();
@@ -35,6 +37,21 @@ export function registrationService(options: { directory: string; config?: Deplo
   }
   return {
     configured: !!config,
+    executionSignerConfigured: !!options.signer,
+    async executionWallet(controller: string, name: string) {
+      const signer = await options.signer?.();
+      if (!signer) throw new Error('Configure the encrypted execution signer on the local helper first.');
+      return { address: await signer.provision(controller, name), custody: 'local-operator-encrypted-keystore' };
+    },
+    async authorizeExecution(id: string, origin: string, controllerSignature: Hex) {
+      const s = session(id, origin);
+      if (s.job?.status !== 'ready' || !s.checkedAt || now() - s.checkedAt > 120000) throw new Error('Run a fresh local worker check before authorizing.');
+      const signer = await options.signer?.();
+      if (!signer) throw new Error('Encrypted execution signer is not configured.');
+      const signature = await signer.registrationSignature(s.challenge, s.prepared.manifest.name, controllerSignature, now());
+      session(id, origin);
+      return signature;
+    },
     vaultSetupConfigured: !!setup,
     challenge(value: unknown, origin: string) {
       const p = checkedPrepared(value); new URL(origin);
@@ -62,6 +79,19 @@ export function registrationService(options: { directory: string; config?: Deplo
       if (now() >= s.challenge.expiresAt) throw new Error('Registration expired during the final local check.');
       const record: RegistrationRecord = { version: 'PUMPCOIN-LOCAL-REGISTRATION-v1', id: keccak256(stringToHex(s.challenge.id)), localAgentId: keccak256(stringToHex(JSON.stringify([s.challenge.chainId, s.prepared.manifest.controller, s.prepared.manifest.name]))), registeredAt: new Date(now()).toISOString(), manifest: s.prepared.manifest, commitment: s.prepared.commitment, authorization: { challenge: s.challenge, controllerSignature, executionSignature }, worker: s.job.result, status: 'registered-locally-vault-pending', investmentEligible: false };
       await save(record.id, { public: record, private: s.prepared.privateRuntimeConfig }, true); return record;
+    },
+    workerRegistration: read,
+    async autonomyStatus(id: string) {
+      if (!setup) throw new Error('Vault network is not configured.');
+      const { record, prepared } = await read(id);
+      if (!record.binding) throw new Error('Create and verify the agent vault first.');
+      return permissionStatus(prepared, record.binding.vault, setup);
+    },
+    async autonomyPlan(id: string, action: 'grant' | 'revoke', days: number, dailyQuoteCap: string) {
+      if (!setup) throw new Error('Vault network is not configured.');
+      const { record, prepared } = await read(id);
+      if (!record.binding) throw new Error('Create and verify the agent vault first.');
+      return permissionPlan(prepared, record.binding.vault, setup, action, { days, dailyQuoteCap });
     },
     async records() {
       let names: string[]; try { names = await readdir(options.directory); } catch (e) { if ((e as {code?: string}).code === 'ENOENT') return []; throw e; }

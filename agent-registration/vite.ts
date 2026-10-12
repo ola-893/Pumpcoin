@@ -4,10 +4,12 @@ import { fileURLToPath } from 'node:url';
 import type { IncomingMessage, ServerResponse } from 'node:http';
 import { allowedRequest } from '../local-inference/vite.js';
 import { registrationService } from './service.js';
+import { configuredSigner } from './signer.js';
+let signer: ReturnType<typeof configuredSigner> | undefined;
 import { tradingService } from './trading.js';
 export const REGISTRATION_API = '/api/agent-registration';
 const defaultNetwork = fileURLToPath(new URL('../deployments/pumpcoin-vault-network.json', import.meta.url));
-export function registrationPlugin(service = registrationService({ vaultNetwork: JSON.parse(readFileSync(process.env.PUMPCOIN_VAULT_NETWORK_CONFIG ?? defaultNetwork, 'utf8')), directory: fileURLToPath(new URL('../.local/agent-registrations/', import.meta.url)), config: process.env.PUMPCOIN_BINDING_CONFIG ? JSON.parse(readFileSync(process.env.PUMPCOIN_BINDING_CONFIG, 'utf8')) : undefined }), pythApiKey?: string) {
+export function registrationPlugin(service = registrationService({ signer: process.env.PUMPCOIN_SIGNER_PASSWORD_FILE ? () => signer ??= configuredSigner() : undefined, vaultNetwork: JSON.parse(readFileSync(process.env.PUMPCOIN_VAULT_NETWORK_CONFIG ?? defaultNetwork, 'utf8')), directory: fileURLToPath(new URL('../.local/agent-registrations/', import.meta.url)), config: process.env.PUMPCOIN_BINDING_CONFIG ? JSON.parse(readFileSync(process.env.PUMPCOIN_BINDING_CONFIG, 'utf8')) : undefined }), pythApiKey?: string) {
   const token = randomBytes(32).toString('hex');
   const trading = tradingService(JSON.parse(readFileSync(process.env.PUMPCOIN_VAULT_NETWORK_CONFIG ?? defaultNetwork, 'utf8')), JSON.parse(readFileSync(new URL('../deployments/pumpcoin-trading-network.json', import.meta.url), 'utf8')), fileURLToPath(new URL('../.local/vault-trading/', import.meta.url)), () => service.records(), undefined, () => pythApiKey ?? process.env.PUMPCOIN_PYTH_API_KEY);
   const send = (res: ServerResponse, code: number, body: unknown) => { res.writeHead(code, { 'Content-Type': 'application/json', 'Cache-Control': 'no-store', 'X-Content-Type-Options': 'nosniff' }); res.end(JSON.stringify(body)); };
@@ -15,7 +17,7 @@ export function registrationPlugin(service = registrationService({ vaultNetwork:
     if (!req.url?.startsWith(REGISTRATION_API)) { next(); return; }
     if (!allowedRequest(req)) { send(res, 403, { error: 'Registration helper accepts only this local PumpCoin origin.' }); return; }
     const origin = `http://${req.headers.host}`;
-    if (req.url === REGISTRATION_API + '/status' && req.method === 'GET') { send(res, 200, { token, configured: service.configured, vaultSetupConfigured: service.vaultSetupConfigured }); return; }
+    if (req.url === REGISTRATION_API + '/status' && req.method === 'GET') { send(res, 200, { token, configured: service.configured, vaultSetupConfigured: service.vaultSetupConfigured, executionSignerConfigured: service.executionSignerConfigured }); return; }
     if (req.headers['x-pumpcoin-registration-token'] !== token) { send(res, 403, { error: 'Refresh to establish a local registration session.' }); return; }
     try {
       if (req.url === REGISTRATION_API + '/records' && req.method === 'GET') { send(res, 200, { records: await service.records() }); return; }
@@ -25,9 +27,13 @@ export function registrationPlugin(service = registrationService({ vaultNetwork:
       const body = JSON.parse(Buffer.concat(chunks).toString('utf8'));
       if (!body || typeof body !== 'object' || Array.isArray(body)) throw new Error('Invalid registration request.');
       const route = req.url.slice(REGISTRATION_API.length);
-      const fields: Record<string, string[]> = { '/trading-receipt': ['id', 'transactionHash'], '/trading-state': ['id', 'account'], '/trading-plan': ['id', 'action', 'account', 'amount'], '/confirm-trading': ['id', 'transactionHash'], '/challenge': ['prepared'], '/worker-check': ['id'], '/job': ['id'], '/commit': ['id', 'controllerSignature', 'executionSignature'], '/vault-plan': ['id'], '/confirm-vault': ['id', 'transactionHash'], '/identity-plan': ['id', 'agentId'], '/verify-binding': ['id', 'agentId'] };
+      const fields: Record<string, string[]> = { '/autonomy-status': ['id'], '/autonomy-plan': ['id', 'action', 'days', 'dailyQuoteCap'], '/execution-wallet': ['controller', 'name'], '/authorize-execution': ['id', 'controllerSignature'], '/trading-receipt': ['id', 'transactionHash'], '/trading-state': ['id', 'account'], '/trading-plan': ['id', 'action', 'account', 'amount'], '/confirm-trading': ['id', 'transactionHash'], '/challenge': ['prepared'], '/worker-check': ['id'], '/job': ['id'], '/commit': ['id', 'controllerSignature', 'executionSignature'], '/vault-plan': ['id'], '/confirm-vault': ['id', 'transactionHash'], '/identity-plan': ['id', 'agentId'], '/verify-binding': ['id', 'agentId'] };
       if (!fields[route] || Object.keys(body).sort().join(',') !== fields[route].sort().join(',')) throw new Error('Invalid registration request fields.');
       let result: unknown;
+      if (route === '/autonomy-status') result = { status: await service.autonomyStatus(body.id) };
+      if (route === '/autonomy-plan') result = { plan: await service.autonomyPlan(body.id, body.action, body.days, body.dailyQuoteCap) };
+      if (route === '/execution-wallet') result = await service.executionWallet(body.controller, body.name);
+      if (route === '/authorize-execution') result = { signature: await service.authorizeExecution(body.id, origin, body.controllerSignature) };
       if (route === '/trading-receipt') result = { receipt: await trading.receipt(body.id, body.transactionHash) };
       if (route === '/trading-state') result = { state: await trading.inspect(body.id, body.account || undefined) };
       if (route === '/trading-plan') result = { plan: await trading.plan(body.id, body.action, body.account, body.amount) };

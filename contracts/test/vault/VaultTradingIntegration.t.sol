@@ -167,6 +167,9 @@ contract VaultTradingIntegrationTest is Test {
         vault.applyConfig();
         vm.prank(controller);
         vault.unpause();
+        bytes32 permissionConfig = vault.currentConfigHash();
+        vm.prank(controller);
+        vault.grantTradingPermission(manager, permissionConfig, uint64(block.timestamp + 7 days), 100e6, 100);
         quote.mint(alice, 100e6);
         quote.mint(bob, 100e6);
         vm.prank(alice);
@@ -188,11 +191,11 @@ contract VaultTradingIntegrationTest is Test {
         vm.prank(alice);
         uint256 shares = gateway.deposit(20e6, 20e12, block.timestamp + 60);
         assertEq(shares, 20e12);
-        buy(10e6, 1);
+        buy(10e6, 4.95e18);
         assertEq(position.balanceOf(address(vault)), 5e18);
         assertEq(vault.totalAssets(), 20e6);
         vm.prank(manager);
-        vault.managerTrade(address(position), address(quote), 5e18, 1, block.timestamp + 60, address(venue));
+        vault.managerTrade(address(position), address(quote), 5e18, 9.9e6, block.timestamp + 60, address(venue));
         assertEq(quote.allowance(address(vault), address(adapter)), 0);
         assertEq(quote.allowance(address(adapter), address(venue)), 0);
         assertEq(quote.allowance(address(venue), address(router)), 0);
@@ -208,8 +211,8 @@ contract VaultTradingIntegrationTest is Test {
     function testSellCapUsesEighteenDecimalNotional() public {
         vm.prank(alice);
         gateway.deposit(30e6, 1, block.timestamp + 60);
-        buy(10e6, 1);
-        buy(10e6, 1);
+        buy(10e6, 4.95e18);
+        buy(10e6, 4.95e18);
         vm.prank(manager);
         vm.expectRevert(UnoraVault.ExceedsPerTradeCap.selector);
         vault.managerTrade(address(position), address(quote), 6e18, 1, block.timestamp + 60, address(venue));
@@ -245,11 +248,11 @@ contract VaultTradingIntegrationTest is Test {
         gateway.deposit(20e6, 1, block.timestamp + 60);
         router.setHaircut(101);
         vm.expectRevert();
-        buy(10e6, 1);
+        buy(10e6, 4.95e18);
         assertEq(quote.balanceOf(address(vault)), 20e6);
         assertEq(position.balanceOf(address(vault)), 0);
         router.setHaircut(100);
-        buy(10e6, 1);
+        buy(10e6, 4.95e18);
         assertEq(position.balanceOf(address(vault)), 4.95e18);
     }
 
@@ -258,7 +261,7 @@ contract VaultTradingIntegrationTest is Test {
         gateway.deposit(20e6, 1, block.timestamp + 60);
         router.setLie(true);
         vm.expectRevert();
-        buy(10e6, 1);
+        buy(10e6, 4.95e18);
     }
 
     function testGatewayLimitsAreAtomic() public {
@@ -285,7 +288,7 @@ contract VaultTradingIntegrationTest is Test {
     function testLiquidityAndManagerAuthority() public {
         vm.prank(alice);
         uint256 shares = gateway.deposit(10e6, 1, block.timestamp + 60);
-        buy(10e6, 1);
+        buy(10e6, 4.95e18);
         vm.prank(alice);
         vault.approve(address(gateway), shares);
         vm.prank(alice);
@@ -306,14 +309,14 @@ contract VaultTradingIntegrationTest is Test {
         gateway.deposit(20e6, 1, block.timestamp + 60);
         router.setPartial(true);
         vm.expectRevert();
-        buy(10e6, 1);
+        buy(10e6, 4.95e18);
         assertEq(quote.balanceOf(address(vault)), 20e6);
     }
 
     function testLaterDepositAfterLossDoesNotDiluteFirstInvestor() public {
         vm.prank(alice);
         uint256 a = gateway.deposit(20e6, 1, block.timestamp + 60);
-        buy(10e6, 1);
+        buy(10e6, 4.95e18);
         pyth.set(MON, 100000000, 1000, -8, block.timestamp);
         assertEq(vault.totalAssets(), 15e6);
         vm.prank(bob);

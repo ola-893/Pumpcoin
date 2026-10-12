@@ -1,0 +1,49 @@
+{
+  "date": "2026-10-12",
+  "scope": "Encrypted local execution signer, one-controller enrollment and bounded headless spot trading",
+  "checks": {
+    "solidity": {
+      "command": "forge test --root contracts -q",
+      "passed": 137,
+      "fuzz_runs": 512
+    },
+    "node": {
+      "command": "node --import tsx --test tests/*.test.ts",
+      "passed": 148
+    },
+    "final_signer_integration": {
+      "command": "node --import tsx --test tests/autonomous-signer.test.ts tests/autonomous-trading.test.ts",
+      "passed": 5
+    },
+    "typescript": [
+      "root",
+      "CRE",
+      "app"
+    ],
+    "production_build": "passed",
+    "lint": {
+      "errors": 0,
+      "preexisting_warnings": 4
+    },
+    "registered_vault_runtime_bytes": 21516
+  },
+  "acceptance": [
+    "encrypted key survives restart and rejects wrong passwords/tampering/unsafe permissions",
+    "controller signature authorizes exact backend execution-role enrollment",
+    "actual Anvil BUY and SELL receipts without controller signing",
+    "journal durability failure prevents broadcast",
+    "accepted broadcast followed by timeout reconciles without duplicate trade",
+    "UTC gross daily limit holds without signing",
+    "controller revocation blocks worker and direct manager transaction",
+    "external dependency runtime and implementation substitutions rejected",
+    "single-controller review screen inspected through browser"
+  ],
+  "limits": [
+    "local operator custody; no enclave/MPC or ERC-7715 session key",
+    "mock inference, valuation and venue in EVM acceptance",
+    "no public deployment, live DEX trade or real funds",
+    "existing immutable vaults require a new autonomy-enabled deployment",
+    "operator must run one worker per execution key and a separate authenticated oracle updater",
+    "physical Mera/WebAuthn transaction acceptance not exercised"
+  ]
+}

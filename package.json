@@ -25,7 +25,9 @@
     "agent:run": "node --import tsx agent-credit/worker.ts",
     "agent:demo": "node --import tsx agent-credit/local-demo.ts",
     "sdk:build": "node node_modules/typescript/bin/tsc -p sdk/tsconfig.json",
-    "preagent:demo": "npm run sdk:build"
+    "preagent:demo": "npm run sdk:build",
+    "signer:init": "node --import tsx agent-registration/init-signer.ts",
+    "agent:trade": "node --import tsx agent-registration/run-autonomous.ts"
   },
   "dependencies": {
     "@chainlink/cre-sdk": "1.22.0",

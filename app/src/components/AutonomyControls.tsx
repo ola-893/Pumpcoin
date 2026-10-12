@@ -1,0 +1,44 @@
+import { useEffect, useRef, useState } from 'react';
+import { formatUnits } from 'viem';
+import { registrationRequest, registrationSession, type RegistrationRecord } from '../lib/agent-registration';
+import { quoteUnits } from '../lib/registration';
+import type { VaultWalletTransaction } from '../lib/wallet-core';
+import { useWallet } from '../lib/wallet-context';
+import { Badge, CopyValue } from './UI';
+import { WalletButton } from './WalletProvider';
+
+type Status = { active: boolean; paused: boolean; adapterConfigured: boolean; validUntil: number; dailyQuoteCap: string; dailyQuoteTraded: string };
+export function AutonomyControls({ record }: { record: RegistrationRecord }) {
+  const wallet = useWallet(), [status, setStatus] = useState<Status>(), [days, setDays] = useState('7'), [daily, setDaily] = useState('100'), [plan, setPlan] = useState<VaultWalletTransaction & { scope: string }>(), [hash, setHash] = useState(''), [error, setError] = useState(''), [busy, setBusy] = useState(false);
+  const active = useRef<AbortController | undefined>(undefined), lock = useRef(false);
+  useEffect(() => () => active.current?.abort(), []);
+  if (!record.binding) return null;
+  const controller = wallet.binding?.address.toLowerCase() === record.manifest.controller.toLowerCase() && wallet.binding?.chainId === record.binding.chainId;
+  async function action(run: (token: string, signal: AbortSignal) => Promise<void>) {
+    if (lock.current) return; lock.current = true; setBusy(true); setError('');
+    const abort = new AbortController(); active.current = abort;
+    try { const helper = await registrationSession(abort.signal); await run(helper.token, abort.signal); }
+    catch (e) { if (!abort.signal.aborted) setError(e instanceof Error ? e.message : 'Trading permission check failed.'); }
+    finally { lock.current = false; if (!abort.signal.aborted) setBusy(false); }
+  }
+  async function prepare(action: 'grant' | 'revoke') {
+    setPlan(undefined); setHash('');
+    await actionRun(action);
+  }
+  const actionRun = (operation: 'grant' | 'revoke') => action(async (token, signal) => {
+    const result = await registrationRequest(token, '/autonomy-plan', { id: record.id, action: operation, days: Number(days), dailyQuoteCap: operation === 'grant' ? quoteUnits(daily).toString() : '0' }, signal);
+    setPlan(result.plan);
+  });
+  return <section className="panel" style={{ marginTop: 20 }} aria-label="Autonomous trading permissions">
+    <h3>Autonomous trading</h3><p>The agent signs its own trades while your permission is active. Your controller wallet approves or revokes that permission.</p>
+    <button type="button" className="button secondary" disabled={busy} onClick={() => void action(async (token, signal) => { const result = await registrationRequest(token, '/autonomy-status', { id: record.id }, signal); setStatus(result.status); })}>Refresh on-chain permission</button>
+    {status && <><Badge tone={status.active ? 'purple' : 'neutral'}>{status.active ? 'Permission active' : 'Permission inactive'}</Badge><p className="small">UTC daily turnover: {formatUnits(BigInt(status.dailyQuoteTraded), 6)} / {formatUnits(BigInt(status.dailyQuoteCap), 6)} quote units. {status.validUntil ? `Expires ${new Date(status.validUntil * 1000).toLocaleString()}.` : 'No grant recorded.'}</p>{(!status.adapterConfigured || status.paused) && <p className="small muted">Activate the restricted venue and healthy valuation through the vault’s configuration notice before granting permission.</p>}</>}
+    <div className="form-grid" style={{ marginTop: 16 }}><label>Permission duration · days<input type="number" min="1" max="30" value={days} onChange={e => { setDays(e.target.value); setPlan(undefined); }} /></label><label>Daily turnover cap · quote units<input value={daily} onChange={e => { setDaily(e.target.value); setPlan(undefined); }} /></label></div>
+    <p className="small muted">Both buys and sells count toward the UTC daily cap. Per-trade and position caps remain enforced. Maximum slippage: {record.manifest.proposedMandate.slippageBps} bps.</p>
+    <div className="review-actions"><button type="button" className="button secondary" disabled={busy} onClick={() => void prepare('grant')}>Review trading permission</button><button type="button" className="button secondary" disabled={busy} onClick={() => void prepare('revoke')}>Review immediate revocation</button></div>
+    {plan && <><p>{plan.scope}</p><WalletButton />{!controller && <p className="small muted">Connect this agent’s controller on the vault’s chain.</p>}<button type="button" className="button full" disabled={busy || wallet.busy || !controller || !!hash} onClick={() => void action(async () => { setHash(await wallet.sendVaultTransaction(plan)); setPlan(undefined); })}>Approve with controller wallet</button></>}
+    {hash && <><p className="small">Transaction submitted. Refresh on-chain permission after it is mined.</p><CopyValue value={hash} label="permission transaction" /></>}
+    <p className="small muted">Permission does not start a worker or prove it is running. The configured headless worker needs gas and a healthy live venue and valuation.</p>
+    {error && <p className="form-error" role="alert">{error}</p>}
+  </section>;
+}

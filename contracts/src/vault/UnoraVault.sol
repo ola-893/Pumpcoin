@@ -64,6 +64,25 @@ contract UnoraVault is ERC4626, ReentrancyGuard {
     uint256 public totalSettled;
     bool public paused;
 
+    // Dedicated agent vaults require an explicit, expiring controller grant.
+    // Once enabled this cannot be disabled, including by revoking or rotating a key.
+    bool public tradingPermissionRequired;
+    uint256 public tradeConfigVersion;
+    struct TradingPermission {
+        uint64 validUntil;
+        uint16 maxSlippageBps;
+        uint256 dailyQuoteCap;
+        uint256 managerVersion;
+        uint256 configVersion;
+    }
+    TradingPermission public tradingPermission;
+    mapping(uint256 => uint256) public dailyQuoteTraded; // UTC days; BUY + SELL, never reset on regrant
+    error TradingPermissionDenied();
+    error DailyTradingLimit();
+    error SlippageLimit();
+    event TradingPermissionGranted(address indexed manager, uint64 validUntil, uint256 dailyQuoteCap, uint16 maxSlippageBps);
+    event TradingPermissionRevoked(address indexed manager);
+
     uint256 public periodId;
 
     struct Period {
@@ -242,7 +261,8 @@ contract UnoraVault is ERC4626, ReentrancyGuard {
                 manager,
                 managerVersion,
                 admin,
-                c.adapter != address(0) && RestrictedSpotAdapter(c.adapter).revoked()
+                c.adapter != address(0) && RestrictedSpotAdapter(c.adapter).revoked(),
+                keccak256(abi.encode(tradingPermissionRequired, tradeConfigVersion, tradingPermission))
             )
         );
     }
@@ -544,6 +564,7 @@ contract UnoraVault is ERC4626, ReentrancyGuard {
         ) revert ExceedsExposure();
         uint256 notional = _quoteNotional(tokenIn, amountIn);
         if (notional > perTradeCap) revert ExceedsPerTradeCap();
+        _consumeTradingPermission(tokenIn, amountIn, notional, minOut, deadline);
         uint256 preVal = _positionValue();
         uint256 beforeIn = IERC20(tokenIn).balanceOf(address(this));
         uint256 beforeOut = IERC20(tokenOut).balanceOf(address(this));
@@ -560,6 +581,48 @@ contract UnoraVault is ERC4626, ReentrancyGuard {
         return tokenIn == address(asset())
             ? amountIn
             : Math.mulDiv(amountIn, valuationSource.price(), 1e18, Math.Rounding.Ceil);
+    }
+
+    /// @notice One controller transaction grants unattended trading for the CURRENT
+    /// manager/configuration only. Call after governed venue/valuation activation.
+    function grantTradingPermission(
+        address expectedManager, bytes32 expectedConfigHash,
+        uint64 validUntil, uint256 dailyQuoteCap, uint16 maxSlippageBps
+    ) external onlyAdmin nonReentrant {
+        if (expectedManager != manager || expectedConfigHash != currentConfigHash()
+            || validUntil <= block.timestamp || validUntil > block.timestamp + 30 days
+            || dailyQuoteCap == 0 || maxSlippageBps > 1000) revert TradingPermissionDenied();
+        _closePeriod();
+        tradingPermissionRequired = true;
+        tradingPermission = TradingPermission(validUntil, maxSlippageBps, dailyQuoteCap, managerVersion, tradeConfigVersion);
+        _openPeriod();
+        emit TradingPermissionGranted(manager, validUntil, dailyQuoteCap, maxSlippageBps);
+    }
+
+    /// @notice Immediate safety action, also available while paused or unvalued.
+    function revokeTradingPermission() external onlyAdmin nonReentrant {
+        _closePeriod();
+        tradingPermissionRequired = true;
+        delete tradingPermission;
+        _openPeriod();
+        emit TradingPermissionRevoked(manager);
+    }
+
+    function _consumeTradingPermission(address tokenIn, uint256 amountIn, uint256 notional, uint256 minOut, uint256 deadline) internal {
+        if (!tradingPermissionRequired) return; // Historical manual vault compatibility.
+        TradingPermission memory p = tradingPermission;
+        if (block.timestamp >= p.validUntil || p.managerVersion != managerVersion
+            || p.configVersion != tradeConfigVersion || deadline < block.timestamp
+            || deadline > block.timestamp + 5 minutes) revert TradingPermissionDenied();
+        uint256 day = block.timestamp / 1 days;
+        uint256 spent = dailyQuoteTraded[day] + notional;
+        if (spent > p.dailyQuoteCap) revert DailyTradingLimit();
+        uint256 expectedOut = tokenIn == address(asset())
+            ? Math.mulDiv(amountIn, 1e18, valuationSource.price())
+            : Math.mulDiv(amountIn, valuationSource.price(), 1e18);
+        uint256 floorOut = Math.mulDiv(expectedOut, 10000 - p.maxSlippageBps, 10000, Math.Rounding.Ceil);
+        if (floorOut == 0 || minOut < floorOut) revert SlippageLimit();
+        dailyQuoteTraded[day] = spent; // Atomic rollback when adapter/exposure checks revert.
     }
 
     function _positionValue() internal view returns (uint256) {
@@ -676,6 +739,7 @@ contract UnoraVault is ERC4626, ReentrancyGuard {
         expenseStream = ServiceExpenseStream(c.stream);
         identityRegistry = c.identityRegistry;
         agentId = c.agentId;
+        tradeConfigVersion += 1; // Any applied configuration invalidates the previous grant.
         delete pending;
         _openPeriod();
         emit ConfigApplied(periodId, currentConfigHash());
@@ -719,6 +783,7 @@ contract UnoraVault is ERC4626, ReentrancyGuard {
         _closePeriod();
         emit AdminChanged(admin, next);
         admin = next;
+        tradeConfigVersion += 1;
         _openPeriod();
     }
 

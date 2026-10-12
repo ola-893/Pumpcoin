@@ -32,7 +32,7 @@ async function pin(client: any, address: Address, expected: Hex, blockNumber: bi
   const code = await client.getCode({ address, blockNumber });
   if (!code || code === '0x' || keccak256(code) !== expected) throw new Error('Configured contract bytecode changed; deployment is blocked.');
 }
-async function networkChecks(c: VaultNetwork, client: any, blockNumber: bigint) {
+export async function networkChecks(c: VaultNetwork, client: any, blockNumber: bigint) {
   if (await client.getChainId() !== c.chainId) throw new Error('Vault RPC is connected to another chain.');
   await Promise.all([[c.identityRegistry, c.identityCodeHash], [c.quote, c.quoteCodeHash], [c.position, c.positionCodeHash]].map(([a, h]) => pin(client, a as Address, h as Hex, blockNumber)));
   const implementation = await client.getStorageAt({ address: c.identityRegistry, slot, blockNumber });
@@ -61,7 +61,7 @@ export async function prepareVault(p: Prepared, config: VaultNetwork, client: an
     scope: 'Create a dedicated paused vault and ERC-8004 identity. Controller owns the identity and administers this vault; the declared execution key is its manager. No deposit, approval, swap or token transfer. Trading and investment stay blocked until live valuation and a restricted venue are configured through notice.',
     blockers: balance < fee ? ['Fund the controller with testnet MON for deployment gas.'] : [] };
 }
-function normalized(code: Hex, refs: VaultArtifact['deployedBytecode']['immutableReferences']) {
+export function normalized(code: Hex, refs: VaultArtifact['deployedBytecode']['immutableReferences']) {
   const bytes = Buffer.from(code.slice(2), 'hex');
   for (const ranges of Object.values(refs ?? {})) for (const { start, length } of ranges) { if (start < 0 || start + length > bytes.length) throw new Error('Invalid runtime artifact references.'); bytes.fill(0, start, start + length); }
   return bytes.toString('hex');

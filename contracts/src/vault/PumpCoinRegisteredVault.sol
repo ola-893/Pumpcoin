@@ -41,6 +41,7 @@ contract PumpCoinRegisteredVault is UnoraVault {
         registrationCommitment = r.commitment;
         bootstrapSource = address(valuationSource);
         paused = true;
+        tradingPermissionRequired = true;
         IPumpCoinIdentityRegistry registry = IPumpCoinIdentityRegistry(r.registry);
         IPumpCoinIdentityRegistry.MetadataEntry[] memory entries = new IPumpCoinIdentityRegistry.MetadataEntry[](1);
         entries[0] = IPumpCoinIdentityRegistry.MetadataEntry("pumpcoinManifestCommitment", abi.encodePacked(r.commitment));

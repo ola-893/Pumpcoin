@@ -1,0 +1,43 @@
+{
+  "registrationId": "REPLACE_WITH_CONFIRMED_LOCAL_REGISTRATION_ID",
+  "pollIntervalMs": 15000,
+  "confirmations": 2,
+  "maxFeePerGasWei": "100000000000",
+  "deployment": {
+    "chainId": 10143,
+    "rpcUrl": "https://testnet-rpc.monad.xyz",
+    "identityRegistry": "REPLACE_WITH_REVIEWED_IDENTITY_REGISTRY",
+    "identityCodeHash": "REPLACE_WITH_RUNTIME_KECCAK256",
+    "identityImplementation": "REPLACE_WITH_PROXY_IMPLEMENTATION_OR_REMOVE_FOR_DIRECT_REGISTRY",
+    "identityImplementationCodeHash": "REPLACE_WITH_IMPLEMENTATION_RUNTIME_KECCAK256_OR_REMOVE",
+    "quote": "REPLACE_WITH_QUOTE_TOKEN",
+    "quoteCodeHash": "REPLACE_WITH_RUNTIME_KECCAK256",
+    "position": "REPLACE_WITH_POSITION_TOKEN",
+    "positionCodeHash": "REPLACE_WITH_RUNTIME_KECCAK256",
+    "positionDecimals": 18,
+    "vault": "REPLACE_WITH_CONFIRMED_AGENT_VAULT",
+    "vaultCodeHash": "REPLACE_WITH_RUNTIME_KECCAK256",
+    "adapter": "REPLACE_WITH_REVIEWED_RESTRICTED_ADAPTER",
+    "adapterCodeHash": "REPLACE_WITH_RUNTIME_KECCAK256",
+    "venue": "REPLACE_WITH_REVIEWED_COMPATIBLE_VENUE",
+    "venueCodeHash": "REPLACE_WITH_RUNTIME_KECCAK256",
+    "source": "REPLACE_WITH_HEALTHY_REVIEWED_VALUATION_SOURCE",
+    "sourceCodeHash": "REPLACE_WITH_RUNTIME_KECCAK256",
+    "dependencies": [
+      {
+        "address": "REPLACE_WITH_PYTH_PROXY",
+        "codeHash": "REPLACE_WITH_PROXY_RUNTIME_KECCAK256",
+        "implementation": "REPLACE_WITH_PYTH_IMPLEMENTATION",
+        "implementationCodeHash": "REPLACE_WITH_IMPLEMENTATION_RUNTIME_KECCAK256"
+      },
+      {
+        "address": "REPLACE_WITH_POOL_MANAGER",
+        "codeHash": "REPLACE_WITH_RUNTIME_KECCAK256"
+      },
+      {
+        "address": "REPLACE_WITH_STATE_VIEW",
+        "codeHash": "REPLACE_WITH_RUNTIME_KECCAK256"
+      }
+    ]
+  }
+}

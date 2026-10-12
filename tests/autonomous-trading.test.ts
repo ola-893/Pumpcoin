@@ -1,0 +1,117 @@
+import test from 'node:test';
+import assert from 'node:assert/strict';
+import { spawn } from 'node:child_process';
+import { mkdtemp, readFile, writeFile, rm, mkdir } from 'node:fs/promises';
+import { readFileSync } from 'node:fs';
+import { tmpdir } from 'node:os';
+import { join } from 'node:path';
+import { randomBytes } from 'node:crypto';
+import { createPublicClient, createWalletClient, getAddress, http, keccak256, type Address, type Hex } from 'viem';
+import { foundry } from 'viem/chains';
+import { privateKeyToAccount } from 'viem/accounts';
+import { initialDraft, prepareManifest } from '../app/src/lib/registration.js';
+import { ExecutionSignerStore } from '../agent-registration/signer.js';
+import { registrationService } from '../agent-registration/service.js';
+import { authorizationMessage } from '../agent-registration/core.js';
+import { checkLocalWorker } from '../agent-registration/worker.js';
+import { prepareVault, confirmVault } from '../agent-registration/vault-setup.js';
+import { autonomousAbi, tradingSnapshot, type AutonomousDeployment } from '../agent-registration/autonomous.js';
+import { permissionPlan, permissionStatus } from '../agent-registration/permissions.js';
+import { runAutonomous } from '../agent-registration/run-autonomous.js';
+import type { Detection } from '../local-inference/types.js';
+
+// Public disposable Anvil fixture key. No user wallets/credentials are used.
+const owner = privateKeyToAccount('0xac0974bec39a17e36ba4a6b4d238ff944bacb478cbed5efcae784d7bf4f2ff80');
+const artifact = (file: string, name: string) => JSON.parse(readFileSync(`contracts/out/${file}/${name}.json`, 'utf8'));
+test('Headless signer trades on real EVM, recovers pending receipt on restart and respects owner revocation', { timeout: 90000 }, async () => {
+  const root = await mkdtemp(join(tmpdir(), 'autonomy-evm-'));
+  const port = 18765, rpcUrl = `http://127.0.0.1:${port}`, anvil = spawn(process.env.ANVIL_BIN ?? 'anvil', ['--port', String(port), '--silent'], { stdio: 'ignore' });
+  const oldPassword = process.env.PUMPCOIN_SIGNER_PASSWORD_FILE, oldDirectory = process.env.PUMPCOIN_SIGNER_DIRECTORY;
+  try {
+    const client = createPublicClient({ chain: foundry, transport: http(rpcUrl, { retryCount: 0, timeout: 3000 }), cacheTime: 0 }), wallet = createWalletClient({ account: owner, chain: foundry, transport: http(rpcUrl) });
+    for (let i = 0; ; i++) { try { await client.getChainId(); break; } catch { if (i === 100) throw new Error('Anvil failed to start.'); await new Promise(r => setTimeout(r, 50)); } }
+    const deploy = async (file: string, name: string, args: unknown[] = []) => { const a = artifact(file, name), hash = await wallet.deployContract({ abi: a.abi, bytecode: a.bytecode.object, args }); const receipt = await client.waitForTransactionReceipt({ hash }); assert.equal(receipt.status, 'success'); return getAddress(receipt.contractAddress!); };
+    const write = async (address: Address, abi: any, functionName: string, args: unknown[] = []) => { const hash = await wallet.writeContract({ address, abi, functionName, args }); const receipt = await client.waitForTransactionReceipt({ hash }); assert.equal(receipt.status, 'success'); return receipt; };
+    const token = artifact('PumpCoinRegisteredVault.t.sol', 'RegistrationTokenFixture').abi;
+    const registry = await deploy('PumpCoinRegisteredVault.t.sol', 'RegistrationRegistryFixture');
+    const quote = await deploy('PumpCoinRegisteredVault.t.sol', 'RegistrationTokenFixture', [6]), position = await deploy('PumpCoinRegisteredVault.t.sol', 'RegistrationTokenFixture', [18]);
+    const codeHash = async (address: Address) => keccak256((await client.getCode({ address }))!);
+    const network = { chainId: 31337 as const, rpcUrl, identityRegistry: registry, identityCodeHash: await codeHash(registry), quote, quoteCodeHash: await codeHash(quote), position, positionCodeHash: await codeHash(position), positionDecimals: 18 as const };
+    const password = join(root, 'unlock'), keys = join(root, 'keys'), registrations = join(root, 'registrations'), directory = join(root, 'worker');
+    await writeFile(password, randomBytes(48), { mode: 0o600 });
+    process.env.PUMPCOIN_SIGNER_PASSWORD_FILE = password; process.env.PUMPCOIN_SIGNER_DIRECTORY = keys;
+    const store = await ExecutionSignerStore.load(keys, password), executionKey = await store.provision(owner.address, 'Autonomous fixture');
+    const prepared = prepareManifest({ ...initialDraft, name: 'Autonomous fixture', controller: owner.address, executionKey, model: 'fixture-local', modelSource: 'https://example.com/weights', weightsHash: 'a'.repeat(64), runtimeHash: 'b'.repeat(64), strategyCodeHash: 'c'.repeat(64), strategy: 'Synthetic deterministic fixture. Not a live strategy or performance claim.', pair: 'WMON / USDC', tradeCap: '10', exposureCap: '50', selfHosted: true });
+    const detected = { model: 'fixture-local', weightsHash: 'a'.repeat(64), runtimeHash: 'b'.repeat(64), runtimeManifest: { fixture: true } } as unknown as Detection;
+    const service = registrationService({ directory: registrations, vaultNetwork: network, signer: async () => store, detect: async () => detected,
+      worker: p => checkLocalWorker(p, { detect: async () => detected, infer: async () => ({ action: 'HOLD', quoteUnits: '0' }) }) });
+    const origin = 'http://127.0.0.1:5173', challenge = service.challenge(prepared, origin);
+    const controllerSignature = await owner.signMessage({ message: authorizationMessage(challenge, 'controller') });
+    service.check(challenge.id, origin); while (service.job(challenge.id, origin).status === 'running') await new Promise(r => setTimeout(r, 1));
+    const executionSignature = await service.authorizeExecution(challenge.id, origin, controllerSignature);
+    const record = await service.commit(challenge.id, origin, controllerSignature, executionSignature);
+    const plan = await prepareVault(prepared, network, client), deploymentHash = await wallet.sendTransaction({ data: plan.data, gas: BigInt(plan.gas), value: 0n });
+    await client.waitForTransactionReceipt({ hash: deploymentHash });
+    const binding = await confirmVault(prepared, deploymentHash, network, client), vault = getAddress(binding.vault);
+    await service.confirmVault(record.id, deploymentHash);
+    await assert.rejects(permissionPlan(prepared, vault, network, 'grant', { days: 7, dailyQuoteCap: '20000000' }, client), /activate/);
+    const source = await deploy('AutonomyFixtures.sol', 'AutonomySourceFixture', [18]);
+    const adapter = await deploy('RestrictedSpotAdapter.sol', 'RestrictedSpotAdapter', [vault, '0x0000000000000000000000000000000000000000', quote, position]);
+    const venue = await deploy('AutonomyFixtures.sol', 'AutonomyVenueFixture', [adapter, quote, position, 18]);
+    const vaultABI = artifact('PumpCoinRegisteredVault.sol', 'PumpCoinRegisteredVault').abi;
+    const read = (functionName: string, args: unknown[] = []) => client.readContract({ address: vault, abi: vaultABI, functionName, args }) as Promise<any>;
+    const config = { adapter, venue, stream: '0x0000000000000000000000000000000000000000', valuationSource: source, perTradeCap: 10000000n, maxPositionValue: 50000000n, expenseBudget: 0n, strategyHash: await read('strategyHash'), riskHash: await read('riskHash'), identityRegistry: registry, agentId: await read('agentId') };
+    await write(vault, vaultABI, 'proposeConfig', [config]);
+    await client.request({ method: 'evm_increaseTime' as any, params: [86401] as any }); await client.request({ method: 'evm_mine' as any });
+    await write(vault, vaultABI, 'applyConfig'); await write(vault, vaultABI, 'unpause');
+    await write(quote, token, 'mint', [owner.address, 100000000n]); await write(position, token, 'mint', [venue, 100n * 10n ** 18n]); await write(quote, token, 'mint', [venue, 100000000n]);
+    await write(quote, token, 'approve', [vault, 50000000n]); await write(vault, vaultABI, 'deposit', [50000000n, owner.address]);
+    const grant = await permissionPlan(prepared, vault, network, 'grant', { days: 7, dailyQuoteCap: '20000000' }, client);
+    await client.waitForTransactionReceipt({ hash: await wallet.sendTransaction({ to: grant.to, data: grant.data, gas: BigInt(grant.gas), value: 0n }) });
+    assert.equal((await permissionStatus(prepared, vault, network, client)).active, true);
+    await client.waitForTransactionReceipt({ hash: await wallet.sendTransaction({ to: executionKey, value: 10n ** 18n }) });
+    const dependency = { address: source, codeHash: await codeHash(source) };
+    const deployment: AutonomousDeployment = { ...network, vault, vaultCodeHash: await codeHash(vault), adapter, adapterCodeHash: await codeHash(adapter), venue, venueCodeHash: await codeHash(venue), source, sourceCodeHash: await codeHash(source), dependencies: [dependency] };
+    await assert.rejects(tradingSnapshot(prepared, { ...deployment, dependencies: [{ ...dependency, codeHash: `0x${'f'.repeat(64)}` }] }, client), /dependency runtime/);
+    await assert.rejects(tradingSnapshot(prepared, { ...deployment, dependencies: [{ ...dependency, implementation: source, implementationCodeHash: dependency.codeHash }] }, client), /implementation changed/);
+    const workerConfig = { registrationId: record.id, deployment };
+    const tick = (action: 'BUY' | 'SELL') => runAutonomous(workerConfig, { once: true, directory, registrations, propose: async () => ({ action, quoteUnits: '10000000' }) });
+    const failedJournal = join(directory, `31337-${vault.toLowerCase()}.json.tmp`);
+    await mkdir(failedJournal, { recursive: true });
+    await assert.rejects(runAutonomous(workerConfig, { directory, registrations, propose: async () => ({ action: 'BUY', quoteUnits: '10000000' }) }), /EISDIR/);
+    assert.equal(await client.getTransactionCount({ address: executionKey }), 0, 'journal failure in persistent mode stops before broadcasting');
+    await rm(failedJournal, { recursive: true });
+    const ambiguousClient = new Proxy(client, { get(target, key) {
+      if (key === 'sendRawTransaction') return async (args: any) => { await target.sendRawTransaction(args); throw new Error('Simulated timeout after network accepted transaction'); };
+      return Reflect.get(target, key);
+    } });
+    await assert.rejects(runAutonomous(workerConfig, { once: true, directory, registrations, client: ambiguousClient, propose: async () => ({ action: 'BUY', quoteUnits: '10000000' }) }), /Simulated timeout/);
+    const journalPath = join(directory, `31337-${vault.toLowerCase()}.json`), journal = JSON.parse(await readFile(journalPath, 'utf8'));
+    assert.ok(journal.pending); assert.equal(keccak256(journal.pending.serialized), journal.pending.hash);
+    const receipt = await client.getTransactionReceipt({ hash: journal.pending.hash }); assert.equal(receipt.status, 'success');
+    assert.equal(await client.readContract({ address: position, abi: token, functionName: 'balanceOf', args: [vault] }), 10n ** 19n);
+    const firstNonce = await client.getTransactionCount({ address: executionKey });
+    await client.request({ method: 'evm_mine' as any });
+    await tick('BUY'); // New process lifecycle recovers prior receipt, does not submit again.
+    assert.equal(await client.getTransactionCount({ address: executionKey }), firstNonce);
+    assert.equal(JSON.parse(await readFile(journalPath, 'utf8')).pending, undefined);
+    await client.request({ method: 'evm_mine' as any }); await tick('SELL'); await client.request({ method: 'evm_mine' as any }); await tick('SELL');
+    assert.equal(await read('dailyQuoteTraded', [(await client.getBlock()).timestamp / 86400n]), 20000000n);
+    assert.equal(await client.readContract({ address: position, abi: token, functionName: 'balanceOf', args: [vault] }), 0n);
+    const before = await client.getTransactionCount({ address: executionKey });
+    await client.request({ method: 'evm_mine' as any }); await tick('BUY'); assert.equal(await client.getTransactionCount({ address: executionKey }), before, 'daily cap HOLD does not sign a transaction');
+    const revoke = await permissionPlan(prepared, vault, network, 'revoke', { days: 0, dailyQuoteCap: '0' }, client);
+    await client.waitForTransactionReceipt({ hash: await wallet.sendTransaction({ to: revoke.to, data: revoke.data, gas: BigInt(revoke.gas), value: 0n }) });
+    assert.equal((await permissionStatus(prepared, vault, network, client)).active, false);
+    await assert.rejects(tradingSnapshot(prepared, deployment, client), /permission/);
+    const agentWallet = createWalletClient({ account: await store.account(owner.address, prepared.manifest.name), chain: foundry, transport: http(rpcUrl) });
+    const badHash = await agentWallet.writeContract({ address: vault, abi: autonomousAbi, functionName: 'managerTrade', args: [quote, position, 1000000n, 995000000000000000n, (await client.getBlock()).timestamp + 120n, venue], gas: 500000n });
+    assert.equal((await client.waitForTransactionReceipt({ hash: badHash })).status, 'reverted', 'on-chain revocation blocks even direct signer submissions');
+    await assert.rejects(tradingSnapshot(prepared, { ...deployment, sourceCodeHash: `0x${'f'.repeat(64)}` as Hex }, client), /runtime/);
+    store.close();
+  } finally {
+    if (oldPassword === undefined) delete process.env.PUMPCOIN_SIGNER_PASSWORD_FILE; else process.env.PUMPCOIN_SIGNER_PASSWORD_FILE = oldPassword;
+    if (oldDirectory === undefined) delete process.env.PUMPCOIN_SIGNER_DIRECTORY; else process.env.PUMPCOIN_SIGNER_DIRECTORY = oldDirectory;
+    anvil.kill('SIGTERM'); await rm(root, { recursive: true, force: true });
+  }
+});

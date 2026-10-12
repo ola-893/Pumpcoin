@@ -1,3 +1,4 @@
+import { AutonomyControls } from './AutonomyControls';
 import { VaultSetup } from './VaultSetup';
 import { Link } from 'react-router-dom';
 import { useEffect, useRef, useState } from 'react';
@@ -11,14 +12,14 @@ import { authorizationMessage, checkWorker, registrationSession, registrationReq
 
 export function AgentRegistration({ prepared, onRegistered }: { prepared: Prepared; onRegistered?: (r: RegistrationRecord) => void }) {
   const wallet = useWallet();
-  const [helper, setHelper] = useState<{ token: string; configured: boolean }>(), [challenge, setChallenge] = useState<Challenge>(), [worker, setWorker] = useState<RegistrationRecord['worker']>(), [signatures, setSignatures] = useState<Partial<Record<'controller' | 'execution', Hex>>>({}), [record, setRecord] = useState<RegistrationRecord>(), [busy, setBusy] = useState(false), [status, setStatus] = useState(''), [error, setError] = useState(''), [now, setNow] = useState(() => Date.now()), [pasted, setPasted] = useState('');
+  const [helper, setHelper] = useState<{ token: string; configured: boolean; executionSignerConfigured?: boolean }>(), [challenge, setChallenge] = useState<Challenge>(), [worker, setWorker] = useState<RegistrationRecord['worker']>(), [signatures, setSignatures] = useState<Partial<Record<'controller' | 'execution', Hex>>>({}), [record, setRecord] = useState<RegistrationRecord>(), [busy, setBusy] = useState(false), [status, setStatus] = useState(''), [error, setError] = useState(''), [now, setNow] = useState(() => Date.now()), [pasted, setPasted] = useState('');
   const abort = useRef(new AbortController()), lock = useRef(false);
   useEffect(() => {
     const controller = new AbortController(); abort.current = controller;
     registrationSession(controller.signal).then(async s => { setHelper(s); const data = await registrationRequest(s.token, '/records', undefined, controller.signal); const found = data.records.find((r: RegistrationRecord) => r.commitment === prepared.commitment); if (found && !controller.signal.aborted) setRecord(found); }).catch(e => { if (!controller.signal.aborted) setError(e.message); });
     const timer = setInterval(() => setNow(Date.now()), 1000);
     return () => { controller.abort(); clearInterval(timer); };
-  }, []);
+  }, [prepared.commitment]);
   useEffect(() => { if (record) onRegistered?.(record); }, [record, onRegistered]);
   const expired = !!challenge && now >= challenge.expiresAt;
   async function action(run: () => Promise<void>) {
@@ -39,22 +40,28 @@ export function AgentRegistration({ prepared, onRegistered }: { prepared: Prepar
     const signature = await wallet.sign(authorizationMessage(challenge, role)); abort.current.signal.throwIfAborted();
     if (Date.now() >= challenge.expiresAt) throw new Error('The registration session expired during signing. Start again.');
     setSignatures(old => ({ ...old, [role]: signature }));
+    if (role === 'controller' && helper?.executionSignerConfigured) {
+      const result = await registrationRequest(helper.token, '/authorize-execution', { id: challenge.id, controllerSignature: signature }, abort.current.signal);
+      if (Date.now() >= challenge.expiresAt) throw new Error('Registration expired. Check the worker again.');
+      setSignatures(old => ({ ...old, execution: result.signature }));
+      setStatus('Controller authorized; the agent signed its own enrollment. No second wallet connection needed.');
+    }
   }
   const request = (route: string, body: unknown) => { if (!helper) throw new Error('Local helper is unavailable.'); return registrationRequest(helper.token, route, body, abort.current.signal); };
   return <section className="panel" aria-label="Agent registration checks" style={{ marginTop: 24 }}>
-    <h3>Register your local agent</h3><p className="small muted">Check the running model, then authorize this declaration with both wallets. Registration stores a versioned record on this computer.</p>
+    <h3>Register your local agent</h3><p className="small muted">Check the running model, then sign this declaration with your controller wallet. The configured agent signer handles its own enrollment. Registration stores a versioned record on this computer.</p>
     {!record ? <>
       <button className="button secondary full" type="button" disabled={busy || !helper} onClick={() => void action(runWorker)}><Cpu size={16} />{worker && !expired ? 'Check local worker again' : 'Check local worker'}</button>
       {worker && !expired && <p className="small success" role="status">Local inference checked · paper-only · not attested</p>}
       {challenge && <details><summary className="small muted">Inspect what both wallets authorize</summary><pre style={{ whiteSpace: 'pre-wrap', overflowWrap: 'anywhere', fontSize: 10 }}>{authorizationMessage(challenge, 'controller')}</pre><pre style={{ whiteSpace: 'pre-wrap', overflowWrap: 'anywhere', fontSize: 10 }}>{authorizationMessage(challenge, 'execution')}</pre></details>}
       <div style={{ margin: '16px 0' }}><WalletButton /></div>
-      <div className="review-actions"><button className="button secondary" type="button" disabled={busy || wallet.busy || !worker || expired || !!signatures.controller} onClick={() => void action(() => sign('controller'))}><Fingerprint size={16} />{signatures.controller ? 'Controller signed' : 'Sign as controller'}</button><button className="button secondary" type="button" disabled={busy || wallet.busy || !worker || expired || !!signatures.execution} onClick={() => void action(() => sign('execution'))}><ShieldCheck size={16} />{signatures.execution ? 'Execution key signed' : 'Sign as execution key'}</button></div>
+      <div className="review-actions"><button className="button secondary" type="button" disabled={busy || wallet.busy || !worker || expired || (!!signatures.controller && !!signatures.execution)} onClick={() => void action(() => sign('controller'))}><Fingerprint size={16} />{signatures.controller && signatures.execution ? 'Controller and agent signed' : 'Authorize agent enrollment'}</button>{!helper?.executionSignerConfigured && <button className="button secondary" type="button" disabled={busy || wallet.busy || !worker || expired || !!signatures.execution} onClick={() => void action(() => sign('execution'))}><ShieldCheck size={16} />{signatures.execution ? 'Execution key signed' : 'Sign as execution key'}</button>}</div>
       <details><summary className="small muted">Execution signer outside this browser?</summary><p className="small muted">Sign the exact execution authorization shown above in your signing tool. Paste the signature, never a private key. The helper verifies it before registration.</p><label className="small" htmlFor="execution-signature">Execution authorization signature</label><input id="execution-signature" className="mono-input" value={pasted} onChange={e => setPasted(e.target.value)} style={{ width: '100%' }} /><button className="text-button" type="button" disabled={busy || !worker || expired} onClick={() => void action(async () => { if (!challenge || expired || !/^0x[0-9a-f]{130}$/i.test(pasted)) throw new Error('Enter a 65-byte EOA signature for this current session.'); const address = await recoverMessageAddress({ message: authorizationMessage(challenge, 'execution'), signature: pasted as Hex }); if (address.toLowerCase() !== prepared.manifest.executionKey.toLowerCase()) throw new Error('Signature does not match the execution key and this declaration.'); setSignatures(x => ({ ...x, execution: pasted as Hex })); })}>Use execution signature</button></details>
       <button className="button full" type="button" disabled={busy || !worker || !signatures.controller || !signatures.execution || expired} onClick={() => void action(async () => { const value = await request('/commit', { id: challenge!.id, controllerSignature: signatures.controller, executionSignature: signatures.execution }); setRecord(value.record); setStatus('Local authorizations saved. Continue below to create and verify the public identity and vault.'); })}>Save authorizations & continue<Check size={16} /></button>
       {expired && <p className="form-error">The session expired. Check the worker again and obtain fresh signatures.</p>}
     </> : <>
       <Badge tone="purple">Registered locally</Badge><p className="small">Both authorizations and the local inference check passed. This is not a public identity or an investment-eligible vault.</p><CopyValue value={record.localAgentId} label="local agent identity" /><button className="button secondary" type="button" onClick={() => downloadJson('pumpcoin-local-registration.json', record)}>Export registration receipt<Download size={16} /></button>
-      <VaultSetup record={record} onComplete={setRecord} />
+      <VaultSetup record={record} onComplete={setRecord} /><AutonomyControls key={record.id} record={record} />
     </>}
     {busy && <p className="small" role="status">{status || 'Checking registration…'}</p>}{!busy && status && <p className="small" role="status">{status}</p>}{error && <p className="form-error" role="alert">{error}</p>}
   </section>;

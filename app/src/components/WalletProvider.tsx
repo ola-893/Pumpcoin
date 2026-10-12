@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState, type ReactNode } from 'react';
 import { ArrowRight, Fingerprint } from 'lucide-react';
 import { Modal, Badge, CopyValue } from './UI';
-import { PROOFLINE_CHAIN_ID, readBrowserBinding, sendBrowserVaultTransaction, sendBrowserTradingTransaction, type TradingWalletTransaction, type VaultWalletTransaction, signBrowserMessage, signChecked, publicWalletError, walletAddress, walletChain, type Provider, type WalletBinding } from '../lib/wallet-core';
+import { PROOFLINE_CHAIN_ID, sendBrowserTradingTransaction, type TradingWalletTransaction, sameWallet, validateVaultTransaction, validateTradingTransaction, readBrowserBinding, sendBrowserVaultTransaction, type VaultWalletTransaction, signBrowserMessage, signChecked, publicWalletError, walletAddress, walletChain, type Provider, type WalletBinding } from '../lib/wallet-core';
 import { Context, type Choice, useWallet } from '../lib/wallet-context';
 import { short } from '../lib/evidence';
 
@@ -83,22 +83,43 @@ export function WalletProvider({ children }: { children: ReactNode }) {
       }));
     } catch (e) { const text = publicWalletError(e); setError(text); throw new Error(text); } finally { finish(); }
   }
+  async function sendMeraTransaction(transaction: TradingWalletTransaction, selected: WalletBinding) {
+    const { withMeraAccount } = await import('../lib/mera');
+    const { createWalletClient, http } = await import('viem');
+    const { monadTestnet } = await import('viem/chains');
+    return await withMeraAccount(false, async account => {
+      if (account.address.toLowerCase() !== selected.address.toLowerCase() || !sameWallet(current.current, selected)) throw new Error('Controller changed. Reconnect before submitting.');
+      const client = createWalletClient({ account, chain: monadTestnet, transport: http() });
+      const request = await client.prepareTransactionRequest({ ...(transaction.to ? { to: transaction.to } : {}), data: transaction.data, value: BigInt(transaction.value), gas: BigInt(transaction.gas) });
+      if (!sameWallet(current.current, selected)) throw new Error('Controller changed before submission.');
+      const serializedTransaction = await client.signTransaction(request);
+      if (!sameWallet(current.current, selected)) throw new Error('Controller changed before broadcast.');
+      return client.sendRawTransaction({ serializedTransaction });
+    });
+  }
   async function sendVaultTransaction(transaction: VaultWalletTransaction) {
     const selected = current.current;
     if (!selected) throw new Error('Connect the controller wallet first.');
-    if (selected.kind !== 'browser') throw new Error('For now, export the deployment transaction and submit it using your Mera signing tool, then paste its hash. Browser-wallet deployment is supported directly.');
     const p = provider.current;
-    if (!p) throw new Error('Reconnect the controller wallet.');
+    if (selected.kind === 'browser' && !p) throw new Error('Reconnect the controller wallet.');
     start();
-    try { return await sendBrowserVaultTransaction(p, selected, () => current.current, transaction); }
+    try {
+      validateVaultTransaction(transaction, selected);
+      if (selected.kind === 'browser') return await sendBrowserVaultTransaction(p!, selected, () => current.current, transaction);
+      return await sendMeraTransaction(transaction, selected);
+    }
     catch (e) { const message = publicWalletError(e); setError(message); throw new Error(message); }
     finally { finish(); }
   }
   async function sendTradingTransaction(transaction: TradingWalletTransaction) {
     const selected = current.current, p = provider.current;
-    if (!selected || selected.kind !== 'browser' || !p) throw new Error('Connect a browser wallet on Monad testnet, or export the transaction for your signing tool.');
+    if (!selected || (selected.kind === 'browser' && !p)) throw new Error('Connect your wallet on Monad testnet.');
     start();
-    try { return await sendBrowserTradingTransaction(p, selected, () => current.current, transaction); }
+    try {
+      validateTradingTransaction(transaction, selected);
+      if (selected.kind === 'browser') return await sendBrowserTradingTransaction(p!, selected, () => current.current, transaction);
+      return await sendMeraTransaction(transaction, selected);
+    }
     catch (e) { const message = publicWalletError(e); setError(message); throw new Error(message); }
     finally { finish(); }
   }

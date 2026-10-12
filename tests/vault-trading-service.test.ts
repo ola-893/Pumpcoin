@@ -47,6 +47,9 @@ test('reviewed infrastructure, notice, deposit, manager trade and investor exit 
   await send('apply');assert.equal((await service.inspect(id)).paused,true);await send('unpause');assert.equal((await service.inspect(id)).ready,true);
   await write(quote,'RegistrationTokenFixture','mint',[account.address,20_000000n]);await send('approve-deposit','20000000');const deposited=await send('deposit','20000000');assert.equal((await service.receipt(id,deposited)).status,'success');
   assert.equal((await service.inspect(id,account.address)).balances!.shares,'20000000000000');
+  await assert.rejects(service.plan(id,'buy',manager.address,'1000000'),'new vault refuses manager trades before controller permission');
+  const permissionConfig=await client.readContract({address:vault,abi:artifact('PumpCoinRegisteredVault').abi,functionName:'currentConfigHash'});
+  await write(vault,'PumpCoinRegisteredVault','grantTradingPermission',[manager.address,permissionConfig,(await client.getBlock()).timestamp+604800n,20_000000n,prepared.manifest.proposedMandate.slippageBps]);
   await assert.rejects(service.plan(id,'buy',account.address,'1000000'),/manager/);await send('buy','1000000',true);await send('sell','500000000000000000',true);
   await send('approve-redeem','20000000000000');await send('redeem','20000000000000');assert.equal((await service.inspect(id,account.address)).balances!.shares,'0');
   await client.request({method:'evm_increaseTime' as any,params:[301] as any});await client.request({method:'evm_mine' as any,params:[] as any});assert.equal((await service.inspect(id)).ready,false);await assert.rejects(service.plan(id,'deposit',account.address,'1000000'),/blocked/);

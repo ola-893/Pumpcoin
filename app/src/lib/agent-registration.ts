@@ -7,7 +7,7 @@ async function json(response: Response) {
   if (!response.headers.get('content-type')?.includes('application/json')) throw new Error('Open the local PumpCoin dev or preview server to register your agent.');
   const result = await response.json(); if (!response.ok) throw new Error(result.error || 'Registration failed.'); return result;
 }
-export const registrationSession = (signal?: AbortSignal): Promise<{token: string; configured: boolean; vaultSetupConfigured?: boolean}> => fetch(API + '/status', { signal }).then(json);
+export const registrationSession = (signal?: AbortSignal): Promise<{token: string; configured: boolean; vaultSetupConfigured?: boolean; executionSignerConfigured?: boolean}> => fetch(API + '/status', { signal }).then(json);
 export const registrationRequest = async (token: string, route: string, body?: unknown, signal?: AbortSignal) => json(await fetch(API + route, { method: body ? 'POST' : 'GET', headers: { 'X-PumpCoin-Registration-Token': token, ...(body ? { 'Content-Type': 'application/json' } : {}) }, ...(body ? { body: JSON.stringify(body) } : {}), signal: signal ? AbortSignal.any([signal, AbortSignal.timeout(120000)]) : AbortSignal.timeout(120000) }));
 export async function checkWorker(token: string, id: string, update: (value: string) => void, signal: AbortSignal) {
   await registrationRequest(token, '/worker-check', { id }, signal); update('Checking your local model and its paper-action guard…');
