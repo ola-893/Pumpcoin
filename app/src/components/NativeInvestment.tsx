@@ -37,9 +37,10 @@ export function NativeInvestment({record}:{record:RegistrationRecord}) {
   }
   const saved={...marker,hash};setPending(saved);setPlan(undefined);
   try{localStorage.setItem(key,JSON.stringify(saved));}catch{setError('Storage failed after submission. Save the visible hash and review ID before refreshing.');}
-  setStatus('Submitted. Check the receipt when mined; do not submit again while it is pending.');
+  setStatus('Submitted. Checking the receipt; your saved transaction remains available if verification needs a retry.');
+  await verify(saved);
  }
- async function verify(){if(!pending||!/^0x[0-9a-f]{64}$/i.test(pending.hash))throw new Error('Find the transaction hash in your wallet activity before verifying.');const x=await request('/native-receipt',{id:record.id,planId:pending.planId,transactionHash:pending.hash});localStorage.removeItem(key);setPending(undefined);setStatus(x.receipt.status==='success'?'Verified on Monad testnet. Your balances will refresh.':'The transaction reverted. No investment change was made.');await refresh();}
+ async function verify(receipt=pending){if(!receipt||!/^0x[0-9a-f]{64}$/i.test(receipt.hash))throw new Error('Find the transaction hash in your wallet activity before verifying.');const x=await request('/native-receipt',{id:record.id,planId:receipt.planId,transactionHash:receipt.hash});localStorage.removeItem(key);setPending(undefined);setStatus(x.receipt.status==='success'?'Verified on Monad testnet. Your balances will refresh.':'The transaction reverted. No investment change was made.');await refresh();}
  const expired=!!plan&&now>=plan.quote.expiresAt;
  let approvalNeeded=false;try{approvalNeeded=!!wallet.binding&&state?.allowance!==undefined&&action==='redeem-mon'&&parseUnits(amount,12)>BigInt(state?.allowance??'0');}catch{/* Invalid input is explained during review. */}
  const checking=!state&&!error&&!!record.binding;
