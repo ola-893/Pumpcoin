@@ -30,7 +30,7 @@ test('native service simulates atomic entry and exit, retains reviewed receipts 
   await write(vault,'PumpCoinRegisteredVault','proposeConfig',[config]);await client.request({method:'evm_increaseTime' as any,params:[86401] as any});await client.request({method:'evm_mine' as any,params:[] as any});await write(vault,'PumpCoinRegisteredVault','applyConfig');await write(vault,'PumpCoinRegisteredVault','unpause');await write(poolManager,'TradingRouterFixture','setHaircut',[25n]);
   const network={chainId:31337,rpcUrl:`http://127.0.0.1:${port}`,quote,position,positionDecimals:18} as VaultNetwork,n={chainId:31337,poolManager,fee:3000,tickSpacing:60} as TradingNetwork;
   let blockers:string[]=[],wrongSource=false;
-  const trading={inspect:async(_id:string,owner?:Address)=>{const block=await client.getBlock(),b=block.number;return{ready:!blockers.length,blockers,blockNumber:String(b),blockHash:block.hash,checkedAt:new Date().toISOString(),vaultRuntimeCompatible:true,controller:account.address,bundle:{source:wrongSource?poolManager:source},poolId:await read(source,'NativePriceFixture','poolId',[],b),nav:await read(vault,'PumpCoinRegisteredVault','totalAssets',[],b).then(String),balances:owner?{shares:String(await read(vault,'PumpCoinRegisteredVault','balanceOf',[owner],b)),maxRedeem:String(await read(vault,'PumpCoinRegisteredVault','maxRedeem',[owner],b))}:undefined};}};
+  const trading={inspect:async(_id:string,owner?:Address)=>{const block=await client.getBlock(),b=block.number;return{ready:!blockers.length,blockers,blockNumber:String(b),blockHash:block.hash,checkedAt:new Date().toISOString(),vaultRuntimeCompatible:true,controller:account.address,bundle:{source:wrongSource?poolManager:source},poolId:await read(source,'NativePriceFixture','poolId',[],b),nav:await read(vault,'PumpCoinRegisteredVault','totalAssets',[],b).then(String),balances:owner?{shares:String(await read(vault,'PumpCoinRegisteredVault','balanceOf',[owner],b)),maxRedeem:blockers.length?'0':String(await read(vault,'PumpCoinRegisteredVault','maxRedeem',[owner],b))}:undefined};}};
   const service=()=>nativeInvestmentService(network,n,directory,async()=>[r],trading as any,client);
   const send=async(p:NativePlan)=>{const hash=await wallet.sendTransaction({to:p.to,data:p.data,value:BigInt(p.value),gas:BigInt(p.gas)});assert.equal((await client.waitForTransactionReceipt({hash})).status,'success');return hash;};
   assert.equal((await service().inspect(id,account.address)).ready,false);
@@ -41,7 +41,12 @@ test('native service simulates atomic entry and exit, retains reviewed receipts 
   const entered=await send(entry);await assert.rejects(service().receipt(id,deployment.id,entered),/exact reviewed/);assert.equal((await service().receipt(id,entry.id,entered)).status,'success');
   const shares=(await service().inspect(id,account.address)).shares!;
   await assert.rejects(service().plan(id,'redeem-mon',account.address,shares),/Approve this exact/);
-  const approval=await service().plan(id,'approve-native-exit',account.address,shares);await service().receipt(id,approval.id,await send(approval));
+  blockers=['Price freshness and liquidity are unavailable.'];
+  await assert.rejects(service().plan(id,'approve-native-exit',account.address,(BigInt(shares)+1n).toString()),/share balance/);
+  const approval=await service().plan(id,'approve-native-exit',account.address,shares);assert.equal(BigInt(approval.value),0n);
+  await service().receipt(id,approval.id,await send(approval));
+  await assert.rejects(service().plan(id,'redeem-mon',account.address,shares),/freshness and liquidity/);
+  wrongSource=true;await assert.rejects(service().plan(id,'approve-native-exit',account.address,shares),/no longer matches/);wrongSource=false;blockers=[];
   await write(quote,'RegistrationTokenFixture','mint',[vault,10000000n]);
   const exit=await service().plan(id,'redeem-mon',account.address,shares);assert.ok(BigInt(exit.output!)>10000000000000000000n);const exited=await send(exit);assert.equal((await service().receipt(id,exit.id,exited)).status,'success');assert.equal((await service().inspect(id,account.address)).shares,'0');
   wrongSource=true;await assert.rejects(service().inspect(id,account.address),/no longer matches/);wrongSource=false;

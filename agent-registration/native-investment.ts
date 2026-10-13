@@ -56,10 +56,11 @@ export function nativeInvestmentService(network: VaultNetwork, n: TradingNetwork
    if(!view.bundle)throw new Error('Deploy the compatible public vault and reviewed trading bundle first.');
    const a=artifact();data=encodeDeployData({abi:a.abi,bytecode:a.bytecode.object,args:[state.vault,n.poolManager,view.bundle.source,n.fee,n.tickSpacing,r.manifest.proposedMandate.slippageBps]});
   }else{
-   if(!state.ready||!state.gateway)throw new Error(state.blockers.join(' ').slice(0,260)||'MON investment is not ready.');
+   if(!state.gateway||(action!=='approve-native-exit'&&!state.ready))throw new Error(state.blockers.join(' ').slice(0,260)||'MON investment is not ready.');
    if(!/^[1-9][0-9]{0,38}$/.test(amount))throw new Error('Enter a positive amount in base units.');
    const units=BigInt(amount),gateway=state.gateway;
-   if(action!=='deposit-mon'&&units>BigInt(state.maxRedeem??'0'))throw new Error('Pump amount exceeds your liquid redemption limit.');
+   if(action==='approve-native-exit'&&units>BigInt(state.shares??'0'))throw new Error('Pump approval exceeds your share balance.');
+   if(action==='redeem-mon'&&units>BigInt(state.maxRedeem??'0'))throw new Error('Pump amount exceeds your liquid redemption limit.');
    native={action,gateway,vault:state.vault,amount,minQuote:'0',minOutput:'0',deadline};
    if(action==='approve-native-exit'){to=state.vault;data=encodeFunctionData({abi:nativeShareAbi,functionName:'approve',args:[gateway,units]});}
    else{

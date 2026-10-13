@@ -1,5 +1,5 @@
 import { encodeFunctionData, getAddress, parseAbi, type Address, type Hex } from 'viem';
-import type { PoolFundingAuthorization } from '../../../agent-registration/pool-funding-types';
+import type { PoolFundingAuthorization } from '../../../agent-registration/pool-funding-types.js';
 const abi=parseAbi(['function seed(uint128,int24,int24,uint256,uint256) payable']);
 export function validatePoolFundingTransaction(tx:{chainId:number;from:Address;to?:Address;value:Hex;data:Hex;gas:Hex;funding?:PoolFundingAuthorization;quote?:{expiresAt:number}},account:Address){
  const f=tx.funding;
