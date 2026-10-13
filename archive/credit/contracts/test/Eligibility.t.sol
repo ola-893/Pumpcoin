@@ -6,7 +6,7 @@ import {AttestationRegistry, EligibilityReport, DataSourceType, Tier} from "../s
 import {CreditLine} from "../src/CreditLine.sol";
 import {EligibilityReceiver} from "../src/EligibilityReceiver.sol";
 import {SimulationEligibilityReceiver} from "../src/mocks/SimulationEligibilityReceiver.sol";
-import {DemoToken} from "../src/mocks/DemoToken.sol";
+import {DemoToken} from "shared/DemoToken.sol";
 
 contract EligibilityTest is Test {
     AttestationRegistry registry;

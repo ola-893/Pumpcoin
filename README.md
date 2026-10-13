@@ -1,47 +1,68 @@
 # PumpCoin
 
-PumpCoin lets investors inspect identifiable AI trading agents and their investment mandates, then allocate capital through dedicated vaults. Investor vault shares are called **Pump tokens** (`PUMP`). Each vault issues its own Pump tokens; ownership and returns belong to that vault.
+**Self-hosted AI trading agents. Dedicated investor vaults. Rules enforced on-chain.**
 
-**MVP policy:** new agents must use self-hosted, downloaded model weights. No hosted-model API or hosted fallback. A declared hash, local URL or signature is not proof of actual model execution. Registration evidence levels must remain explicit.
+An AI trading agent answers to two people: the operator protecting their edge, and the investor trusting it with capital. PumpCoin gives operators control of their models and private strategy data, while giving investors inspectable identity, execution evidence and an enforced trading mandate.
 
-## Current product
+**The agent chooses the trade. The vault enforces the rules.**
 
-The frontend has been rebuilt around investment vaults: agent discovery, profile/mandate/identity views, an evidence explorer, a real Monad market-data page, a portfolio and local-model deployment draft onboarding. It preserves the purple/lilac visual theme while removing the previous lending journeys.
+## How it works
 
-- **Real read-only data:** GeckoTerminal's public Monad pool endpoint. Provider failures and stale snapshots are displayed; no fixture prices are substituted.
-- **Archived execution evidence:** a stopped, disposable Anvil run with valueless tokens, scripted manager transactions and injected marks. The browser reconciles the supplied archive internally; it does not independently establish its provenance or re-read that stopped chain.
-- **Draft onboarding:** automatically detects a local macOS llama-server, streams a SHA-256 calculation of its loaded GGUF, hashes a manifest of its mapped native runtime, and recovers a pinned source from a matching local download record. It still requires a strategy digest, isolated controller/execution roles and self-hosted confirmation. With the local encrypted signer configured, the helper provisions the execution address and signs enrollment after the owner authorizes it. Exports are unsigned, unpublished drafts. These measurements come from the operator-controlled host, not independent execution attestation. Local admission verifies both role signatures. The controller can deploy/verify a dedicated identity and paused vault; registration alone grants no trading permission.
-- **Autonomous signing:** a headless worker can sign restricted vault trades after an expiring on-chain controller grant. UTC turnover, per-trade/exposure and valuation-relative slippage limits are enforced by the contract. The included encrypted local signer trusts the operator host; it is not enclave custody. See [setup, operation and limits](docs/AUTONOMOUS-TRADING.md).
-- **Readiness-gated live actions:** the separate trading/deposit interface prepares controller and investor transactions only after its configured deployment, pricing and route checks pass. Autonomous permission does not establish investment eligibility or a funded performance record. See [trading/deposit setup](docs/TRADING-AND-DEPOSITS.md).
+1. **Register your agent.** Run a self-hosted, open-weight model. Record model and runtime measurements, commit your strategy and trading limits, and authorize the agent's dedicated execution key. Complete registration by deploying its ERC-8004 identity and isolated vault on Monad testnet.
+2. **Inspect before investing.** Review the agent's signed identity, model provenance, configuration and trading receipts. Each strategy and configuration has its own record.
+3. **Invest under a mandate.** Deposit MON through the vault's conversion gateway and receive that vault's Pump tokens (`PUMP`). The agent submits trades using an expiring permission; the vault enforces turnover, trade-size, exposure and slippage limits.
+4. **Follow the outcome and redeem.** Pump tokens represent ownership in one vault. Redeem at current value, subject to available liquidity. Gains and losses change that value; deposits and withdrawals are accounted for separately from performance.
 
-The contract remains named `UnoraVault` for source continuity; newly deployed shares use `Pump token` / `PUMP`. The saved pre-rename archive retains its original `Unora Vault Share` / `UVS` metadata. No historical receipts or policy commitments were rewritten to imply a new deployment.
+## Key features
 
-## Run the frontend
+- **Operator control:** self-hosted, open-weight models and private strategy data stay under the operator's control.
+- **Inspectable identity:** signed registration, model hashes, runtime measurements and source commitments make the deployment inspectable.
+- **Isolated vaults:** each agent has its own capital, Pump shares and mandate.
+- **On-chain guardrails:** expiring permissions, turnover caps, slippage limits and timelocked configuration changes constrain execution.
+- **Configuration-specific records:** a strategy change starts a distinct accounting period instead of inheriting a previous strategy's results.
+- **Hardware-backed attestation — coming soon.**
+
+## Live frontend demo
+
+The demo runs on **Monad testnet, chain 10143**. Start at `/register` or `/agents`, inspect an agent profile, and use its **Invest & redeem MON** controls. All demo transactions are reviewed in the frontend and confirmed through the connected wallet.
+
+Standard vaults use a one-day configuration notice. The separately labeled **instant testnet demo** vault applies changes without that delay and retains mandate and accounting checks. See [demo policy](docs/INSTANT-TESTNET-DEMO.md).
+
+Live investment availability follows current vault, pricing and pool-liquidity checks. Agent trading also requires an active controller permission, a configured worker and execution-wallet gas. Testnet tokens are for demonstration. [Demo walkthrough and verification status](docs/FRONTEND-MONAD-DEMO.md).
+
+## Develop and check
+
+Use Node 22.13 or newer. Install root and frontend dependencies, build the contracts, and start the app:
 
 ```sh
-cd app
 npm install
+npm --prefix app install
+npm run build:contracts
 npm run dev
 ```
 
-Routes: `/`, `/agents`, `/agents/local-vault`, `/markets`, `/register`, `/portfolio`, `/evidence`, `/how-it-works`. A BrowserRouter deployment needs an SPA fallback for deep links. Public data uses the browser network; all other demo evidence is served as static public JSON. No private key or API secret belongs in the browser bundle.
-
-## Validation
+Private server settings are documented in [.env.example](.env.example). Model inference and execution signing run in the local backend; credentials and private inference endpoints stay out of the browser bundle.
 
 ```sh
-cd app
-npm run build
-npm run lint
-cd ..
 npm run typecheck
 npm test
-forge test --root contracts -vv
+npm run test:contracts
+npm run build
+npm run lint
 ```
 
-Node and Foundry must be on PATH for chain integration tests. [Frontend scope and validation](docs/PUMPCOIN-FRONTEND.md), [vault acceptance criteria](docs/AGENT-VAULT-ACCEPTANCE.md), [NAV policy](docs/VAULT-NAV-POLICY.md), [vault authority](docs/VAULT-ACCESS-CONTROL.md) and [archived evidence](docs/VAULT-EVIDENCE.md) explain mechanisms and limits.
+## Repository scope
 
-## Next gates
+| Area | Responsibility |
+| --- | --- |
+| `app/` | Registration, discovery, agent profiles, evidence and investment controls |
+| `local-inference/` | Model and runtime measurement |
+| `agent-registration/` | Signed enrollment, dedicated deployment, permissions and execution |
+| `contracts/src/vault/` | Custody, Pump shares, accounting and mandate enforcement |
+| `vault/` | Configuration-scoped accounting and evidence reconciliation |
+| `market-data/` | Supporting market research |
+| `archive/credit/` | Historical credit system, separate from the active product |
 
-Live acceptance of the local-model trading worker with a reviewed DEX adapter and reliable valuation; reviewed public vault activation; production signing custody, host isolation and private-record access. FlowPay streaming is deferred. Share ownership is not a lending obligation or a promise of fixed returns.
+The active product focuses on agent vaults. Historical lending, financial eligibility, CRE workflows, oracle identity, credit SDK and indexer code are preserved in the [legacy archive](archive/credit/README.md) with separate opt-in checks. Existing vault expense-accounting compatibility remains for deployed-contract verification; new registrations use a zero expense budget.
 
-Historical credit/eligibility/CRE source, SDK and tests remain as a separate baseline. Browser-only legacy calculation/auth helpers moved to `frontend/legacy-browser/` so the old regression tests continue running without shipping old UI content. See [historical credit documentation](docs/HISTORICAL-CREDIT-README.md); those mechanisms do not establish vault-product acceptance.
+Read [product scope](docs/PRODUCT-SCOPE.md), [registration](docs/AGENT-REGISTRATION.md), [autonomous trading](docs/AUTONOMOUS-TRADING.md), [MON investing](docs/NATIVE-MON-INVESTMENTS.md), and [local model measurement](docs/LOCAL-MODEL-DETECTION.md).

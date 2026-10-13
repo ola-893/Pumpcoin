@@ -8,7 +8,7 @@ import {SafeERC20} from "@openzeppelin/contracts/token/ERC20/utils/SafeERC20.sol
 import {AttestationRegistry, EligibilityReport, Tier} from "../src/AttestationRegistry.sol";
 import {CreditLine} from "../src/CreditLine.sol";
 import {AgentCreditMandate} from "../src/AgentCreditMandate.sol";
-import {DemoToken} from "../src/mocks/DemoToken.sol";
+import {DemoToken} from "shared/DemoToken.sol";
 import {FeeToken, FailingToken} from "./CreditLine.t.sol";
 
 contract AgentCreditMandateTest is Test {

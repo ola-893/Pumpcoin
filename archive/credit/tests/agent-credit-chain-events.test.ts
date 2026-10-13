@@ -33,7 +33,7 @@ import { lineAbi, mandateAbi } from "../agent-credit/abi.js";
 // Anvil chain, fetched through the same per-event queries the worker uses.
 // Synthetic GroupedLogs cannot drift from actual emission shapes here because
 // every input log comes from a mined receipt.
-execFileSync("forge", ["build", "--root", "contracts"], { stdio: "ignore" });
+execFileSync("forge", ["build", "--root", "contracts", "--skip", "script"], { stdio: "ignore" });
 
 function artifact(name: string) {
   return JSON.parse(readFileSync(`contracts/out/${name}.sol/${name}.json`, "utf8")) as {

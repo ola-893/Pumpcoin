@@ -8,7 +8,7 @@ export function AgentManifestReview({ manifest }: { manifest: Prepared['manifest
     <details><summary>Review code commitment and declared dependencies</summary>
       <CopyValue value={manifest.strategy.codeDigest} label="declared strategy code digest" />
       <ul>{manifest.dependencies.map((dependency, i) => <li key={i}>{dependency}</li>)}</ul>
-      <p className="small muted">The source commitment and local admission check do not attest execution on the operator-controlled host.</p>
+      <p className="small muted">The source commitment and local inference receipt are tied to this configuration. Hardware-backed attestation — coming soon.</p>
     </details>
   </section>;
 }

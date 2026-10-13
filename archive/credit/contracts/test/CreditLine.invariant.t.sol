@@ -5,7 +5,7 @@ import {Test} from "forge-std/Test.sol";
 import {StdInvariant} from "forge-std/StdInvariant.sol";
 import {AttestationRegistry, DataSourceType, Tier} from "../src/AttestationRegistry.sol";
 import {CreditLine} from "../src/CreditLine.sol";
-import {DemoToken} from "../src/mocks/DemoToken.sol";
+import {DemoToken} from "shared/DemoToken.sol";
 
 contract CreditHandler is Test {
     CreditLine public line;

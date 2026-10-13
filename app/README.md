@@ -1,5 +1,13 @@
 # PumpCoin frontend
 
-React + Vite investment-vault preview. Start with `npm install` and `npm run dev`. Build with `npm run build`; use SPA fallback routing when serving `dist/`.
+One agent-vault journey: register self-hosted inference, inspect identity and execution evidence, invest MON for Pump shares, and redeem at current value.
 
-See [the product README](../README.md) and [frontend scope](../docs/PUMPCOIN-FRONTEND.md). Agent manifest exports are unsigned local drafts. Investment and public registration remain disabled. The markets page requests real read-only Monad pool data from GeckoTerminal; static receipts are a separate archived simulation. No FlowPay streaming or human lending journey is presented.
+Install root and frontend dependencies, compile the vault contracts, then run `npm run dev` from the repository root. Build with `npm run build`; configure an SPA fallback when serving `app/dist/`.
+
+Main routes: `/register`, `/agents`, `/agents/:agentId`, `/evidence`, and `/how-it-works`. Market research and archived regression records are secondary routes. `/proofline` redirects to live evidence; the historical wallet/archive checker is at `/evidence/archive/proofline`.
+
+The live chain is Monad testnet (10143). Transactions are prepared for wallet review and availability follows current vault, pricing and liquidity checks. Private inference endpoints, signing material and Pyth credentials remain server-side.
+
+Hardware-backed attestation — coming soon.
+
+See [the product README](../README.md), [scope](../docs/PRODUCT-SCOPE.md) and [frontend demo](../docs/FRONTEND-MONAD-DEMO.md).

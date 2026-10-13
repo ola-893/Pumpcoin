@@ -4,7 +4,7 @@ pragma solidity 0.8.24;
 import {Script, console2} from "forge-std/Script.sol";
 import {AttestationRegistry, DataSourceType, Tier} from "../src/AttestationRegistry.sol";
 import {CreditLine} from "../src/CreditLine.sol";
-import {DemoToken} from "../src/mocks/DemoToken.sol";
+import {DemoToken} from "shared/DemoToken.sol";
 
 /// @notice Explicitly synthetic milestone-1 attestation. Does not generate or verify income proofs.
 contract ManualDemo is Script {

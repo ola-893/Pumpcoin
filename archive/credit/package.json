@@ -1,0 +1,48 @@
+{
+  "name": "pumpcoin-credit-archive",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "typecheck": "tsc --noEmit && tsc --noEmit -p cre/eligibility/tsconfig.json",
+    "test": "node --import tsx --test tests/*.test.ts",
+    "oracle": "tsx oracle-identity/register.ts",
+    "oracle:watch": "tsx oracle-identity/watch.ts",
+    "oracle:fork-demo": "tsx oracle-identity/fork-demo.ts",
+    "indexer:config": "tsx indexer/write-config.ts",
+    "eligibility:server": "node --import tsx eligibility/server.ts",
+    "eligibility:fixtures": "node --import tsx eligibility/fixture-server.ts",
+    "eligibility:demo": "node --import tsx eligibility/local-demo.ts",
+    "cre:compile": "cre-compile cre/eligibility/main.ts .local/eligibility.wasm",
+    "cre:test": "bun test cre/eligibility/workflow.test.ts",
+    "cre:simulate:fixture": "cre workflow simulate ./cre/eligibility --target fixture --env ./cre/fixture.env --non-interactive --trigger-index 0 --http-payload ./cre/eligibility/trigger.fixture.json",
+    "cre:simulate:localexec": "cre workflow simulate ./cre/eligibility --target localexec --env ./cre/localexec.env --non-interactive --trigger-index 0 --http-payload ./cre/eligibility/trigger.localexec.json",
+    "cre:broadcast:localexec": "cre workflow simulate ./cre/eligibility --target localexec-broadcast --env ./cre/localexec.env --non-interactive --trigger-index 0 --http-payload ./cre/eligibility/trigger.localexec.json --broadcast",
+    "cre:approve-report": "node --import tsx cre/approve-report.ts",
+    "cre:report:local": "node --import tsx cre/report-local.ts",
+    "cre:deliver-report": "node --import tsx cre/deliver-report.ts",
+    "cre:delivery:local": "node --import tsx cre/simulation-delivery.ts",
+    "cre:cli-check": "node --import tsx cre/cli-check.ts",
+    "agent:run": "node --import tsx agent-credit/worker.ts",
+    "agent:demo": "node --import tsx agent-credit/local-demo.ts",
+    "sdk:build": "node node_modules/typescript/bin/tsc -p sdk/tsconfig.json",
+    "preagent:demo": "npm run sdk:build",
+    "build:contracts": "forge build --root contracts --skip script",
+    "test:contracts": "forge test --root contracts --skip script"
+  },
+  "dependencies": {
+    "@chainlink/cre-sdk": "1.22.0",
+    "@reclaimprotocol/js-sdk": "5.8.2",
+    "agent0-sdk": "1.7.1",
+    "react": "19.3.0",
+    "viem": "2.56.8"
+  },
+  "devDependencies": {
+    "@types/node": "26.6.1",
+    "@types/react": "19.3.0",
+    "tsx": "4.23.13",
+    "typescript": "5.9.3"
+  },
+  "engines": {
+    "node": ">=22.13"
+  }
+}

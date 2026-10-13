@@ -6,7 +6,7 @@ import {AttestationRegistry} from "../src/AttestationRegistry.sol";
 import {CreditLine} from "../src/CreditLine.sol";
 import {EligibilityReceiver} from "../src/EligibilityReceiver.sol";
 import {SimulationEligibilityReceiver} from "../src/mocks/SimulationEligibilityReceiver.sol";
-import {DemoToken} from "../src/mocks/DemoToken.sol";
+import {DemoToken} from "shared/DemoToken.sol";
 import {RepaymentVault} from "../src/RepaymentVault.sol";
 import {AgentCreditMandate} from "../src/AgentCreditMandate.sol";
 

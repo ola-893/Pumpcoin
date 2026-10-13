@@ -6,7 +6,7 @@ import {Vm} from "forge-std/Vm.sol";
 import {AttestationRegistry} from "../src/AttestationRegistry.sol";
 import {CreditLine} from "../src/CreditLine.sol";
 import {AgentCreditMandate} from "../src/AgentCreditMandate.sol";
-import {DemoToken} from "../src/mocks/DemoToken.sol";
+import {DemoToken} from "shared/DemoToken.sol";
 import {CreditBatcher} from "../src/mocks/CreditBatcher.sol";
 
 /// @notice Documents the exact multi-action log sequences that the

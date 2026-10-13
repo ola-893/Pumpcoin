@@ -1,31 +1,28 @@
-# PumpCoin frontend rebuild
+# PumpCoin frontend
 
-11 October 2026. The purple/lilac palette, Newsreader serif headings, Jakarta body type, rounded navigation and restrained surfaces are retained. All visible product content and routes have been rebuilt around agent-managed investment vaults.
+The frontend focuses on self-hosted AI agents and dedicated investment vaults, with a purple/lilac palette, serif headings and clear investor/operator controls.
 
-| Route | Implemented behavior |
+| Route | Purpose |
 | --- | --- |
-| `/` | New investor/operator proposition and accountable-vault ownership explanation |
-| `/agents` | Search and filter the archived demonstrator; empty state for live vaults |
-| `/agents/local-vault` | Actual archived NAV, P&L and flows; mandate, identity and evidence tabs; Pump-token share illustration with integer virtual-share math |
-| `/markets` | Read-only real Monad GeckoTerminal pool data; missing values, stale snapshots, request timeout/rate-limit/error states; no fallback fabricated prices |
-| `/register` | Three-step mandatory local-model declaration, artifact hash and execution-key validation; public/private draft exports, browser-local save/restore |
-| `/portfolio` | Explicit unavailable position-read state; saved operator draft export/removal |
-| `/proofline` | Agent-performance archive, separated verification levels, Mera/browser-wallet connection, explicitly reviewed ownership signature and public receipt export |
-| `/evidence` | Saved local receipts including mined rejections, checkpoints, source commitments and downloads |
-| `/how-it-works` | Identity/evidence/enforcement distinctions, Pump-token ownership, inference policy and open acceptance gates |
+| `/` | Operator control, investor evidence and the agent-vault journey |
+| `/register` | Local model measurement, strategy/mandate review, signed enrollment and dedicated deployment |
+| `/agents` | Search and inspect this server's signed agent registrations |
+| `/agents/:agentId` | Identity, provenance, trading history, investment/redemption and operator setup |
+| `/evidence` | Live Monad vault receipt inspection |
+| `/how-it-works` | Agent identity, mandate enforcement and Pump share ownership |
+| `/markets` | Supporting read-only market research |
+| `/portfolio` | Operator drafts and links to profile-based position reads |
+| `/evidence/archive` | Historical local vault regressions |
+| `/evidence/archive/proofline` | Historical archive ownership checker |
 
-Wallet connection supports Mera passkeys and browser EOAs, and requests no signature. ProofLine separately offers an explicitly reviewed read-only ownership signature. See [wallet boundaries and validation](PROOFLINE-WALLETS.md). Browser-wallet connection requests only public accounts. It does not send transactions, approvals, deposits or registration signatures. Public investment and registration remain disabled, with the reason shown before any claim of completion. Draft preparation is a frontend input policy, not server admission or proof of actual inference. The local runtime URL is excluded from the public manifest commitment; private keys and proprietary prompts are never requested.
+The main navigation leads to agents, live evidence and how it works. `/proofline` redirects to live evidence. Archived simulations remain explicitly labeled historical and are loaded only on archive routes.
 
-Real DEX adapters, token-decimal support, reliable NAV valuation, public deployment, local-model agent worker, signed admission, production records service and real-device passkey acceptance remain open. Live mainnet market data does not turn archived local execution into live trading evidence. FlowPay streaming is deferred.
+Wallet connection reads public accounts. Registration signatures and transactions have their own review steps. Investment and redemption prepare exact simulated transactions for the connected wallet on Monad testnet; availability follows current vault, pricing and liquidity checks.
 
-Historical UI pages and providers are removed from `app/src`. Lending helpers required by existing tests moved to `frontend/legacy-browser/`; their original behavior remains separate. Source still uses the historical `UnoraVault` class and immutable NAV policy domain, with new share metadata `Pump token` / `PUMP`. Do not rewrite historical evidence to pretend it used the new metadata.
+Local model measurement and execution signing run in the loopback backend. Public records include model/runtime digests, source commitments, signed configuration and scoped receipts. Private inference endpoints and signing material stay off the frontend.
 
-## Checks
+Hardware-backed attestation — coming soon.
 
-Production build, root/CRE/frontend TypeScript checks, lint, new frontend unit tests and historical browser-helper regressions. Browser checks cover search/filtering, exact archived metrics, invalid allocation input, disabled funding/registration, rejection of hosted inference, manifest export, draft save/restore, receipt filters, provider failure, modal dismissal and mobile navigation/overflow at 390px. The browser market success path uses a captured real provider response for reproducibility; its failure path injects HTTP 429. Manual screenshot review covers desktop and mobile.
+Historical lending UI, credit contracts, CRE delivery, oracle identity and credit SDK/indexer source are isolated under [archive/credit](../archive/credit/README.md). The vault's existing contract name and accounting domains are retained for deployed-contract verification.
 
-Production build, both root TypeScript checks, frontend TypeScript and lint passed. All 108 Foundry tests and 16 browser checks passed. Screenshots and the browser check record are in `docs/testing/pumpcoin-frontend-20261011/`.
-
-The ordinary full Node command is blocked in two integration files because their `forge build --root contracts` also compiles historical deployment scripts. An unchanged-checkout build reproduces the same Solc 0.8.24 via-IR Yul stack exception. This is not a passing full deployment build. Contract-only integration results are recorded separately; no deployment-script behavior was changed for this frontend rebuild.
-
-All 102 Node tests passed with a temporary test-only `forge` wrapper adding `--skip script` to `forge build`. Test bodies were unchanged. The standard `npm test` still encounters the pre-existing script compile failure; excluding it is not a deployment fix.
+See [product scope](PRODUCT-SCOPE.md), [the browser walkthrough](FRONTEND-MONAD-DEMO.md) and [MON investment](NATIVE-MON-INVESTMENTS.md).

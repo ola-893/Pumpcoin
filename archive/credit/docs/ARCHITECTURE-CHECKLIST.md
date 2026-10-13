@@ -1,6 +1,6 @@
 # Unora — architecture completion checklist
 
-> **Scope update · 10 October 2026:** [Agent-managed investment vault acceptance criteria](AGENT-VAULT-ACCEPTANCE.md) govern new implementation work. This checklist preserves the historical human-backed credit baseline and its evidence gates. Its mandatory human-eligibility/agent-borrowing direction is superseded for the new vault product; existing completion marks do not demonstrate investment-vault acceptance.
+> **Scope update · 10 October 2026:** [Agent-managed investment vault acceptance criteria](../../../docs/AGENT-VAULT-ACCEPTANCE.md) govern new implementation work. This checklist preserves the historical human-backed credit baseline and its evidence gates. Its mandatory human-eligibility/agent-borrowing direction is superseded for the new vault product; existing completion marks do not demonstrate investment-vault acceptance.
 
 Updated 28 September 2026; based on source and recorded results at `9e16c6e`, not fresh public-chain acceptance testing. See the [updated architecture](../app/Architecture/architecture-design.md).
 

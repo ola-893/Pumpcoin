@@ -34,7 +34,7 @@ test("report CLI uses configured endpoint, saves immutable bytes, and rejects fi
     allowTestMode: true, verifierUrl: `http://127.0.0.1:${port}`,
   }));
   const tool = resolve("cre/report-local.ts");
-  const tsx = resolve("node_modules/tsx/dist/loader.mjs");
+  const tsx = new URL(import.meta.resolve("tsx")).pathname;
   const out = join(scratch, "report.json");
   async function run() {
     const env: NodeJS.ProcessEnv = { ...process.env, VERIFIER_API_TOKEN: token, RECEIPT_ID: "receipt-test" };

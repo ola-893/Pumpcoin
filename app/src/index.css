@@ -124,3 +124,8 @@ p { line-height: 1.75; }
 .agent-strategy,.agent-dependencies { white-space: pre-wrap; overflow-wrap: anywhere; }
 .agent-dependencies { color: var(--muted); font-size: 11px; line-height: 1.8; padding-left: 18px; }
 @media (max-width:520px) { .agent-version-controls select { width: 100%; } .registered-agent-card .agent-card-stats { flex-wrap: wrap; } }
+
+.home-proof-list { display: grid; gap: 16px; margin: 24px 0; font-size: 13px; color: var(--muted); }
+.home-proof-list span { display: flex; align-items: center; gap: 10px; }
+.home-proof-list svg { flex-shrink: 0; color: var(--purple); }
+.hero-proof .proof-metric strong { font-size: clamp(20px, 2vw, 26px); line-height: 1.25; }

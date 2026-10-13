@@ -1,37 +1,39 @@
 # Live frontend demo · Monad testnet
 
-All presentation actions take place in the browser. Vault setup and investor/controller transactions are prepared by the frontend and signed through its connected wallet. The agent signs trades in the backend under an expiring on-chain permission. No terminal demo or scripted trade sequence is part of this walkthrough.
+PumpCoin's demo has three journeys, all in the frontend using contracts on **Monad testnet (10143)**.
 
-## Current presentation scope
+## 1. Register a self-hosted agent
 
-The requested demo has three browser journeys: register an agent with local inference; inspect its identity, provenance and complete trading record before investing MON for Pump shares; return and redeem those shares for MON at their current value after profits or losses. Losses affect investment performance, not the authenticity of identity or provenance. An agent with no funded history must show that history as unavailable.
+Open `/register` in the external browser with your Monad wallet. Detect the locally running model and inspect its weights, runtime and source commitments. Prepare its dedicated execution wallet, declare the public strategy and mandate, and complete controller enrollment.
 
-On 12 October 2026, Klaris completed the local enrollment journey in external Chrome with MetaMask on Monad testnet: the running Qwen3.8-27B was locally detected, real inference answered the admission check, the controller signed the exact non-spending enrollment message, and the dedicated backend execution key signed its own enrollment. The frontend saved both authorizations. This establishes local registration only; no new public identity/vault transaction or autonomous trade was submitted in that run.
+Review and confirm the dedicated identity/vault deployment. The frontend verifies the mined transaction and displays the agent's ERC-8004 identity and vault addresses. Keep private prompts, strategy files and keys on the operator's machine.
 
-The current deployment still uses a six-decimal test-USDC quote asset. The existing ERC-20 gateway cannot accept or pay native MON. The MON entry/exit route and its valuation and liquidity checks must be implemented and verified before deploying the vault used for the presentation. Do not present the test-USDC walkthrough below as the requested MON investment/redemption journey.
+Standard vaults use a one-day configuration notice. For an immediate testnet rehearsal, choose the clearly labeled **Instant Monad testnet demo** option. It deploys the separate zero-notice demo contract; mandate, valuation and accounting checks still apply. Klaris and Azula are separate agents and vaults.
 
-## Before the presentation
+Hardware-backed attestation — coming soon.
 
-Open the intended agent profile on the running PumpCoin frontend. Check its **Trading & deposits** readiness against chain 10143. A compatible deployed vault, reviewed oracle/venue infrastructure, test-token liquidity and fresh valuation are required. Propose its configuration through the controller setup controls today: the actual mined proposal sets a one-day notice. Applying or trading early must remain blocked.
+## 2. Inspect and invest
 
-The encrypted execution signer and reviewed deployment must be configured on the backend serving this frontend. The **Agent trader** section displays setup required until a matching Monad deployment is configured. Frontend controls never accept private keys, file paths, RPC endpoints or runtime pins. The server must stay running throughout unattended trading; a static frontend deployment alone cannot host a signing worker.
+Open the agent's profile. Review its signed controller and execution key, model provenance, strategy, mandate and configuration. Use **Trading history** and **Live vault & receipts** to inspect recorded activity and transaction links.
 
-The existing Klaris vault predates the autonomy permission interface. It cannot be upgraded in place or presented as an autonomous compatible vault. Its existing record and history remain intact. A new compatible agent/vault needs controller authorization, deployment gas and the same complete configuration notice.
+Investment availability follows the current on-chain vault configuration, pause state, healthy prices and executable liquidity. The controller completes trading infrastructure, pool funding and MON gateway setup through **Operator setup**, applies the configuration and enables the vault.
 
-## Browser walkthrough
+Connect the investor wallet, choose **Invest MON**, enter the amount and review the simulated Pump output and fees. Confirm in the wallet, verify the mined receipt and inspect the updated Pump balance. An initial test-USDC bootstrap may be needed to meet the vault's minimum first-deposit requirement before a small MON investment.
 
-1. Open **Agents**, select the compatible agent, and inspect its signed controller, execution manager and mandate.
-2. In **Trading & deposits**, refresh readiness. Use the controller setup controls to apply a matured configuration and enable the vault. Keep oracle and liquidity gates enforced.
-3. Connect an investor wallet, review an exact test-USDC approval, then deposit. Inspect the mined transaction, Pump token balance and current vault NAV. The approval itself is not a deposit.
-4. In **Autonomous trading**, review the duration and UTC turnover cap, then approve permission with the controller wallet. Refresh the on-chain permission after mining.
-5. Select **Start agent trader**. Show its actual backend status and **Live vault & receipts**. When the model produces a permitted trade, open its Monad transaction link and inspect the manager sender and vault events. A HOLD decision or a blocked market is shown as such; neither is a trade.
-6. Review and submit immediate controller revocation. Refresh the permission and demonstrate that future trading is blocked. **Stop agent trader** stops the process but does not revoke permission or cancel already submitted transactions.
-7. Connect the investor, review a Pump token exit approval, then redeem within available cash. Verify the mined receipt and updated share balance in the frontend.
+Each Pump token represents ownership in this agent's vault. Capital contributions are accounted for separately from trading gains and losses. A profile with no verified funded performance displays unavailable returns and an unrated performance record.
 
-Live receipt history shows at most ten transactions emitting vault events in the last 1,000 blocks. It cross-checks RPC logs against mined receipts and canonical block hashes. It does not claim complete performance coverage; reverted calls normally produce no logs. Current NAV is unavailable when valuation fails and is never replaced with a simulated mark. Deposits are capital, not profits.
+## 3. Follow results and redeem
 
-## Current acceptance boundary
+The controller grants a bounded, expiring trading permission. The backend worker needs a matching reviewed configuration and funded execution wallet. Start it through the frontend and inspect its real status. A permitted model decision can produce an agent-signed trade; a HOLD or blocked decision is displayed as such.
 
-This document is a frontend walkthrough, not proof it has succeeded on Monad. The initial public readiness check is blocked by the older vault runtime, missing/failing configured oracle feeds and insufficient DEX liquidity. Neither an autonomous public trade nor a public deposit/redemption rehearsal is established by local tests. External-browser local enrollment has been exercised separately, as recorded above.
+Return as the investor, choose **Redeem Pump for MON**, enter a share amount and review any required bounded Pump approval. Verify that approval, then review and confirm the redemption itself. Check the mined receipt, remaining shares and MON received. Exit value reflects current vault assets, losses or gains, conversion costs and available liquidity.
 
-Budgeted manual expense accounting exists in contracts; FlowPay timed streams and a production authenticated private-record/export service are not connected to this frontend. Do not include those as completed live demo capabilities. Archived Anvil evidence remains explicitly separate from this Monad view.
+Controller revocation disables future trading authority. Stopping the worker ends its process; use the on-chain revocation control to revoke its permission.
+
+## Observed acceptance status
+
+The latest saved rehearsal established Azula's signed local enrollment, dedicated identity/vault deployment, trading infrastructure, funded demo pool, applied configuration and enabled vault. A 1 test-USDC bootstrap minted 1 Pump. A subsequent 0.1 MON investment minted 0.002489 Pump. These are capital contributions, not trading profit.
+
+End-to-end MON redemption and an autonomous funded trade still need verified frontend receipts. Current readiness must be refreshed before a presentation: both price observations have a five-minute freshness policy and the narrow demo pool has limited capacity. Continuous operation requires an oracle keeper and a running configured worker.
+
+The live receipt view covers up to ten vault-event transactions in the latest 1,000 blocks; it labels that coverage. Standard configuration changes retain their notice. Historical Anvil accounting tests are available separately under `/evidence/archive`.

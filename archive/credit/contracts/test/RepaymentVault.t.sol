@@ -5,7 +5,7 @@ import {Test} from "forge-std/Test.sol";
 import {AttestationRegistry} from "../src/AttestationRegistry.sol";
 import {CreditLine} from "../src/CreditLine.sol";
 import {RepaymentVault} from "../src/RepaymentVault.sol";
-import {DemoToken} from "../src/mocks/DemoToken.sol";
+import {DemoToken} from "shared/DemoToken.sol";
 import {FeeToken, CallbackToken} from "./CreditLine.t.sol";
 
 contract RepaymentVaultTest is Test {

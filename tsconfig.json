@@ -10,27 +10,15 @@
     "noEmit": true
   },
   "include": [
-    "oracle-identity/**/*.ts",
-    "frontend/**/*.ts",
-    "frontend/**/*.tsx",
     "tests/**/*.ts",
-    "eligibility/**/*.ts",
-    "cre/approve-report.ts",
-    "cre/report-local.ts",
-    "cre/local-report.ts",
-    "cre/deliver-report.ts",
-    "cre/cli-check.ts",
-    "cre/simulation-delivery.ts",
-    "indexer/write-config.ts",
-    "indexer/reducers.ts",
-    "agent-credit/**/*.ts",
-    "sdk/index.ts",
     "vault/**/*.ts",
     "local-inference/**/*.ts",
-    "agent-registration/**/*.ts"
+    "agent-registration/**/*.ts",
+    "market-data/**/*.ts"
   ],
   "exclude": [
     "node_modules",
-    "contracts"
+    "contracts",
+    "archive"
   ]
 }

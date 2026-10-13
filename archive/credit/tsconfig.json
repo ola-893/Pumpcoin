@@ -1,0 +1,33 @@
+{
+  "compilerOptions": {
+    "target": "ES2022",
+    "module": "NodeNext",
+    "moduleResolution": "NodeNext",
+    "strict": true,
+    "esModuleInterop": true,
+    "skipLibCheck": true,
+    "jsx": "react-jsx",
+    "noEmit": true
+  },
+  "include": [
+    "oracle-identity/**/*.ts",
+    "frontend/**/*.ts",
+    "frontend/**/*.tsx",
+    "tests/**/*.ts",
+    "eligibility/**/*.ts",
+    "cre/approve-report.ts",
+    "cre/report-local.ts",
+    "cre/local-report.ts",
+    "cre/deliver-report.ts",
+    "cre/cli-check.ts",
+    "cre/simulation-delivery.ts",
+    "indexer/write-config.ts",
+    "indexer/reducers.ts",
+    "agent-credit/**/*.ts",
+    "sdk/index.ts"
+  ],
+  "exclude": [
+    "node_modules",
+    "contracts"
+  ]
+}

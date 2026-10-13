@@ -13,7 +13,7 @@ Each signature binds the origin, role, chain, exact public manifest commitment, 
 
 Private runtime endpoint data stays in the private server record. Exported registration receipts contain the signed messages and public manifest, plus scoped local inference evidence. They exclude the endpoint, filesystem paths and all private keys. Public declarations remain immutable `unpublished-draft` bytes; the separate receipt records successful local registration without silently upgrading the manifest's evidence level.
 
-This is a local registration and a one-shot inference/guard capability check, not proof that the declared strategy source executed, a deployed worker, a backtest, independent runtime attestation, network egress isolation, performance verification or investment eligibility. The local host/operator remains trusted. Registration alone does not permit investor deposits or trades. The separate [autonomous trading workflow](AUTONOMOUS-TRADING.md) adds controller-approved on-chain permissions and a headless execution process.
+Registration records signed identity, model/runtime measurements and a one-shot local inference/guard check. Deployment, vault readiness and funded trading history are tracked on the agent profile. The [autonomous trading workflow](AUTONOMOUS-TRADING.md) adds controller-approved on-chain permissions and a headless execution process. Hardware-backed attestation — coming soon.
 
 ## Public identity and vault binding
 

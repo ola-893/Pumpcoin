@@ -22,3 +22,16 @@ cre/eligibility/*.js
 
 sdk/dist/
 sdk/*.tgz
+
+# Archived generated output and private configuration.
+archive/credit/contracts/out/
+archive/credit/contracts/cache/
+archive/credit/contracts/broadcast/
+archive/credit/sdk/dist/
+archive/credit/cre/eligibility/*.wasm
+archive/credit/cre/eligibility/*.wasm.br
+archive/credit/cre/eligibility/*.js
+archive/credit/cre/eligibility/config.*.local.json
+archive/credit/cre/eligibility/config.localexec.broadcast.local.json
+archive/credit/indexer/config.yaml
+archive/credit/indexer/generated/

@@ -19,7 +19,7 @@ Use the external browser with the configured Monad wallet. All public demo actio
 
 1. Register the locally hosted agent and verify its signed manifest and local inference receipt.
 2. On its profile, finish the public identity/vault creation and verify the mined transaction.
-3. Use controller setup to deploy the reviewed valuation/trading bundle and propose its configuration. The one-day notice and fresh oracle/liquidity gates remain enforced. Apply the configuration after the notice and enable the vault.
+3. Use controller setup to deploy the reviewed valuation/trading bundle and propose its configuration. Standard vaults retain the one-day notice; the labeled instant testnet demo vault permits immediate application. Fresh oracle/liquidity checks apply to both. Apply the configuration and enable the vault.
 4. The controller reviews and deploys the dedicated MON gateway from **Invest & redeem MON**, then verifies its receipt. Deployment can happen before the configuration notice matures, once the trading bundle exists.
 5. An investor chooses **Invest MON**, enters an amount, reviews the exact simulated output and MON/gas amounts, and confirms in the wallet. Verify the mined receipt to refresh share balances.
 6. After trading results have changed the vault value, choose **Redeem Pump for MON**. Approve only the exact share amount if required, verify that receipt, then review and confirm the actual redemption. The preview uses the current share value and executable conversion rather than promising the original MON amount.
@@ -30,8 +30,8 @@ The backend retains exact reviewed transactions in `.local/vault-native/plans/`;
 
 ## Current public demo status
 
-As of 2026-10-12, Klaris’s latest signed local registration has no public vault binding. External Chrome visibly shows the MON panel’s **Setup required** state. No public MON deposit or redemption has been executed by this implementation.
+Azula’s saved frontend rehearsal verified its dedicated vault, trading bundle, MON gateway, funded pool, applied configuration and enabled vault. A 1 test-USDC bootstrap minted 1 Pump; a 0.1 MON investment minted an additional 0.002489 Pump. End-to-end MON redemption remains the next acceptance check. Current readiness and transaction receipts are read from the agent profile.
 
-Public trading infrastructure still needs verified fresh MON/USD and USDC/USD feeds and sufficient, fairly priced liquidity in the configured pool. A missing feed, stale valuation, immature configuration, paused vault or failed liquidity/deviation check blocks investment. Do not relax these checks or present local fixtures as a Monad testnet demo.
+Fresh MON and USDC prices, an active configuration, an enabled vault and sufficient executable pool liquidity are required for conversion. An expiring price observation must be refreshed before a new review.
 
 Development validation covers atomic MON entry/exit, fees, fair share issuance, higher/lower NAV exits, exact approvals, failed settlement rollback, expired/stale/paused inputs, recipient failure, recovery across service restarts and wallet amount/destination tampering. Contract and integration fixtures are development tests only; the demo is the live public-chain frontend workflow above.
