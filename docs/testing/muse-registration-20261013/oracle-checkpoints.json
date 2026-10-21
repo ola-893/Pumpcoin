@@ -1,0 +1,23 @@
+{
+  "chainId": 10143,
+  "guard": "0x1de1Da47D231B41541Aba41d1dA5F687FE06a574",
+  "checkpoints": [
+    {
+      "hash": "0x1c3a2c05e6a7469e384514c71ff485fb0fdc0f982254dce83328af7dd164df55",
+      "status": "success",
+      "gasCostWei": "21841464000000000",
+      "valueWei": "0",
+      "kind": "checkpoint",
+      "target": "0x1de1Da47D231B41541Aba41d1dA5F687FE06a574"
+    },
+    {
+      "hash": "0xed517db7b590574b62e5571b4d69d942c7692f63e215b67e66d3f79fa2534f90",
+      "status": "success",
+      "gasCostWei": "21935304000000000",
+      "valueWei": "0",
+      "kind": "checkpoint",
+      "target": "0x1de1Da47D231B41541Aba41d1dA5F687FE06a574"
+    }
+  ],
+  "scope": "Actual oracle upkeep receipts; not agent trading results or investment returns."
+}

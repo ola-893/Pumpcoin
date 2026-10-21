@@ -1,0 +1,56 @@
+{
+  "state": {
+    "vaultRuntimeCompatible": true,
+    "instantTestnetDemo": true,
+    "oracle": "supra-pyth",
+    "chainId": 10143,
+    "vault": "0x506Bd00B5E19Da455CbFb04335cF7c4d0eb1f803",
+    "blockNumber": "70760329",
+    "blockHash": "0xa9c9a462fb115e70d09e3f61a138ace808840cd8768ca758e5da9601558750de",
+    "checkedAt": "2026-10-13T19:07:52.809Z",
+    "paused": false,
+    "configured": true,
+    "valuation": false,
+    "ready": false,
+    "blockers": [
+      "MON price is stale, missing or invalid, or outside the confidence policy.",
+      "USDC price is stale, missing or invalid, or outside the confidence policy.",
+      "On-chain valuation is unavailable."
+    ],
+    "bundle": {
+      "address": "0xDa4C24c42A907964fC948ddD5D8a821DFaBE6Ebc",
+      "vault": "0x506Bd00B5E19Da455CbFb04335cF7c4d0eb1f803",
+      "adapter": "0x0b05AB164B948EF5dC8cc1F8a989B8FA101d1641",
+      "source": "0x02A64C5f80CA157ddE79DaDE3337F72263AB4921",
+      "venue": "0xf8f406536d44dC57A91a381C0e7330cBa6D3D057",
+      "gateway": "0x825e8bc0BaCB914BE9a5772dacf82784C777Bdcd",
+      "valuationSource": "0x1de1Da47D231B41541Aba41d1dA5F687FE06a574",
+      "guard": {
+        "address": "0x1de1Da47D231B41541Aba41d1dA5F687FE06a574",
+        "acceptedAt": "1791918184",
+        "acceptedPublication": "1791918079",
+        "candidateAt": "0",
+        "candidatePublication": "0"
+      }
+    },
+    "poolId": "0x8bd734c49be0ac769780c5b74f71a5e334bd1b2ea1576c3592ebe02f73b13ed4",
+    "poolManager": "0x451D64ab3b650040d2aE1886602b97ed6eDc643d",
+    "monPublishedAt": "1791918131",
+    "usdPublishedAt": "1791918079",
+    "spotPrice": "24911",
+    "virtualQuoteLiquidity": "124997510",
+    "cash": "0",
+    "position": "0",
+    "totalSupply": "0",
+    "balances": {
+      "quote": "58937076",
+      "shares": "0",
+      "maxRedeem": "0"
+    },
+    "controller": "0xe26468ae02368a75DBDBea58F367B7313942ad26",
+    "manager": "0x4775Ae60A798F58140Ce3c6ab2751106C22fd40A",
+    "quote": "0x534b2f3A21130d7a60830c2Df862319e593943A3",
+    "positionToken": "0xFb8bf4c1CC7a94c73D209a149eA2AbEa852BC541",
+    "configHash": "0x1616a278eb634a9cb7423410bab0883ef7d73bfb1337241b096c5935581f1c5b"
+  }
+}

@@ -1,0 +1,38 @@
+{
+  "collectedAt": "2026-10-17T22:46:36.326Z",
+  "classification": "AUTHENTIC LOCAL STATE INVENTORY — NO LIVE RESEARCH RESULTS",
+  "engineDigest": "sha256:5e91d655e1f5d48766acd76ad3e64d0d77e0fb971e4fcb580463a238778322a0",
+  "configured": {
+    "ryo": false,
+    "ryoMapping": false,
+    "x": false,
+    "news": false
+  },
+  "counts": {
+    "policies": 0,
+    "sessions": 0,
+    "evidence": 0,
+    "decisions": 0,
+    "events": 0
+  },
+  "agent": {
+    "name": "Gemma Demo",
+    "registrationId": "0x006c0d9546c588ab272f046ea2f716ba3020b1078efa537acddb1ce0bcf53ddd",
+    "manifestCommitment": "0xbdb6e0a2d8e6747c71a3b284cc664a1b57080540ebb70a37683b4a07734eaaa2"
+  },
+  "api": {
+    "hosted": false,
+    "capabilities": {
+      "ryo": false,
+      "ryoMapping": false,
+      "x": false,
+      "news": false,
+      "signer": true
+    },
+    "policies": 0,
+    "sessions": 0,
+    "latest": 0,
+    "comparison": null,
+    "errors": []
+  }
+}

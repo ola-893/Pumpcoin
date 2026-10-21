@@ -1,0 +1,73 @@
+{
+  "classification": "LOCAL CODE VERIFICATION; ALL MARKET/MODEL EXAMPLES ARE TEST FIXTURES",
+  "fullRegression": {
+    "command": "npm test",
+    "result": {
+      "tests": 177,
+      "pass": 177,
+      "fail": 0,
+      "skipped": 0
+    },
+    "note": "Passed against the final implementation, including registered-key binding and the extended engine commitment."
+  },
+  "finalTargeted": {
+    "command": "node --import tsx --test tests/research-*.test.ts tests/practice-ledger.test.ts",
+    "result": {
+      "tests": 26,
+      "pass": 26,
+      "fail": 0,
+      "skipped": 0
+    }
+  },
+  "typecheck": {
+    "command": "npm run typecheck",
+    "exitCode": 0
+  },
+  "build": {
+    "command": "npm --prefix app run build",
+    "exitCode": 0,
+    "warnings": [
+      "Main application chunk exceeds 500 kB",
+      "Node SQLite experimental warning"
+    ]
+  },
+  "lint": {
+    "command": "npm run lint",
+    "exitCode": 0,
+    "note": "Existing warnings in funded-vault and registration components; no new AgentResearch warnings."
+  },
+  "independentAccounting": {
+    "language": "Python",
+    "cases": 24,
+    "seed": 20261017,
+    "productionImports": false
+  },
+  "browser": {
+    "surface": "External Google Chrome Guest",
+    "agent": "Gemma Demo",
+    "sections": [
+      "Overview",
+      "Trading history",
+      "Identity & evidence"
+    ],
+    "observed": [
+      "Practice setup required",
+      "RYO access required",
+      "RYO schema required",
+      "News feeds required",
+      "X access required",
+      "No signed research policy or practice history is recorded for this agent."
+    ],
+    "agreement": "Matches read-only SQLite counts and research-state API in observed-state.json",
+    "populatedGenuineDataVerified": false
+  },
+  "liveAcceptance": {
+    "authenticRyoCycle": false,
+    "authorizedXCycle": false,
+    "genuineMarketAwareModelTrace": false,
+    "genuinePracticeLifecycle": false,
+    "strategyWinner": null,
+    "hostedPublicationVerified": false
+  },
+  "engineDigest": "sha256:5e91d655e1f5d48766acd76ad3e64d0d77e0fb971e4fcb580463a238778322a0"
+}

@@ -1,22 +1,26 @@
+import { requestOracleRefresh } from './oracle-demand.js';
+import { canonical, signDecision, verifyDecision, type DecisionReceipt } from './decision-receipt.js';
+import { inferenceRequest, LIVE_PURPOSE, type Proposal } from './worker.js';
+import { economyPolicy, gasDay, requireActivityBudget, BudgetLimitError, type EconomyPolicy, type GasDay } from './gas-budget.js';
 import { mkdir, open, readFile, rename, unlink } from 'node:fs/promises';
 import { join, resolve } from 'node:path';
 import { pathToFileURL, fileURLToPath } from 'node:url';
 import { decodeFunctionData, keccak256, parseTransaction, recoverTransactionAddress, type Hex, type TransactionSerialized } from 'viem';
 import { configuredSigner } from './signer.js';
 import { registrationService } from './service.js';
-import { autonomousAbi, autonomousClient, autonomousDeployment, tradingSnapshot, proposeTrade, submitTrade, type AutonomousDeployment } from './autonomous.js';
+import { autonomousAbi, autonomousClient, autonomousDeployment, tradingSnapshot, proposeTrade, proposeDecision, submitTrade, type AutonomousDeployment } from './autonomous.js';
 
-type Pending = { hash: Hex; serialized: Hex; blockNumber: string };
-type Journal = { scope: string; lastBlock: string; pending?: Pending; lastReceipt?: { hash: Hex; status: string; blockNumber: string; blockHash: Hex } };
-export type WorkerConfig = { registrationId: Hex; deployment: AutonomousDeployment; pollIntervalMs?: number; maxFeePerGasWei?: string; confirmations?: number };
+type Pending = { decisionHash?: Hex; hash: Hex; serialized: Hex; blockNumber: string };
+type Journal = { decisionCount?: number; lastDecisionHash?: Hex; gasBudget?: GasDay; lastTradeTimestamp?: string; receipts?: { hash: Hex; status: string; blockNumber: string; gasCostWei: string; decisionHash?: Hex }[]; scope: string; lastBlock: string; pending?: Pending; lastReceipt?: { hash: Hex; status: string; blockNumber: string; blockHash: Hex } };
+export type WorkerConfig = { registrationId: Hex; deployment: AutonomousDeployment; pollIntervalMs?: number; maxFeePerGasWei?: string; confirmations?: number; economy?: EconomyPolicy };
 import type { WorkerObservation } from "./types.js";
 export type { WorkerObservation } from "./types.js";
 
-export async function runAutonomous(config: WorkerConfig, options: { once?: boolean; directory?: string; registrations?: string; signal?: AbortSignal; propose?: typeof proposeTrade; client?: ReturnType<typeof autonomousClient>; observe?: (event: WorkerObservation) => void } = {}) {
+export async function runAutonomous(config: WorkerConfig, options: { once?: boolean; directory?: string; registrations?: string; signal?: AbortSignal; propose?: typeof proposeTrade; decide?: typeof proposeDecision; client?: ReturnType<typeof autonomousClient>; observe?: (event: WorkerObservation) => void } = {}) {
   // Observability must never interrupt signing or durable receipt reconciliation.
   const observe = (event: WorkerObservation) => { console.log(JSON.stringify(event)); try { options.observe?.(event); } catch { /* No effect on trading. */ } };
   if (options.signal?.aborted) return;
-  const c = autonomousDeployment(config.deployment);
+  const c = autonomousDeployment(config.deployment), economy = economyPolicy(config.economy);
   const signer = await configuredSigner();
   if (!signer) throw new Error('Configure the encrypted execution signer before starting the worker.');
   try {
@@ -36,6 +40,15 @@ export async function runAutonomous(config: WorkerConfig, options: { once?: bool
       try { state = JSON.parse(await readFile(file, 'utf8')); }
       catch (e) { if ((e as NodeJS.ErrnoException).code !== 'ENOENT') throw e; state = { scope, lastBlock: '-1' }; }
       if (state.scope !== scope || !/^-?\d+$/.test(state.lastBlock)) throw new Error('Worker journal belongs to a different registration.');
+      const decisionsDirectory = join(directory, 'decisions', `${c.chainId}-${c.vault.toLowerCase()}`);
+      await mkdir(decisionsDirectory, { recursive: true, mode: 0o700 });
+      if ((state.decisionCount === undefined) !== (state.lastDecisionHash === undefined) || (state.decisionCount !== undefined && (!Number.isSafeInteger(state.decisionCount) || state.decisionCount < 1))) throw new Error('Invalid decision journal checkpoint.');
+      if (state.lastDecisionHash) {
+        if (!/^0x[0-9a-f]{64}$/.test(state.lastDecisionHash)) throw new Error('Invalid decision journal checkpoint.');
+        const receipt: DecisionReceipt = JSON.parse(await readFile(join(decisionsDirectory, `${state.lastDecisionHash.slice(2)}.json`), 'utf8'));
+        await verifyDecision(receipt, prepared, c, record.id);
+        if (receipt.body.sequence !== state.decisionCount) throw new Error('Decision journal checkpoint differs from the stored receipt.');
+      }
       let storageHealthy = true;
       const persist = async () => {
         try {
@@ -62,6 +75,12 @@ export async function runAutonomous(config: WorkerConfig, options: { once?: bool
             if (keccak256(pending.serialized) !== pending.hash || tx.chainId !== c.chainId || tx.to?.toLowerCase() !== c.vault.toLowerCase() || (tx.value ?? 0n) !== 0n
                 || (await recoverTransactionAddress({ serializedTransaction: pending.serialized as TransactionSerialized })).toLowerCase() !== account.address.toLowerCase()) throw new Error('Worker pending transaction is invalid.');
             if (!tx.data || decodeFunctionData({ abi: autonomousAbi, data: tx.data }).functionName !== 'managerTrade') throw new Error('Pending transaction is not a restricted trade.');
+            if (pending.decisionHash) {
+              if (pending.decisionHash !== state.lastDecisionHash) throw new Error('Pending decision differs from the journal checkpoint.');
+              const decision: DecisionReceipt = JSON.parse(await readFile(join(decisionsDirectory, `${pending.decisionHash.slice(2)}.json`), 'utf8'));
+              await verifyDecision(decision, prepared, c, record.id);
+              if (!decision.body.tradeData || tx.data !== `${decision.body.tradeData}50434431${decision.hash.slice(2)}`) throw new Error('Pending trade differs from its decision commitment.');
+            }
             let receipt;
             try { receipt = await client.getTransactionReceipt({ hash: pending.hash }); }
             catch (e) { if ((e as Error).name !== 'TransactionReceiptNotFoundError') throw e; }
@@ -75,21 +94,51 @@ export async function runAutonomous(config: WorkerConfig, options: { once?: bool
               if ((await client.getBlock({ blockNumber: receipt.blockNumber })).hash !== receipt.blockHash) throw new Error('Pending receipt is not canonical.');
               state.lastReceipt = { hash: pending.hash, status: receipt.status, blockNumber: receipt.blockNumber.toString(), blockHash: receipt.blockHash };
               // Skip the receipt block as well, avoiding a second action on unchanged market observations.
+              const receiptBlock = await client.getBlock({ blockNumber: receipt.blockNumber });
+              const budget = gasDay(state.gasBudget, receiptBlock.timestamp);
+              const gasCost = receipt.gasUsed * receipt.effectiveGasPrice;
+              if (gasCost < 0n) throw new Error('Invalid receipt gas cost.');
+              state.gasBudget = { ...budget, spentWei: (BigInt(budget.spentWei) + gasCost).toString(), trades: budget.trades + 1 };
+              state.lastTradeTimestamp = receiptBlock.timestamp.toString();
+              state.receipts = [...(state.receipts ?? []), { hash: pending.hash, status: receipt.status, blockNumber: receipt.blockNumber.toString(), gasCostWei: gasCost.toString(), ...(pending.decisionHash ? { decisionHash: pending.decisionHash } : {}) }];
               state.lastBlock = receipt.blockNumber.toString(); delete state.pending; await persist();
               observe({ state: receipt.status, hash: receipt.transactionHash });
             }
           } else {
+            const head = await client.getBlock();
+            const budget = gasDay(state.gasBudget, head.timestamp);
+            if (economy) requireActivityBudget(economy, budget, head.timestamp, state.lastTradeTimestamp);
             const snapshot = await tradingSnapshot(prepared, c, client);
             if (snapshot.blockNumber > BigInt(state.lastBlock)) {
-              const proposal = await (options.propose ?? proposeTrade)(prepared, snapshot);
+              const inference = options.propose
+                ? await (async () => { const rawProposal = await options.propose!(prepared, snapshot) as Proposal; return { request: inferenceRequest(prepared, snapshot.input, LIVE_PURPOSE), rawContent: JSON.stringify(rawProposal), rawProposal }; })()
+                : await (options.decide ?? proposeDecision)(prepared, snapshot);
               if (options.signal?.aborted) break;
-              const hash = await submitTrade(prepared, c, snapshot, proposal, account, async pending => { state.pending = pending; await persist(); }, client, maxFee, options.signal);
+              const decision = await signDecision(prepared, c, record.id, snapshot, inference, account, (state.decisionCount ?? 0) + 1, state.lastDecisionHash ?? null, !!options.propose || !!options.decide);
+              await verifyDecision(decision, prepared, c, record.id);
+              // Immutable receipt and checkpoint are durable before transaction signing/broadcast.
+              // An exact deterministic retry may reuse identical bytes; conflicting receipts stop the worker.
+              try {
+                const path = join(decisionsDirectory, `${decision.hash.slice(2)}.json`);
+                let receiptFile;
+                try { receiptFile = await open(path, 'wx', 0o600); }
+                catch (error) {
+                  if ((error as NodeJS.ErrnoException).code !== 'EEXIST' || canonical(JSON.parse(await readFile(path, 'utf8'))) !== canonical(decision)) throw error;
+                }
+                if (receiptFile) { try { await receiptFile.writeFile(JSON.stringify(decision, null, 2)); await receiptFile.sync(); } finally { await receiptFile.close(); } }
+                const receiptParent = await open(decisionsDirectory, 'r'); try { await receiptParent.sync(); } finally { await receiptParent.close(); }
+              } catch (error) { storageHealthy = false; throw error; }
+              state.decisionCount = decision.body.sequence; state.lastDecisionHash = decision.hash; await persist();
+              const hash = await submitTrade(prepared, c, snapshot, inference.rawProposal, account, async pending => { state.pending = { ...pending, decisionHash: decision.hash }; await persist(); }, client, maxFee, options.signal, economy ? { policy: economy, spentWei: BigInt(budget.spentWei) } : undefined, decision.hash);
               if (!hash) { state.lastBlock = snapshot.blockNumber.toString(); await persist(); }
               observe({ state: hash ? 'submitted' : 'hold', ...(hash ? { hash } : {}) });
             }
           }
         } catch (error) {
+          if (error instanceof Error && error.message === 'Live valuation is unavailable.') { try { await requestOracleRefresh(config.registrationId); } catch { /* Stay blocked; a failed upkeep request cannot authorize a trade. */ } }
           if (options.once || !storageHealthy) throw error;
+          if (error instanceof BudgetLimitError) observe({ state: 'budget', budgetReason: error.reason });
+          else
           observe({ state: 'blocked', reason: 'Trading blocked. Check permission, valuation, runtime and pending journal; uncertain submissions remain journaled.' });
         }
         if (options.once || options.signal?.aborted) break;

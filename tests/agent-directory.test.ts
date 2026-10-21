@@ -1,3 +1,5 @@
+import { checkLocalWorker } from '../agent-registration/worker.js';
+import type { Detection } from '../local-inference/types.js';
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import { keccak256, stringToHex, type Hex } from 'viem';
@@ -68,4 +70,18 @@ test('Search uses current model, strategy, pair and role addresses; decimal amou
   assert.equal(filterAgents(agents, 'unknown', 'all').length, 0);
   assert.equal(quoteAmount('0'), '0'); assert.equal(quoteAmount('10000001'), '10.000001');
   assert.equal(quoteAmount('9999999999999999999'), '9999999999999.999999');
+});
+
+test('V2 admission evidence replays funded scenarios and exact guard challenges while preserving v1 history', async () => {
+  const r = await record();
+  const p = { manifest: r.manifest, commitment: r.commitment, privateRuntimeConfig: { inferenceBaseURL: 'http://127.0.0.1:8080' } };
+  const detected = { model: r.manifest.model.id, weightsHash: 'a'.repeat(64), runtimeHash: 'b'.repeat(64), runtimeManifest: { fixture: true }, checkedAt: r.worker.checkedAt } as unknown as Detection;
+  r.worker = await checkLocalWorker(p, { detect: async () => detected, infer: async (_p, input) => ({ action: input.fresh ? input.cashQuoteUnits === '0' ? 'SELL' : 'BUY' : 'HOLD', quoteUnits: input.fresh ? '10000000' : '0' }) });
+  assert.equal((await readDirectory({ records: [r] }))[0].latest.worker.version, 'PUMPCOIN-LOCAL-WORKER-CHECK-v2');
+  for (const edit of [
+    (x: RegistrationRecord) => { x.worker.scenarios![0].guardedProposal.action = 'HOLD'; },
+    (x: RegistrationRecord) => { x.worker.guardChallenges!.pop(); },
+    (x: RegistrationRecord) => { x.worker.guardChallenges![0].expected.action = 'HOLD'; },
+    (x: RegistrationRecord) => { x.worker.scenarios![1].input.fresh = false; },
+  ]) { const altered = structuredClone(r); edit(altered); await assert.rejects(readDirectory({ records: [altered] })); }
 });

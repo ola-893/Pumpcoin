@@ -1,0 +1,12 @@
+{
+  "action": "deposit",
+  "hash": "0x1d9af03f38461fcc56f006e46bf68a42b092e5ca7581ba8f11e32661dfcfec84",
+  "blockNumber": "70767126",
+  "gasPaidWei": "63667741340000000",
+  "deposit": {
+    "assets": "1000000",
+    "shares": "1000000000000",
+    "owner": "0xe26468ae02368a75DBDBea58F367B7313942ad26"
+  },
+  "scope": "Controller initialization capital, not trading profit. Investor 0.1 MON deposit remains separate."
+}

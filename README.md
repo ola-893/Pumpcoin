@@ -8,6 +8,8 @@ An AI trading agent answers to two people: the operator protecting their edge, a
 
 ## How it works
 
+**Research and practice first:** each registered agent can enable market/news and Multi-KOL research strategies, with signed policies, source-linked decisions, separate virtual portfolios and deterministic evidence replay. These appear in the existing directory and agent profile. Funded Monad vault controls remain a separate execution mode. [RYO integration, setup and verification boundaries](docs/RYO-CHAN.md).
+
 1. **Register your agent.** Run a self-hosted, open-weight model. Record model and runtime measurements, commit your strategy and trading limits, and authorize the agent's dedicated execution key. Complete registration by deploying its ERC-8004 identity and isolated vault on Monad testnet.
 2. **Inspect before investing.** Review the agent's signed identity, model provenance, configuration and trading receipts. Each strategy and configuration has its own record.
 3. **Invest under a mandate.** Deposit MON through the vault's conversion gateway and receive that vault's Pump tokens (`PUMP`). The agent submits trades using an expiring permission; the vault enforces turnover, trade-size, exposure and slippage limits.
@@ -20,7 +22,9 @@ An AI trading agent answers to two people: the operator protecting their edge, a
 - **Isolated vaults:** each agent has its own capital, Pump shares and mandate.
 - **On-chain guardrails:** expiring permissions, turnover caps, slippage limits and timelocked configuration changes constrain execution.
 - **Configuration-specific records:** a strategy change starts a distinct accounting period instead of inheriting a previous strategy's results.
-- **Hardware-backed attestation — coming soon.**
+- **Replayable decision evidence:** signed inference requests/outputs, canonical chain snapshots and deterministic guard/trade replay; future worker trades carry the receipt commitment in their transaction calldata.
+
+Model execution is not hardware-attested. Model/runtime measurements are local observations; the public weights check matches a pinned publisher digest. A signed receipt establishes an attributable assertion, not proof of which model ran. Current Monad identities use the maintainers-listed ERC-8004 registry; the archived Anvil example uses a mock. See [evidence boundaries and prior art](docs/AGENT-EVIDENCE-AND-PRIOR-ART.md).
 
 ## Live frontend demo
 
@@ -65,4 +69,6 @@ npm run lint
 
 The active product focuses on agent vaults. Historical lending, financial eligibility, CRE workflows, oracle identity, credit SDK and indexer code are preserved in the [legacy archive](archive/credit/README.md) with separate opt-in checks. Existing vault expense-accounting compatibility remains for deployed-contract verification; new registrations use a zero expense budget.
 
-Read [product scope](docs/PRODUCT-SCOPE.md), [registration](docs/AGENT-REGISTRATION.md), [autonomous trading](docs/AUTONOMOUS-TRADING.md), [MON investing](docs/NATIVE-MON-INVESTMENTS.md), and [local model measurement](docs/LOCAL-MODEL-DETECTION.md).
+Read [valuation upkeep and circuit breaker](docs/VALUATION-KEEPER.md), [product scope](docs/PRODUCT-SCOPE.md), [registration](docs/AGENT-REGISTRATION.md), [autonomous trading](docs/AUTONOMOUS-TRADING.md), [MON investing](docs/NATIVE-MON-INVESTMENTS.md), and [local model measurement](docs/LOCAL-MODEL-DETECTION.md).
+
+Operator infrastructure deployments and frontend boundaries: [runbook](docs/OPERATOR-DEPLOYMENTS.md).

@@ -1,49 +1,39 @@
-import { useEffect, useRef, useState } from 'react';
+import { useAgentState } from '../lib/use-agent-state';
 import { formatUnits } from 'viem';
 import { RefreshCw, ExternalLink } from 'lucide-react';
-import type { LiveVaultObservation } from '../../../agent-registration/types';
-import { registrationRequest, registrationSession, type RegistrationRecord } from '../lib/agent-registration';
+import { type RegistrationRecord } from '../lib/agent-registration';
 import { Badge, CopyValue, Note } from './UI';
 
 const explorer = 'https://testnet.monadexplorer.com';
-export function LiveVaultEvidence({ record }: { record: RegistrationRecord }) {
-  const [data, setData] = useState<LiveVaultObservation>(), [error, setError] = useState(''), [busy, setBusy] = useState(false);
-  const current = useRef<AbortController | undefined>(undefined), lock = useRef(false);
-  async function refresh(signal: AbortSignal) {
-    if (lock.current) return; lock.current = true; setBusy(true); setError('');
-    try {
-      const session = await registrationSession(signal), result = await registrationRequest(session.token, '/live-vault', { id: record.id }, signal);
-      if (result.observation.chainId !== 10143 || result.observation.vault.toLowerCase() !== record.binding?.vault.toLowerCase()) throw new Error('Evidence does not belong to this Monad vault.');
-      if (!signal.aborted) setData(result.observation);
-    } catch (e) { if (!signal.aborted) { setData(undefined); setError(e instanceof Error ? e.message : 'Monad evidence could not be refreshed.'); } }
-    finally { lock.current = false; if (!signal.aborted) setBusy(false); }
-  }
-  useEffect(() => {
-    if (record.binding?.chainId !== 10143) return;
-    const c = new AbortController(); current.current = c; void refresh(c.signal);
-    const timer = setInterval(() => { if (document.visibilityState === 'visible') void refresh(c.signal); }, 30000);
-    return () => { c.abort(); clearInterval(timer); };
-    // The parent keys this view by registration ID; do not restart on wallet changes.
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [record.id, record.binding?.vault]);
+type Observation = ReturnType<typeof useAgentState>;
+export function LiveVaultEvidence({ record, observed }: { record: RegistrationRecord; observed?: Observation }) {
+  return observed ? <VaultEvidence record={record} observed={observed}/> : <StandaloneVaultEvidence record={record}/>;
+}
+function StandaloneVaultEvidence({ record }: { record: RegistrationRecord }) {
+  const observed = useAgentState(record);
+  return <VaultEvidence record={record} observed={observed}/>;
+}
+function VaultEvidence({ record, observed }: { record: RegistrationRecord; observed: Observation }) {
+  const data = observed.data?.observation, busy = observed.busy, error = observed.error || observed.data?.chainError;
   if (record.binding?.chainId !== 10143) return null;
   return <section className="panel" aria-label="Live Monad vault evidence">
-    <div className="panel-heading"><h2>Vault activity on Monad</h2><Badge tone="neutral">Monad testnet · 10143</Badge></div>
-    <p>Reads the deployed vault and mined receipts from Monad. Updates every 30 seconds while this page is visible.</p>
+    <div className="panel-heading"><h2>Vault activity on Monad</h2><Badge tone="neutral">Monad testnet · {record.binding.chainId}</Badge></div>
+    <p>Reads the deployed vault and mined receipts from Monad. Updates every 60 seconds while this page is visible.</p>
     <a className="text-link" href={`${explorer}/address/${record.binding.vault}`} target="_blank" rel="noreferrer">View deployed vault <ExternalLink size={14} /></a>
-    <button className="button secondary" disabled={busy} onClick={() => { if (current.current) void refresh(current.current.signal); }}><RefreshCw size={14} />{busy ? 'Reading Monad…' : 'Refresh live evidence'}</button>
+    <button className="button secondary" disabled={busy} onClick={observed.refresh}><RefreshCw size={14} />{busy ? 'Reading Monad…' : 'Refresh live evidence'}</button>
     {busy && !data && <p role="status" className="small">Reading the public vault and confirmed receipts…</p>}
     {error && <p className="form-error" role="alert">{error}</p>}
     {data && <>
+      {observed.stale && <Note>This is an earlier snapshot; refresh to establish current state.</Note>}
       <p className="small muted">Observed at block {data.blockNumber} · {new Date(data.checkedAt).toLocaleString()}. Refresh to check current state.</p>
       <div className="definition-grid">
-        <div><small>Vault cash</small><strong>{formatUnits(BigInt(data.cash), 6)} test-USDC</strong></div>
-        <div><small>WMON position</small><strong>{formatUnits(BigInt(data.position), data.positionDecimals)}</strong></div>
+        <div><small>Vault cash</small><strong>{formatUnits(BigInt(data.cash), data.quote.decimals)} {data.quote.symbol}</strong></div>
+        <div><small>{data.positionToken.symbol} position</small><strong>{formatUnits(BigInt(data.position), data.positionDecimals)}</strong></div>
         <div><small>Total Pump tokens</small><strong>{formatUnits(BigInt(data.shares), data.shareDecimals)}</strong></div>
-        <div><small>Vault NAV</small><strong>{data.nav !== undefined ? `${formatUnits(BigInt(data.nav), 6)} test-USDC` : 'Valuation unavailable'}</strong></div>
+        <div><small>Vault NAV</small><strong>{data.nav !== undefined ? `${formatUnits(BigInt(data.nav), data.quote.decimals)} ${data.quote.symbol}` : 'Valuation unavailable'}</strong></div>
       </div>
-      <p><Badge tone={data.paused ? 'amber' : 'purple'}>{data.paused ? 'Vault paused' : 'Vault enabled'}</Badge> <Badge tone={data.permission?.active ? 'purple' : 'neutral'}>{!data.permissionSupported ? 'Older vault · permissions unavailable' : data.permission?.active ? 'Trading permission active' : 'Trading permission inactive'}</Badge></p>
-      {data.permission && <p className="small">UTC turnover: {formatUnits(BigInt(data.permission.dailyQuoteTraded), 6)} / {formatUnits(BigInt(data.permission.dailyQuoteCap), 6)} test-USDC. {data.permission.validUntil !== '0' && `Permission expires ${new Date(Number(data.permission.validUntil) * 1000).toLocaleString()}.`}</p>}
+      <p><Badge tone={data.paused ? 'amber' : 'purple'}>{data.paused ? 'Vault paused' : 'Vault enabled'}</Badge> <Badge tone={data.permission?.active ? 'purple' : 'neutral'}>{!data.permissionSupported ? 'Permission read unavailable' : data.permission?.active ? 'Trading permission active' : 'Trading permission inactive'}</Badge></p>
+      {data.permission && <p className="small">UTC turnover: {formatUnits(BigInt(data.permission.dailyQuoteTraded), data.quote.decimals)} / {formatUnits(BigInt(data.permission.dailyQuoteCap), data.quote.decimals)} {data.quote.symbol}. {data.permission.validUntil !== '0' && `Permission expires ${new Date(Number(data.permission.validUntil) * 1000).toLocaleString()}.`}</p>}
       <details className="native-technical"><summary>Current manager & configuration</summary><h3>Current manager</h3><CopyValue value={data.manager} label="live vault manager" />
       <h3>Current configuration</h3><CopyValue value={data.configHash} label="live vault configuration" /></details>
       <h3>Recent confirmed activity</h3>

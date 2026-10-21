@@ -1,3 +1,4 @@
+import { deployReviewed } from '../agent-registration/operator-deployment.js';
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import {spawn} from 'node:child_process';
@@ -99,6 +100,28 @@ for(const oracle of ['supra-pyth'] as ('pyth'|'chainlink'|'supra-pyth')[]) test(
   const sellQuote=await service.plan(id,'sell',manager.address,'500000000000000000');assert.equal(sellQuote.quote!.expectedOutput,'1000000');assert.equal(sellQuote.quote!.minimumOutput,'997500');
   await send('sell','500000000000000000',true);
   await send('approve-redeem','20000000000000');await send('redeem','20000000000000');assert.equal((await service.inspect(id,account.address)).balances!.shares,'0');
+  await send('pause');
+  const pausedApproval=await service.plan(id,'approve-deposit',account.address,'1000000');
+  assert.equal(pausedApproval.to,quote);assert.equal(BigInt(pausedApproval.value),0n);
+  await assert.rejects(service.plan(id,'deposit',account.address,'1000000'),/remain blocked/);
+  await assert.rejects(service.plan(id,'approve-redeem',account.address,'1'),/share balance/);
+  await send('unpause');
+  await assert.rejects(service.confirmGuard(id,hash),/exact canonical/);
+  const guarded=await deployReviewed({directory:join(directory,'operator-journal'),id:record.id,kind:'guard',chainId:31337,account,client,
+   broadcastClient:{sendRawTransaction:async(tx:any)=>{const hash=await client.sendRawTransaction(tx);await client.request({method:'evm_mine' as any});await client.request({method:'evm_mine' as any});return hash;}},broadcast:true,maxCostWei:10n**18n,
+   prepare:()=>service.plan(record.id,'deploy-valuation-guard',account.address),confirm:(hash)=>service.confirmGuard(record.id,hash)});
+  const guardedHash=guarded.hash!;assert.equal(guarded.state,'verified');
+  await service.confirmGuard(id,guardedHash);await service.confirmGuard(id,guardedHash);
+  assert.equal((await service.inspect(id)).configured,false,'recording the candidate does not claim on-chain activation');
+  await send('checkpoint-valuation');
+  await client.request({method:'evm_increaseTime' as any,params:[61] as any});await client.request({method:'evm_mine' as any,params:[] as any});await fresh();
+  await send('checkpoint-valuation');await send('propose');
+  await assert.rejects(service.plan(id,'apply',account.address),/ready/);
+  await client.request({method:'evm_increaseTime' as any,params:[86401] as any});await client.request({method:'evm_mine' as any,params:[] as any});await fresh();
+  await send('checkpoint-valuation');
+  await client.request({method:'evm_increaseTime' as any,params:[61] as any});await client.request({method:'evm_mine' as any,params:[] as any});await fresh();await send('checkpoint-valuation');
+  await send('apply');assert.equal((await service.inspect(id)).configured,true);assert.equal((await service.inspect(id)).ready,true);
+  const guardedRestart=tradingService(network,n,directory,async()=>[record],client);assert.ok((await guardedRestart.inspect(id)).bundle!.guard);
   await client.request({method:'evm_increaseTime' as any,params:[301] as any});await client.request({method:'evm_mine' as any,params:[] as any});assert.equal((await service.inspect(id)).ready,false);await assert.rejects(service.plan(id,'deposit',account.address,'1000000'),/blocked/);
   if(oracle==='chainlink'){await write(monOracle!,'ChainlinkProxyFixture','setAggregator',[usdOracle!]);await assert.rejects(service.inspect(id),/aggregator changed/);await write(monOracle!,'ChainlinkProxyFixture','setAggregator',[(n as any).monOracle.aggregator]);}
   await client.request({method:'anvil_setCode' as any,params:[poolManager,'0x60006000fd'] as any});await assert.rejects(service.inspect(id),/code changed/);

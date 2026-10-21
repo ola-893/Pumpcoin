@@ -39,3 +39,38 @@ test('read batches stay within the public endpoint burst limit', async () => {
   assert.equal(sizes.reduce((sum,x)=>sum+x,0),12);
   assert.ok(sizes.every(x=>x<=5));
 });
+
+// Receipt confirmation polling reads the head number; it still cannot broadcast.
+test('read-only transport supports confirmation head reads without signing methods', async () => {
+  const methods:string[]=[];
+  const request:typeof fetch=async(_input,init)=>{const body=JSON.parse(String(init?.body));const calls=Array.isArray(body)?body:[body];methods.push(...calls.map((c:any)=>c.method));const answers=calls.map((c:any)=>({jsonrpc:'2.0',id:c.id,result:'0x2a'}));return new Response(JSON.stringify(Array.isArray(body)?answers:answers[0]),{headers:{'Content-Type':'application/json'}});};
+  const client=createPublicClient({transport:readTransport('https://test.invalid',request)});
+  assert.equal(await client.getBlockNumber({cacheTime:0}),42n);
+  await assert.rejects(client.request({method:'eth_sendRawTransaction',params:['0x01']} as any));
+  assert.deepEqual(methods,['eth_blockNumber']);
+});
+
+
+test('a slow read does not block the next batch and concurrency remains bounded', async () => {
+  let active = 0, maximum = 0, started = 0;
+  const releases: Array<() => void> = [];
+  const request: typeof fetch = async (_input, init) => {
+    active++; maximum = Math.max(maximum, active); started++;
+    await new Promise<void>(resolve => releases.push(resolve));
+    active--;
+    const payload = JSON.parse(String(init?.body));
+    const calls = Array.isArray(payload) ? payload : [payload];
+    const result = calls.map((call: any) => ({ jsonrpc: '2.0', id: call.id, result: '0x01' }));
+    return Response.json(Array.isArray(payload) ? result : result[0]);
+  };
+  const client = createPublicClient({ transport: readTransport('https://test.invalid', request) });
+  const first = client.getBalance({ address: '0x0000000000000000000000000000000000000001', blockNumber: 1n });
+  await new Promise(resolve => setTimeout(resolve, 30));
+  const second = client.getBalance({ address: '0x0000000000000000000000000000000000000002', blockNumber: 1n });
+  const third = client.getBalance({ address: '0x0000000000000000000000000000000000000003', blockNumber: 1n });
+  for (let i = 0; started < 2 && i < 200; i++) await new Promise(resolve => setTimeout(resolve, 20));
+  assert.equal(started, 2); assert.equal(maximum, 2);
+  while (releases.length) releases.shift()!();
+  await Promise.all([first, second, third]);
+  assert.ok(maximum <= 2);
+});

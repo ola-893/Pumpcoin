@@ -8,7 +8,7 @@ import { getAddress, keccak256, type Hex } from 'viem';
 import { privateKeyToAccount } from 'viem/accounts';
 import { initialDraft, prepareManifest } from '../app/src/lib/registration.js';
 import { authorizationMessage, checkedPrepared, checkAuthorizations, runtimeConfigHash, strategyBindingHash, riskBindingHash, type Challenge } from '../agent-registration/core.js';
-import { checkLocalWorker, guardedProposal, inferPaper, matchingDetection } from '../agent-registration/worker.js';
+import { checkLocalWorker, guardedProposal, inferenceRequest, inferPaper, matchingDetection } from '../agent-registration/worker.js';
 import { registrationService } from '../agent-registration/service.js';
 import { registrationPlugin, REGISTRATION_API } from '../agent-registration/vite.js';
 import { deployment, identityPlan, identityURI, verifyBinding, type Deployment } from '../agent-registration/binding.js';
@@ -43,6 +43,7 @@ test('Deterministic guard overrides stale, unvalued, oversized, overexposed, ove
 test('Worker check performs local inference, guards it, rechecks artifacts and refuses changed weights', async () => {
   let calls=0; const result=await checkLocalWorker(prepared,{detect:async()=>{calls++;return detected;},infer:async()=>({action:'BUY',quoteUnits:'10000000'})});
   assert.equal(calls,2); assert.equal(result.guardedProposal.action,'HOLD'); assert.equal(result.mode,'synthetic-paper-only');
+  assert.equal(result.version,'PUMPCOIN-LOCAL-WORKER-CHECK-v2'); assert.equal(result.scenarios.length,2); assert.equal(result.scenarios[0].guardedProposal.action,'BUY'); assert.equal(result.guardChallenges.length,8); assert.deepEqual(result.guardChallenges.map(x=>x.result),result.guardChallenges.map(x=>x.expected));
   assert.throws(()=>matchingDetection(prepared,{...detected,weightsHash:'d'.repeat(64)}));
   calls=0; await assert.rejects(checkLocalWorker(prepared,{detect:async()=>++calls===1?detected:{...detected,runtimeHash:'d'.repeat(64)},infer:async()=>({action:'HOLD',quoteUnits:'0'})}),/artifacts/);
 });
@@ -72,6 +73,19 @@ test('Changed artifacts, reused sessions and stale worker checks cannot produce 
     clock+=120001; await assert.rejects(service.commit(challenge.id,c.origin,sig.controllerSignature,sig.executionSignature),/fresh/);
     clock-=120001; await assert.rejects(service.commit(challenge.id,c.origin,sig.controllerSignature,sig.executionSignature),/artifacts/); await assert.rejects(service.commit(challenge.id,c.origin,sig.controllerSignature,sig.executionSignature),/consumed/);
     assert.equal((await readdir(directory)).length,0);
+  } finally {await rm(directory,{recursive:true,force:true});}
+});
+test('Fresh enrollment preserves only an identical declaration’s historical binding', async () => {
+  const directory=await mkdtemp(join(tmpdir(),'pumpcoin-reenroll-'));
+  try {
+    const binding=await verifyBinding(prepared,'1',config,rpc());
+    const service=registrationService({directory,config,worker:mockWorker,detect:async()=>detected,binding:async()=>binding});
+    const enroll=async(p=prepared)=>{const challenge=service.challenge(p,c.origin),sig=await signs(challenge);service.check(challenge.id,c.origin);while(service.job(challenge.id,c.origin).status==='running')await new Promise(r=>setTimeout(r,0));return service.commit(challenge.id,c.origin,sig.controllerSignature,sig.executionSignature);};
+    const original=await enroll();await service.bind(original.id,'1');
+    const fresh=await enroll();assert.notEqual(fresh.id,original.id);assert.deepEqual(fresh.binding,binding);assert.equal(fresh.investmentEligible,false);
+    // Prepare the changed declaration through the same canonical form validator.
+    const other=prepareManifest({...initialDraft,name:prepared.manifest.name,controller:controller.address,executionKey:execution.address,model:'test-local',modelSource:'https://example.org/model',weightsHash:'a'.repeat(64),runtimeHash:'b'.repeat(64),strategy:'Changed strategy declaration',strategyCodeHash:'c'.repeat(64),pair:'WMON / USDC',tradeCap:'10',exposureCap:'50',slippageBps:'50',endpoint:'http://127.0.0.1:8080/v1',selfHosted:true});
+    assert.equal((await enroll(other)).binding,undefined);assert.equal((await service.records()).length,3);
   } finally {await rm(directory,{recursive:true,force:true});}
 });
 const addr=(n:number)=>getAddress('0x'+n.toString(16).padStart(40,'0'));
@@ -110,4 +124,15 @@ test('ERC-1967 identities require a matching implementation address and runtime 
 test('Configuration updates prepare a URI change on the same owned identity instead of resetting its history',async()=>{
   const plan=await identityPlan(prepared,config,rpc(),'1');assert.equal(plan.existingAgentId,'1');assert.equal(plan.status,'prepared-not-submitted');
   await assert.rejects(identityPlan(prepared,config,rpc({ownerOf:execution.address}),'1'),/not owned/);
+});
+
+
+test('Muse has a bounded reasoning allowance without changing earlier local model requests', () => {
+  const input = { fresh: false, valued: false, positionQuoteUnits: '0', cashQuoteUnits: '0' };
+  const muse = { ...prepared, manifest: { ...prepared.manifest, model: { ...prepared.manifest.model, id: 'muse-glimmer-30b' } } };
+  const request = inferenceRequest(muse, input);
+  assert.equal(request.max_tokens, 512);
+  assert.deepEqual(request.chat_template_kwargs, { enable_thinking: false, reasoning_strength: 'low' });
+  assert.equal(inferenceRequest(prepared, input).max_tokens, 96);
+  assert.deepEqual(inferenceRequest(prepared, input).chat_template_kwargs, { enable_thinking: false });
 });

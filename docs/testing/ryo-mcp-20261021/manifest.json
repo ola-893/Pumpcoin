@@ -1,0 +1,31 @@
+{
+  "scope": "File identity for this verification package, not provider execution attestation",
+  "sha256": {
+    "agent-registration/vite.ts": "126f4c1552efc43f64f6c7115fe19c1a903cf52ad80d3ed459eb44650eaae885",
+    "app/src/components/AgentResearch.tsx": "3917e8e5e37ba53c28ece65dede3e86e3545ffd1b62450f6afcf7d02c80a7776",
+    "app/vite.config.ts": "9cebd4dcdf168c333870446f09e17980423cf6181762d28bcd55affad9a7ff91",
+    "docs/testing/ryo-mcp-20261021/README.md": "e73dc8c3a1ef3a4559a93da4166dc5b9a4391e8556774708c033f04098d4eab4",
+    "docs/testing/ryo-mcp-20261021/api-preflight.json": "05c5b129e5bbda79e420161a6986b0ef6d8fbf2fb26591e22c4e5ade051c521b",
+    "docs/testing/ryo-mcp-20261021/verification.json": "f74b2fee3652c533b8729f67514322250698abde35913dbdcd1be01f80edef77",
+    "research/checkpoint.ts": "359d2d786843f07a5e8d32c482278e8c71cf54408d0d65cccc816f901039ef56",
+    "research/decision.ts": "ef9efa7485cbc5b2930a585d1e358e7b8a810fbc78db1bd9ab894345661f24df",
+    "research/encoding.ts": "ec225227df9fd0b8a16ce2f5fc600cde4112110b098476375e17a0f43a2054c8",
+    "research/engine.ts": "8dac858c9267f3d77dd269db3fe2d81111271a03ea5a062d512c171809e56d79",
+    "research/evaluation.ts": "2357b658204c931d2ed1bd067ca6622488e8b0235600b8b1bdb7a67685139574",
+    "research/evidence.ts": "a3d281eb70c1cf0215976c0c087afe0deffa5f0bf67e19b08182ff797d326efb",
+    "research/inference.ts": "ad20b96ced78be806feab02b253898e2fc25ac61181d3465b03878a07079f802",
+    "research/normalization.ts": "f5d4e0a186a683e66390839523984db2fa1a9bc79b53ff0637436ef9d9adbcb0",
+    "research/policy.ts": "72c28f9348a1bac3cf8b36227d0a48c6a3eb00500f98f8add293fc92a26d6ad5",
+    "research/providers.ts": "968dcc0c5f0019b2c67fe563ed1a5c3295daaeeeba5e1b960cf83fd5ed4041aa",
+    "research/request.ts": "410b4333c22767dc4455625d631eafc721b0705b3eb01b8c210cc32e51b3a5d7",
+    "research/run.ts": "4af52e9b80abf93f2f64f19836c02aec035cf3f71468eafa78bb2bbfbce55bd0",
+    "research/ryo-contract.ts": "b9a6a6a654e3a0426fc535051eb46786dd1312943678f29b38648f3077f62bf2",
+    "research/service.ts": "638bd24048f436de626dbb5e95e99d4ef1650f8bd3f5c1c04dd8a04738f2e4e0",
+    "research/signals.ts": "32d1bed0099fc221da22f0545ffc647d368bad1f789749bfa6deb22a87b1911c",
+    "research/store.ts": "de88db082ebb263e63e1895ae674437f03b8f14e5a62f8ae494c1063cdee6da5",
+    "research/types.ts": "a68721c781cbcc587c7dab128a900c7451ada5848d6a43b36ad44f007a43b86b",
+    "tests/fixtures/ryo-mcp-20261021.json": "c1a181c0772da014de1b6fcb3be9c31b50f88c13a368d1d9d78ba0aea438ddc6",
+    "tests/frontend-runtime-api.test.ts": "7a44dc69419c09b19d29fb2217183f1cec3788ef7789633141b293ce86abab1a",
+    "tests/ryo-mcp-contract.test.ts": "8cf1dc4fb8ba1db0a7ed3b5f3064d209eef05ef186711cdb92580a60694ffc5f"
+  }
+}

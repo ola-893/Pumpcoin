@@ -1,0 +1,60 @@
+{
+  "address": "0xcF0C1eDcefff16e0136d777b11BD1d7fd4A3819B",
+  "chainId": 10143,
+  "fundedWei": "0",
+  "mode": "on-demand",
+  "activeRequests": 1,
+  "enabled": false,
+  "validUntil": 0,
+  "due": [
+    {
+      "kind": "usd",
+      "target": "0x2880aB155794e7179c9eE2e38200202908C17B43"
+    },
+    {
+      "kind": "mon",
+      "target": "0xba5C0C9aca788465c69E611f6Dd7f10A3Cf658E6"
+    }
+  ],
+  "vaults": [
+    {
+      "id": "0xbc00cf26449e93bf64c799fa4adcdb6423ec14ab2b941e6643fd5cc934a397bc",
+      "vault": "0x5276a188Df65e66E4208ce7AcC6BE8542f578C80",
+      "valuationAvailable": false,
+      "monPublishedAt": "1791892555",
+      "usdPublishedAt": "1791892814"
+    },
+    {
+      "id": "0x35ee2fb845f6eb6c358f99a8aa5dd363b5906182445485597e1387ef069a415c",
+      "vault": "0xE047120881026327aF28E74a6EA0C046Edd01568",
+      "valuationAvailable": false,
+      "monPublishedAt": "1791838105",
+      "usdPublishedAt": "1791892814"
+    }
+  ],
+  "economy": {
+    "maxTransactionGasWei": "300000000000000000",
+    "maxDailyGasWei": "2000000000000000000",
+    "gasReserveWei": "100000000000000000",
+    "minimumTradeIntervalMs": 0,
+    "maxTradesPerDay": 24
+  },
+  "scope": "Approximation using this update estimate and configured cadence; MON and USDC update costs differ. Budget exhaustion deliberately permits staleness rather than overspending.",
+  "expectedUpdateCostWei": "21507312000000001",
+  "projectedContinuousDayCostWei": "109906729920000000480",
+  "estimates": [
+    {
+      "kind": "usd",
+      "target": "0x2880aB155794e7179c9eE2e38200202908C17B43",
+      "estimatedCostWei": "21507312000000001"
+    },
+    {
+      "kind": "mon",
+      "target": "0xba5C0C9aca788465c69E611f6Dd7f10A3Cf658E6",
+      "estimatedCostWei": "207465042000000000"
+    }
+  ],
+  "estimatedRefreshCycleCostWei": "228972354000000001",
+  "simulationAccount": "0xe26468ae02368a75DBDBea58F367B7313942ad26",
+  "state": "simulated-no-broadcast"
+}

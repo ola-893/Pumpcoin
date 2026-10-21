@@ -1,0 +1,314 @@
+{
+  "version": "PUMPCOIN-LOCAL-REGISTRATION-v1",
+  "id": "0x006c0d9546c588ab272f046ea2f716ba3020b1078efa537acddb1ce0bcf53ddd",
+  "localAgentId": "0x63788e989cc1008d94ae103f5c23708d70c5c48052de4cf6022d473c2a5b4b02",
+  "registeredAt": "2026-10-14T03:28:09.329Z",
+  "manifest": {
+    "version": "PUMPCOIN-DEPLOYMENT-DRAFT-v1",
+    "inferencePolicy": "PUMPCOIN-SELF-HOSTED-v1",
+    "evidenceLevel": "operator-declared",
+    "registrationStatus": "unpublished-draft",
+    "vaultPolicy": {
+      "mode": "instant-testnet-demo",
+      "chainId": 10143,
+      "configurationNoticeSeconds": 0
+    },
+    "name": "Gemma Demo",
+    "controller": "0xe26468ae02368a75DBDBea58F367B7313942ad26",
+    "executionKey": "0xd1e45757048B76D95eBBE4cb6C7aAFA1b05c5c19",
+    "model": {
+      "id": "gemma-4-26b-a4b",
+      "source": "https://huggingface.co/unsloth/gemma-4-26B-A4B-it-GGUF",
+      "weightsDigest": "sha256:f2c28b3dc4776931ac6f879e11f203dec637ea0f14267a86ec8f6165f63f293f",
+      "runtimeDigest": "sha256:41f2fdddcb093047df14f70f8904c686f2ea99043348032d2386d54241068461"
+    },
+    "strategy": {
+      "description": "Monad testnet demo spot proposer using locally hosted Gemma 4 26B A4B. Propose HOLD, BUY or SELL from the vault liquid quote balance and independently valued WMON position. Deterministic guards check fresh prices, available liquidity, active permission, caps and slippage before simulation and restricted execution. Per-trade cap: 0.01 test-USDC; maximum position value: 0.05 test-USDC; maximum slippage: 50 basis points. HOLD when required inputs are unavailable or stale. No leverage or guaranteed return. Zero configuration notice for this testnet demo; local execution is not hardware attested.",
+      "codeDigest": "sha256:353e9addb5d91ace33525594a9151429b55e2bbad5cc7cfdf281137ce3d37db8",
+      "pair": "WMON / USDC"
+    },
+    "proposedMandate": {
+      "quoteDecimals": 6,
+      "perTradeQuoteUnits": "10000",
+      "maxPositionQuoteUnits": "50000",
+      "slippageBps": 50,
+      "leverage": false
+    },
+    "dependencies": [
+      "Self-hosted Gemma 4 26B A4B via local llama-server using the installed Ollama GGUF weights",
+      "Monad testnet RPC",
+      "Supra MON/USDT and USDT/USD",
+      "Pyth USDC/USD",
+      "restricted WMON/test-USDC Uniswap v4 pool",
+      "encrypted dedicated execution signer. Fresh prices, liquidity, applied configuration and controller permission are required for live trading."
+    ]
+  },
+  "commitment": "0xbdb6e0a2d8e6747c71a3b284cc664a1b57080540ebb70a37683b4a07734eaaa2",
+  "authorization": {
+    "challenge": {
+      "id": "1a9872a79b4809f9ea707e82afe55d27f4fb74efff0ca37f5fa13baa785ec2b1",
+      "origin": "http://127.0.0.1:5173",
+      "chainId": 10143,
+      "commitment": "0xbdb6e0a2d8e6747c71a3b284cc664a1b57080540ebb70a37683b4a07734eaaa2",
+      "runtimeConfigHash": "0x144175ebce3257a627ff5458704cf4af0107cf13408d8a4e58676eacd3a08a0f",
+      "controller": "0xe26468ae02368a75DBDBea58F367B7313942ad26",
+      "executionKey": "0xd1e45757048B76D95eBBE4cb6C7aAFA1b05c5c19",
+      "expiresAt": 1791949030606,
+      "demoMode": true
+    },
+    "controllerSignature": "0x254955dedacb8503e671a48ad410fabde87be1c4d4346b746280bbe9655220ec218b3fb206189706b79d3cf36c0dff5ace453dcf34885f7b53ffdd68e3acfbab1c",
+    "executionSignature": "0x0182b02ebcd3383537e61eaf9079750c32a03543cb2985b7a0eecaea9bcb4c9b6df95e5791d6623fa8aaa1607489c90b1f6e3ae22d4615a4faac64cfea9a33311c"
+  },
+  "worker": {
+    "version": "PUMPCOIN-LOCAL-WORKER-CHECK-v2",
+    "mode": "synthetic-paper-only",
+    "evidence": "locally-observed-not-attested",
+    "model": "gemma-4-26b-a4b",
+    "weightsDigest": "sha256:f2c28b3dc4776931ac6f879e11f203dec637ea0f14267a86ec8f6165f63f293f",
+    "runtimeDigest": "sha256:41f2fdddcb093047df14f70f8904c686f2ea99043348032d2386d54241068461",
+    "checkedAt": "2026-10-14T03:27:16.568Z",
+    "input": {
+      "fresh": false,
+      "valued": false,
+      "positionQuoteUnits": "0",
+      "cashQuoteUnits": "0"
+    },
+    "rawProposal": {
+      "action": "HOLD",
+      "quoteUnits": "0"
+    },
+    "guardedProposal": {
+      "action": "HOLD",
+      "quoteUnits": "0"
+    },
+    "scenarios": [
+      {
+        "id": "fresh-cash",
+        "input": {
+          "fresh": true,
+          "valued": true,
+          "positionQuoteUnits": "0",
+          "cashQuoteUnits": "10000"
+        },
+        "rawProposal": {
+          "action": "HOLD",
+          "quoteUnits": "0"
+        },
+        "guardedProposal": {
+          "action": "HOLD",
+          "quoteUnits": "0"
+        }
+      },
+      {
+        "id": "fresh-position",
+        "input": {
+          "fresh": true,
+          "valued": true,
+          "positionQuoteUnits": "10000",
+          "cashQuoteUnits": "0"
+        },
+        "rawProposal": {
+          "action": "HOLD",
+          "quoteUnits": "0"
+        },
+        "guardedProposal": {
+          "action": "HOLD",
+          "quoteUnits": "0"
+        }
+      }
+    ],
+    "guardChallenges": [
+      {
+        "id": "allowed-buy",
+        "input": {
+          "fresh": true,
+          "valued": true,
+          "positionQuoteUnits": "0",
+          "cashQuoteUnits": "10000"
+        },
+        "proposal": {
+          "action": "BUY",
+          "quoteUnits": "10000"
+        },
+        "expected": {
+          "action": "BUY",
+          "quoteUnits": "10000"
+        },
+        "result": {
+          "action": "BUY",
+          "quoteUnits": "10000"
+        }
+      },
+      {
+        "id": "allowed-sell",
+        "input": {
+          "fresh": true,
+          "valued": true,
+          "positionQuoteUnits": "10000",
+          "cashQuoteUnits": "0"
+        },
+        "proposal": {
+          "action": "SELL",
+          "quoteUnits": "10000"
+        },
+        "expected": {
+          "action": "SELL",
+          "quoteUnits": "10000"
+        },
+        "result": {
+          "action": "SELL",
+          "quoteUnits": "10000"
+        }
+      },
+      {
+        "id": "stale-buy",
+        "input": {
+          "fresh": false,
+          "valued": true,
+          "positionQuoteUnits": "0",
+          "cashQuoteUnits": "10000"
+        },
+        "proposal": {
+          "action": "BUY",
+          "quoteUnits": "10000"
+        },
+        "expected": {
+          "action": "HOLD",
+          "quoteUnits": "0"
+        },
+        "result": {
+          "action": "HOLD",
+          "quoteUnits": "0"
+        }
+      },
+      {
+        "id": "unvalued-buy",
+        "input": {
+          "fresh": true,
+          "valued": false,
+          "positionQuoteUnits": "0",
+          "cashQuoteUnits": "10000"
+        },
+        "proposal": {
+          "action": "BUY",
+          "quoteUnits": "10000"
+        },
+        "expected": {
+          "action": "HOLD",
+          "quoteUnits": "0"
+        },
+        "result": {
+          "action": "HOLD",
+          "quoteUnits": "0"
+        }
+      },
+      {
+        "id": "oversized-buy",
+        "input": {
+          "fresh": true,
+          "valued": true,
+          "positionQuoteUnits": "0",
+          "cashQuoteUnits": "10000"
+        },
+        "proposal": {
+          "action": "BUY",
+          "quoteUnits": "10001"
+        },
+        "expected": {
+          "action": "HOLD",
+          "quoteUnits": "0"
+        },
+        "result": {
+          "action": "HOLD",
+          "quoteUnits": "0"
+        }
+      },
+      {
+        "id": "overexposed-buy",
+        "input": {
+          "fresh": true,
+          "valued": true,
+          "positionQuoteUnits": "50000",
+          "cashQuoteUnits": "10000"
+        },
+        "proposal": {
+          "action": "BUY",
+          "quoteUnits": "10000"
+        },
+        "expected": {
+          "action": "HOLD",
+          "quoteUnits": "0"
+        },
+        "result": {
+          "action": "HOLD",
+          "quoteUnits": "0"
+        }
+      },
+      {
+        "id": "cashless-buy",
+        "input": {
+          "fresh": true,
+          "valued": true,
+          "positionQuoteUnits": "0",
+          "cashQuoteUnits": "0"
+        },
+        "proposal": {
+          "action": "BUY",
+          "quoteUnits": "10000"
+        },
+        "expected": {
+          "action": "HOLD",
+          "quoteUnits": "0"
+        },
+        "result": {
+          "action": "HOLD",
+          "quoteUnits": "0"
+        }
+      },
+      {
+        "id": "positionless-sell",
+        "input": {
+          "fresh": true,
+          "valued": true,
+          "positionQuoteUnits": "0",
+          "cashQuoteUnits": "10000"
+        },
+        "proposal": {
+          "action": "SELL",
+          "quoteUnits": "10000"
+        },
+        "expected": {
+          "action": "HOLD",
+          "quoteUnits": "0"
+        },
+        "result": {
+          "action": "HOLD",
+          "quoteUnits": "0"
+        }
+      }
+    ],
+    "receiptHash": "0x8429023a6838e9f3a56f3e8ff16f99f77655d096f875ad8556b72b68f4105efa",
+    "scope": "Three local inferences: stale/unvalued, fresh cash and fresh position; eight injected deterministic guard challenges. Synthetic inputs, no token movements. Does not prove host integrity, strategy-code execution, continuous operation or profitability."
+  },
+  "status": "registered-locally-binding-checked",
+  "investmentEligible": false,
+  "binding": {
+    "instantTestnetDemo": true,
+    "configurationNoticeSeconds": 0,
+    "status": "binding-checked-at-block",
+    "chainId": 10143,
+    "mode": "monad-testnet",
+    "vault": "0x1c95B91cB51434d7eC21732b415D1cfFEEFA0cD3",
+    "identityRegistry": "0x8004A818BFB912233c491871b3d84c89A494BD9e",
+    "agentId": "2356",
+    "blockNumber": "70859426",
+    "blockHash": "0xf7d25589b4994469fbd07dc9bb2f0178774a4491bfff19c1503d11d775ed5f52",
+    "configHash": "0xb0a96129c1efb2346b0d6c38f1f32c5542ac2566a1785b3019c5cf64772cebb5",
+    "checkedAt": "2026-10-14T03:29:06.842Z",
+    "investmentEligible": false,
+    "evidence": "controller-deployment-receipt-and-runtime-verification",
+    "scope": "Dedicated vault and ERC-8004 identity created and bound. Vault starts paused with unavailable valuation and no trading adapter. Trading and investment remain blocked. Historical deployment snapshot; configured RPC and registry implementation are trust boundaries.",
+    "deploymentTransaction": "0x332d283eac146f97f08a8cee4151f5f6838985c74e9a0537fe1b4b6f3242ba8f",
+    "tradingReady": false
+  }
+}

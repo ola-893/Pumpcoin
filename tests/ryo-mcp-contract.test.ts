@@ -1,0 +1,40 @@
+import test from 'node:test';
+import assert from 'node:assert/strict';
+import { readFileSync } from 'node:fs';
+import { researchSources } from '../research/providers.js';
+import { verifyNormalization } from '../research/evidence.js';
+import { validateArguments } from '../research/ryo-contract.js';
+import { policy } from './research-fixtures.js';
+const captured=JSON.parse(readFileSync(new URL('./fixtures/ryo-mcp-20261021.json',import.meta.url),'utf8'));
+test('authenticated RYO contract: 2024-11-05 negotiation, advertised schemas, tool errors and RSS coverage remain honest',async()=>{
+  let calls=0;const requested:string[]=[];const endpoint='https://93.184.216.34/api/mcp',feed='https://93.184.216.34/news.xml';
+  const fetcher=(async(input:any,init:any)=>{
+    calls++;const url=String(input);
+    if(url===feed)return new Response(`<rss><channel><item><guid>test-only</guid><title>Test-only headline</title><link>https://example.com/test</link><pubDate>${new Date(Date.now()-1000).toUTCString()}</pubDate></item></channel></rss>`,{headers:{'Content-Type':'application/rss+xml'}});
+    assert.equal(url,endpoint);assert.equal(init.headers.Authorization,'Bearer fixture-key');
+    const request=JSON.parse(init.body);requested.push(request.method);
+    if(request.method==='initialize')return Response.json({...captured.initialize,id:request.id});
+    assert.equal(init.headers['MCP-Protocol-Version'],'2024-11-05');
+    if(request.method==='notifications/initialized')return new Response(null,{status:202});
+    if(request.method==='tools/list')return Response.json({...captured.catalog,id:request.id});
+    assert.equal(request.params.name,'analyze_token');assert.deepEqual(request.params.arguments,{symbol:'BTC'});
+    return Response.json({...captured.analyze_token[0],id:request.id});
+  }) as typeof fetch;
+  const source=researchSources({url:endpoint,key:'fixture-key',newsFeeds:[feed]},fetcher);
+  const catalog=await source.discover();assert.equal(catalog.length,6);assert(!catalog.some(t=>t.name==='check_safety'));assert(catalog.some(t=>t.name==='monitor_market_sentiment_shift'));
+  const p={...policy(),symbols:['BTC'],voices:[],newsFeeds:[feed]};const e=await source.collect(p);
+  assert.equal(e.markets.length,0);assert.equal(e.posts.length,1);assert.equal(e.sources.find(s=>s.source==='ryo')?.available,false);assert.equal(e.sources.find(s=>s.source==='news')?.available,true);assert.equal(e.sources.find(s=>s.source==='x')?.available,false);
+  assert.equal((e.raw[0] as any).kind,'ryo-observation');verifyNormalization(e,p);
+  const changed=structuredClone(e);changed.sources.find(s=>s.source==='ryo')!.available=true;assert.throws(()=>verifyNormalization(changed,p),/verified mapping/);
+  const before=calls;await source.collect(p);assert.equal(calls,before,'Same-policy observations coalesce/cache without rewriting receipt timestamps');
+  await assert.rejects(source.inspect('check_safety',{}),/before a tool response/);assert.equal(calls,before);
+  await assert.rejects(source.inspect('monitor_market_sentiment_shift',{time_window:'1d'}),/before a tool response/);assert.equal(calls,before);
+  assert.deepEqual(requested.slice(0,3),['initialize','notifications/initialized','tools/list']);
+});
+test('tool schema checks enforce objects, arrays, required properties, enum values and unknown constraints',()=>{
+  assert.throws(()=>validateArguments([],{type:'object'}),/type/);
+  assert.throws(()=>validateArguments({symbols:'BTC'},{type:'object',properties:{symbols:{type:'array',items:{type:'string'}}}}),/type/);
+  assert.throws(()=>validateArguments({},{type:'object',required:['symbol']}),/required/);
+  assert.throws(()=>validateArguments('1d',{type:'string',enum:['7d']}),/enum/);
+  assert.throws(()=>validateArguments('BTC',{type:'string',not:{const:'BTC'}}),/unsupported/);
+});

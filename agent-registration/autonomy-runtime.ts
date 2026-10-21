@@ -1,3 +1,5 @@
+import { join } from 'node:path';
+import { access } from 'node:fs/promises';
 import { readFile } from 'node:fs/promises';
 import { runAutonomous, type WorkerConfig } from './run-autonomous.js';
 import { autonomousDeployment } from './autonomous.js';
@@ -9,7 +11,7 @@ export type { RuntimeStatus } from "./types.js";
  * Browser requests select a registration, never a key, path, RPC or deployment pin.
  * The existing worker retains key locks, on-chain checks and durable nonce recovery.
  */
-export function autonomyRuntime(options: { configFile?: string; run?: typeof runAutonomous; now?: () => number } = {}) {
+function singleRuntime(options: { configFile?: string; run?: typeof runAutonomous; now?: () => number } = {}) {
   const now = () => new Date((options.now ?? Date.now)()).toISOString();
   let task: Promise<void> | undefined, stop: AbortController | undefined, registrationId: Hex | undefined;
   let status: RuntimeStatus = { configured: !!options.configFile, running: false, state: options.configFile ? 'stopped' : 'unconfigured', changedAt: now(), message: options.configFile ? 'Trader stopped.' : 'No reviewed trading deployment is configured on this server.' };
@@ -46,7 +48,7 @@ export function autonomyRuntime(options: { configFile?: string; run?: typeof run
       const current = Promise.resolve().then(() => (options.run ?? runAutonomous)(c, { signal, observe: event => {
         if (signal.aborted) return;
         status = { configured: true, running: true, state: event.state, changedAt: now(), observedAt: now(),
-          ...(event.hash ? { transactionHash: event.hash } : {}), message: event.state === 'blocked'
+          ...(event.hash ? { transactionHash: event.hash } : {}), message: event.state === 'budget' ? event.budgetReason === 'cooldown' ? 'Waiting for the five-minute trade interval.' : event.budgetReason === 'daily-limit' ? 'Daily faucet gas or activity limit reached. Resumes next UTC day.' : event.budgetReason === 'gas-reserve' ? 'Preserving the execution wallet gas reserve. No new trade signed.' : 'Current transaction fee exceeds the faucet budget. Waiting for an affordable estimate.' : event.state === 'blocked'
             ? 'Trading blocked by permission, valuation, runtime or pending-transaction checks.'
             : event.state === 'hold' ? 'The current proposal produced no trade.'
             : event.state === 'success' ? 'Agent trade confirmed. Inspect its Monad receipt below.'
@@ -70,5 +72,27 @@ export function autonomyRuntime(options: { configFile?: string; run?: typeof run
     },
     // Vite restarts stop the worker; its journal survives and is reconciled on the next start.
     async close() { stop?.abort(); await task; },
+  };
+}
+
+
+/** Each server-reviewed configuration owns an independent worker and journal. */
+export function autonomyRuntime(options: { configFile?: string; configDirectory?: string; run?: typeof runAutonomous; now?: () => number } = {}) {
+  if (!options.configDirectory) return singleRuntime(options);
+  const workers = new Map<string, ReturnType<typeof singleRuntime>>();
+  async function runtime(value: string) {
+    if (!/^0x[a-f0-9]{64}$/i.test(value)) throw new Error('Invalid registration identifier.');
+    const key = value.toLowerCase(); const existing = workers.get(key); if (existing) return existing;
+    const file = join(options.configDirectory!, key.slice(2) + '.json');
+    try { await access(file); } catch (e) { if ((e as NodeJS.ErrnoException).code === 'ENOENT') return singleRuntime(); throw e; }
+    // No await between this lookup and insert: concurrent calls share one instance.
+    const raced = workers.get(key); if (raced) return raced;
+    const worker = singleRuntime({ configFile: file, run: options.run, now: options.now }); workers.set(key, worker); return worker;
+  }
+  return {
+    async status(id: string) { return (await runtime(id)).status(id); },
+    async start(id: string) { return (await runtime(id)).start(id); },
+    async stop(id: string) { return (await runtime(id)).stop(id); },
+    async close() { await Promise.all([...workers.values()].map(worker => worker.close())); },
   };
 }

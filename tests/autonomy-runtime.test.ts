@@ -60,3 +60,17 @@ test('runtime strips private startup errors and can restart only after its task 
   assert.doesNotMatch(JSON.stringify(status), /PRIVATE_KEY|\/Users\/|private-model-prompt/);
   await runtime.start(registrationId); await runtime.close(); assert.equal(starts, 2);
 }));
+
+
+test('directory runtime isolates two registered workers and rejects missing configurations and path traversal',async()=>{
+ const dir=await mkdtemp(join(tmpdir(),'multi-agent-runtime-'));const second=`0x${'2'.repeat(64)}` as const;
+ const starts:string[]=[];const runtime=autonomyRuntime({configDirectory:dir,run:async(c,options)=>{starts.push(c.registrationId);await new Promise<void>(resolve=>options!.signal!.addEventListener('abort',()=>resolve(),{once:true}));}});
+ try {
+  await writeFile(join(dir,registrationId.slice(2)+'.json'),JSON.stringify(config));await writeFile(join(dir,second.slice(2)+'.json'),JSON.stringify({...config,registrationId:second}));
+  await Promise.all([runtime.start(registrationId),runtime.start(second),runtime.start(registrationId)]);assert.equal(starts.length,2);
+  assert.equal((await runtime.status(second)).running,true);await runtime.stop(registrationId);
+  assert.equal((await runtime.status(second)).running,true);
+  await assert.rejects(runtime.start('../secrets'),/identifier/);
+  const missing=`0x${'3'.repeat(64)}`;assert.equal((await runtime.status(missing)).configured,false);await assert.rejects(runtime.start(missing),/deployment/);
+ } finally {await runtime.close();await rm(dir,{recursive:true,force:true});}
+});

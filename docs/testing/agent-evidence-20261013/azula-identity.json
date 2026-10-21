@@ -1,0 +1,23 @@
+{
+  "name": "azula",
+  "registrationId": "0xbc00cf26449e93bf64c799fa4adcdb6423ec14ab2b941e6643fd5cc934a397bc",
+  "chainId": 10143,
+  "registry": "0x8004A818BFB912233c491871b3d84c89A494BD9e",
+  "maintainersListedMonadRegistry": true,
+  "registryCodeHash": "0xd0e45b1d89fa9b6cc7e97c1f155d64180e5c232aaccf9900ef9d4fd738c02b41",
+  "registryImplementation": "0x7274e874CA62410a93Bd8bf61c69d8045E399c02",
+  "registryImplementationCodeHash": "0xa5f9624ea85e45b3f4b8558581f03bfb3e6cefab278d7bf0500ec9bd065dc16f",
+  "agentId": "2224",
+  "vault": "0x5276a188Df65e66E4208ce7AcC6BE8542f578C80",
+  "controller": "0xe26468ae02368a75DBDBea58F367B7313942ad26",
+  "executionKey": "0x188a72C0e803C8cB288f5cf53Cbf8BF25Cebe7DF",
+  "manifestCommitment": "0xf85c41202e092e6f0686d2489d3ea16f1cc3a6551878afff80e77428bdb68d45",
+  "uriMatches": true,
+  "ownerMatches": true,
+  "vaultBindingMatches": true,
+  "configHash": "0xc61820a37ab24af8d8671d1429d520acfa872e999b26d01f691da95e354c6ea8",
+  "blockNumber": "70680544",
+  "blockHash": "0x315facf72243ec5e143c060c64d36bc67fe7c0041f0137d6648e04c7c2acff24",
+  "checkedAt": "2026-10-13T12:22:06.571Z",
+  "scope": "Public registry ownership, published signed manifest, reviewed vault authority and identity binding checked at this block. Configured runtime pins and RPC are trust boundaries. Does not attest model execution, profitability or investment readiness."
+}

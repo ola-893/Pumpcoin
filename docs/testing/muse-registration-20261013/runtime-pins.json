@@ -1,0 +1,58 @@
+{
+  "registrationId": "0xac8b58d31c0464df2efed441e3e0187cf3e16f6b0cdcafce87be86732dc2dd95",
+  "deployment": {
+    "chainId": 10143,
+    "rpcUrl": "https://testnet-rpc.monad.xyz",
+    "identityRegistry": "0x8004A818BFB912233c491871b3d84c89A494BD9e",
+    "identityCodeHash": "0xd0e45b1d89fa9b6cc7e97c1f155d64180e5c232aaccf9900ef9d4fd738c02b41",
+    "identityImplementation": "0x7274e874CA62410a93Bd8bf61c69d8045E399c02",
+    "identityImplementationCodeHash": "0xa5f9624ea85e45b3f4b8558581f03bfb3e6cefab278d7bf0500ec9bd065dc16f",
+    "quote": "0x534b2f3A21130d7a60830c2Df862319e593943A3",
+    "quoteCodeHash": "0x96215e6049ed615cdc22fea7701e85458a8e51a2df3e7d45e8f9fa1d521b5a78",
+    "position": "0xFb8bf4c1CC7a94c73D209a149eA2AbEa852BC541",
+    "positionCodeHash": "0xa32df4f1226f1bb0d6ce9b917752ed687857899a35ebf902c9992edb73b138b6",
+    "positionDecimals": 18,
+    "vault": "0x506Bd00B5E19Da455CbFb04335cF7c4d0eb1f803",
+    "adapter": "0x0b05AB164B948EF5dC8cc1F8a989B8FA101d1641",
+    "venue": "0xf8f406536d44dC57A91a381C0e7330cBa6D3D057",
+    "source": "0x1de1Da47D231B41541Aba41d1dA5F687FE06a574",
+    "vaultCodeHash": "0x732962c38291542654f4fa599e91784fb0df19a447da474998636d6aa7f3e2ab",
+    "adapterCodeHash": "0x1b3ff9c15fd1314196e0efff7ca6c97ad35b916096cf9a5a2e0322666e0ee1d8",
+    "venueCodeHash": "0x799fa180d02009290ad984b3794a609ee331a1e2a759ffec5100fa3097502303",
+    "sourceCodeHash": "0x9330cd7927dbba5bb576cf23dd1e3831d5cb42d2b402228ee3c71150a8134a0d",
+    "dependencies": [
+      {
+        "address": "0x2880aB155794e7179c9eE2e38200202908C17B43",
+        "codeHash": "0x7e693eea60500e1d5c5984a4cc54ec0b371d9ad29e8bb09c543cb7be447963df",
+        "implementation": "0x030c1C3Dbd579Ed636eAEF2810F4D4E549a0ed95",
+        "implementationCodeHash": "0x03c6ea8da62780bfc5398c8374f0611710eb4e3d5c2d50f862ff157a997f2aff"
+      },
+      {
+        "address": "0xF8522B7fcE37439b98A2be282d413A44269028bE",
+        "codeHash": "0x6e3a6d42335ec651bf68b1ad923f7a3d7b2e81c8d7801f81ec9aa8c705ba320e"
+      },
+      {
+        "address": "0x451D64ab3b650040d2aE1886602b97ed6eDc643d",
+        "codeHash": "0x61199025286997b715457c68f86dbc42c847753f01e0773668394a405d53d579"
+      },
+      {
+        "address": "0xB639209539c61BaF67AC04876315786F8D0b153c",
+        "codeHash": "0xeedadde80f69c3b89437996025759b839a65e12db6c8379a7327a34aa269fa5e"
+      },
+      {
+        "address": "0x02A64C5f80CA157ddE79DaDE3337F72263AB4921",
+        "codeHash": "0xe5a94cb65eb0f913d7595dbbe56200a52479f976c332e20d1b07fca3136b7341"
+      }
+    ]
+  },
+  "pollIntervalMs": 60000,
+  "confirmations": 2,
+  "maxFeePerGasWei": "500000000000",
+  "economy": {
+    "maxTransactionGasWei": "100000000000000000",
+    "maxDailyGasWei": "1000000000000000000",
+    "gasReserveWei": "100000000000000000",
+    "minimumTradeIntervalMs": 300000,
+    "maxTradesPerDay": 24
+  }
+}

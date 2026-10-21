@@ -112,7 +112,7 @@ The review packet must map each claim to source mechanism, executed test and ins
 - [ERC-4626: Tokenized Vaults](https://eips.ethereum.org/EIPS/eip-4626) — share interface and required accounting/rounding behavior; strategy logic is an implementation responsibility.
 - [ERC-7540: Asynchronous Vaults](https://eips.ethereum.org/EIPS/eip-7540) — reference if redemption needs requests and later settlement.
 - [ERC-8004: Trustless Agents](https://eips.ethereum.org/EIPS/eip-8004) — draft identity/reputation/validation interfaces; identity ownership is not vault authority.
-- [Historical architecture checklist](ARCHITECTURE-CHECKLIST.md), [current agent-credit baseline](AGENT-CREDIT.md), [historical submission demo](SUBMISSION-DEMO.md).
+- [Historical architecture checklist](../archive/credit/docs/ARCHITECTURE-CHECKLIST.md), [current agent-credit baseline](../archive/credit/docs/AGENT-CREDIT.md), [historical submission demo](../archive/credit/docs/SUBMISSION-DEMO.md).
 
 ## Review update — 10 October 2026
 

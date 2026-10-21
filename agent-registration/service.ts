@@ -8,7 +8,7 @@ import { checkLocalWorker, matchingDetection } from './worker.js';
 import { detectLocalModel } from '../local-inference/discovery.js';
 import { prepareVault, confirmVault, vaultNetwork, type VaultNetwork } from './vault-setup.js';
 import type { RegistrationRecord, WorkerReceipt } from './types.js';
-import { permissionStatus, permissionPlan } from './permissions.js';
+import { permissionStatus, permissionPlan, executionFundingPlan } from './permissions.js';
 import type { ExecutionSignerStore } from './signer.js';
 export type { RegistrationRecord } from './types.js';
 type Session = { challenge: Challenge; prepared: Prepared; job?: { status: 'running' | 'ready' | 'error'; result?: WorkerReceipt; error?: string }; checkedAt?: number; consumed: boolean };
@@ -37,6 +37,8 @@ export function registrationService(options: { directory: string; signer?: () =>
     return { record: value.public, prepared: p };
   }
   return {
+    // Internal local operator access only; never expose private runtime fields over HTTP.
+    async researchPrepared(id: string) { return read(id); },
     configured: !!config,
     executionSignerConfigured: !!options.signer,
     async executionWallet(controller: string, name: string) {
@@ -80,9 +82,22 @@ export function registrationService(options: { directory: string; signer?: () =>
       const current = await detect(s.prepared.privateRuntimeConfig.inferenceBaseURL, () => {}); matchingDetection(s.prepared, current);
       if (now() >= s.challenge.expiresAt) throw new Error('Registration expired during the final local check.');
       const record: RegistrationRecord = { version: 'PUMPCOIN-LOCAL-REGISTRATION-v1', id: keccak256(stringToHex(s.challenge.id)), localAgentId: keccak256(stringToHex(JSON.stringify([s.challenge.chainId, s.prepared.manifest.controller, s.prepared.manifest.name]))), registeredAt: new Date(now()).toISOString(), manifest: s.prepared.manifest, commitment: s.prepared.commitment, authorization: { challenge: s.challenge, controllerSignature, executionSignature }, worker: s.job.result, status: 'registered-locally-vault-pending', investmentEligible: false };
+      // Re-enrollment of the exact same declaration retains its historical vault
+      // reference. This is not a new chain check: keep the original block/time.
+      // Changed declarations must complete binding checks separately.
+      const names = await readdir(options.directory).catch((e: NodeJS.ErrnoException) => { if (e.code === 'ENOENT') return []; throw e; });
+      const prior = await Promise.all(names.filter(n => /^[a-f0-9]{64}\.json$/.test(n)).map(n => read('0x' + n.slice(0, -5))));
+      const existing = prior.map(x => x.record).filter(r => r.localAgentId === record.localAgentId && r.commitment === record.commitment && r.binding).sort((a,b) => b.registeredAt.localeCompare(a.registeredAt))[0];
+      if (existing) { record.binding = existing.binding; record.status = 'registered-locally-binding-checked'; }
       await save(record.id, { public: record, private: s.prepared.privateRuntimeConfig }, true); return record;
     },
     workerRegistration: read,
+    async executionFundingPlan(id: string) {
+      if (!setup) throw new Error('Vault network is not configured.');
+      const { record, prepared } = await read(id);
+      if (!record.binding) throw new Error('Create and verify the agent vault first.');
+      return executionFundingPlan(prepared, record.binding.vault, setup);
+    },
     async autonomyStatus(id: string) {
       if (!setup) throw new Error('Vault network is not configured.');
       const { record, prepared } = await read(id);

@@ -12,6 +12,8 @@ Hardware-backed attestation — coming soon.
 
 ## The core journey
 
+The research/practice stage is part of this same lifecycle: configure an agent's signed market/news and Multi-KOL policies, collect RYO/source evidence, run local interpretation, and inspect practice decisions and portfolio outcomes before considering funded allocation. Practice metrics never become funded-vault performance or mint Pump shares. Authentic provider access and live acceptance remain explicit gates; see [RYO research implementation](RYO-CHAN.md).
+
 1. Register an agent with local inference and model/runtime evidence.
 2. Deploy and configure its dedicated vault under a defined trading mandate.
 3. Let investors inspect the agent and invest MON for Pump shares.

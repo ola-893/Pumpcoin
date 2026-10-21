@@ -11,9 +11,16 @@
     "build:contracts": "forge build --root contracts",
     "test:contracts": "forge test --root contracts",
     "signer:init": "node --import tsx agent-registration/init-signer.ts",
-    "agent:trade": "node --import tsx agent-registration/run-autonomous.ts"
+    "agent:trade": "node --import tsx agent-registration/run-autonomous.ts",
+    "agent:evidence": "node --import tsx agent-registration/verify-evidence.ts",
+    "agent:research": "node --env-file-if-exists=.env --import tsx research/run.ts",
+    "oracle:keeper": "node --import tsx agent-registration/run-oracle-keeper.ts",
+    "oracle:guard-plan": "node --import tsx agent-registration/valuation-guard-plan.ts",
+    "operator:deploy": "node --import tsx agent-registration/run-deployment.ts"
   },
   "dependencies": {
+    "@vercel/blob": "^2.8.1",
+    "fast-xml-parser": "^5.11.2",
     "react": "19.3.0",
     "viem": "2.56.8"
   },

@@ -1,9 +1,11 @@
+import { committedTradeData } from './trade-commitment.js';
+import { requireGasBudget, type EconomyPolicy } from './gas-budget.js';
 import { createPublicClient, createWalletClient, getAddress, http, keccak256, parseAbi, type Address, type Hex, type Chain } from 'viem';
 import { monadTestnet, foundry } from 'viem/chains';
 import type { PrivateKeyAccount } from 'viem/accounts';
 import { type Prepared, riskBindingHash, strategyBindingHash } from './core.js';
 import { type VaultNetwork, vaultNetwork, networkChecks } from './vault-setup.js';
-import { guardedProposal, inferProposal, matchingDetection } from './worker.js';
+import { guardedProposal, inferProposal, inferTrace, LIVE_PURPOSE, matchingDetection } from './worker.js';
 import { detectLocalModel } from '../local-inference/discovery.js';
 import type { PaperInput } from './types.js';
 
@@ -81,8 +83,10 @@ export async function tradingSnapshot(p: Prepared, config: AutonomousDeployment,
   if (!same(bindings[0], c.vault) || !same(bindings[1], c.quote) || !same(bindings[2], c.position) || !same(bindings[3], c.venue) || bindings[4]) throw new Error('Restricted trading adapter is unavailable.');
   const permission = v.tradingPermission as TradeSnapshot['permission'];
   if (BigInt(permission[0]) <= block.timestamp || permission[2] <= 0n || permission[3] !== v.managerVersion || permission[4] !== v.tradeConfigVersion || permission[1] > p.manifest.proposedMandate.slippageBps) throw new Error('Trading permission expired, revoked or exceeds declared slippage.');
-  const [status, decimals, price, cash, positions, spent] = await Promise.all([
-    read(c.source, sourceAbi, 'status'), read(c.source, sourceAbi, 'positionDecimals'), read(c.source, sourceAbi, 'price'),
+  const status = await read(c.source, sourceAbi, 'status');
+  if (!status[0]) throw new Error('Live valuation is unavailable.');
+  const [decimals, price, cash, positions, spent] = await Promise.all([
+    read(c.source, sourceAbi, 'positionDecimals'), read(c.source, sourceAbi, 'price'),
     read(c.quote, tokenAbi, 'balanceOf', [c.vault]), read(c.position, tokenAbi, 'balanceOf', [c.vault]), read(c.vault, autonomousAbi, 'dailyQuoteTraded', [block.timestamp / 86400n]),
   ]);
   if (!status[0] || decimals !== c.positionDecimals || price <= 0n) throw new Error('Live valuation is unavailable.');
@@ -114,9 +118,17 @@ export async function proposeTrade(p: Prepared, snapshot: TradeSnapshot, depende
   return proposal;
 }
 
+export async function proposeDecision(p: Prepared, snapshot: TradeSnapshot, dependencies = { detect: detectLocalModel, infer: inferTrace }) {
+  const first = await dependencies.detect(p.privateRuntimeConfig.inferenceBaseURL, () => {}); matchingDetection(p, first);
+  const inference = await dependencies.infer(p, snapshot.input, fetch, LIVE_PURPOSE);
+  const last = await dependencies.detect(p.privateRuntimeConfig.inferenceBaseURL, () => {}); matchingDetection(p, last);
+  if (JSON.stringify(first.runtimeManifest) !== JSON.stringify(last.runtimeManifest)) throw new Error('Local runtime changed during proposal.');
+  return inference;
+}
+
 /** Prepare locally, journal BEFORE broadcast, then send one signed transaction. */
 export async function submitTrade(p: Prepared, c: AutonomousDeployment, s: TradeSnapshot, raw: unknown, account: PrivateKeyAccount,
-  savePending: (pending: { hash: Hex; serialized: Hex; blockNumber: string }) => Promise<void>, client: any = autonomousClient(c), maxFeePerGas = 100000000000n, signal?: AbortSignal) {
+  savePending: (pending: { hash: Hex; serialized: Hex; blockNumber: string }) => Promise<void>, client: any = autonomousClient(c), maxFeePerGas = 100000000000n, signal?: AbortSignal, budget?: { policy: EconomyPolicy; spentWei: bigint }, decisionCommitment?: Hex) {
   if (account.address.toLowerCase() !== p.manifest.executionKey.toLowerCase()) throw new Error('Execution account does not match the declaration.');
   const args = tradeArguments(p, c, s, raw);
   if (!args) return undefined;
@@ -124,10 +136,10 @@ export async function submitTrade(p: Prepared, c: AutonomousDeployment, s: Trade
   if (latest.configHash !== s.configHash || latest.timestamp > s.timestamp + 30n || latest.timestamp < s.timestamp
       || latest.cash !== s.cash || latest.positions !== s.positions || latest.spent !== s.spent) throw new Error('Trading state changed during inference. Request a fresh proposal.');
   const wallet = createWalletClient({ account, chain: chainFor(c.chainId), transport: http(c.rpcUrl, { retryCount: 0, timeout: 15000 }) });
-  const simulation = await client.simulateContract({ account: account.address, address: c.vault, abi: autonomousAbi, functionName: 'managerTrade', args });
-  const { encodeFunctionData } = await import('viem');
-  const request = await wallet.prepareTransactionRequest({ to: c.vault, data: encodeFunctionData(simulation.request), value: 0n });
+  await client.simulateContract({ account: account.address, address: c.vault, abi: autonomousAbi, functionName: 'managerTrade', args });
+  const request = await wallet.prepareTransactionRequest({ to: c.vault, data: committedTradeData(autonomousAbi, args, decisionCommitment), value: 0n });
   if ((request.maxFeePerGas ?? request.gasPrice ?? 0n) > maxFeePerGas || request.gas > 1500000n) throw new Error('Trading transaction exceeds the operator gas budget.');
+  if (budget) requireGasBudget(budget.policy, await client.getBalance({ address: account.address }), request.gas, request.maxFeePerGas ?? request.gasPrice ?? 0n, budget.spentWei);
   if (signal?.aborted) throw new Error('Worker is stopping.');
   const serialized = await wallet.signTransaction(request), hash = keccak256(serialized);
   if (signal?.aborted) throw new Error('Worker is stopping.');

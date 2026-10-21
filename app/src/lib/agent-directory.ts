@@ -1,3 +1,4 @@
+import { guardedProposal, workerGuardChallenges } from '../../../agent-registration/proposal.js';
 import { getAddress, keccak256, stringToHex } from 'viem';
 import { checkAuthorizations } from '../../../agent-registration/core.js';
 import { registrationRequest, registrationSession, type RegistrationRecord } from './agent-registration.js';
@@ -25,6 +26,7 @@ export async function readDirectory(value: unknown): Promise<DirectoryAgent[]> {
       if (!text(m.name, 64) || !address(m.controller) || !address(m.executionKey) || m.controller === m.executionKey || !text(m.model?.id, 100) || !digest(m.model.weightsDigest) || !digest(m.model.runtimeDigest)) invalid();
       const source = new URL(m.model.source); if (source.protocol !== 'https:' || source.username || source.password) invalid();
       if (!text(m.strategy?.description, 2000) || !digest(m.strategy.codeDigest) || !['MON / USDC', 'WMON / USDC'].includes(m.strategy.pair) || !Array.isArray(m.dependencies) || !m.dependencies.every(d => text(d, 1000))) invalid();
+      if (m.vaultPolicy !== undefined && (m.vaultPolicy.mode !== 'instant-testnet-demo' || m.vaultPolicy.chainId !== 10143 || m.vaultPolicy.configurationNoticeSeconds !== 0 || c?.demoMode !== true || Object.keys(m.vaultPolicy).sort().join(',') !== 'chainId,configurationNoticeSeconds,mode')) invalid();
       const mandate = m.proposedMandate;
       if (mandate?.quoteDecimals !== 6 || mandate.leverage !== false || !units(mandate.perTradeQuoteUnits) || !units(mandate.maxPositionQuoteUnits) || BigInt(mandate.perTradeQuoteUnits) > BigInt(mandate.maxPositionQuoteUnits) || !Number.isInteger(mandate.slippageBps) || mandate.slippageBps < 1 || mandate.slippageBps > 500) invalid();
       if (!hash(r.commitment) || keccak256(stringToHex(JSON.stringify(m))) !== r.commitment || !c || c.commitment !== r.commitment || c.controller !== m.controller || c.executionKey !== m.executionKey || !hash(c.runtimeConfigHash) || !/^[a-f0-9]{64}$/.test(c.id) || ![10143, 31337].includes(c.chainId) || !Number.isSafeInteger(c.expiresAt)) invalid();
@@ -34,11 +36,21 @@ export async function readDirectory(value: unknown): Promise<DirectoryAgent[]> {
       if (registered < c.expiresAt - 600000 || registered >= c.expiresAt) invalid();
       // Verify historical consent at its recorded validity time, not against today's clock.
       await checkAuthorizations(c, r.authorization.controllerSignature, r.authorization.executionSignature, c.expiresAt - 1);
-      if (!w || w.version !== 'PUMPCOIN-LOCAL-WORKER-CHECK-v1' || w.mode !== 'synthetic-paper-only' || w.evidence !== 'locally-observed-not-attested' || w.model !== m.model.id || w.weightsDigest !== m.model.weightsDigest || w.runtimeDigest !== m.model.runtimeDigest || !date(w.checkedAt)) invalid();
+      if (!w || !['PUMPCOIN-LOCAL-WORKER-CHECK-v1', 'PUMPCOIN-LOCAL-WORKER-CHECK-v2'].includes(w.version) || w.mode !== 'synthetic-paper-only' || w.evidence !== 'locally-observed-not-attested' || w.model !== m.model.id || w.weightsDigest !== m.model.weightsDigest || w.runtimeDigest !== m.model.runtimeDigest || !date(w.checkedAt)) invalid();
       if (Date.parse(w.checkedAt) > registered || registered - Date.parse(w.checkedAt) > 120000) invalid();
       const input = w.input, raw = w.rawProposal, output = w.guardedProposal;
       if (!input || input.fresh !== false || input.valued !== false || input.cashQuoteUnits !== '0' || input.positionQuoteUnits !== '0' || !raw || !['HOLD', 'BUY', 'SELL'].includes(raw.action) || !/^(0|[1-9]\d{0,18})$/.test(raw.quoteUnits) || output?.action !== 'HOLD' || output.quoteUnits !== '0') invalid();
-      if (w.receiptHash !== keccak256(stringToHex(JSON.stringify({ commitment: r.commitment, input, raw, output })))) invalid();
+      const receiptBody: Record<string, unknown> = { commitment: r.commitment, input, raw, output };
+      if (w.version === 'PUMPCOIN-LOCAL-WORKER-CHECK-v2') {
+        if (!Array.isArray(w.scenarios) || w.scenarios.length !== 2 || !Array.isArray(w.guardChallenges) || w.guardChallenges.length !== 8) invalid();
+        const prepared = { manifest: m, commitment: r.commitment, privateRuntimeConfig: { inferenceBaseURL: 'http://127.0.0.1:8080' } };
+        for (const [i, scenario] of w.scenarios!.entries()) {
+          if (scenario.id !== ['fresh-cash', 'fresh-position'][i] || scenario.input.fresh !== true || scenario.input.valued !== true || scenario.input.cashQuoteUnits !== (i === 0 ? mandate.perTradeQuoteUnits : '0') || scenario.input.positionQuoteUnits !== (i === 1 ? mandate.perTradeQuoteUnits : '0') || JSON.stringify(guardedProposal(scenario.rawProposal, scenario.input, prepared)) !== JSON.stringify(scenario.guardedProposal)) invalid();
+        }
+        if (JSON.stringify(w.guardChallenges) !== JSON.stringify(workerGuardChallenges(prepared))) invalid();
+        receiptBody.scenarios = w.scenarios; receiptBody.guardChallenges = w.guardChallenges;
+      }
+      if (w.receiptHash !== keccak256(stringToHex(JSON.stringify(receiptBody)))) invalid();
       if (r.binding) {
         const b = r.binding;
         if (r.status !== 'registered-locally-binding-checked' || b.status !== 'binding-checked-at-block' || b.investmentEligible !== false || b.chainId !== c.chainId || b.mode !== (b.chainId === 10143 ? 'monad-testnet' : 'local-simulation') || !address(b.vault) || !address(b.identityRegistry) || !/^(0|[1-9]\d*)$/.test(b.agentId) || !/^(0|[1-9]\d*)$/.test(b.blockNumber) || !hash(b.blockHash) || !hash(b.configHash) || !date(b.checkedAt)) invalid();

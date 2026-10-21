@@ -1,0 +1,12 @@
+.git
+.env
+.env.*
+.local
+archive
+node_modules
+app/node_modules
+contracts/lib
+contracts/cache
+contracts/broadcast
+docs/testing
+*.log

@@ -1,0 +1,1942 @@
+{
+  "records": [
+    {
+      "version": "PUMPCOIN-LOCAL-REGISTRATION-v1",
+      "id": "0x006c0d9546c588ab272f046ea2f716ba3020b1078efa537acddb1ce0bcf53ddd",
+      "localAgentId": "0x63788e989cc1008d94ae103f5c23708d70c5c48052de4cf6022d473c2a5b4b02",
+      "registeredAt": "2026-10-14T03:28:09.329Z",
+      "manifest": {
+        "version": "PUMPCOIN-DEPLOYMENT-DRAFT-v1",
+        "inferencePolicy": "PUMPCOIN-SELF-HOSTED-v1",
+        "evidenceLevel": "operator-declared",
+        "registrationStatus": "unpublished-draft",
+        "vaultPolicy": {
+          "mode": "instant-testnet-demo",
+          "chainId": 10143,
+          "configurationNoticeSeconds": 0
+        },
+        "name": "Gemma Demo",
+        "controller": "0xe26468ae02368a75DBDBea58F367B7313942ad26",
+        "executionKey": "0xd1e45757048B76D95eBBE4cb6C7aAFA1b05c5c19",
+        "model": {
+          "id": "gemma-4-26b-a4b",
+          "source": "https://huggingface.co/unsloth/gemma-4-26B-A4B-it-GGUF",
+          "weightsDigest": "sha256:f2c28b3dc4776931ac6f879e11f203dec637ea0f14267a86ec8f6165f63f293f",
+          "runtimeDigest": "sha256:41f2fdddcb093047df14f70f8904c686f2ea99043348032d2386d54241068461"
+        },
+        "strategy": {
+          "description": "Monad testnet demo spot proposer using locally hosted Gemma 4 26B A4B. Propose HOLD, BUY or SELL from the vault liquid quote balance and independently valued WMON position. Deterministic guards check fresh prices, available liquidity, active permission, caps and slippage before simulation and restricted execution. Per-trade cap: 0.01 test-USDC; maximum position value: 0.05 test-USDC; maximum slippage: 50 basis points. HOLD when required inputs are unavailable or stale. No leverage or guaranteed return. Zero configuration notice for this testnet demo; local execution is not hardware attested.",
+          "codeDigest": "sha256:353e9addb5d91ace33525594a9151429b55e2bbad5cc7cfdf281137ce3d37db8",
+          "pair": "WMON / USDC"
+        },
+        "proposedMandate": {
+          "quoteDecimals": 6,
+          "perTradeQuoteUnits": "10000",
+          "maxPositionQuoteUnits": "50000",
+          "slippageBps": 50,
+          "leverage": false
+        },
+        "dependencies": [
+          "Self-hosted Gemma 4 26B A4B via local llama-server using the installed Ollama GGUF weights",
+          "Monad testnet RPC",
+          "Supra MON/USDT and USDT/USD",
+          "Pyth USDC/USD",
+          "restricted WMON/test-USDC Uniswap v4 pool",
+          "encrypted dedicated execution signer. Fresh prices, liquidity, applied configuration and controller permission are required for live trading."
+        ]
+      },
+      "commitment": "0xbdb6e0a2d8e6747c71a3b284cc664a1b57080540ebb70a37683b4a07734eaaa2",
+      "authorization": {
+        "challenge": {
+          "id": "1a9872a79b4809f9ea707e82afe55d27f4fb74efff0ca37f5fa13baa785ec2b1",
+          "origin": "http://127.0.0.1:5173",
+          "chainId": 10143,
+          "commitment": "0xbdb6e0a2d8e6747c71a3b284cc664a1b57080540ebb70a37683b4a07734eaaa2",
+          "runtimeConfigHash": "0x144175ebce3257a627ff5458704cf4af0107cf13408d8a4e58676eacd3a08a0f",
+          "controller": "0xe26468ae02368a75DBDBea58F367B7313942ad26",
+          "executionKey": "0xd1e45757048B76D95eBBE4cb6C7aAFA1b05c5c19",
+          "expiresAt": 1791949030606,
+          "demoMode": true
+        },
+        "controllerSignature": "0x254955dedacb8503e671a48ad410fabde87be1c4d4346b746280bbe9655220ec218b3fb206189706b79d3cf36c0dff5ace453dcf34885f7b53ffdd68e3acfbab1c",
+        "executionSignature": "0x0182b02ebcd3383537e61eaf9079750c32a03543cb2985b7a0eecaea9bcb4c9b6df95e5791d6623fa8aaa1607489c90b1f6e3ae22d4615a4faac64cfea9a33311c"
+      },
+      "worker": {
+        "version": "PUMPCOIN-LOCAL-WORKER-CHECK-v2",
+        "mode": "synthetic-paper-only",
+        "evidence": "locally-observed-not-attested",
+        "model": "gemma-4-26b-a4b",
+        "weightsDigest": "sha256:f2c28b3dc4776931ac6f879e11f203dec637ea0f14267a86ec8f6165f63f293f",
+        "runtimeDigest": "sha256:41f2fdddcb093047df14f70f8904c686f2ea99043348032d2386d54241068461",
+        "checkedAt": "2026-10-14T03:27:16.568Z",
+        "input": {
+          "fresh": false,
+          "valued": false,
+          "positionQuoteUnits": "0",
+          "cashQuoteUnits": "0"
+        },
+        "rawProposal": {
+          "action": "HOLD",
+          "quoteUnits": "0"
+        },
+        "guardedProposal": {
+          "action": "HOLD",
+          "quoteUnits": "0"
+        },
+        "scenarios": [
+          {
+            "id": "fresh-cash",
+            "input": {
+              "fresh": true,
+              "valued": true,
+              "positionQuoteUnits": "0",
+              "cashQuoteUnits": "10000"
+            },
+            "rawProposal": {
+              "action": "HOLD",
+              "quoteUnits": "0"
+            },
+            "guardedProposal": {
+              "action": "HOLD",
+              "quoteUnits": "0"
+            }
+          },
+          {
+            "id": "fresh-position",
+            "input": {
+              "fresh": true,
+              "valued": true,
+              "positionQuoteUnits": "10000",
+              "cashQuoteUnits": "0"
+            },
+            "rawProposal": {
+              "action": "HOLD",
+              "quoteUnits": "0"
+            },
+            "guardedProposal": {
+              "action": "HOLD",
+              "quoteUnits": "0"
+            }
+          }
+        ],
+        "guardChallenges": [
+          {
+            "id": "allowed-buy",
+            "input": {
+              "fresh": true,
+              "valued": true,
+              "positionQuoteUnits": "0",
+              "cashQuoteUnits": "10000"
+            },
+            "proposal": {
+              "action": "BUY",
+              "quoteUnits": "10000"
+            },
+            "expected": {
+              "action": "BUY",
+              "quoteUnits": "10000"
+            },
+            "result": {
+              "action": "BUY",
+              "quoteUnits": "10000"
+            }
+          },
+          {
+            "id": "allowed-sell",
+            "input": {
+              "fresh": true,
+              "valued": true,
+              "positionQuoteUnits": "10000",
+              "cashQuoteUnits": "0"
+            },
+            "proposal": {
+              "action": "SELL",
+              "quoteUnits": "10000"
+            },
+            "expected": {
+              "action": "SELL",
+              "quoteUnits": "10000"
+            },
+            "result": {
+              "action": "SELL",
+              "quoteUnits": "10000"
+            }
+          },
+          {
+            "id": "stale-buy",
+            "input": {
+              "fresh": false,
+              "valued": true,
+              "positionQuoteUnits": "0",
+              "cashQuoteUnits": "10000"
+            },
+            "proposal": {
+              "action": "BUY",
+              "quoteUnits": "10000"
+            },
+            "expected": {
+              "action": "HOLD",
+              "quoteUnits": "0"
+            },
+            "result": {
+              "action": "HOLD",
+              "quoteUnits": "0"
+            }
+          },
+          {
+            "id": "unvalued-buy",
+            "input": {
+              "fresh": true,
+              "valued": false,
+              "positionQuoteUnits": "0",
+              "cashQuoteUnits": "10000"
+            },
+            "proposal": {
+              "action": "BUY",
+              "quoteUnits": "10000"
+            },
+            "expected": {
+              "action": "HOLD",
+              "quoteUnits": "0"
+            },
+            "result": {
+              "action": "HOLD",
+              "quoteUnits": "0"
+            }
+          },
+          {
+            "id": "oversized-buy",
+            "input": {
+              "fresh": true,
+              "valued": true,
+              "positionQuoteUnits": "0",
+              "cashQuoteUnits": "10000"
+            },
+            "proposal": {
+              "action": "BUY",
+              "quoteUnits": "10001"
+            },
+            "expected": {
+              "action": "HOLD",
+              "quoteUnits": "0"
+            },
+            "result": {
+              "action": "HOLD",
+              "quoteUnits": "0"
+            }
+          },
+          {
+            "id": "overexposed-buy",
+            "input": {
+              "fresh": true,
+              "valued": true,
+              "positionQuoteUnits": "50000",
+              "cashQuoteUnits": "10000"
+            },
+            "proposal": {
+              "action": "BUY",
+              "quoteUnits": "10000"
+            },
+            "expected": {
+              "action": "HOLD",
+              "quoteUnits": "0"
+            },
+            "result": {
+              "action": "HOLD",
+              "quoteUnits": "0"
+            }
+          },
+          {
+            "id": "cashless-buy",
+            "input": {
+              "fresh": true,
+              "valued": true,
+              "positionQuoteUnits": "0",
+              "cashQuoteUnits": "0"
+            },
+            "proposal": {
+              "action": "BUY",
+              "quoteUnits": "10000"
+            },
+            "expected": {
+              "action": "HOLD",
+              "quoteUnits": "0"
+            },
+            "result": {
+              "action": "HOLD",
+              "quoteUnits": "0"
+            }
+          },
+          {
+            "id": "positionless-sell",
+            "input": {
+              "fresh": true,
+              "valued": true,
+              "positionQuoteUnits": "0",
+              "cashQuoteUnits": "10000"
+            },
+            "proposal": {
+              "action": "SELL",
+              "quoteUnits": "10000"
+            },
+            "expected": {
+              "action": "HOLD",
+              "quoteUnits": "0"
+            },
+            "result": {
+              "action": "HOLD",
+              "quoteUnits": "0"
+            }
+          }
+        ],
+        "receiptHash": "0x8429023a6838e9f3a56f3e8ff16f99f77655d096f875ad8556b72b68f4105efa",
+        "scope": "Three local inferences: stale/unvalued, fresh cash and fresh position; eight injected deterministic guard challenges. Synthetic inputs, no token movements. Does not prove host integrity, strategy-code execution, continuous operation or profitability."
+      },
+      "status": "registered-locally-binding-checked",
+      "investmentEligible": false,
+      "binding": {
+        "instantTestnetDemo": true,
+        "configurationNoticeSeconds": 0,
+        "status": "binding-checked-at-block",
+        "chainId": 10143,
+        "mode": "monad-testnet",
+        "vault": "0x1c95B91cB51434d7eC21732b415D1cfFEEFA0cD3",
+        "identityRegistry": "0x8004A818BFB912233c491871b3d84c89A494BD9e",
+        "agentId": "2356",
+        "blockNumber": "70859426",
+        "blockHash": "0xf7d25589b4994469fbd07dc9bb2f0178774a4491bfff19c1503d11d775ed5f52",
+        "configHash": "0xb0a96129c1efb2346b0d6c38f1f32c5542ac2566a1785b3019c5cf64772cebb5",
+        "checkedAt": "2026-10-14T03:29:06.842Z",
+        "investmentEligible": false,
+        "evidence": "controller-deployment-receipt-and-runtime-verification",
+        "scope": "Dedicated vault and ERC-8004 identity created and bound. Vault starts paused with unavailable valuation and no trading adapter. Trading and investment remain blocked. Historical deployment snapshot; configured RPC and registry implementation are trust boundaries.",
+        "deploymentTransaction": "0x332d283eac146f97f08a8cee4151f5f6838985c74e9a0537fe1b4b6f3242ba8f",
+        "tradingReady": false
+      }
+    },
+    {
+      "version": "PUMPCOIN-LOCAL-REGISTRATION-v1",
+      "id": "0x35ee2fb845f6eb6c358f99a8aa5dd363b5906182445485597e1387ef069a415c",
+      "localAgentId": "0x30439997eda44487cd3443e6de8509fa789f9ba3fd14e84cd9cd977b84640b50",
+      "registeredAt": "2026-10-12T18:29:26.475Z",
+      "manifest": {
+        "version": "PUMPCOIN-DEPLOYMENT-DRAFT-v1",
+        "inferencePolicy": "PUMPCOIN-SELF-HOSTED-v1",
+        "evidenceLevel": "operator-declared",
+        "registrationStatus": "unpublished-draft",
+        "name": "klaris",
+        "controller": "0xe26468ae02368a75DBDBea58F367B7313942ad26",
+        "executionKey": "0xE3bA663F22c8b8db5E3c7a98A55ec9C45255A4F8",
+        "model": {
+          "id": "qwen3.8-27b",
+          "source": "https://huggingface.co/unsloth/Qwen3.8-27B-GGUF/resolve/4ca720788d1e01f1bff70c033e0d0028fd02e502/Qwen3.8-27B-UD-IQ4_XS.gguf",
+          "weightsDigest": "sha256:40fac4050e940397dbf13087afd50f4734a11805bf9d65ef8ddd7483470e6199",
+          "runtimeDigest": "sha256:41f2fdddcb093047df14f70f8904c686f2ea99043348032d2386d54241068461",
+          "localMeasurements": {
+            "evidence": "locally-detected-not-attested",
+            "checkedAt": "2026-10-12T18:27:29.550Z",
+            "quantization": "IQ4_XS - 4.25 bpw",
+            "context": 16384,
+            "weightsBytes": 14252845984,
+            "sourceStatus": "local-download-record-matched",
+            "runtimeManifest": {
+              "version": "PUMPCOIN-MAPPED-RUNTIME-v1",
+              "scope": "llama-server executable and mapped non-system native libraries; excludes OS, GPU driver, strategy and proof of execution",
+              "build": "b11429-d81235049",
+              "artifacts": [
+                {
+                  "name": "libcrypto.3.dylib",
+                  "sha256": "6c7139ae515b274286b2f62d662a173e32d34854e1fc26cca46ee08efe16ae45",
+                  "bytes": 4874336
+                },
+                {
+                  "name": "libggml-base.0.26.0.dylib",
+                  "sha256": "0bb8b0aef84f3fe9d352e570ef58da97e736ecea15f9fba44ab4c3d4f951e324",
+                  "bytes": 537424
+                },
+                {
+                  "name": "libggml-blas.so",
+                  "sha256": "b60f01874e149a4c67d9d171923cc28cb0add3ad9485de06d4a73f086bdb5a59",
+                  "bytes": 59424
+                },
+                {
+                  "name": "libggml-cpu-apple_m4.so",
+                  "sha256": "46103dd30440b3eef9a54e732cb46e693fad148d58be587d3319f6c0e3e9c8a5",
+                  "bytes": 589520
+                },
+                {
+                  "name": "libggml-metal.so",
+                  "sha256": "eb1ca2de17ea7663781b9b3012a95e39ecd9ae54db2c76968b346c9fc6fddac3",
+                  "bytes": 5517520
+                },
+                {
+                  "name": "libggml.0.26.0.dylib",
+                  "sha256": "d9fdae8264f577300ecc8c3b634165dbac14b794a1399cdaa422b4ab8c925722",
+                  "bytes": 61232
+                },
+                {
+                  "name": "libllama-common.0.6.0.dylib",
+                  "sha256": "fab2fde1a21bb9920b6f14cf39924b7379a3b789d1abcbeb3e9ca014fb145d33",
+                  "bytes": 5060704
+                },
+                {
+                  "name": "libllama-server-impl.dylib",
+                  "sha256": "5fc7d59cc85e16adaa84211b63c60c17e33c0c8715624b23e2507a76e032b73a",
+                  "bytes": 6538800
+                },
+                {
+                  "name": "libllama.0.6.0.dylib",
+                  "sha256": "810ad2c4e137dc75daa33297e1c8f32d1e35d72eccf4eaaa6fbf8793169253ab",
+                  "bytes": 3130208
+                },
+                {
+                  "name": "libmtmd.0.6.0.dylib",
+                  "sha256": "5c503d28b9455466e85e20134b5febaa279a1cdf26a3850fd762c7f07aebab95",
+                  "bytes": 1186816
+                },
+                {
+                  "name": "libomp.dylib",
+                  "sha256": "cb679440b0af57131274b6c0bcc11b8c18ef7ad45e2a6625ef57e90379fc2ae4",
+                  "bytes": 725984
+                },
+                {
+                  "name": "libssl.3.dylib",
+                  "sha256": "2b343dc7a88d6e49720ae6b939a178b5e688912e682044250203770b8acc2a08",
+                  "bytes": 890256
+                },
+                {
+                  "name": "llama-server",
+                  "sha256": "1579d2139003a9f1b5ddccbab0a019054859fa546f724657ca7c301819240cf5",
+                  "bytes": 33616
+                }
+              ]
+            }
+          }
+        },
+        "strategy": {
+          "description": "Monad testnet autonomous spot proposer. The locally hosted Qwen3.8-27B model proposes HOLD, BUY or SELL using the vault\u2019s current liquid quote balance and independently marked WMON position value at an anchored block. The worker validates the model artifacts, applies deterministic guards, simulates a restricted trade, and signs with its dedicated backend execution key only while the controller\u2019s expiring permission is active. Per-trade cap: 10 test-USDC; maximum marked position: 50 test-USDC; slippage ceiling: 50 basis points. Buys and sells consume the UTC daily turnover cap granted by the controller. Hold or block on unavailable/stale valuation, changed configuration or runtime, insufficient funds, exhausted limits, expired permission or uncertain pending transactions. No leverage, withdrawal authority, hosted inference or guaranteed return. This prototype does not execute a candle-based moving-average strategy. The code commitment identifies the proposal/execution module; the operator-controlled host is not remotely attested.",
+          "codeDigest": "sha256:3eef99c1023b4ccafa2015f655c6f960e5ac1bc4e1c7b83331fed458497b4849",
+          "pair": "WMON / USDC"
+        },
+        "proposedMandate": {
+          "quoteDecimals": 6,
+          "perTradeQuoteUnits": "10000000",
+          "maxPositionQuoteUnits": "50000000",
+          "slippageBps": 50,
+          "leverage": false
+        },
+        "dependencies": [
+          "Self-hosted Qwen3.8-27B via the local llama-server",
+          "Monad testnet RPC",
+          "a separately reviewed on-chain valuation source",
+          "a fixed restricted WMON/test-USDC Uniswap v4 venue",
+          "encrypted local execution signer. Public market research is separate from trading and share valuation. Live execution requires healthy feeds, sufficient pool liquidity, a compatible vault and a matured configuration notice."
+        ]
+      },
+      "commitment": "0xbf5eea291a5e04d7e676b0c36a94c6b100f597db352e1cd230a2793d24bbb32f",
+      "authorization": {
+        "challenge": {
+          "id": "04aa66eab4e718e1fef8a0d37177a76f7cc241d0e5fcd557c07b5c3d232e30d9",
+          "origin": "http://127.0.0.1:5173",
+          "chainId": 10143,
+          "commitment": "0xbf5eea291a5e04d7e676b0c36a94c6b100f597db352e1cd230a2793d24bbb32f",
+          "runtimeConfigHash": "0x32f68d9159b0dbb16058ba45b4fc09238e8d3fd3c855fb0d8e3e3237b563f192",
+          "controller": "0xe26468ae02368a75DBDBea58F367B7313942ad26",
+          "executionKey": "0xE3bA663F22c8b8db5E3c7a98A55ec9C45255A4F8",
+          "expiresAt": 1791830322710
+        },
+        "controllerSignature": "0xe326772516f11aa98474ae23b6eeaa6d27e7a2dbed84324716ffdf9890ab4ead31e32b9747ca15042cff72895133dea650d74c45f0921a0697ef66685abcaab51b",
+        "executionSignature": "0xd3d811decb16dd83dfce634ca65c45e8b6beb08326cee01ace370df46cc0c82a36a2d765d849219139cae1e20842d1e2f8b11996e979d003a40a21dc334488c81c"
+      },
+      "worker": {
+        "version": "PUMPCOIN-LOCAL-WORKER-CHECK-v1",
+        "mode": "synthetic-paper-only",
+        "evidence": "locally-observed-not-attested",
+        "model": "qwen3.8-27b",
+        "weightsDigest": "sha256:40fac4050e940397dbf13087afd50f4734a11805bf9d65ef8ddd7483470e6199",
+        "runtimeDigest": "sha256:41f2fdddcb093047df14f70f8904c686f2ea99043348032d2386d54241068461",
+        "checkedAt": "2026-10-12T18:28:53.649Z",
+        "input": {
+          "fresh": false,
+          "valued": false,
+          "positionQuoteUnits": "0",
+          "cashQuoteUnits": "0"
+        },
+        "rawProposal": {
+          "action": "HOLD",
+          "quoteUnits": "0"
+        },
+        "guardedProposal": {
+          "action": "HOLD",
+          "quoteUnits": "0"
+        },
+        "receiptHash": "0xc8aaec036e47d6a7190ac1034989ce8564d2e13263a6bc07cb9c2195a827ef30",
+        "scope": "One local inference and deterministic guard check. Does not prove execution of the declared strategy code, continuous operation, real prices or profitability."
+      },
+      "status": "registered-locally-binding-checked",
+      "investmentEligible": false,
+      "binding": {
+        "status": "binding-checked-at-block",
+        "chainId": 10143,
+        "mode": "monad-testnet",
+        "vault": "0xE047120881026327aF28E74a6EA0C046Edd01568",
+        "identityRegistry": "0x8004A818BFB912233c491871b3d84c89A494BD9e",
+        "agentId": "2222",
+        "blockNumber": "70469510",
+        "blockHash": "0x7948c4f70341e091974aecfda53261764a686553a6ae4ea30e34dc83432be1b4",
+        "configHash": "0xf2d980a8725e6bee362046fdd1cb86d520ac431d6c5aa7b63e1d6df62da89454",
+        "checkedAt": "2026-10-12T18:31:05.170Z",
+        "investmentEligible": false,
+        "evidence": "controller-deployment-receipt-and-runtime-verification",
+        "scope": "Dedicated vault and ERC-8004 identity created and bound. Vault starts paused with unavailable valuation and no trading adapter. Trading and investment remain blocked. Historical deployment snapshot; configured RPC and registry implementation are trust boundaries.",
+        "deploymentTransaction": "0x5b484f93620f74b6a59e892e5d720c39c8e3f1060d1e07afcb79b471899e637f",
+        "tradingReady": false
+      }
+    },
+    {
+      "version": "PUMPCOIN-LOCAL-REGISTRATION-v1",
+      "id": "0x550f734ecb97f8bcf800f3855a73b804e9f9a622acc6db6158e19d1b853bbfd9",
+      "localAgentId": "0xd5acff118c2a3c54378c9dea722aea900049855ebc581177393a81a0b4641755",
+      "registeredAt": "2026-10-13T21:31:33.892Z",
+      "manifest": {
+        "version": "PUMPCOIN-DEPLOYMENT-DRAFT-v1",
+        "inferencePolicy": "PUMPCOIN-SELF-HOSTED-v1",
+        "evidenceLevel": "operator-declared",
+        "registrationStatus": "unpublished-draft",
+        "vaultPolicy": {
+          "mode": "instant-testnet-demo",
+          "chainId": 10143,
+          "configurationNoticeSeconds": 0
+        },
+        "name": "Muse",
+        "controller": "0xe26468ae02368a75DBDBea58F367B7313942ad26",
+        "executionKey": "0x4775Ae60A798F58140Ce3c6ab2751106C22fd40A",
+        "model": {
+          "id": "muse-glimmer-30b",
+          "source": "https://huggingface.co/unsloth/Muse-Glimmer-30B-GGUF/resolve/faa5b025c584459c13febfa5c59883516710ae39/Muse-Glimmer-30B-UD-Q4_K_XL.gguf",
+          "weightsDigest": "sha256:82bece304887a313ece08400bc030f6066c7bff5b906b0cd40308ec8a409fd38",
+          "runtimeDigest": "sha256:41f2fdddcb093047df14f70f8904c686f2ea99043348032d2386d54241068461",
+          "localMeasurements": {
+            "evidence": "locally-detected-not-attested",
+            "checkedAt": "2026-10-13T15:40:21.334Z",
+            "quantization": "Q4_K - Medium",
+            "context": 4096,
+            "weightsBytes": 15878222368,
+            "sourceStatus": "local-download-record-matched",
+            "runtimeManifest": {
+              "version": "PUMPCOIN-MAPPED-RUNTIME-v1",
+              "scope": "llama-server executable and mapped non-system native libraries; excludes OS, GPU driver, strategy and proof of execution",
+              "build": "b11429-d81235049",
+              "artifacts": [
+                {
+                  "name": "libcrypto.3.dylib",
+                  "sha256": "6c7139ae515b274286b2f62d662a173e32d34854e1fc26cca46ee08efe16ae45",
+                  "bytes": 4874336
+                },
+                {
+                  "name": "libggml-base.0.26.0.dylib",
+                  "sha256": "0bb8b0aef84f3fe9d352e570ef58da97e736ecea15f9fba44ab4c3d4f951e324",
+                  "bytes": 537424
+                },
+                {
+                  "name": "libggml-blas.so",
+                  "sha256": "b60f01874e149a4c67d9d171923cc28cb0add3ad9485de06d4a73f086bdb5a59",
+                  "bytes": 59424
+                },
+                {
+                  "name": "libggml-cpu-apple_m4.so",
+                  "sha256": "46103dd30440b3eef9a54e732cb46e693fad148d58be587d3319f6c0e3e9c8a5",
+                  "bytes": 589520
+                },
+                {
+                  "name": "libggml-metal.so",
+                  "sha256": "eb1ca2de17ea7663781b9b3012a95e39ecd9ae54db2c76968b346c9fc6fddac3",
+                  "bytes": 5517520
+                },
+                {
+                  "name": "libggml.0.26.0.dylib",
+                  "sha256": "d9fdae8264f577300ecc8c3b634165dbac14b794a1399cdaa422b4ab8c925722",
+                  "bytes": 61232
+                },
+                {
+                  "name": "libllama-common.0.6.0.dylib",
+                  "sha256": "fab2fde1a21bb9920b6f14cf39924b7379a3b789d1abcbeb3e9ca014fb145d33",
+                  "bytes": 5060704
+                },
+                {
+                  "name": "libllama-server-impl.dylib",
+                  "sha256": "5fc7d59cc85e16adaa84211b63c60c17e33c0c8715624b23e2507a76e032b73a",
+                  "bytes": 6538800
+                },
+                {
+                  "name": "libllama.0.6.0.dylib",
+                  "sha256": "810ad2c4e137dc75daa33297e1c8f32d1e35d72eccf4eaaa6fbf8793169253ab",
+                  "bytes": 3130208
+                },
+                {
+                  "name": "libmtmd.0.6.0.dylib",
+                  "sha256": "5c503d28b9455466e85e20134b5febaa279a1cdf26a3850fd762c7f07aebab95",
+                  "bytes": 1186816
+                },
+                {
+                  "name": "libomp.dylib",
+                  "sha256": "cb679440b0af57131274b6c0bcc11b8c18ef7ad45e2a6625ef57e90379fc2ae4",
+                  "bytes": 725984
+                },
+                {
+                  "name": "libssl.3.dylib",
+                  "sha256": "2b343dc7a88d6e49720ae6b939a178b5e688912e682044250203770b8acc2a08",
+                  "bytes": 890256
+                },
+                {
+                  "name": "llama-server",
+                  "sha256": "1579d2139003a9f1b5ddccbab0a019054859fa546f724657ca7c301819240cf5",
+                  "bytes": 33616
+                }
+              ]
+            }
+          }
+        },
+        "strategy": {
+          "description": "Monad testnet demo spot proposer using locally hosted Muse Glimmer 30B. Propose HOLD, BUY or SELL from the vault liquid quote balance and independently valued WMON position. Deterministic guards check fresh prices, available liquidity, active permission, caps and slippage before simulation and restricted execution. Per-trade cap: 0.01 test-USDC; maximum position value: 0.05 test-USDC; maximum slippage: 50 basis points. HOLD when required inputs are unavailable or stale. No leverage or guaranteed return. Gains, losses and expenses remain visible. Zero configuration notice for this testnet demo; local execution is not hardware attested.",
+          "codeDigest": "sha256:353e9addb5d91ace33525594a9151429b55e2bbad5cc7cfdf281137ce3d37db8",
+          "pair": "WMON / USDC"
+        },
+        "proposedMandate": {
+          "quoteDecimals": 6,
+          "perTradeQuoteUnits": "10000",
+          "maxPositionQuoteUnits": "50000",
+          "slippageBps": 50,
+          "leverage": false
+        },
+        "dependencies": [
+          "Self-hosted Muse Glimmer 30B via local llama-server",
+          "Monad testnet RPC",
+          "Supra MON/USDT and USDT/USD",
+          "Pyth USDC/USD",
+          "restricted WMON/test-USDC Uniswap v4 pool",
+          "encrypted dedicated execution signer. Fresh prices, liquidity, applied configuration and controller permission are required for live trading."
+        ]
+      },
+      "commitment": "0x92cb81ae925786dd7bdd2a4dbe85c001689852b2e9ff605b802fa6a4049599c6",
+      "authorization": {
+        "challenge": {
+          "id": "7b2675a19e5ad33befd4bd210f1b804e1116634868941e370a85477fa692780f",
+          "origin": "http://127.0.0.1:5173",
+          "chainId": 10143,
+          "commitment": "0x92cb81ae925786dd7bdd2a4dbe85c001689852b2e9ff605b802fa6a4049599c6",
+          "runtimeConfigHash": "0x144175ebce3257a627ff5458704cf4af0107cf13408d8a4e58676eacd3a08a0f",
+          "controller": "0xe26468ae02368a75DBDBea58F367B7313942ad26",
+          "executionKey": "0x4775Ae60A798F58140Ce3c6ab2751106C22fd40A",
+          "expiresAt": 1791927572388,
+          "demoMode": true
+        },
+        "controllerSignature": "0xf41fc78cfa461fb6a4cf3e1c6a90e82eb4036f6fecd0739f7dba16fc4c53fe0e021993975c4ab606d130f093361db3ab5f4151be35c5ffa5f9d59c87e905f36e1b",
+        "executionSignature": "0xa3cdbaf3cd13448dd56c7cc434ab99e5c55c73a4503902729fca29b02f1143203cf0652fa7e8f8251343410befdd5464928c96548e586e0a99d13888d7379dcd1b"
+      },
+      "worker": {
+        "version": "PUMPCOIN-LOCAL-WORKER-CHECK-v2",
+        "mode": "synthetic-paper-only",
+        "evidence": "locally-observed-not-attested",
+        "model": "muse-glimmer-30b",
+        "weightsDigest": "sha256:82bece304887a313ece08400bc030f6066c7bff5b906b0cd40308ec8a409fd38",
+        "runtimeDigest": "sha256:41f2fdddcb093047df14f70f8904c686f2ea99043348032d2386d54241068461",
+        "checkedAt": "2026-10-13T21:30:47.019Z",
+        "input": {
+          "fresh": false,
+          "valued": false,
+          "positionQuoteUnits": "0",
+          "cashQuoteUnits": "0"
+        },
+        "rawProposal": {
+          "action": "HOLD",
+          "quoteUnits": "0"
+        },
+        "guardedProposal": {
+          "action": "HOLD",
+          "quoteUnits": "0"
+        },
+        "scenarios": [
+          {
+            "id": "fresh-cash",
+            "input": {
+              "fresh": true,
+              "valued": true,
+              "positionQuoteUnits": "0",
+              "cashQuoteUnits": "10000"
+            },
+            "rawProposal": {
+              "action": "HOLD",
+              "quoteUnits": "0"
+            },
+            "guardedProposal": {
+              "action": "HOLD",
+              "quoteUnits": "0"
+            }
+          },
+          {
+            "id": "fresh-position",
+            "input": {
+              "fresh": true,
+              "valued": true,
+              "positionQuoteUnits": "10000",
+              "cashQuoteUnits": "0"
+            },
+            "rawProposal": {
+              "action": "HOLD",
+              "quoteUnits": "0"
+            },
+            "guardedProposal": {
+              "action": "HOLD",
+              "quoteUnits": "0"
+            }
+          }
+        ],
+        "guardChallenges": [
+          {
+            "id": "allowed-buy",
+            "input": {
+              "fresh": true,
+              "valued": true,
+              "positionQuoteUnits": "0",
+              "cashQuoteUnits": "10000"
+            },
+            "proposal": {
+              "action": "BUY",
+              "quoteUnits": "10000"
+            },
+            "expected": {
+              "action": "BUY",
+              "quoteUnits": "10000"
+            },
+            "result": {
+              "action": "BUY",
+              "quoteUnits": "10000"
+            }
+          },
+          {
+            "id": "allowed-sell",
+            "input": {
+              "fresh": true,
+              "valued": true,
+              "positionQuoteUnits": "10000",
+              "cashQuoteUnits": "0"
+            },
+            "proposal": {
+              "action": "SELL",
+              "quoteUnits": "10000"
+            },
+            "expected": {
+              "action": "SELL",
+              "quoteUnits": "10000"
+            },
+            "result": {
+              "action": "SELL",
+              "quoteUnits": "10000"
+            }
+          },
+          {
+            "id": "stale-buy",
+            "input": {
+              "fresh": false,
+              "valued": true,
+              "positionQuoteUnits": "0",
+              "cashQuoteUnits": "10000"
+            },
+            "proposal": {
+              "action": "BUY",
+              "quoteUnits": "10000"
+            },
+            "expected": {
+              "action": "HOLD",
+              "quoteUnits": "0"
+            },
+            "result": {
+              "action": "HOLD",
+              "quoteUnits": "0"
+            }
+          },
+          {
+            "id": "unvalued-buy",
+            "input": {
+              "fresh": true,
+              "valued": false,
+              "positionQuoteUnits": "0",
+              "cashQuoteUnits": "10000"
+            },
+            "proposal": {
+              "action": "BUY",
+              "quoteUnits": "10000"
+            },
+            "expected": {
+              "action": "HOLD",
+              "quoteUnits": "0"
+            },
+            "result": {
+              "action": "HOLD",
+              "quoteUnits": "0"
+            }
+          },
+          {
+            "id": "oversized-buy",
+            "input": {
+              "fresh": true,
+              "valued": true,
+              "positionQuoteUnits": "0",
+              "cashQuoteUnits": "10000"
+            },
+            "proposal": {
+              "action": "BUY",
+              "quoteUnits": "10001"
+            },
+            "expected": {
+              "action": "HOLD",
+              "quoteUnits": "0"
+            },
+            "result": {
+              "action": "HOLD",
+              "quoteUnits": "0"
+            }
+          },
+          {
+            "id": "overexposed-buy",
+            "input": {
+              "fresh": true,
+              "valued": true,
+              "positionQuoteUnits": "50000",
+              "cashQuoteUnits": "10000"
+            },
+            "proposal": {
+              "action": "BUY",
+              "quoteUnits": "10000"
+            },
+            "expected": {
+              "action": "HOLD",
+              "quoteUnits": "0"
+            },
+            "result": {
+              "action": "HOLD",
+              "quoteUnits": "0"
+            }
+          },
+          {
+            "id": "cashless-buy",
+            "input": {
+              "fresh": true,
+              "valued": true,
+              "positionQuoteUnits": "0",
+              "cashQuoteUnits": "0"
+            },
+            "proposal": {
+              "action": "BUY",
+              "quoteUnits": "10000"
+            },
+            "expected": {
+              "action": "HOLD",
+              "quoteUnits": "0"
+            },
+            "result": {
+              "action": "HOLD",
+              "quoteUnits": "0"
+            }
+          },
+          {
+            "id": "positionless-sell",
+            "input": {
+              "fresh": true,
+              "valued": true,
+              "positionQuoteUnits": "0",
+              "cashQuoteUnits": "10000"
+            },
+            "proposal": {
+              "action": "SELL",
+              "quoteUnits": "10000"
+            },
+            "expected": {
+              "action": "HOLD",
+              "quoteUnits": "0"
+            },
+            "result": {
+              "action": "HOLD",
+              "quoteUnits": "0"
+            }
+          }
+        ],
+        "receiptHash": "0xe04bcdb60812bbbe4a4b98c78569d65325ea8b4d68dd4cb30a9bc00162ea2b35",
+        "scope": "Three local inferences: stale/unvalued, fresh cash and fresh position; eight injected deterministic guard challenges. Synthetic inputs, no token movements. Does not prove host integrity, strategy-code execution, continuous operation or profitability."
+      },
+      "status": "registered-locally-binding-checked",
+      "investmentEligible": false,
+      "binding": {
+        "instantTestnetDemo": true,
+        "configurationNoticeSeconds": 0,
+        "status": "binding-checked-at-block",
+        "chainId": 10143,
+        "mode": "monad-testnet",
+        "vault": "0x506Bd00B5E19Da455CbFb04335cF7c4d0eb1f803",
+        "identityRegistry": "0x8004A818BFB912233c491871b3d84c89A494BD9e",
+        "agentId": "2295",
+        "blockNumber": "70727260",
+        "blockHash": "0x9c03a4c0ea8233cb2d83370ebe281a0aa8f2646aea45b64ce9c8a5203f5a99b6",
+        "configHash": "0x654907eae8039616b458caf6fe0e04956a07b516b527268eb0c11f5270853e68",
+        "checkedAt": "2026-10-13T16:19:38.454Z",
+        "investmentEligible": false,
+        "evidence": "controller-deployment-receipt-and-runtime-verification",
+        "scope": "Dedicated vault and ERC-8004 identity created and bound. Vault starts paused with unavailable valuation and no trading adapter. Trading and investment remain blocked. Historical deployment snapshot; configured RPC and registry implementation are trust boundaries.",
+        "deploymentTransaction": "0x5e9d6aea0f052b85ee0694b6c0784abb2d873c883251c333c07716f72c5b8527",
+        "tradingReady": false
+      }
+    },
+    {
+      "version": "PUMPCOIN-LOCAL-REGISTRATION-v1",
+      "id": "0xac8b58d31c0464df2efed441e3e0187cf3e16f6b0cdcafce87be86732dc2dd95",
+      "localAgentId": "0xd5acff118c2a3c54378c9dea722aea900049855ebc581177393a81a0b4641755",
+      "registeredAt": "2026-10-13T15:43:09.737Z",
+      "manifest": {
+        "version": "PUMPCOIN-DEPLOYMENT-DRAFT-v1",
+        "inferencePolicy": "PUMPCOIN-SELF-HOSTED-v1",
+        "evidenceLevel": "operator-declared",
+        "registrationStatus": "unpublished-draft",
+        "vaultPolicy": {
+          "mode": "instant-testnet-demo",
+          "chainId": 10143,
+          "configurationNoticeSeconds": 0
+        },
+        "name": "Muse",
+        "controller": "0xe26468ae02368a75DBDBea58F367B7313942ad26",
+        "executionKey": "0x4775Ae60A798F58140Ce3c6ab2751106C22fd40A",
+        "model": {
+          "id": "muse-glimmer-30b",
+          "source": "https://huggingface.co/unsloth/Muse-Glimmer-30B-GGUF/resolve/faa5b025c584459c13febfa5c59883516710ae39/Muse-Glimmer-30B-UD-Q4_K_XL.gguf",
+          "weightsDigest": "sha256:82bece304887a313ece08400bc030f6066c7bff5b906b0cd40308ec8a409fd38",
+          "runtimeDigest": "sha256:41f2fdddcb093047df14f70f8904c686f2ea99043348032d2386d54241068461",
+          "localMeasurements": {
+            "evidence": "locally-detected-not-attested",
+            "checkedAt": "2026-10-13T15:40:21.334Z",
+            "quantization": "Q4_K - Medium",
+            "context": 4096,
+            "weightsBytes": 15878222368,
+            "sourceStatus": "local-download-record-matched",
+            "runtimeManifest": {
+              "version": "PUMPCOIN-MAPPED-RUNTIME-v1",
+              "scope": "llama-server executable and mapped non-system native libraries; excludes OS, GPU driver, strategy and proof of execution",
+              "build": "b11429-d81235049",
+              "artifacts": [
+                {
+                  "name": "libcrypto.3.dylib",
+                  "sha256": "6c7139ae515b274286b2f62d662a173e32d34854e1fc26cca46ee08efe16ae45",
+                  "bytes": 4874336
+                },
+                {
+                  "name": "libggml-base.0.26.0.dylib",
+                  "sha256": "0bb8b0aef84f3fe9d352e570ef58da97e736ecea15f9fba44ab4c3d4f951e324",
+                  "bytes": 537424
+                },
+                {
+                  "name": "libggml-blas.so",
+                  "sha256": "b60f01874e149a4c67d9d171923cc28cb0add3ad9485de06d4a73f086bdb5a59",
+                  "bytes": 59424
+                },
+                {
+                  "name": "libggml-cpu-apple_m4.so",
+                  "sha256": "46103dd30440b3eef9a54e732cb46e693fad148d58be587d3319f6c0e3e9c8a5",
+                  "bytes": 589520
+                },
+                {
+                  "name": "libggml-metal.so",
+                  "sha256": "eb1ca2de17ea7663781b9b3012a95e39ecd9ae54db2c76968b346c9fc6fddac3",
+                  "bytes": 5517520
+                },
+                {
+                  "name": "libggml.0.26.0.dylib",
+                  "sha256": "d9fdae8264f577300ecc8c3b634165dbac14b794a1399cdaa422b4ab8c925722",
+                  "bytes": 61232
+                },
+                {
+                  "name": "libllama-common.0.6.0.dylib",
+                  "sha256": "fab2fde1a21bb9920b6f14cf39924b7379a3b789d1abcbeb3e9ca014fb145d33",
+                  "bytes": 5060704
+                },
+                {
+                  "name": "libllama-server-impl.dylib",
+                  "sha256": "5fc7d59cc85e16adaa84211b63c60c17e33c0c8715624b23e2507a76e032b73a",
+                  "bytes": 6538800
+                },
+                {
+                  "name": "libllama.0.6.0.dylib",
+                  "sha256": "810ad2c4e137dc75daa33297e1c8f32d1e35d72eccf4eaaa6fbf8793169253ab",
+                  "bytes": 3130208
+                },
+                {
+                  "name": "libmtmd.0.6.0.dylib",
+                  "sha256": "5c503d28b9455466e85e20134b5febaa279a1cdf26a3850fd762c7f07aebab95",
+                  "bytes": 1186816
+                },
+                {
+                  "name": "libomp.dylib",
+                  "sha256": "cb679440b0af57131274b6c0bcc11b8c18ef7ad45e2a6625ef57e90379fc2ae4",
+                  "bytes": 725984
+                },
+                {
+                  "name": "libssl.3.dylib",
+                  "sha256": "2b343dc7a88d6e49720ae6b939a178b5e688912e682044250203770b8acc2a08",
+                  "bytes": 890256
+                },
+                {
+                  "name": "llama-server",
+                  "sha256": "1579d2139003a9f1b5ddccbab0a019054859fa546f724657ca7c301819240cf5",
+                  "bytes": 33616
+                }
+              ]
+            }
+          }
+        },
+        "strategy": {
+          "description": "Monad testnet demo spot proposer using locally hosted Muse Glimmer 30B. Propose HOLD, BUY or SELL from the vault liquid quote balance and independently valued WMON position. Deterministic guards check fresh prices, available liquidity, active permission, caps and slippage before simulation and restricted execution. Per-trade cap: 0.01 test-USDC; maximum position value: 0.05 test-USDC; maximum slippage: 50 basis points. HOLD when required inputs are unavailable or stale. No leverage or guaranteed return. Gains, losses and expenses remain visible. Zero configuration notice for this testnet demo; local execution is not hardware attested.",
+          "codeDigest": "sha256:353e9addb5d91ace33525594a9151429b55e2bbad5cc7cfdf281137ce3d37db8",
+          "pair": "WMON / USDC"
+        },
+        "proposedMandate": {
+          "quoteDecimals": 6,
+          "perTradeQuoteUnits": "10000",
+          "maxPositionQuoteUnits": "50000",
+          "slippageBps": 50,
+          "leverage": false
+        },
+        "dependencies": [
+          "Self-hosted Muse Glimmer 30B via local llama-server",
+          "Monad testnet RPC",
+          "Supra MON/USDT and USDT/USD",
+          "Pyth USDC/USD",
+          "restricted WMON/test-USDC Uniswap v4 pool",
+          "encrypted dedicated execution signer. Fresh prices, liquidity, applied configuration and controller permission are required for live trading."
+        ]
+      },
+      "commitment": "0x92cb81ae925786dd7bdd2a4dbe85c001689852b2e9ff605b802fa6a4049599c6",
+      "authorization": {
+        "challenge": {
+          "id": "f87e7b4d61f3ab1903b8991fd783552e52a28a7ce7d14f299ad2700b62890b67",
+          "origin": "http://127.0.0.1:5173",
+          "chainId": 10143,
+          "commitment": "0x92cb81ae925786dd7bdd2a4dbe85c001689852b2e9ff605b802fa6a4049599c6",
+          "runtimeConfigHash": "0x144175ebce3257a627ff5458704cf4af0107cf13408d8a4e58676eacd3a08a0f",
+          "controller": "0xe26468ae02368a75DBDBea58F367B7313942ad26",
+          "executionKey": "0x4775Ae60A798F58140Ce3c6ab2751106C22fd40A",
+          "expiresAt": 1791906648239,
+          "demoMode": true
+        },
+        "controllerSignature": "0xb79f98d7511faa5ca668578dc19d07b4cd289b6aa91dd9c1f0c7d52cc4a3bd930c5197e67d25a0720d8fddd47375d51cdfd35a6366bcad8a3546eb475e55474b1b",
+        "executionSignature": "0x4e2ba617cd5e5c2a46155d9b8e05286de57ae442ae5c83396f32ac12685527dd0618c3aacbf43ae696c6079abdb14fadbe71954c46caba448fb8b909727e09251c"
+      },
+      "worker": {
+        "version": "PUMPCOIN-LOCAL-WORKER-CHECK-v2",
+        "mode": "synthetic-paper-only",
+        "evidence": "locally-observed-not-attested",
+        "model": "muse-glimmer-30b",
+        "weightsDigest": "sha256:82bece304887a313ece08400bc030f6066c7bff5b906b0cd40308ec8a409fd38",
+        "runtimeDigest": "sha256:41f2fdddcb093047df14f70f8904c686f2ea99043348032d2386d54241068461",
+        "checkedAt": "2026-10-13T15:42:23.567Z",
+        "input": {
+          "fresh": false,
+          "valued": false,
+          "positionQuoteUnits": "0",
+          "cashQuoteUnits": "0"
+        },
+        "rawProposal": {
+          "action": "HOLD",
+          "quoteUnits": "0"
+        },
+        "guardedProposal": {
+          "action": "HOLD",
+          "quoteUnits": "0"
+        },
+        "scenarios": [
+          {
+            "id": "fresh-cash",
+            "input": {
+              "fresh": true,
+              "valued": true,
+              "positionQuoteUnits": "0",
+              "cashQuoteUnits": "10000"
+            },
+            "rawProposal": {
+              "action": "HOLD",
+              "quoteUnits": "0"
+            },
+            "guardedProposal": {
+              "action": "HOLD",
+              "quoteUnits": "0"
+            }
+          },
+          {
+            "id": "fresh-position",
+            "input": {
+              "fresh": true,
+              "valued": true,
+              "positionQuoteUnits": "10000",
+              "cashQuoteUnits": "0"
+            },
+            "rawProposal": {
+              "action": "HOLD",
+              "quoteUnits": "0"
+            },
+            "guardedProposal": {
+              "action": "HOLD",
+              "quoteUnits": "0"
+            }
+          }
+        ],
+        "guardChallenges": [
+          {
+            "id": "allowed-buy",
+            "input": {
+              "fresh": true,
+              "valued": true,
+              "positionQuoteUnits": "0",
+              "cashQuoteUnits": "10000"
+            },
+            "proposal": {
+              "action": "BUY",
+              "quoteUnits": "10000"
+            },
+            "expected": {
+              "action": "BUY",
+              "quoteUnits": "10000"
+            },
+            "result": {
+              "action": "BUY",
+              "quoteUnits": "10000"
+            }
+          },
+          {
+            "id": "allowed-sell",
+            "input": {
+              "fresh": true,
+              "valued": true,
+              "positionQuoteUnits": "10000",
+              "cashQuoteUnits": "0"
+            },
+            "proposal": {
+              "action": "SELL",
+              "quoteUnits": "10000"
+            },
+            "expected": {
+              "action": "SELL",
+              "quoteUnits": "10000"
+            },
+            "result": {
+              "action": "SELL",
+              "quoteUnits": "10000"
+            }
+          },
+          {
+            "id": "stale-buy",
+            "input": {
+              "fresh": false,
+              "valued": true,
+              "positionQuoteUnits": "0",
+              "cashQuoteUnits": "10000"
+            },
+            "proposal": {
+              "action": "BUY",
+              "quoteUnits": "10000"
+            },
+            "expected": {
+              "action": "HOLD",
+              "quoteUnits": "0"
+            },
+            "result": {
+              "action": "HOLD",
+              "quoteUnits": "0"
+            }
+          },
+          {
+            "id": "unvalued-buy",
+            "input": {
+              "fresh": true,
+              "valued": false,
+              "positionQuoteUnits": "0",
+              "cashQuoteUnits": "10000"
+            },
+            "proposal": {
+              "action": "BUY",
+              "quoteUnits": "10000"
+            },
+            "expected": {
+              "action": "HOLD",
+              "quoteUnits": "0"
+            },
+            "result": {
+              "action": "HOLD",
+              "quoteUnits": "0"
+            }
+          },
+          {
+            "id": "oversized-buy",
+            "input": {
+              "fresh": true,
+              "valued": true,
+              "positionQuoteUnits": "0",
+              "cashQuoteUnits": "10000"
+            },
+            "proposal": {
+              "action": "BUY",
+              "quoteUnits": "10001"
+            },
+            "expected": {
+              "action": "HOLD",
+              "quoteUnits": "0"
+            },
+            "result": {
+              "action": "HOLD",
+              "quoteUnits": "0"
+            }
+          },
+          {
+            "id": "overexposed-buy",
+            "input": {
+              "fresh": true,
+              "valued": true,
+              "positionQuoteUnits": "50000",
+              "cashQuoteUnits": "10000"
+            },
+            "proposal": {
+              "action": "BUY",
+              "quoteUnits": "10000"
+            },
+            "expected": {
+              "action": "HOLD",
+              "quoteUnits": "0"
+            },
+            "result": {
+              "action": "HOLD",
+              "quoteUnits": "0"
+            }
+          },
+          {
+            "id": "cashless-buy",
+            "input": {
+              "fresh": true,
+              "valued": true,
+              "positionQuoteUnits": "0",
+              "cashQuoteUnits": "0"
+            },
+            "proposal": {
+              "action": "BUY",
+              "quoteUnits": "10000"
+            },
+            "expected": {
+              "action": "HOLD",
+              "quoteUnits": "0"
+            },
+            "result": {
+              "action": "HOLD",
+              "quoteUnits": "0"
+            }
+          },
+          {
+            "id": "positionless-sell",
+            "input": {
+              "fresh": true,
+              "valued": true,
+              "positionQuoteUnits": "0",
+              "cashQuoteUnits": "10000"
+            },
+            "proposal": {
+              "action": "SELL",
+              "quoteUnits": "10000"
+            },
+            "expected": {
+              "action": "HOLD",
+              "quoteUnits": "0"
+            },
+            "result": {
+              "action": "HOLD",
+              "quoteUnits": "0"
+            }
+          }
+        ],
+        "receiptHash": "0xe04bcdb60812bbbe4a4b98c78569d65325ea8b4d68dd4cb30a9bc00162ea2b35",
+        "scope": "Three local inferences: stale/unvalued, fresh cash and fresh position; eight injected deterministic guard challenges. Synthetic inputs, no token movements. Does not prove host integrity, strategy-code execution, continuous operation or profitability."
+      },
+      "status": "registered-locally-binding-checked",
+      "investmentEligible": false,
+      "binding": {
+        "instantTestnetDemo": true,
+        "configurationNoticeSeconds": 0,
+        "status": "binding-checked-at-block",
+        "chainId": 10143,
+        "mode": "monad-testnet",
+        "vault": "0x506Bd00B5E19Da455CbFb04335cF7c4d0eb1f803",
+        "identityRegistry": "0x8004A818BFB912233c491871b3d84c89A494BD9e",
+        "agentId": "2295",
+        "blockNumber": "70727260",
+        "blockHash": "0x9c03a4c0ea8233cb2d83370ebe281a0aa8f2646aea45b64ce9c8a5203f5a99b6",
+        "configHash": "0x654907eae8039616b458caf6fe0e04956a07b516b527268eb0c11f5270853e68",
+        "checkedAt": "2026-10-13T16:19:38.454Z",
+        "investmentEligible": false,
+        "evidence": "controller-deployment-receipt-and-runtime-verification",
+        "scope": "Dedicated vault and ERC-8004 identity created and bound. Vault starts paused with unavailable valuation and no trading adapter. Trading and investment remain blocked. Historical deployment snapshot; configured RPC and registry implementation are trust boundaries.",
+        "deploymentTransaction": "0x5e9d6aea0f052b85ee0694b6c0784abb2d873c883251c333c07716f72c5b8527",
+        "tradingReady": false
+      }
+    },
+    {
+      "version": "PUMPCOIN-LOCAL-REGISTRATION-v1",
+      "id": "0xbc00cf26449e93bf64c799fa4adcdb6423ec14ab2b941e6643fd5cc934a397bc",
+      "localAgentId": "0x64d213d51eac0fe65b0987916ea0bd048f8b2afbeaf8a6ae11eaac91b7c372da",
+      "registeredAt": "2026-10-12T22:09:28.055Z",
+      "manifest": {
+        "version": "PUMPCOIN-DEPLOYMENT-DRAFT-v1",
+        "inferencePolicy": "PUMPCOIN-SELF-HOSTED-v1",
+        "evidenceLevel": "operator-declared",
+        "registrationStatus": "unpublished-draft",
+        "vaultPolicy": {
+          "mode": "instant-testnet-demo",
+          "chainId": 10143,
+          "configurationNoticeSeconds": 0
+        },
+        "name": "azula",
+        "controller": "0xe26468ae02368a75DBDBea58F367B7313942ad26",
+        "executionKey": "0x188a72C0e803C8cB288f5cf53Cbf8BF25Cebe7DF",
+        "model": {
+          "id": "qwen3.8-27b",
+          "source": "https://huggingface.co/unsloth/Qwen3.8-27B-GGUF/resolve/4ca720788d1e01f1bff70c033e0d0028fd02e502/Qwen3.8-27B-UD-IQ4_XS.gguf",
+          "weightsDigest": "sha256:40fac4050e940397dbf13087afd50f4734a11805bf9d65ef8ddd7483470e6199",
+          "runtimeDigest": "sha256:41f2fdddcb093047df14f70f8904c686f2ea99043348032d2386d54241068461",
+          "localMeasurements": {
+            "evidence": "locally-detected-not-attested",
+            "checkedAt": "2026-10-12T21:37:41.816Z",
+            "quantization": "IQ4_XS - 4.25 bpw",
+            "context": 16384,
+            "weightsBytes": 14252845984,
+            "sourceStatus": "local-download-record-matched",
+            "runtimeManifest": {
+              "version": "PUMPCOIN-MAPPED-RUNTIME-v1",
+              "scope": "llama-server executable and mapped non-system native libraries; excludes OS, GPU driver, strategy and proof of execution",
+              "build": "b11429-d81235049",
+              "artifacts": [
+                {
+                  "name": "libcrypto.3.dylib",
+                  "sha256": "6c7139ae515b274286b2f62d662a173e32d34854e1fc26cca46ee08efe16ae45",
+                  "bytes": 4874336
+                },
+                {
+                  "name": "libggml-base.0.26.0.dylib",
+                  "sha256": "0bb8b0aef84f3fe9d352e570ef58da97e736ecea15f9fba44ab4c3d4f951e324",
+                  "bytes": 537424
+                },
+                {
+                  "name": "libggml-blas.so",
+                  "sha256": "b60f01874e149a4c67d9d171923cc28cb0add3ad9485de06d4a73f086bdb5a59",
+                  "bytes": 59424
+                },
+                {
+                  "name": "libggml-cpu-apple_m4.so",
+                  "sha256": "46103dd30440b3eef9a54e732cb46e693fad148d58be587d3319f6c0e3e9c8a5",
+                  "bytes": 589520
+                },
+                {
+                  "name": "libggml-metal.so",
+                  "sha256": "eb1ca2de17ea7663781b9b3012a95e39ecd9ae54db2c76968b346c9fc6fddac3",
+                  "bytes": 5517520
+                },
+                {
+                  "name": "libggml.0.26.0.dylib",
+                  "sha256": "d9fdae8264f577300ecc8c3b634165dbac14b794a1399cdaa422b4ab8c925722",
+                  "bytes": 61232
+                },
+                {
+                  "name": "libllama-common.0.6.0.dylib",
+                  "sha256": "fab2fde1a21bb9920b6f14cf39924b7379a3b789d1abcbeb3e9ca014fb145d33",
+                  "bytes": 5060704
+                },
+                {
+                  "name": "libllama-server-impl.dylib",
+                  "sha256": "5fc7d59cc85e16adaa84211b63c60c17e33c0c8715624b23e2507a76e032b73a",
+                  "bytes": 6538800
+                },
+                {
+                  "name": "libllama.0.6.0.dylib",
+                  "sha256": "810ad2c4e137dc75daa33297e1c8f32d1e35d72eccf4eaaa6fbf8793169253ab",
+                  "bytes": 3130208
+                },
+                {
+                  "name": "libmtmd.0.6.0.dylib",
+                  "sha256": "5c503d28b9455466e85e20134b5febaa279a1cdf26a3850fd762c7f07aebab95",
+                  "bytes": 1186816
+                },
+                {
+                  "name": "libomp.dylib",
+                  "sha256": "cb679440b0af57131274b6c0bcc11b8c18ef7ad45e2a6625ef57e90379fc2ae4",
+                  "bytes": 725984
+                },
+                {
+                  "name": "libssl.3.dylib",
+                  "sha256": "2b343dc7a88d6e49720ae6b939a178b5e688912e682044250203770b8acc2a08",
+                  "bytes": 890256
+                },
+                {
+                  "name": "llama-server",
+                  "sha256": "1579d2139003a9f1b5ddccbab0a019054859fa546f724657ca7c301819240cf5",
+                  "bytes": 33616
+                }
+              ]
+            }
+          }
+        },
+        "strategy": {
+          "description": "Monad testnet demo spot proposer using locally hosted Qwen3.8-27B. Propose HOLD, BUY or SELL from the vault\u2019s liquid quote balance and independently valued WMON position. The worker validates local artifacts, applies deterministic guards, simulates each restricted trade and signs with this agent\u2019s encrypted execution key under an expiring controller permission. Per-trade cap: 0.01 test-USDC; maximum position value: 0.05 test-USDC; maximum slippage: 50 basis points. Hold when prices, liquidity, permission, funds or configuration are unavailable, stale or outside limits. No leverage, withdrawal authority or guaranteed return. This explicitly labeled Monad testnet demo uses zero configuration notice; host execution is not remotely attested.",
+          "codeDigest": "sha256:3eef99c1023b4ccafa2015f655c6f960e5ac1bc4e1c7b83331fed458497b4849",
+          "pair": "WMON / USDC"
+        },
+        "proposedMandate": {
+          "quoteDecimals": 6,
+          "perTradeQuoteUnits": "10000",
+          "maxPositionQuoteUnits": "50000",
+          "slippageBps": 50,
+          "leverage": false
+        },
+        "dependencies": [
+          "Self-hosted Qwen3.8-27B via local llama-server",
+          "Monad testnet RPC",
+          "verified Supra MON/USDT and USDT/USD",
+          "Pyth USDC/USD",
+          "fixed hook-free WMON/test-USDC Uniswap v4 pool",
+          "encrypted execution signer",
+          "instant Monad testnet demo vault with zero configuration notice. Live execution still requires fresh prices, active liquidity, applied configuration and controller trading permission."
+        ]
+      },
+      "commitment": "0xf85c41202e092e6f0686d2489d3ea16f1cc3a6551878afff80e77428bdb68d45",
+      "authorization": {
+        "challenge": {
+          "id": "7f9b3bf8a78407cfa70ba4f0a78bd69bf60328881c3e0e87c1b408da093d6afe",
+          "origin": "http://127.0.0.1:5173",
+          "chainId": 10143,
+          "commitment": "0xf85c41202e092e6f0686d2489d3ea16f1cc3a6551878afff80e77428bdb68d45",
+          "runtimeConfigHash": "0x32f68d9159b0dbb16058ba45b4fc09238e8d3fd3c855fb0d8e3e3237b563f192",
+          "controller": "0xe26468ae02368a75DBDBea58F367B7313942ad26",
+          "executionKey": "0x188a72C0e803C8cB288f5cf53Cbf8BF25Cebe7DF",
+          "expiresAt": 1791843508373,
+          "demoMode": true
+        },
+        "controllerSignature": "0xf618919c5f7128b6b387012f1a945dc5fe7c924be05657a0cb9d99887b4ef3c75ca39630e379d87da91cec4862b2adfdf5f2fbb1a2417f743700faa387d8e0d21c",
+        "executionSignature": "0x73d7701d17e52bff85b26f6f3f1c92f89bf306fee322a86dfc8ddebace02aaca72960e1d75b4cbff30efea9638bdde179d2922b525a6658d5b02f4a1c769ed481b"
+      },
+      "worker": {
+        "version": "PUMPCOIN-LOCAL-WORKER-CHECK-v1",
+        "mode": "synthetic-paper-only",
+        "evidence": "locally-observed-not-attested",
+        "model": "qwen3.8-27b",
+        "weightsDigest": "sha256:40fac4050e940397dbf13087afd50f4734a11805bf9d65ef8ddd7483470e6199",
+        "runtimeDigest": "sha256:41f2fdddcb093047df14f70f8904c686f2ea99043348032d2386d54241068461",
+        "checkedAt": "2026-10-12T22:08:36.474Z",
+        "input": {
+          "fresh": false,
+          "valued": false,
+          "positionQuoteUnits": "0",
+          "cashQuoteUnits": "0"
+        },
+        "rawProposal": {
+          "action": "HOLD",
+          "quoteUnits": "0"
+        },
+        "guardedProposal": {
+          "action": "HOLD",
+          "quoteUnits": "0"
+        },
+        "receiptHash": "0x13c56a47ca38a6faa3770635e28841c5d97901f7460ba62d7f7de3ba1ceec018",
+        "scope": "One local inference and deterministic guard check. Does not prove execution of the declared strategy code, continuous operation, real prices or profitability."
+      },
+      "status": "registered-locally-binding-checked",
+      "investmentEligible": false,
+      "binding": {
+        "instantTestnetDemo": true,
+        "configurationNoticeSeconds": 0,
+        "status": "binding-checked-at-block",
+        "chainId": 10143,
+        "mode": "monad-testnet",
+        "vault": "0x5276a188Df65e66E4208ce7AcC6BE8542f578C80",
+        "identityRegistry": "0x8004A818BFB912233c491871b3d84c89A494BD9e",
+        "agentId": "2224",
+        "blockNumber": "70513069",
+        "blockHash": "0xd5b383af9d0c76f66a2f9d6cc43e5708935ff2be752389d66e1bec2b00768b93",
+        "configHash": "0x35401ff9798f7d6c4510df8152b105a3ef4c050dbc155f884a7f66727fea4e10",
+        "checkedAt": "2026-10-12T22:10:54.391Z",
+        "investmentEligible": false,
+        "evidence": "controller-deployment-receipt-and-runtime-verification",
+        "scope": "Dedicated vault and ERC-8004 identity created and bound. Vault starts paused with unavailable valuation and no trading adapter. Trading and investment remain blocked. Historical deployment snapshot; configured RPC and registry implementation are trust boundaries.",
+        "deploymentTransaction": "0x88d29fe3a9722f7fc7fb97125c25399f5fb34b8b66bf9baf6e39ad2549da0563",
+        "tradingReady": false
+      }
+    },
+    {
+      "version": "PUMPCOIN-LOCAL-REGISTRATION-v1",
+      "id": "0xd5083af412bd7922876c428f3555aba21e90ee7ed03e2913ed37e0f96693e1f9",
+      "localAgentId": "0x13e7f97c19441cec3de86784b9297fd1b10c07e29b3f0e393821f00ed3c97f46",
+      "registeredAt": "2026-10-14T03:19:33.599Z",
+      "manifest": {
+        "version": "PUMPCOIN-DEPLOYMENT-DRAFT-v1",
+        "inferencePolicy": "PUMPCOIN-SELF-HOSTED-v1",
+        "evidenceLevel": "operator-declared",
+        "registrationStatus": "unpublished-draft",
+        "vaultPolicy": {
+          "mode": "instant-testnet-demo",
+          "chainId": 10143,
+          "configurationNoticeSeconds": 0
+        },
+        "name": "Muse Demo",
+        "controller": "0xe26468ae02368a75DBDBea58F367B7313942ad26",
+        "executionKey": "0x5b7D85d534DEca2D7fca964165D0918d1AE40d23",
+        "model": {
+          "id": "muse-glimmer-30b",
+          "source": "https://huggingface.co/unsloth/Muse-Glimmer-30B-GGUF/resolve/faa5b025c584459c13febfa5c59883516710ae39/Muse-Glimmer-30B-UD-Q4_K_XL.gguf",
+          "weightsDigest": "sha256:82bece304887a313ece08400bc030f6066c7bff5b906b0cd40308ec8a409fd38",
+          "runtimeDigest": "sha256:41f2fdddcb093047df14f70f8904c686f2ea99043348032d2386d54241068461",
+          "localMeasurements": {
+            "evidence": "locally-detected-not-attested",
+            "checkedAt": "2026-10-14T03:17:15.490Z",
+            "quantization": "Q4_K - Medium",
+            "context": 4096,
+            "weightsBytes": 15878222368,
+            "sourceStatus": "local-download-record-matched",
+            "runtimeManifest": {
+              "version": "PUMPCOIN-MAPPED-RUNTIME-v1",
+              "scope": "llama-server executable and mapped non-system native libraries; excludes OS, GPU driver, strategy and proof of execution",
+              "build": "b11429-d81235049",
+              "artifacts": [
+                {
+                  "name": "libcrypto.3.dylib",
+                  "sha256": "6c7139ae515b274286b2f62d662a173e32d34854e1fc26cca46ee08efe16ae45",
+                  "bytes": 4874336
+                },
+                {
+                  "name": "libggml-base.0.26.0.dylib",
+                  "sha256": "0bb8b0aef84f3fe9d352e570ef58da97e736ecea15f9fba44ab4c3d4f951e324",
+                  "bytes": 537424
+                },
+                {
+                  "name": "libggml-blas.so",
+                  "sha256": "b60f01874e149a4c67d9d171923cc28cb0add3ad9485de06d4a73f086bdb5a59",
+                  "bytes": 59424
+                },
+                {
+                  "name": "libggml-cpu-apple_m4.so",
+                  "sha256": "46103dd30440b3eef9a54e732cb46e693fad148d58be587d3319f6c0e3e9c8a5",
+                  "bytes": 589520
+                },
+                {
+                  "name": "libggml-metal.so",
+                  "sha256": "eb1ca2de17ea7663781b9b3012a95e39ecd9ae54db2c76968b346c9fc6fddac3",
+                  "bytes": 5517520
+                },
+                {
+                  "name": "libggml.0.26.0.dylib",
+                  "sha256": "d9fdae8264f577300ecc8c3b634165dbac14b794a1399cdaa422b4ab8c925722",
+                  "bytes": 61232
+                },
+                {
+                  "name": "libllama-common.0.6.0.dylib",
+                  "sha256": "fab2fde1a21bb9920b6f14cf39924b7379a3b789d1abcbeb3e9ca014fb145d33",
+                  "bytes": 5060704
+                },
+                {
+                  "name": "libllama-server-impl.dylib",
+                  "sha256": "5fc7d59cc85e16adaa84211b63c60c17e33c0c8715624b23e2507a76e032b73a",
+                  "bytes": 6538800
+                },
+                {
+                  "name": "libllama.0.6.0.dylib",
+                  "sha256": "810ad2c4e137dc75daa33297e1c8f32d1e35d72eccf4eaaa6fbf8793169253ab",
+                  "bytes": 3130208
+                },
+                {
+                  "name": "libmtmd.0.6.0.dylib",
+                  "sha256": "5c503d28b9455466e85e20134b5febaa279a1cdf26a3850fd762c7f07aebab95",
+                  "bytes": 1186816
+                },
+                {
+                  "name": "libomp.dylib",
+                  "sha256": "cb679440b0af57131274b6c0bcc11b8c18ef7ad45e2a6625ef57e90379fc2ae4",
+                  "bytes": 725984
+                },
+                {
+                  "name": "libssl.3.dylib",
+                  "sha256": "2b343dc7a88d6e49720ae6b939a178b5e688912e682044250203770b8acc2a08",
+                  "bytes": 890256
+                },
+                {
+                  "name": "llama-server",
+                  "sha256": "1579d2139003a9f1b5ddccbab0a019054859fa546f724657ca7c301819240cf5",
+                  "bytes": 33616
+                }
+              ]
+            }
+          }
+        },
+        "strategy": {
+          "description": "Monad testnet demo spot proposer using locally hosted Muse Glimmer 30B. Propose HOLD, BUY or SELL from the vault liquid quote balance and independently valued WMON position. Deterministic guards check fresh prices, available liquidity, active permission, caps and slippage before simulation and restricted execution. Per-trade cap: 0.01 test-USDC; maximum position value: 0.05 test-USDC; maximum slippage: 50 basis points. HOLD when required inputs are unavailable or stale. No leverage or guaranteed return. Gains, losses and expenses remain visible. Zero configuration notice for this testnet demo; local execution is not hardware attested.",
+          "codeDigest": "sha256:353e9addb5d91ace33525594a9151429b55e2bbad5cc7cfdf281137ce3d37db8",
+          "pair": "WMON / USDC"
+        },
+        "proposedMandate": {
+          "quoteDecimals": 6,
+          "perTradeQuoteUnits": "10000",
+          "maxPositionQuoteUnits": "50000",
+          "slippageBps": 50,
+          "leverage": false
+        },
+        "dependencies": [
+          "Self-hosted Muse Glimmer 30B via local llama-server",
+          "Monad testnet RPC",
+          "Supra MON/USDT and USDT/USD",
+          "Pyth USDC/USD",
+          "restricted WMON/test-USDC Uniswap v4 pool",
+          "encrypted dedicated execution signer. Fresh prices, liquidity, applied configuration and controller permission are required for live trading."
+        ]
+      },
+      "commitment": "0x58225a73a25ff0c139ab7231e09ae6e2de36fb63b244d11ec5585237d79d66e5",
+      "authorization": {
+        "challenge": {
+          "id": "e40193850bf7cd95b52ee1ba84f69283b6b9e54d7f2571f4c43e051dd038f0b8",
+          "origin": "http://127.0.0.1:5173",
+          "chainId": 10143,
+          "commitment": "0x58225a73a25ff0c139ab7231e09ae6e2de36fb63b244d11ec5585237d79d66e5",
+          "runtimeConfigHash": "0x144175ebce3257a627ff5458704cf4af0107cf13408d8a4e58676eacd3a08a0f",
+          "controller": "0xe26468ae02368a75DBDBea58F367B7313942ad26",
+          "executionKey": "0x5b7D85d534DEca2D7fca964165D0918d1AE40d23",
+          "expiresAt": 1791948459669,
+          "demoMode": true
+        },
+        "controllerSignature": "0xb3b25edf0d75d8d8d55e5e325e1dd85c0dddc5fa1a32e5b0f7a92af78430293324a5e4361f40f71596cd3e73923be0f5f540a878af4634a227b970b9859aa0e91c",
+        "executionSignature": "0x2b67592a141fd804b7b72f7de42abe9bf7cecbb6ce62e546d312fe90c03088a6267c633227ac85f8c9fe9e75feebf7b61d752e7c8044677665394d28b30f3a141c"
+      },
+      "worker": {
+        "version": "PUMPCOIN-LOCAL-WORKER-CHECK-v2",
+        "mode": "synthetic-paper-only",
+        "evidence": "locally-observed-not-attested",
+        "model": "muse-glimmer-30b",
+        "weightsDigest": "sha256:82bece304887a313ece08400bc030f6066c7bff5b906b0cd40308ec8a409fd38",
+        "runtimeDigest": "sha256:41f2fdddcb093047df14f70f8904c686f2ea99043348032d2386d54241068461",
+        "checkedAt": "2026-10-14T03:18:49.261Z",
+        "input": {
+          "fresh": false,
+          "valued": false,
+          "positionQuoteUnits": "0",
+          "cashQuoteUnits": "0"
+        },
+        "rawProposal": {
+          "action": "HOLD",
+          "quoteUnits": "0"
+        },
+        "guardedProposal": {
+          "action": "HOLD",
+          "quoteUnits": "0"
+        },
+        "scenarios": [
+          {
+            "id": "fresh-cash",
+            "input": {
+              "fresh": true,
+              "valued": true,
+              "positionQuoteUnits": "0",
+              "cashQuoteUnits": "10000"
+            },
+            "rawProposal": {
+              "action": "HOLD",
+              "quoteUnits": "0"
+            },
+            "guardedProposal": {
+              "action": "HOLD",
+              "quoteUnits": "0"
+            }
+          },
+          {
+            "id": "fresh-position",
+            "input": {
+              "fresh": true,
+              "valued": true,
+              "positionQuoteUnits": "10000",
+              "cashQuoteUnits": "0"
+            },
+            "rawProposal": {
+              "action": "HOLD",
+              "quoteUnits": "0"
+            },
+            "guardedProposal": {
+              "action": "HOLD",
+              "quoteUnits": "0"
+            }
+          }
+        ],
+        "guardChallenges": [
+          {
+            "id": "allowed-buy",
+            "input": {
+              "fresh": true,
+              "valued": true,
+              "positionQuoteUnits": "0",
+              "cashQuoteUnits": "10000"
+            },
+            "proposal": {
+              "action": "BUY",
+              "quoteUnits": "10000"
+            },
+            "expected": {
+              "action": "BUY",
+              "quoteUnits": "10000"
+            },
+            "result": {
+              "action": "BUY",
+              "quoteUnits": "10000"
+            }
+          },
+          {
+            "id": "allowed-sell",
+            "input": {
+              "fresh": true,
+              "valued": true,
+              "positionQuoteUnits": "10000",
+              "cashQuoteUnits": "0"
+            },
+            "proposal": {
+              "action": "SELL",
+              "quoteUnits": "10000"
+            },
+            "expected": {
+              "action": "SELL",
+              "quoteUnits": "10000"
+            },
+            "result": {
+              "action": "SELL",
+              "quoteUnits": "10000"
+            }
+          },
+          {
+            "id": "stale-buy",
+            "input": {
+              "fresh": false,
+              "valued": true,
+              "positionQuoteUnits": "0",
+              "cashQuoteUnits": "10000"
+            },
+            "proposal": {
+              "action": "BUY",
+              "quoteUnits": "10000"
+            },
+            "expected": {
+              "action": "HOLD",
+              "quoteUnits": "0"
+            },
+            "result": {
+              "action": "HOLD",
+              "quoteUnits": "0"
+            }
+          },
+          {
+            "id": "unvalued-buy",
+            "input": {
+              "fresh": true,
+              "valued": false,
+              "positionQuoteUnits": "0",
+              "cashQuoteUnits": "10000"
+            },
+            "proposal": {
+              "action": "BUY",
+              "quoteUnits": "10000"
+            },
+            "expected": {
+              "action": "HOLD",
+              "quoteUnits": "0"
+            },
+            "result": {
+              "action": "HOLD",
+              "quoteUnits": "0"
+            }
+          },
+          {
+            "id": "oversized-buy",
+            "input": {
+              "fresh": true,
+              "valued": true,
+              "positionQuoteUnits": "0",
+              "cashQuoteUnits": "10000"
+            },
+            "proposal": {
+              "action": "BUY",
+              "quoteUnits": "10001"
+            },
+            "expected": {
+              "action": "HOLD",
+              "quoteUnits": "0"
+            },
+            "result": {
+              "action": "HOLD",
+              "quoteUnits": "0"
+            }
+          },
+          {
+            "id": "overexposed-buy",
+            "input": {
+              "fresh": true,
+              "valued": true,
+              "positionQuoteUnits": "50000",
+              "cashQuoteUnits": "10000"
+            },
+            "proposal": {
+              "action": "BUY",
+              "quoteUnits": "10000"
+            },
+            "expected": {
+              "action": "HOLD",
+              "quoteUnits": "0"
+            },
+            "result": {
+              "action": "HOLD",
+              "quoteUnits": "0"
+            }
+          },
+          {
+            "id": "cashless-buy",
+            "input": {
+              "fresh": true,
+              "valued": true,
+              "positionQuoteUnits": "0",
+              "cashQuoteUnits": "0"
+            },
+            "proposal": {
+              "action": "BUY",
+              "quoteUnits": "10000"
+            },
+            "expected": {
+              "action": "HOLD",
+              "quoteUnits": "0"
+            },
+            "result": {
+              "action": "HOLD",
+              "quoteUnits": "0"
+            }
+          },
+          {
+            "id": "positionless-sell",
+            "input": {
+              "fresh": true,
+              "valued": true,
+              "positionQuoteUnits": "0",
+              "cashQuoteUnits": "10000"
+            },
+            "proposal": {
+              "action": "SELL",
+              "quoteUnits": "10000"
+            },
+            "expected": {
+              "action": "HOLD",
+              "quoteUnits": "0"
+            },
+            "result": {
+              "action": "HOLD",
+              "quoteUnits": "0"
+            }
+          }
+        ],
+        "receiptHash": "0x22af422bbe2b30d17b1ce61ee42abc349e69c9b47a9ccb90c2dde1f5dca12843",
+        "scope": "Three local inferences: stale/unvalued, fresh cash and fresh position; eight injected deterministic guard challenges. Synthetic inputs, no token movements. Does not prove host integrity, strategy-code execution, continuous operation or profitability."
+      },
+      "status": "registered-locally-binding-checked",
+      "investmentEligible": false,
+      "binding": {
+        "instantTestnetDemo": true,
+        "configurationNoticeSeconds": 0,
+        "status": "binding-checked-at-block",
+        "chainId": 10143,
+        "mode": "monad-testnet",
+        "vault": "0x867D68B7dd99064E7e75949069FbF01E6385c614",
+        "identityRegistry": "0x8004A818BFB912233c491871b3d84c89A494BD9e",
+        "agentId": "2355",
+        "blockNumber": "70857725",
+        "blockHash": "0x0e2013a2baabd85931825ab0de7ac06c195b2d682097e091fbab225bc0732567",
+        "configHash": "0x68e7ac947ae2b5b335f34346f46c405a5c05ec617e9ca3b43fc24a0ef8ea25d3",
+        "checkedAt": "2026-10-14T03:20:28.444Z",
+        "investmentEligible": false,
+        "evidence": "controller-deployment-receipt-and-runtime-verification",
+        "scope": "Dedicated vault and ERC-8004 identity created and bound. Vault starts paused with unavailable valuation and no trading adapter. Trading and investment remain blocked. Historical deployment snapshot; configured RPC and registry implementation are trust boundaries.",
+        "deploymentTransaction": "0x5e4be0cb208fdf6b964461fdacb513c6981c99f56359ea20b63ae85cf4f63e97",
+        "tradingReady": false
+      }
+    }
+  ],
+  "metadata": {
+    "vault-native/35ee2fb845f6eb6c358f99a8aa5dd363b5906182445485597e1387ef069a415c.json": {
+      "address": "0xEb85915fab325b677F900D27712bcc1d085bA514",
+      "transactionHash": "0xfb965e8173451fc43e5b8adf44a2891c44550066708136c845def3cb8c60fd64",
+      "source": "0x5c8DeFa8AEC89b0E721dDD8E2b04859898b3a2be"
+    },
+    "vault-native/550f734ecb97f8bcf800f3855a73b804e9f9a622acc6db6158e19d1b853bbfd9-1de1da47d231b41541aba41d1da5f687fe06a574.json": {
+      "address": "0x03b54B7C55FdfD4956077381c6EF1A983AfcfCb5",
+      "transactionHash": "0x075be54854d1be44a84756dc147e416673fde23e25343bb0ceb04422bbc0bb2d",
+      "source": "0x1de1Da47D231B41541Aba41d1dA5F687FE06a574"
+    },
+    "vault-native/550f734ecb97f8bcf800f3855a73b804e9f9a622acc6db6158e19d1b853bbfd9.json": {
+      "address": "0x6f79393D0DA6F46c7CD29c958D7bb58316a9599a",
+      "transactionHash": "0x3916c62338cc2cdd44c86658e249893b7cf63eb1428212584581fe73c040160c",
+      "source": "0x02A64C5f80CA157ddE79DaDE3337F72263AB4921"
+    },
+    "vault-native/ac8b58d31c0464df2efed441e3e0187cf3e16f6b0cdcafce87be86732dc2dd95-1de1da47d231b41541aba41d1da5f687fe06a574.json": {
+      "address": "0x03b54B7C55FdfD4956077381c6EF1A983AfcfCb5",
+      "transactionHash": "0x075be54854d1be44a84756dc147e416673fde23e25343bb0ceb04422bbc0bb2d",
+      "source": "0x1de1Da47D231B41541Aba41d1dA5F687FE06a574"
+    },
+    "vault-native/ac8b58d31c0464df2efed441e3e0187cf3e16f6b0cdcafce87be86732dc2dd95.json": {
+      "address": "0x6f79393D0DA6F46c7CD29c958D7bb58316a9599a",
+      "transactionHash": "0x3916c62338cc2cdd44c86658e249893b7cf63eb1428212584581fe73c040160c",
+      "source": "0x02A64C5f80CA157ddE79DaDE3337F72263AB4921"
+    },
+    "vault-native/bc00cf26449e93bf64c799fa4adcdb6423ec14ab2b941e6643fd5cc934a397bc.json": {
+      "address": "0xc9DDe4D8F8a435e2aDa399D649E0a806C214D8F4",
+      "transactionHash": "0xc1662a1d8786b9c1c52aa3b922ae4b9cd6604ccd6fe0004551b8516dc9700e95",
+      "source": "0xba5C0C9aca788465c69E611f6Dd7f10A3Cf658E6"
+    },
+    "vault-trading/35ee2fb845f6eb6c358f99a8aa5dd363b5906182445485597e1387ef069a415c.json": {
+      "address": "0xf07af10A7Af5D3d6E5beF3B3f22195a89C257770",
+      "transactionHash": "0xdc493533160a89a46bd5bd7d2c957b09fd3b70a011cbbbded0ec684ed02e6fef",
+      "guard": {
+        "address": "0x184299685D95F31cCd4ADc0222367C4bd6Df0631",
+        "transactionHash": "0x53036d6d89750e615e973989f0fddc1b341ba0cbb325d55ab655231624d05877"
+      }
+    },
+    "vault-trading/550f734ecb97f8bcf800f3855a73b804e9f9a622acc6db6158e19d1b853bbfd9.json": {
+      "address": "0xDa4C24c42A907964fC948ddD5D8a821DFaBE6Ebc",
+      "transactionHash": "0xca84ec194d2677f0292b22607e194e0c4b0467b79e03750477f6cfe78ee05521",
+      "guard": {
+        "address": "0x1de1Da47D231B41541Aba41d1dA5F687FE06a574",
+        "transactionHash": "0xcda57d74d1f8e8dcd31bb33c8240afa3a1a8003b6484d4730b6c3d140786ba97"
+      }
+    },
+    "vault-trading/ac8b58d31c0464df2efed441e3e0187cf3e16f6b0cdcafce87be86732dc2dd95.json": {
+      "address": "0xDa4C24c42A907964fC948ddD5D8a821DFaBE6Ebc",
+      "transactionHash": "0xca84ec194d2677f0292b22607e194e0c4b0467b79e03750477f6cfe78ee05521",
+      "guard": {
+        "address": "0x1de1Da47D231B41541Aba41d1dA5F687FE06a574",
+        "transactionHash": "0xcda57d74d1f8e8dcd31bb33c8240afa3a1a8003b6484d4730b6c3d140786ba97"
+      }
+    },
+    "vault-trading/bc00cf26449e93bf64c799fa4adcdb6423ec14ab2b941e6643fd5cc934a397bc.json": {
+      "address": "0xeccb1eEf608dAf1c72FB44fE468Dc6C21a4d9704",
+      "transactionHash": "0x493a65ac647b26bb4dc1ea6b39162fc9ae267ab4a76b165501ada41123e9c4d8",
+      "guard": {
+        "address": "0x3fbACDf7a21c23EB6aa56E34cE8F5e8d0d1aa89e",
+        "transactionHash": "0x86534cdf42ffdc3865f88f2cc410a21cb3b49f880694facdc40694cab3717d84"
+      }
+    },
+    "vault-liquidity/35ee2fb845f6eb6c358f99a8aa5dd363b5906182445485597e1387ef069a415c.json": {
+      "address": "0xB4e14b44E716e46EA2cdd6FC01529Cb937dc3619",
+      "source": "0x5c8DeFa8AEC89b0E721dDD8E2b04859898b3a2be",
+      "transactionHash": "0x3a40ccb6dde7316d184fec780f83ef805d0915c4852008c20c03fed94607acb8"
+    },
+    "vault-liquidity/bc00cf26449e93bf64c799fa4adcdb6423ec14ab2b941e6643fd5cc934a397bc.json": {
+      "address": "0x00356b4baE8f3f1bf9Ee02A9A1B278Fd45e0edf2",
+      "source": "0xba5C0C9aca788465c69E611f6Dd7f10A3Cf658E6",
+      "transactionHash": "0x3a8ca411f0a50c76db2368cbe6b6c749d0480b8a5849f5e6994f4dbf9c53a530"
+    }
+  }
+}

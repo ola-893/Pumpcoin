@@ -84,7 +84,7 @@ export function validateVaultTransaction(tx: VaultWalletTransaction, binding: Wa
 export async function sendBrowserVaultTransaction(provider: Provider, binding: WalletBinding, current: () => WalletBinding | undefined, tx: VaultWalletTransaction): Promise<Hex> {
   validateVaultTransaction(tx, binding);
   const actual = await readBrowserBinding(provider);
-  if (!sameWallet(current(), binding) || actual.address !== binding.address || actual.chainId !== tx.chainId) throw new Error('Connect the controller on Monad testnet before deploying.');
+  if (!sameWallet(current(), binding) || actual.address !== binding.address || actual.chainId !== tx.chainId) throw new Error('Connect the controller on Monad testnet before submitting.');
   const hash = await provider.request({ method: 'eth_sendTransaction', params: [{ from: binding.address, ...(tx.to ? { to: tx.to } : {}), data: tx.data, value: tx.value, gas: tx.gas, chainId: '0x279f' }] });
   // Never discard a submitted hash because the user subsequently changes wallets.
   // The server verifies its sender, exact input, receipt and chain independently.
@@ -92,13 +92,20 @@ export async function sendBrowserVaultTransaction(provider: Provider, binding: W
   return hash as Hex;
 }
 
-export type TradingWalletTransaction = Omit<VaultWalletTransaction, 'value'> & { to?: Address; value: Hex; native?: NativeAuthorization; funding?: PoolFundingAuthorization; quote?: { expiresAt: number } };
+export type TradingWalletTransaction = Omit<VaultWalletTransaction, 'value'> & { to?: Address; value: Hex; native?: NativeAuthorization; funding?: PoolFundingAuthorization; executionFunding?: { controller: Address; manager: Address; amount: string }; quote?: { expiresAt: number } };
 export function validateTradingQuote(tx: TradingWalletTransaction) {
   if (tx.quote && (!Number.isSafeInteger(tx.quote.expiresAt) || Date.now() >= tx.quote.expiresAt)) throw new Error('DEX quote expired. Review and simulate again.');
 }
 export function validateTradingTransaction(tx: TradingWalletTransaction, binding: WalletBinding) {
   validateTradingQuote(tx);
-  if (tx.native && tx.funding) throw new Error('Conflicting transaction authorization.');
+  if (!tx.to) throw new Error('Infrastructure creation is unavailable in the investment/trading wallet flow.');
+  if ([tx.native, tx.funding, tx.executionFunding].filter(Boolean).length > 1) throw new Error('Conflicting transaction authorization.');
+  if (tx.executionFunding) {
+    const f = tx.executionFunding;
+    if (tx.chainId !== PROOFLINE_CHAIN_ID || tx.from !== binding.address || f.controller !== binding.address || tx.to !== f.manager || walletAddress(f.manager) !== f.manager || f.manager === f.controller
+        || !['10000000000000000','200000000000000000'].includes(f.amount) || !/^0x[0-9a-f]+$/i.test(tx.value) || BigInt(tx.value) !== BigInt(f.amount) || tx.data !== '0x' || !/^0x[0-9a-f]+$/i.test(tx.gas)) throw new Error('Invalid agent gas funding transaction.');
+    return;
+  }
   if (tx.funding) { validatePoolFundingTransaction(tx, binding.address); return; }
   if (tx.native) { validateNativeTransaction(tx, binding.address); return; }
   if (tx.chainId !== PROOFLINE_CHAIN_ID || (!/^0x[0-9a-f]+$/i.test(tx.value) || BigInt(tx.value) > 1000000000000000n || (BigInt(tx.value) > 0n && tx.to?.toLowerCase() !== '0x2880ab155794e7179c9ee2e38200202908c17b43')) || !/^0x[0-9a-f]+$/i.test(tx.data) || !/^0x[0-9a-f]+$/i.test(tx.gas) || tx.from.toLowerCase() !== binding.address.toLowerCase() || (tx.to !== undefined && walletAddress(tx.to) !== tx.to)) throw new Error('Invalid testnet vault transaction.');

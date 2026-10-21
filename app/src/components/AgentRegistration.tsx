@@ -1,5 +1,7 @@
 import { AutonomyControls } from './AutonomyControls';
 import { VaultSetup } from './VaultSetup';
+import { AgentManifestReview } from './AgentManifestReview';
+import { AgentResearch } from './AgentResearch';
 import { Link } from 'react-router-dom';
 import { useEffect, useRef, useState } from 'react';
 import { Check, Download, Fingerprint, Cpu, ShieldCheck } from 'lucide-react';
@@ -10,13 +12,15 @@ import { Badge, CopyValue, Note } from './UI';
 import { downloadJson } from '../lib/registration';
 import { authorizationMessage, checkWorker, registrationSession, registrationRequest, type Challenge, type Prepared, type RegistrationRecord } from '../lib/agent-registration';
 
-export function AgentRegistration({ prepared, onRegistered }: { prepared: Prepared; onRegistered?: (r: RegistrationRecord) => void }) {
+export function AgentRegistration({ prepared: draftPrepared, onRegistered }: { prepared: Prepared; onRegistered?: (r: RegistrationRecord) => void }) {
+  const [prior, setPrior] = useState<RegistrationRecord>(), [renewal, setRenewal] = useState<Prepared>();
+  const prepared = renewal ?? draftPrepared;
   const wallet = useWallet();
   const [helper, setHelper] = useState<{ token: string; configured: boolean; executionSignerConfigured?: boolean }>(), [challenge, setChallenge] = useState<Challenge>(), [worker, setWorker] = useState<RegistrationRecord['worker']>(), [signatures, setSignatures] = useState<Partial<Record<'controller' | 'execution', Hex>>>({}), [record, setRecord] = useState<RegistrationRecord>(), [busy, setBusy] = useState(false), [status, setStatus] = useState(''), [error, setError] = useState(''), [now, setNow] = useState(() => Date.now()), [pasted, setPasted] = useState('');
   const abort = useRef(new AbortController()), lock = useRef(false);
   useEffect(() => {
     const controller = new AbortController(); abort.current = controller;
-    registrationSession(controller.signal).then(async s => { setHelper(s); const data = await registrationRequest(s.token, '/records', undefined, controller.signal); const found = data.records.find((r: RegistrationRecord) => r.commitment === prepared.commitment); if (found && !controller.signal.aborted) setRecord(found); }).catch(e => { if (!controller.signal.aborted) setError(e.message); });
+    registrationSession(controller.signal).then(async s => { setHelper(s); const data = await registrationRequest(s.token, '/records', undefined, controller.signal); if (controller.signal.aborted) return; const found = data.records.find((r: RegistrationRecord) => r.commitment === prepared.commitment); if (found) setRecord(found); setPrior(data.records.find((r: RegistrationRecord) => r.manifest.name === prepared.manifest.name && r.manifest.controller === prepared.manifest.controller && r.manifest.executionKey === prepared.manifest.executionKey && r.binding)); }).catch(e => { if (!controller.signal.aborted) setError(e.message); });
     const timer = setInterval(() => setNow(Date.now()), 1000);
     return () => { controller.abort(); clearInterval(timer); };
   }, [prepared.commitment]);
@@ -51,6 +55,8 @@ export function AgentRegistration({ prepared, onRegistered }: { prepared: Prepar
   return <section className="panel" aria-label="Agent registration checks" style={{ marginTop: 24 }}>
     <h3>Register your local agent</h3><p className="small muted">Check the running model, then sign this declaration with your controller wallet. The configured agent signer handles its own enrollment. Registration stores a versioned record on this computer.</p>
     {!record ? <>
+      {prior && !renewal && <><p className="small">This agent already has a signed declaration and vault. Renew that exact declaration to retain its history; its original model measurement remains historical and the next worker check is recorded with its actual current time.</p><button type="button" className="button secondary" onClick={() => { setRenewal({manifest:prior.manifest,commitment:prior.commitment,privateRuntimeConfig:draftPrepared.privateRuntimeConfig}); setChallenge(undefined); setWorker(undefined); setSignatures({}); }}>Renew existing signed declaration</button></>}
+      {renewal && <><p className="small">Renewing the unchanged declaration. Original local model measurement: {renewal.manifest.model.localMeasurements?.checkedAt ?? 'not recorded'}. A fresh enrollment does not replace this historical measurement.</p><AgentManifestReview manifest={renewal.manifest}/><CopyValue value={renewal.commitment} label="declaration being renewed"/></>}
       <button className="button secondary full" type="button" disabled={busy || !helper} onClick={() => void action(runWorker)}><Cpu size={16} />{worker && !expired ? 'Check local worker again' : 'Check local worker'}</button>
       {worker && !expired && <p className="small success" role="status">Local inference checked · paper admission complete</p>}
       {challenge && <details><summary className="small muted">Inspect what both wallets authorize</summary><pre style={{ whiteSpace: 'pre-wrap', overflowWrap: 'anywhere', fontSize: 10 }}>{authorizationMessage(challenge, 'controller')}</pre><pre style={{ whiteSpace: 'pre-wrap', overflowWrap: 'anywhere', fontSize: 10 }}>{authorizationMessage(challenge, 'execution')}</pre></details>}
@@ -60,8 +66,10 @@ export function AgentRegistration({ prepared, onRegistered }: { prepared: Prepar
       <button className="button full" type="button" disabled={busy || !worker || !signatures.controller || !signatures.execution || expired} onClick={() => void action(async () => { const value = await request('/commit', { id: challenge!.id, controllerSignature: signatures.controller, executionSignature: signatures.execution }); setRecord(value.record); setStatus('Local authorizations saved. Continue below to create and verify the public identity and vault.'); })}>Save authorizations & continue<Check size={16} /></button>
       {expired && <p className="form-error">The session expired. Check the worker again and obtain fresh signatures.</p>}
     </> : <>
+      <button className="button secondary" type="button" disabled={busy} onClick={() => { setRecord(undefined); setChallenge(undefined); setWorker(undefined); setSignatures({}); setStatus('Run a fresh local check and sign a new enrollment. An unchanged declaration retains its historical vault reference and activity.'); }}>Register a fresh signed enrollment</button>
       <Badge tone="purple">Registered locally</Badge><p className="small">Both authorizations and the local inference check passed. This is not a public identity or an investment-eligible vault.</p><CopyValue value={record.localAgentId} label="local agent identity" /><button className="button secondary" type="button" onClick={() => downloadJson('pumpcoin-local-registration.json', record)}>Export registration receipt<Download size={16} /></button>
-      <VaultSetup record={record} onComplete={setRecord} /><AutonomyControls key={record.id} record={record} />
+      <AgentResearch record={record} section="setup"/>
+      <details><summary>Optional funded Monad vault setup</summary><VaultSetup record={record} onComplete={setRecord} /><AutonomyControls key={record.id} record={record} /></details>
     </>}
     {busy && <p className="small" role="status">{status || 'Checking registration…'}</p>}{!busy && status && <p className="small" role="status">{status}</p>}{error && <p className="form-error" role="alert">{error}</p>}
   </section>;

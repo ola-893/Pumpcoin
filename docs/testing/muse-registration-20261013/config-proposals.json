@@ -1,0 +1,13 @@
+{
+  "chainId": 10143,
+  "vault": "0x506Bd00B5E19Da455CbFb04335cF7c4d0eb1f803",
+  "events": [
+    {
+      "hash": "0xcbaf1ecc2ebae08beece7d18a64360e3f0fdfd29de5c3283372f3be31cc5695c",
+      "blockNumber": "70756940",
+      "configHash": "0x933e286b0f11bff78fb1efbbc2b87bf075ec4e2f1a8e63bc9273c618d8dbe26e",
+      "effectiveAt": "1791917418",
+      "gasPaidWei": "39120413220000000"
+    }
+  ]
+}

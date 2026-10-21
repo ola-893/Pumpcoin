@@ -23,7 +23,7 @@ Use the agent profile in external Chrome with its controller wallet on Monad tes
 6. After the displayed notice time, refresh prices and readiness, apply the configuration, verify the receipt, then enable the vault. These are separate controller transactions. No frontend flag bypasses contract checks.
 7. Investors use the frontend to invest MON, receive Pump shares, then redeem their current value in MON. Gains, losses, conversion fees, liquidity and freshness affect the result. A funded, pinned headless-worker configuration and controller trading permission are still required to demonstrate autonomous trades.
 
-Oracle updates are currently exposed as frontend relay actions; this integration does not create a continuously funded oracle keeper. Prices expire after five minutes unless refreshed. Stale data blocks valuation, trading and share operations. Plan and fund a keeper before describing the live vault as continuously autonomous.
+A separate gas-capped, on-demand keeper and guarded valuation wrapper are now implemented. The keeper key is provisioned but initially unfunded/disabled; the wrapper requires a receipt-verified deployment, advancing checkpoints and explicit configuration activation. Prices still expire after five minutes, and stale data blocks valuation, trading and shares. See [keeper operation, actual costs and activation status](VALUATION-KEEPER.md).
 
 ## Validation and limits
 

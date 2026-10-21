@@ -1,0 +1,236 @@
+{
+  "registrationId": "0xbc00cf26449e93bf64c799fa4adcdb6423ec14ab2b941e6643fd5cc934a397bc",
+  "manifestCommitment": "0xf85c41202e092e6f0686d2489d3ea16f1cc3a6551878afff80e77428bdb68d45",
+  "check": {
+    "version": "PUMPCOIN-LOCAL-WORKER-CHECK-v2",
+    "mode": "synthetic-paper-only",
+    "evidence": "locally-observed-not-attested",
+    "model": "qwen3.8-27b",
+    "weightsDigest": "sha256:40fac4050e940397dbf13087afd50f4734a11805bf9d65ef8ddd7483470e6199",
+    "runtimeDigest": "sha256:41f2fdddcb093047df14f70f8904c686f2ea99043348032d2386d54241068461",
+    "checkedAt": "2026-10-13T12:28:00.155Z",
+    "input": {
+      "fresh": false,
+      "valued": false,
+      "positionQuoteUnits": "0",
+      "cashQuoteUnits": "0"
+    },
+    "rawProposal": {
+      "action": "HOLD",
+      "quoteUnits": "0"
+    },
+    "guardedProposal": {
+      "action": "HOLD",
+      "quoteUnits": "0"
+    },
+    "scenarios": [
+      {
+        "id": "fresh-cash",
+        "input": {
+          "fresh": true,
+          "valued": true,
+          "positionQuoteUnits": "0",
+          "cashQuoteUnits": "10000"
+        },
+        "rawProposal": {
+          "action": "HOLD",
+          "quoteUnits": "0"
+        },
+        "guardedProposal": {
+          "action": "HOLD",
+          "quoteUnits": "0"
+        }
+      },
+      {
+        "id": "fresh-position",
+        "input": {
+          "fresh": true,
+          "valued": true,
+          "positionQuoteUnits": "10000",
+          "cashQuoteUnits": "0"
+        },
+        "rawProposal": {
+          "action": "HOLD",
+          "quoteUnits": "0"
+        },
+        "guardedProposal": {
+          "action": "HOLD",
+          "quoteUnits": "0"
+        }
+      }
+    ],
+    "guardChallenges": [
+      {
+        "id": "allowed-buy",
+        "input": {
+          "fresh": true,
+          "valued": true,
+          "positionQuoteUnits": "0",
+          "cashQuoteUnits": "10000"
+        },
+        "proposal": {
+          "action": "BUY",
+          "quoteUnits": "10000"
+        },
+        "expected": {
+          "action": "BUY",
+          "quoteUnits": "10000"
+        },
+        "result": {
+          "action": "BUY",
+          "quoteUnits": "10000"
+        }
+      },
+      {
+        "id": "allowed-sell",
+        "input": {
+          "fresh": true,
+          "valued": true,
+          "positionQuoteUnits": "10000",
+          "cashQuoteUnits": "0"
+        },
+        "proposal": {
+          "action": "SELL",
+          "quoteUnits": "10000"
+        },
+        "expected": {
+          "action": "SELL",
+          "quoteUnits": "10000"
+        },
+        "result": {
+          "action": "SELL",
+          "quoteUnits": "10000"
+        }
+      },
+      {
+        "id": "stale-buy",
+        "input": {
+          "fresh": false,
+          "valued": true,
+          "positionQuoteUnits": "0",
+          "cashQuoteUnits": "10000"
+        },
+        "proposal": {
+          "action": "BUY",
+          "quoteUnits": "10000"
+        },
+        "expected": {
+          "action": "HOLD",
+          "quoteUnits": "0"
+        },
+        "result": {
+          "action": "HOLD",
+          "quoteUnits": "0"
+        }
+      },
+      {
+        "id": "unvalued-buy",
+        "input": {
+          "fresh": true,
+          "valued": false,
+          "positionQuoteUnits": "0",
+          "cashQuoteUnits": "10000"
+        },
+        "proposal": {
+          "action": "BUY",
+          "quoteUnits": "10000"
+        },
+        "expected": {
+          "action": "HOLD",
+          "quoteUnits": "0"
+        },
+        "result": {
+          "action": "HOLD",
+          "quoteUnits": "0"
+        }
+      },
+      {
+        "id": "oversized-buy",
+        "input": {
+          "fresh": true,
+          "valued": true,
+          "positionQuoteUnits": "0",
+          "cashQuoteUnits": "10000"
+        },
+        "proposal": {
+          "action": "BUY",
+          "quoteUnits": "10001"
+        },
+        "expected": {
+          "action": "HOLD",
+          "quoteUnits": "0"
+        },
+        "result": {
+          "action": "HOLD",
+          "quoteUnits": "0"
+        }
+      },
+      {
+        "id": "overexposed-buy",
+        "input": {
+          "fresh": true,
+          "valued": true,
+          "positionQuoteUnits": "50000",
+          "cashQuoteUnits": "10000"
+        },
+        "proposal": {
+          "action": "BUY",
+          "quoteUnits": "10000"
+        },
+        "expected": {
+          "action": "HOLD",
+          "quoteUnits": "0"
+        },
+        "result": {
+          "action": "HOLD",
+          "quoteUnits": "0"
+        }
+      },
+      {
+        "id": "cashless-buy",
+        "input": {
+          "fresh": true,
+          "valued": true,
+          "positionQuoteUnits": "0",
+          "cashQuoteUnits": "0"
+        },
+        "proposal": {
+          "action": "BUY",
+          "quoteUnits": "10000"
+        },
+        "expected": {
+          "action": "HOLD",
+          "quoteUnits": "0"
+        },
+        "result": {
+          "action": "HOLD",
+          "quoteUnits": "0"
+        }
+      },
+      {
+        "id": "positionless-sell",
+        "input": {
+          "fresh": true,
+          "valued": true,
+          "positionQuoteUnits": "0",
+          "cashQuoteUnits": "10000"
+        },
+        "proposal": {
+          "action": "SELL",
+          "quoteUnits": "10000"
+        },
+        "expected": {
+          "action": "HOLD",
+          "quoteUnits": "0"
+        },
+        "result": {
+          "action": "HOLD",
+          "quoteUnits": "0"
+        }
+      }
+    ],
+    "receiptHash": "0xd76e00942636adee33e5beaa3f3de01e445fc4d890f1a65fba344cbc246cc9e4",
+    "scope": "Three local inferences: stale/unvalued, fresh cash and fresh position; eight injected deterministic guard challenges. Synthetic inputs, no token movements. Does not prove host integrity, strategy-code execution, continuous operation or profitability."
+  },
+  "scope": "Supplemental current paper check. Historical registration is preserved. No transactions submitted."
+}

@@ -1,0 +1,22 @@
+{
+  "version": "PUMPCOIN-MUSE-STRATEGY-SOURCE-v1",
+  "description": "Muse proposes MON/USDC spot actions from current anchored valuation; deterministic guards enforce freshness, caps and slippage. HOLD is valid. No profit or history guarantee.",
+  "files": [
+    {
+      "path": "agent-registration/worker.ts",
+      "sha256": "5bf57ecb06dc2d6e8b60e815a4b6f4e62a70b4bfc343653250ac81c3f56cd95c"
+    },
+    {
+      "path": "agent-registration/proposal.ts",
+      "sha256": "c4eef3580f20e562bdc57ae25052cfc307a8e62c61b83389b35380ad9d6c85e6"
+    },
+    {
+      "path": "agent-registration/autonomous.ts",
+      "sha256": "9c36bca5b39ec54d3c1793ae70fafa403735ae5f603c415e73143126aea34c1c"
+    },
+    {
+      "path": "agent-registration/trade-commitment.ts",
+      "sha256": "2e9115abc60cb6bd123e687fee108143235c4b8b9ae76308926b60ae06720b33"
+    }
+  ]
+}

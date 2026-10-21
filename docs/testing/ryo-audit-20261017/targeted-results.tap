@@ -1,0 +1,170 @@
+TAP version 13
+# Subtest: decision queues an order; only later observed data fills; stop gap executes at observed price with fees
+ok 1 - decision queues an order; only later observed data fills; stop gap executes at observed price with fees
+  ---
+  duration_ms: 21.904
+  type: 'test'
+  ...
+# Subtest: missing prices leave positions unpriced and never invent an exit
+ok 2 - missing prices leave positions unpriced and never invent an exit
+  ---
+  duration_ms: 0.607167
+  type: 'test'
+  ...
+# Subtest: exact signed decision and portfolio replay detects tampering or a missing decision
+ok 3 - exact signed decision and portfolio replay detects tampering or a missing decision
+  ---
+  duration_ms: 39.166875
+  type: 'test'
+  ...
+# Subtest: audit: pending entries recheck cooldown at execution, including another fill in the same observation
+ok 4 - audit: pending entries recheck cooldown at execution, including another fill in the same observation
+  ---
+  duration_ms: 3.63375
+  type: 'test'
+  ...
+# Subtest: audit: execution enforces the signed risk budget even for an oversized queued order
+ok 5 - audit: execution enforces the signed risk budget even for an oversized queued order
+  ---
+  duration_ms: 0.778583
+  type: 'test'
+  ...
+# Subtest: audit: an older quote cannot close a position after a newer entry observation
+ok 6 - audit: an older quote cannot close a position after a newer entry observation
+  ---
+  duration_ms: 1.131375
+  type: 'test'
+  ...
+# Subtest: audit: synthetic evidence never fills existing live practice orders
+ok 7 - audit: synthetic evidence never fills existing live practice orders
+  ---
+  duration_ms: 0.404958
+  type: 'test'
+  ...
+# Subtest: audit: copied post consensus is independent of provider order
+ok 8 - audit: copied post consensus is independent of provider order
+  ---
+  duration_ms: 0.701042
+  type: 'test'
+  ...
+# Subtest: audit: a single strategy cannot establish a paired common window
+ok 9 - audit: a single strategy cannot establish a paired common window
+  ---
+  duration_ms: 6.14225
+  type: 'test'
+  ...
+# Subtest: audit: comparison reports overlapping period boundaries and is inconclusive without qualified shared evidence
+ok 10 - audit: comparison reports overlapping period boundaries and is inconclusive without qualified shared evidence
+  ---
+  duration_ms: 10.70925
+  type: 'test'
+  ...
+# Subtest: raw market normalization replays exactly and uses the oldest price/liquidity/safety timestamp
+ok 11 - raw market normalization replays exactly and uses the oldest price/liquidity/safety timestamp
+  ---
+  duration_ms: 5.739542
+  type: 'test'
+  ...
+# Subtest: raw news/X transformation preserves originals while reproducing stripping, truncation and repost attribution
+ok 12 - raw news/X transformation preserves originals while reproducing stripping, truncation and repost attribution
+  ---
+  duration_ms: 2.439958
+  type: 'test'
+  ...
+# Subtest: future sources, reversed inference timing, mismatched MCP responses and duplicate references fail
+ok 13 - future sources, reversed inference timing, mismatched MCP responses and duplicate references fail
+  ---
+  duration_ms: 0.726625
+  type: 'test'
+  ...
+# Subtest: selection excludes stale/future posts, records bounded previews, and requires all selected entry classifications
+ok 14 - selection excludes stale/future posts, records bounded previews, and requires all selected entry classifications
+  ---
+  duration_ms: 11.671125
+  type: 'test'
+  ...
+# Subtest: 24 independent Python accounting references match entry rounding, adverse gap exits, fees and conserved cash
+ok 15 - 24 independent Python accounting references match entry rounding, adverse gap exits, fees and conserved cash
+  ---
+  duration_ms: 15.095167
+  type: 'test'
+  ...
+# Subtest: a test-owned signed checkpoint verifies internal consistency, while a re-signed truncated model response is rejected
+ok 16 - a test-owned signed checkpoint verifies internal consistency, while a re-signed truncated model response is rejected
+  ---
+  duration_ms: 61.338458
+  type: 'test'
+  ...
+# (node:9562) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: signed configuration creates both isolated sessions; unavailable sources produce replayable blocked records without calling a model
+ok 17 - signed configuration creates both isolated sessions; unavailable sources produce replayable blocked records without calling a model
+  ---
+  duration_ms: 126.090083
+  type: 'test'
+  ...
+# (node:9563) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: SQLite policies/sessions survive restart; nonce consumption and writer leases prevent competing updates
+ok 18 - SQLite policies/sessions survive restart; nonce consumption and writer leases prevent competing updates
+  ---
+  duration_ms: 24.347417
+  type: 'test'
+  ...
+# Subtest: supervised runtime ownership and durable stop requests remain separate from cycle writer leases
+ok 19 - supervised runtime ownership and durable stop requests remain separate from cycle writer leases
+  ---
+  duration_ms: 5.234667
+  type: 'test'
+  ...
+# Subtest: a failed event insert rolls back the receipt, evidence, events and portfolio together; restart cannot double-fill
+ok 20 - a failed event insert rolls back the receipt, evidence, events and portfolio together; restart cannot double-fill
+  ---
+  duration_ms: 49.596625
+  type: 'test'
+  ...
+# Subtest: both strategies operate on the same evidence, with attributable different thresholds
+ok 21 - both strategies operate on the same evidence, with attributable different thresholds
+  ---
+  duration_ms: 2.056334
+  type: 'test'
+  ...
+# Subtest: stale, future, synthetic, ambiguous, unsafe and missing-source inputs cannot pass entry guards
+ok 22 - stale, future, synthetic, ambiguous, unsafe and missing-source inputs cannot pass entry guards
+  ---
+  duration_ms: 0.496
+  type: 'test'
+  ...
+# Subtest: unsupported citations, duplicate post classifications and missing market identities are rejected
+ok 23 - unsupported citations, duplicate post classifications and missing market identities are rejected
+  ---
+  duration_ms: 0.63925
+  type: 'test'
+  ...
+# Subtest: signed policy binds original agent, exact limits, origin and execution key
+ok 24 - signed policy binds original agent, exact limits, origin and execution key
+  ---
+  duration_ms: 14.510542
+  type: 'test'
+  ...
+# Subtest: unconfigured sources fail honestly without outgoing requests or invented market data
+ok 25 - unconfigured sources fail honestly without outgoing requests or invented market data
+  ---
+  duration_ms: 0.883959
+  type: 'test'
+  ...
+# Subtest: copied text and transitively shared repost origins cannot inflate independent voice counts
+ok 26 - copied text and transitively shared repost origins cannot inflate independent voice counts
+  ---
+  duration_ms: 0.201542
+  type: 'test'
+  ...
+1..26
+# tests 26
+# suites 0
+# pass 26
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 746.789041

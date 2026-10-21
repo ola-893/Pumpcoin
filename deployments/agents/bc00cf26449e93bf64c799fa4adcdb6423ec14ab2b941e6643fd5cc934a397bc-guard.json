@@ -1,0 +1,15 @@
+{
+  "version": "PUMPCOIN-DEPLOYMENT-RECEIPT-v1",
+  "chainId": 10143,
+  "registrationId": "0xbc00cf26449e93bf64c799fa4adcdb6423ec14ab2b941e6643fd5cc934a397bc",
+  "kind": "guard",
+  "deployer": "0xe26468ae02368a75DBDBea58F367B7313942ad26",
+  "address": "0x3fbACDf7a21c23EB6aa56E34cE8F5e8d0d1aa89e",
+  "transactionHash": "0x86534cdf42ffdc3865f88f2cc410a21cb3b49f880694facdc40694cab3717d84",
+  "blockNumber": "70704577",
+  "blockHash": "0x29059177f2069317e6b4d9af9afddbefb6f075181951e30a9cb70b86f98f9971",
+  "creationCodeHash": "0xb7cdd9b1d2cf20af4d02026163cc6366281fbb49a274f76f108f89408ff60fc2",
+  "runtimeCodeHash": "0xdad177a7c7ff245632cf06ce7f062ae84ee58a5e18e8550bdc1c88e1b431381c",
+  "gasPaidWei": "119021964000000000",
+  "scope": "Verified deployment only. Configuration activation, oracle warm-up and trading permissions are separate operations."
+}

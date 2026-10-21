@@ -1,0 +1,38 @@
+{
+  "scope": "Read-only authentic source probe; not a signed policy, model run or trade",
+  "httpStatus": 200,
+  "capturedAt": "2026-10-21T07:54:57.070Z",
+  "markets": 0,
+  "posts": 25,
+  "rawCaptures": 2,
+  "sources": [
+    {
+      "source": "ryo:ETH",
+      "available": false,
+      "reason": "RYO response captured; no reviewed price, liquidity, safety and instrument-identity mapping is established. Practice entry remains blocked.",
+      "retrievedAt": "2026-10-21T07:54:56.336Z"
+    },
+    {
+      "source": "ryo",
+      "available": false,
+      "reason": "Required watchlist coverage is incomplete.",
+      "retrievedAt": "2026-10-21T07:54:56.336Z"
+    },
+    {
+      "source": "news:https://www.coindesk.com/arc/outboundfeeds/rss",
+      "available": true,
+      "retrievedAt": "2026-10-21T07:54:57.070Z"
+    },
+    {
+      "source": "news",
+      "available": true,
+      "retrievedAt": "2026-10-21T07:54:57.070Z"
+    },
+    {
+      "source": "x",
+      "available": false,
+      "reason": "Selected X accounts are missing authorized observation coverage.",
+      "retrievedAt": "2026-10-21T07:54:57.070Z"
+    }
+  ]
+}

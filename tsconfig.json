@@ -14,7 +14,11 @@
     "vault/**/*.ts",
     "local-inference/**/*.ts",
     "agent-registration/**/*.ts",
-    "market-data/**/*.ts"
+    "market-data/**/*.ts",
+    "research/**/*.ts",
+    "practice/**/*.ts",
+    "hosting/**/*.ts",
+    "api/**/*.ts"
   ],
   "exclude": [
     "node_modules",

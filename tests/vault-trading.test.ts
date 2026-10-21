@@ -27,6 +27,7 @@ test('wallet changes and arbitrary payable destinations cannot submit trading tr
  const tx={chainId:10143,from,to:from,data:'0x1234' as const,value:'0x0' as const,gas:'0x10000' as const};
  await assert.rejects(sendBrowserTradingTransaction(provider,binding,()=>({...binding,revision:2}),tx));assert.equal(sends,0);
  await assert.rejects(sendBrowserTradingTransaction(provider,binding,()=>binding,{...tx,value:'0x1'}));assert.equal(sends,0);
+ await assert.rejects(sendBrowserTradingTransaction(provider,binding,()=>binding,{...tx,to:undefined}),/Infrastructure creation/);assert.equal(sends,0);
  assert.equal(await sendBrowserTradingTransaction(provider,binding,()=>binding,tx),'0x'+'a'.repeat(64));assert.equal(sends,1);
  const changed:Provider={request:async({method})=>method==='eth_accounts'?['0x2222222222222222222222222222222222222222']:'0x279f'};
  await assert.rejects(sendBrowserTradingTransaction(changed,binding,()=>binding,tx));

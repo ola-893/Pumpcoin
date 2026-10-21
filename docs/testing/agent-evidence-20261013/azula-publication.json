@@ -1,0 +1,22 @@
+{
+  "registrationId": "0xbc00cf26449e93bf64c799fa4adcdb6423ec14ab2b941e6643fd5cc934a397bc",
+  "manifestCommitment": "0xf85c41202e092e6f0686d2489d3ea16f1cc3a6551878afff80e77428bdb68d45",
+  "publication": {
+    "version": "PUMPCOIN-WEIGHTS-PUBLICATION-v1",
+    "modelLabel": "qwen3.8-27b",
+    "repository": "unsloth/Qwen3.8-27B-GGUF",
+    "revision": "4ca720788d1e01f1bff70c033e0d0028fd02e502",
+    "filename": "Qwen3.8-27B-UD-IQ4_XS.gguf",
+    "weightsDigest": "sha256:40fac4050e940397dbf13087afd50f4734a11805bf9d65ef8ddd7483470e6199",
+    "weightsBytes": 14252845984,
+    "metadataURL": "https://huggingface.co/api/models/unsloth/Qwen3.8-27B-GGUF/revision/4ca720788d1e01f1bff70c033e0d0028fd02e502?blobs=true",
+    "checkedAt": "2026-10-13T12:27:09.876Z",
+    "evidence": "publisher-metadata-digest-matched",
+    "scope": "Measured file digest and size match public Hugging Face LFS metadata at this pinned publisher commit. Trusts Hugging Face HTTPS metadata and the local measurement. Does not prove upstream model lineage, training provenance, semantic model identity or inference execution."
+  },
+  "localMeasurement": {
+    "checkedAt": "2026-10-13T12:27:09.274Z",
+    "weightsDigest": "sha256:40fac4050e940397dbf13087afd50f4734a11805bf9d65ef8ddd7483470e6199",
+    "runtimeDigest": "sha256:41f2fdddcb093047df14f70f8904c686f2ea99043348032d2386d54241068461"
+  }
+}

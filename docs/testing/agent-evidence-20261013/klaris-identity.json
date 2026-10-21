@@ -1,0 +1,23 @@
+{
+  "name": "klaris",
+  "registrationId": "0x35ee2fb845f6eb6c358f99a8aa5dd363b5906182445485597e1387ef069a415c",
+  "chainId": 10143,
+  "registry": "0x8004A818BFB912233c491871b3d84c89A494BD9e",
+  "maintainersListedMonadRegistry": true,
+  "registryCodeHash": "0xd0e45b1d89fa9b6cc7e97c1f155d64180e5c232aaccf9900ef9d4fd738c02b41",
+  "registryImplementation": "0x7274e874CA62410a93Bd8bf61c69d8045E399c02",
+  "registryImplementationCodeHash": "0xa5f9624ea85e45b3f4b8558581f03bfb3e6cefab278d7bf0500ec9bd065dc16f",
+  "agentId": "2222",
+  "vault": "0xE047120881026327aF28E74a6EA0C046Edd01568",
+  "controller": "0xe26468ae02368a75DBDBea58F367B7313942ad26",
+  "executionKey": "0xE3bA663F22c8b8db5E3c7a98A55ec9C45255A4F8",
+  "manifestCommitment": "0xbf5eea291a5e04d7e676b0c36a94c6b100f597db352e1cd230a2793d24bbb32f",
+  "uriMatches": true,
+  "ownerMatches": true,
+  "vaultBindingMatches": true,
+  "configHash": "0xf2d980a8725e6bee362046fdd1cb86d520ac431d6c5aa7b63e1d6df62da89454",
+  "blockNumber": "70681545",
+  "blockHash": "0xaa16cf6c6f3c732a794b74875d404ddbfab696e0e85c088dc50010c5fa999f1e",
+  "checkedAt": "2026-10-13T12:27:12.700Z",
+  "scope": "Public registry ownership, published signed manifest, reviewed vault authority and identity binding checked at this block. Configured runtime pins and RPC are trust boundaries. Does not attest model execution, profitability or investment readiness."
+}

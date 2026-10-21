@@ -24,12 +24,35 @@ test('frontend runtime endpoints retain origin/session protection and reject bro
     assert.equal((await post('/trader-start', { id }, 'bad')).status, 403);
     assert.equal((await post('/trader-stop', { id }, token, 'https://evil.test')).status, 403);
     for (const field of ['privateKey', 'rpcUrl', 'configFile', 'deployment']) assert.equal((await post('/trader-start', { id, [field]: 'untrusted' })).status, 400);
+    for (const action of ['deploy', 'deploy-valuation-guard', 'unknown']) {
+      const blocked = await post('/trading-plan', { id, action, account: '0x1111111111111111111111111111111111111111', amount: '0' });
+      assert.equal(blocked.status, 400); assert.match((await blocked.json() as any).error, /operator CLI/);
+    }
+    for (const [route, action, amount] of [['/native-plan','deploy-native','0'], ['/pool-plan','deploy-pool-funder',undefined]] as const) {
+      const blocked = await post(route, { id, action, account: '0x1111111111111111111111111111111111111111', ...(amount ? {amount} : {}) });
+      assert.equal(blocked.status, 400); assert.match((await blocked.json() as any).error, /operator CLI/);
+    }
     const response = await post('/trader-status', { id }); assert.equal(response.status, 200);
     const result = await response.json() as any; assert.equal(result.runtime.state, 'unconfigured'); assert.equal(result.runtime.running, false);
     assert.equal((await post('/trader-start', { id })).status, 400);
+    assert.equal((await post('/agent-state-refresh', { id }, 'bad')).status, 403);
+    assert.equal((await post('/agent-state-refresh', { id, force: true })).status, 400);
+    assert.equal((await post('/agent-state-refresh', { id })).status, 400);
+    assert.equal((await post('/agent-state', { id, chainId: 31337 })).status, 400);
+    assert.equal((await post('/agent-state', { id }, 'bad')).status, 403);
+    assert.equal((await post('/agent-state', { id })).status, 400);
     assert.equal((await post('/live-vault', { id, chainId: 31337 })).status, 400);
     assert.equal((await post('/live-vault', { id })).status, 400);
     assert.equal((await post('/sign', { id, data: '0x00' })).status, 400);
+    assert.equal((await post('/research-state', { id }, 'bad')).status, 403);
+    assert.equal((await post('/research-start', { id, sessionId: 'unknown' }, token, 'https://evil.test')).status, 403);
+    assert.equal((await post('/research-state', { id, privateKey: 'untrusted' })).status, 400);
+    assert.equal((await post('/research-challenge', { id, policy: {}, rpcUrl: 'untrusted' })).status, 400);
+    assert.equal((await post('/research-state', { id })).status, 400);
+    assert.equal((await post('/research-sources', { id, symbol: 'ETH' }, 'bad')).status, 403);
+    assert.equal((await post('/research-sources', { id, symbol: 'ETH' }, token, 'https://evil.test')).status, 403);
+    assert.equal((await post('/research-sources', { id, symbol: 'ETH', apiKey: 'untrusted' })).status, 400);
+    assert.equal((await post('/research-sources', { id, symbol: 'ETH' })).status, 400);
   } finally {
     await new Promise<void>(done => server.close(() => done()));
     await rm(directory, { recursive: true, force: true });

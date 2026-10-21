@@ -1,3 +1,4 @@
+import { requestOracleRefresh } from './oracle-demand.js';
 import { readFileSync } from 'node:fs';
 import { mkdir, readFile, writeFile, rename } from 'node:fs/promises';
 import { join } from 'node:path';
@@ -44,7 +45,7 @@ export function tradingService(network:VaultNetwork,n:TradingNetwork,directory:s
  async function pin(address:Address,hash:Hex,blockNumber:bigint){const code=await client.getCode({address,blockNumber});if(!code||keccak256(code)!==hash)throw new Error('External contract code changed. Trading is blocked.');}
  async function matchesRuntime(address:Address,name:string,blockNumber:bigint){const a=artifact(name),code=await client.getCode({address,blockNumber});return !!code&&code.length===a.deployedBytecode.object.length&&normalized(code,a)===normalized(a.deployedBytecode.object,a);}
  async function runtime(address:Address,name:string,blockNumber:bigint){if(!await matchesRuntime(address,name,blockNumber))throw new Error('Deployed vault infrastructure differs from the reviewed artifact.');}
- async function load(id:string){try{return JSON.parse(await readFile(path(id),'utf8')) as {address:Address;transactionHash:Hex};}catch(e){if((e as any).code==='ENOENT')return undefined;throw e;}}
+ async function load(id:string){try{return JSON.parse(await readFile(path(id),'utf8')) as {address:Address;transactionHash:Hex;guard?:{address:Address;transactionHash:Hex}};}catch(e){if((e as any).code==='ENOENT')return undefined;throw e;}}
  const bundleArgs=(r:RegistrationRecord)=>{
   const common={poolManager:n.poolManager,stateView:n.stateView,fee:n.fee,tickSpacing:n.tickSpacing};
   if(n.oracle==='chainlink'){
@@ -55,6 +56,7 @@ export function tradingService(network:VaultNetwork,n:TradingNetwork,directory:s
   return [r.binding!.vault,{...common,pyth:n.pyth,monFeed:n.monFeed,usdFeed:n.usdFeed},r.manifest.proposedMandate.slippageBps];
  };
  function deployData(r:RegistrationRecord){const a=artifact(bundleName);return encodeDeployData({abi:a.abi,bytecode:a.bytecode.object,args:bundleArgs(r)});}
+ function guardData(source:Address,sourceHash:Hex){return encodeDeployData({abi:artifact('GuardedHybridValuationSource').abi,bytecode:artifact('GuardedHybridValuationSource').bytecode.object,args:[source,sourceHash,(n as any).pythCodeHash,n.stateViewCodeHash]});}
  async function readSnapshot(id:string,account?:Address){
   const r=await record(id),vault=getAddress(r.binding!.vault);const block=await client.getBlock();const b=block.number as bigint;
   if(await client.getChainId()!==n.chainId)throw new Error('Wrong RPC chain.');
@@ -72,7 +74,17 @@ export function tradingService(network:VaultNetwork,n:TradingNetwork,directory:s
   const poolAbi=parseAbi(['function getSlot0(bytes32) view returns(uint160,int24,uint24,uint24)','function getLiquidity(bytes32) view returns(uint128)']);
   const [slot,liquidity,cash,position]=await Promise.all([read(n.stateView,'getSlot0',[pid],poolAbi),read(n.stateView,'getLiquidity',[pid],poolAbi),read(network.quote,'balanceOf',[vault]),read(network.position,'balanceOf',[vault])]);
   const saved=await load(id);let bundle:any;
-  if(saved){await runtime(saved.address,bundleName,b);const bs=await Promise.all(['vault','adapter','source','venue','gateway'].map(x=>read(saved.address,x,[],bundleAbi)));bundle={address:saved.address,vault:bs[0],adapter:bs[1],source:bs[2],venue:bs[3],gateway:bs[4]};if(bundle.vault!==vault)throw new Error('Infrastructure belongs to another vault.');for(const [key,name] of [['adapter','RestrictedSpotAdapter'],['source',sourceName],['venue','UniswapV4VaultVenue'],['gateway','VaultInvestorGateway']])await runtime(bundle[key],name,b);}
+  if(saved){await runtime(saved.address,bundleName,b);const bs=await Promise.all(['vault','adapter','source','venue','gateway'].map(x=>read(saved.address,x,[],bundleAbi)));bundle={address:saved.address,vault:bs[0],adapter:bs[1],source:bs[2],venue:bs[3],gateway:bs[4]};if(bundle.vault!==vault)throw new Error('Infrastructure belongs to another vault.');await Promise.all([['adapter','RestrictedSpotAdapter'],['source',sourceName],['venue','UniswapV4VaultVenue'],['gateway','VaultInvestorGateway']].map(([key,name])=>runtime(bundle[key],name,b)));}
+  if(saved?.guard){
+   if(n.oracle!=='supra-pyth'||!bundle)throw new Error('Guard requires the reviewed hybrid source.');
+   await runtime(saved.guard.address,'GuardedHybridValuationSource',b);
+   const ga=parseAbi(['function underlying() view returns(address)','function underlyingCodeHash() view returns(bytes32)','function pyth() view returns(address)','function pythCodeHash() view returns(bytes32)','function stateView() view returns(address)','function stateViewCodeHash() view returns(bytes32)','function quoteFeed() view returns(bytes32)','function poolId() view returns(bytes32)','function acceptedAt() view returns(uint64)','function acceptedPublication() view returns(uint64)','function candidateAt() view returns(uint64)','function candidatePublication() view returns(uint64)']);
+   const sourceCode=await client.getCode({address:bundle.source,blockNumber:b});
+   await Promise.all([['underlying',bundle.source],['underlyingCodeHash',keccak256(sourceCode)],['pyth',n.pyth],['pythCodeHash',n.pythCodeHash],['stateView',n.stateView],['stateViewCodeHash',n.stateViewCodeHash],['quoteFeed',n.usdFeed],['poolId',pid]].map(async([name,expected])=>{if(await read(saved.guard!.address,name,[],ga)!==expected)throw new Error('Guard immutable bindings changed.');}));
+   bundle.valuationSource=saved.guard.address;
+   const values=await Promise.all(['acceptedAt','acceptedPublication','candidateAt','candidatePublication'].map(x=>read(saved.guard!.address,x,[],ga)));
+   bundle.guard={address:saved.guard.address,acceptedAt:String(values[0]),acceptedPublication:String(values[1]),candidateAt:String(values[2]),candidatePublication:String(values[3])};
+  }
   let mon,usd;const oracleBlockers:string[]=[];
   if(n.oracle==='chainlink'){
    const observations=await Promise.all([readChainlinkFeed(n.monOracle,'MON',read,(a,h)=>pin(a,h,b)),readChainlinkFeed(n.usdOracle,'USDC',read,(a,h)=>pin(a,h,b))]);
@@ -85,7 +97,7 @@ export function tradingService(network:VaultNetwork,n:TradingNetwork,directory:s
   const market=marketChecks(mon,usd,block.timestamp,slot[0],liquidity,n);
   if(bundle&&n.oracle==='supra-pyth'){
    const pinsAbi=parseAbi(['function supra() view returns(address)','function supraCodeHash() view returns(bytes32)','function pyth() view returns(address)','function quoteFeed() view returns(bytes32)','function stateView() view returns(address)','function poolId() view returns(bytes32)']);
-   for(const [name,expected] of [['supra',n.supra],['supraCodeHash',n.supraCodeHash],['pyth',n.pyth],['quoteFeed',n.usdFeed],['stateView',n.stateView],['poolId',pid]])if(await read(bundle.source,name,[],pinsAbi)!==expected)throw new Error('Deployed hybrid oracle differs from the reviewed configuration.');
+   await Promise.all([['supra',n.supra],['supraCodeHash',n.supraCodeHash],['pyth',n.pyth],['quoteFeed',n.usdFeed],['stateView',n.stateView],['poolId',pid]].map(async([name,expected])=>{if(await read(bundle.source,name,[],pinsAbi)!==expected)throw new Error('Deployed hybrid oracle differs from the reviewed configuration.');}));
   }
   if(bundle&&n.oracle==='chainlink'){
    const feedAbi=parseAbi(['function monFeed() view returns(address,address,bytes32,bytes32,uint8)','function usdFeed() view returns(address,address,bytes32,bytes32,uint8)','function poolId() view returns(bytes32)','function stateView() view returns(address)']);
@@ -96,12 +108,12 @@ export function tradingService(network:VaultNetwork,n:TradingNetwork,directory:s
    }
    if(await read(bundle.source,'poolId',[],feedAbi)!==pid||await read(bundle.source,'stateView',[],feedAbi)!==n.stateView)throw new Error('Deployed Chainlink source differs from the reviewed pool.');
   }
-  const blockers=[...oracleBlockers,...market.blockers];if(!vaultRuntimeCompatible)blockers.push('Deployed vault differs from the current reviewed trading-permission contract. A compatible vault is required before activation.');if(!bundle)blockers.push('Trading infrastructure has not been deployed.');const configured=!!bundle&&v.adapter===bundle.adapter&&v.valuationSource===bundle.source;
+  const blockers=[...oracleBlockers,...market.blockers];if(!vaultRuntimeCompatible)blockers.push('Deployed vault differs from the current reviewed trading-permission contract. A compatible vault is required before activation.');if(!bundle)blockers.push('Trading infrastructure has not been deployed.');const configured=!!bundle&&v.adapter===bundle.adapter&&v.valuationSource===(bundle.valuationSource??bundle.source);
   if(!configured)blockers.push('The complete trading configuration has not been applied through notice.');if(v.paused)blockers.push('Vault is paused.');
-  let valuation=false,nav:string|undefined;if(configured){const adapterState=await Promise.all([read(bundle.adapter,'revoked',[],parseAbi(['function revoked() view returns(bool)'])),read(bundle.adapter,'allowedVenue',[],parseAbi(['function allowedVenue() view returns(address)']))]);if(adapterState[0]||adapterState[1]!==bundle.venue)blockers.push('Trading adapter is revoked or its venue differs from the reviewed route.');const status=await read(bundle.source,'status',[],sourceAbi);valuation=status[0];if(!valuation)blockers.push('On-chain valuation is unavailable.');else {nav=String(await read(vault,'totalAssets'));if(nav==='0'&&v.totalSupply>0n)blockers.push('Vault equity is unavailable for new deposits.');}}
+  let valuation=false,nav:string|undefined;if(configured){const adapterState=await Promise.all([read(bundle.adapter,'revoked',[],parseAbi(['function revoked() view returns(bool)'])),read(bundle.adapter,'allowedVenue',[],parseAbi(['function allowedVenue() view returns(address)']))]);if(adapterState[0]||adapterState[1]!==bundle.venue)blockers.push('Trading adapter is revoked or its venue differs from the reviewed route.');const status=await read(bundle.valuationSource??bundle.source,'status',[],sourceAbi);valuation=status[0];if(!valuation)blockers.push('On-chain valuation is unavailable.');else {nav=String(await read(vault,'totalAssets'));if(nav==='0'&&v.totalSupply>0n)blockers.push('Vault equity is unavailable for new deposits.');}}
   const owner=account?getAddress(account):undefined;const balances=owner?{quote:String(await read(network.quote,'balanceOf',[owner])),shares:String(await read(vault,'balanceOf',[owner])),maxRedeem:String(await read(vault,'maxRedeem',[owner]))}:undefined;
   if((await client.getBlock({blockNumber:b})).hash!==block.hash)throw new Error('Chain changed while checking readiness. Retry.');
-  return {r,v,read,block,view:{vaultRuntimeCompatible,instantTestnetDemo:!!r.manifest.vaultPolicy,oracle:n.oracle??'pyth',chainId:n.chainId,vault,blockNumber:String(b),blockHash:block.hash,checkedAt:new Date().toISOString(),paused:v.paused,configured,valuation,ready:blockers.length===0,blockers,bundle,poolId:pid,poolManager:n.poolManager,monPublishedAt:String(mon.publishTime),usdPublishedAt:String(usd.publishTime),referencePrice:market.referencePrice,spotPrice:market.spotPrice,virtualQuoteLiquidity:market.virtualQuoteLiquidity,cash:String(cash),position:String(position),totalSupply:String(v.totalSupply),nav,balances,pendingAt:v.pending[2]?String(v.pending[1]):undefined,controller:v.admin,manager:v.manager,quote:network.quote,positionToken:network.position,configHash:v.currentConfigHash}};
+  return {r,v,read,block,view:{policy:{maxStalenessSeconds:n.maxStaleness,minimumQuoteLiquidity:n.minimumQuoteLiquidity,quoteDecimals:Number(await read(network.quote,'decimals')),positionDecimals:Number(await read(network.position,'decimals')),shareDecimals:Number(await read(vault,'decimals'))},vaultRuntimeCompatible,instantTestnetDemo:!!r.manifest.vaultPolicy,oracle:n.oracle??'pyth',chainId:n.chainId,vault,blockNumber:String(b),blockHash:block.hash,checkedAt:new Date().toISOString(),paused:v.paused,configured,valuation,ready:blockers.length===0,blockers,bundle,poolId:pid,poolManager:n.poolManager,monPublishedAt:String(mon.publishTime),usdPublishedAt:String(usd.publishTime),referencePrice:market.referencePrice,spotPrice:market.spotPrice,virtualQuoteLiquidity:market.virtualQuoteLiquidity,cash:String(cash),position:String(position),totalSupply:String(v.totalSupply),nav,balances,pendingAt:v.pending[2]?String(v.pending[1]):undefined,controller:v.admin,manager:v.manager,quote:network.quote,positionToken:network.position,configHash:v.currentConfigHash}};
  }
  // Share only requests already in progress; never cache a completed chain check.
  const checking=new Map<string,ReturnType<typeof readSnapshot>>();
@@ -111,10 +123,11 @@ export function tradingService(network:VaultNetwork,n:TradingNetwork,directory:s
   const task=readSnapshot(id,account).finally(()=>{if(checking.get(key)===task)checking.delete(key);});
   checking.set(key,task);return task;
  }
- async function plan(id:string,action:TradeAction,account:Address,amount='0'){
-  const s=await snapshot(id,account),{r,v,view,block,read}=s;const from=getAddress(account);let to:Address|undefined,data:Hex,output:bigint|undefined,quote:TradingQuote|undefined,value=0n;
+ async function plan(id:string,action:TradeAction,account:Address,amount='0',inspection?:Awaited<ReturnType<typeof readSnapshot>>){
+  const s=inspection??await snapshot(id,account),{r,v,view,block,read}=s;const from=getAddress(account);let to:Address|undefined,data:Hex,output:bigint|undefined,quote:TradingQuote|undefined,value=0n;
+  if(inspection&&((await client.getBlock({blockNumber:block.number})).hash!==block.hash||(await client.getBlock()).timestamp>block.timestamp+60n))throw new Error('Oracle inspection expired or changed. Retry with fresh checks.');
   if(!view.vaultRuntimeCompatible)throw new Error('Deployed vault differs from the current reviewed trading-permission contract. A compatible vault is required before activation.');
-  if(['deploy','propose','apply','unpause','pause'].includes(action)&&from!==v.admin)throw new Error('Connect this vault’s controller.');
+  if(['deploy','deploy-valuation-guard','propose','apply','unpause','pause'].includes(action)&&from!==v.admin)throw new Error('Connect this vault’s controller.');
   const amountValue=/^[1-9][0-9]{0,30}$/.test(amount)?BigInt(amount):0n;// Leave RPC preparation and an already-open wallet time to finish; the browser quote still expires in 30 seconds.
   const deadline=block.timestamp+(action==='buy'||action==='sell'?120n:300n);
   const encode=(a:any,name:string,args:unknown[]=[])=>encodeFunctionData({abi:a,functionName:name,args});
@@ -128,20 +141,31 @@ export function tradingService(network:VaultNetwork,n:TradingNetwork,directory:s
    if(n.oracle!=='supra-pyth'||!view.bundle)throw new Error('Deploy the Supra/Pyth infrastructure before relaying MON prices.');
    to=view.bundle.source;data=encode(parseAbi(['function updateMon(bytes)']),'updateMon',[await supraMonProof()]);
   }
+  else if(action==='deploy-valuation-guard'){
+   if(n.oracle!=='supra-pyth'||!view.bundle||view.bundle.guard)throw new Error('Deploy the hybrid infrastructure first; only one verified guard can be recorded.');
+   const code=await client.getCode({address:view.bundle.source,blockNumber:block.number});data=guardData(view.bundle.source,keccak256(code));
+  }
+  else if(action==='checkpoint-valuation'){
+   if(!view.bundle?.guard)throw new Error('Deploy and verify the valuation guard first.');
+   to=view.bundle.guard.address;data=encode(parseAbi(['function checkpoint() returns(bool)']),'checkpoint');
+  }
   else if(action==='deploy'){if(view.bundle)throw new Error('Infrastructure is already deployed.');data=deployData(r);}
   else {
    to=getAddress(view.vault);
    if(action==='pause')data=encode(abi,'pause');
    else {
     const b=view.bundle;if(!b)throw new Error('Deploy and verify the infrastructure first.');
-    if(action==='propose'){const args={adapter:b.adapter,venue:b.venue,stream:ZERO,valuationSource:b.source,perTradeCap:v.perTradeCap,maxPositionValue:v.maxPositionValue,expenseBudget:0n,strategyHash:v.strategyHash,riskHash:v.riskHash,identityRegistry:v.identityRegistry,agentId:v.agentId};data=encode(abi,r.manifest.vaultPolicy?'proposeDemoConfig':'proposeConfig',[args]);}
-    else if(action==='apply'){if(!v.pending[2]||block.timestamp<v.pending[1])throw new Error('No applicable configuration proposal is ready.');const p=v.pending[0];if(p.adapter!==b.adapter||p.venue!==b.venue||p.valuationSource!==b.source||p.stream!==ZERO||p.expenseBudget!==0n||p.perTradeCap!==v.perTradeCap||p.maxPositionValue!==v.maxPositionValue||p.strategyHash!==v.strategyHash||p.riskHash!==v.riskHash||p.identityRegistry!==v.identityRegistry||p.agentId!==v.agentId)throw new Error('Pending configuration does not match reviewed infrastructure.');data=encode(abi,'applyConfig');}
+    if(action==='propose'){const args={adapter:b.adapter,venue:b.venue,stream:ZERO,valuationSource:b.valuationSource??b.source,perTradeCap:v.perTradeCap,maxPositionValue:v.maxPositionValue,expenseBudget:0n,strategyHash:v.strategyHash,riskHash:v.riskHash,identityRegistry:v.identityRegistry,agentId:v.agentId};data=encode(abi,r.manifest.vaultPolicy?'proposeDemoConfig':'proposeConfig',[args]);}
+    else if(action==='apply'){if(!v.pending[2]||block.timestamp<v.pending[1])throw new Error('No applicable configuration proposal is ready.');const p=v.pending[0];if(p.adapter!==b.adapter||p.venue!==b.venue||p.valuationSource!==(b.valuationSource??b.source)||p.stream!==ZERO||p.expenseBudget!==0n||p.perTradeCap!==v.perTradeCap||p.maxPositionValue!==v.maxPositionValue||p.strategyHash!==v.strategyHash||p.riskHash!==v.riskHash||p.identityRegistry!==v.identityRegistry||p.agentId!==v.agentId)throw new Error('Pending configuration does not match reviewed infrastructure.');data=encode(abi,'applyConfig');}
     else if(action==='unpause'){if(!view.configured||!view.valuation||view.blockers.some((x:string)=>x!=='Vault is paused.'))throw new Error('Resolve the live pricing and DEX readiness blockers before unpausing.');data=encode(abi,'unpause');}
     else {
-     if(!view.ready)throw new Error('Deposits and trading remain blocked. Refresh the readiness checks.');if(amountValue===0n)throw new Error('Enter a positive integer amount in base units.');
+     if(amountValue===0n)throw new Error('Enter a positive integer amount in base units.');
+     if(!view.ready&&!['approve-deposit','approve-redeem'].includes(action)){await requestOracleRefresh(id);throw new Error('Deposits and trading remain blocked. An on-demand price refresh was requested if a keeper is configured; retry after fresh readiness checks.');}if(amountValue===0n)throw new Error('Enter a positive integer amount in base units.');
      const gatewayAbi=parseAbi(['function deposit(uint256,uint256,uint256) returns(uint256)','function redeem(uint256,uint256,uint256) returns(uint256)']);
-     if(action==='approve-deposit'||action==='deposit'){if(amountValue>BigInt(view.balances!.quote))throw new Error('Insufficient test-USDC balance.');output=await read(to,'previewDeposit',[amountValue]);to=action==='approve-deposit'?network.quote:b.gateway;data=action==='approve-deposit'?encode(abi,'approve',[b.gateway,amountValue]):encode(gatewayAbi,'deposit',[amountValue,(output!*9990n/10000n)||1n,deadline]);}
-     else if(action==='approve-redeem'||action==='redeem'){if(amountValue>BigInt(view.balances!.maxRedeem))throw new Error('Requested exit exceeds your liquid share claim.');output=await read(to,'previewRedeem',[amountValue]);to=action==='approve-redeem'?to:b.gateway;data=action==='approve-redeem'?encode(abi,'approve',[b.gateway,amountValue]):encode(gatewayAbi,'redeem',[amountValue,(output!*9990n/10000n)||1n,deadline]);}
+     if(action==='approve-deposit'){if(amountValue>BigInt(view.balances!.quote))throw new Error('Insufficient test-USDC balance.');to=network.quote;data=encode(abi,'approve',[b.gateway,amountValue]);}
+     else if(action==='deposit'){if(amountValue>BigInt(view.balances!.quote))throw new Error('Insufficient test-USDC balance.');output=await read(to,'previewDeposit',[amountValue]);to=b.gateway;data=encode(gatewayAbi,'deposit',[amountValue,(output!*9990n/10000n)||1n,deadline]);}
+     else if(action==='approve-redeem'){if(amountValue>BigInt(view.balances!.shares))throw new Error('Pump approval exceeds your share balance.');data=encode(abi,'approve',[b.gateway,amountValue]);}
+     else if(action==='redeem'){if(amountValue>BigInt(view.balances!.maxRedeem))throw new Error('Requested exit exceeds your liquid share claim.');output=await read(to,'previewRedeem',[amountValue]);to=b.gateway;data=encode(gatewayAbi,'redeem',[amountValue,(output!*9990n/10000n)||1n,deadline]);}
      else if(action==='buy'||action==='sell'){
       if(from!==v.manager)throw new Error('Connect the declared trading manager.');
       const input=action==='buy'?network.quote:network.position,out=action==='buy'?network.position:network.quote;
@@ -160,10 +184,25 @@ export function tradingService(network:VaultNetwork,n:TradingNetwork,directory:s
   }
   const estimated=await client.estimateGas({account:from,to,data,value,...(quote?{blockNumber:block.number}:{})});const gas=estimated*12n/10n;const fee=gas*await client.getGasPrice()+value;const balance=await client.getBalance({address:from});
   if(quote){if((await client.getBlock({blockNumber:block.number})).hash!==block.hash)throw new Error('Chain changed during quotation. Review again.');const latest=await client.getBlock();if(latest.timestamp>=deadline||Date.now()>=quote.expiresAt)throw new Error('DEX quote expired during preparation. Review again.');quote.expiresAt=Math.min(quote.expiresAt,Date.now()+Number(deadline-latest.timestamp)*1000);}
-  return {chainId:n.chainId,from,to,data,quote,value:`0x${value.toString(16)}`,gas:`0x${gas.toString(16)}`,balance:String(balance),estimatedFee:String(fee),canSubmit:balance>=fee,action,output:output?.toString(),deadline:String(deadline),scope:action==='deploy'?'Deploy valuation, fixed-pool venue, restricted adapter and investor gateway. Does not configure or unpause the vault.':action==='propose'?(r.manifest.vaultPolicy?'INSTANT TESTNET DEMO: propose the full configuration with zero notice. Apply it separately; the vault remains paused.':'Propose the full configuration. Starts a one-day notice; the vault remains paused.'):`${action} on this testnet vault only. Review amount, recipient and gas in your wallet.`,blockers:balance<fee?['Fund this wallet with testnet MON for gas.']:[]};
+  return {chainId:n.chainId,from,to,data,quote,value:`0x${value.toString(16)}`,gas:`0x${gas.toString(16)}`,balance:String(balance),estimatedFee:String(fee),canSubmit:balance>=fee,action,output:output?.toString(),deadline:String(deadline),scope:action==='deploy-valuation-guard'?'Deploy the guarded valuation wrapper. Does not activate it; prime advancing checkpoints and apply a controller configuration separately.':action==='checkpoint-valuation'?'Publish a valuation guard checkpoint. A candidate observation may require another advancing observation after one minute.':action==='deploy'?'Deploy valuation, fixed-pool venue, restricted adapter and investor gateway. Does not configure or unpause the vault.':action==='propose'?(r.manifest.vaultPolicy?'INSTANT TESTNET DEMO: propose the full configuration with zero notice. Apply it separately; the vault remains paused.':'Propose the full configuration. Starts a one-day notice; the vault remains paused.'):`${action} on this testnet vault only. Review amount, recipient and gas in your wallet.`,blockers:balance<fee?['Fund this wallet with testnet MON for gas.']:[]};
  }
- return {inspect:async(id:string,account?:Address)=>(await snapshot(id,account)).view,plan,
-  async receipt(id:string,hash:Hex){if(!/^0x[a-f0-9]{64}$/i.test(hash))throw new Error('Invalid transaction hash.');const s=await snapshot(id);const [tx,r]=await Promise.all([client.getTransaction({hash}),client.getTransactionReceipt({hash})]);const destinations=[s.view.vault,network.quote,n.oracle==='chainlink'?undefined:n.pyth,s.view.bundle?.gateway,s.view.bundle?.source].filter(Boolean).map(x=>x.toLowerCase());if(!tx.to||!destinations.includes(tx.to.toLowerCase())||(tx.value!==0n&&(n.oracle==='chainlink'||tx.to.toLowerCase()!==n.pyth.toLowerCase())))throw new Error('Transaction is outside this vault integration.');if((await client.getBlock({blockNumber:r.blockNumber})).hash!==r.blockHash)throw new Error('Transaction was reorganized.');return {status:r.status,blockNumber:String(r.blockNumber),transactionHash:hash};},
+ return {inspect:async(id:string,account?:Address)=>(await snapshot(id,account)).view,
+  inspectForOracle:async(id:string)=>{const s=await snapshot(id);return {view:s.view,plan:(action:'update-mon-price'|'update-prices'|'checkpoint-valuation',account:Address)=>plan(id,action,account,'0',s)};},
+  plan:(id:string,action:TradeAction,account:Address,amount='0')=>plan(id,action,account,amount),
+  async confirmGuard(id:string,hash:Hex){
+   if(confirming.has(id))throw new Error('A receipt verification is already running.');confirming.add(id);
+   try{
+    const saved=await load(id);if(!saved||n.oracle!=='supra-pyth')throw new Error('Hybrid infrastructure is required.');
+    if(saved.guard){if(saved.guard.transactionHash!==hash)throw new Error('A different guard is already recorded.');return (await snapshot(id)).view;}
+    const s=await snapshot(id),[tx,r]=await Promise.all([client.getTransaction({hash}),client.getTransactionReceipt({hash})]);
+    const code=await client.getCode({address:s.view.bundle.source,blockNumber:r.blockNumber});
+    if(r.status!=='success'||!r.contractAddress||tx.to!==null||tx.from.toLowerCase()!==s.view.controller.toLowerCase()||tx.value!==0n||tx.input!==guardData(s.view.bundle.source,keccak256(code))||(await client.getBlock({blockNumber:r.blockNumber})).hash!==r.blockHash)throw new Error('Not the exact canonical controller-approved guard deployment.');
+    await runtime(r.contractAddress,'GuardedHybridValuationSource',r.blockNumber);
+    const temporary=path(id)+'.guard.tmp';await writeFile(temporary,JSON.stringify({...saved,guard:{address:getAddress(r.contractAddress),transactionHash:hash}}),{flag:'wx',mode:0o600});await rename(temporary,path(id));
+    return (await snapshot(id)).view;
+   }finally{confirming.delete(id);}
+  },
+  async receipt(id:string,hash:Hex){if(!/^0x[a-f0-9]{64}$/i.test(hash))throw new Error('Invalid transaction hash.');const s=await snapshot(id);const [tx,r]=await Promise.all([client.getTransaction({hash}),client.getTransactionReceipt({hash})]);const destinations=[s.view.vault,network.quote,n.oracle==='chainlink'?undefined:n.pyth,s.view.bundle?.gateway,s.view.bundle?.source,s.view.bundle?.guard?.address].filter(Boolean).map(x=>x.toLowerCase());if(!tx.to||!destinations.includes(tx.to.toLowerCase())||(tx.value!==0n&&(n.oracle==='chainlink'||tx.to.toLowerCase()!==n.pyth.toLowerCase())))throw new Error('Transaction is outside this vault integration.');if((await client.getBlock({blockNumber:r.blockNumber})).hash!==r.blockHash)throw new Error('Transaction was reorganized.');return {status:r.status,blockNumber:String(r.blockNumber),transactionHash:hash};},
   async confirm(id:string,hash:Hex){if(confirming.has(id))throw new Error('Infrastructure confirmation is already running. Retry verification.');confirming.add(id);try{if(!/^0x[a-f0-9]{64}$/i.test(hash))throw new Error('Invalid transaction hash.');const r=await record(id),saved=await load(id);if(saved){if(saved.transactionHash!==hash)throw new Error('This agent already has infrastructure.');return (await snapshot(id)).view;}
    const [tx,receipt]=await Promise.all([client.getTransaction({hash}),client.getTransactionReceipt({hash})]);if(receipt.status!=='success'||!receipt.contractAddress||tx.to!==null||tx.from.toLowerCase()!==r.manifest.controller.toLowerCase()||tx.value!==0n||tx.input!==deployData(r))throw new Error('This is not the exact successful controller infrastructure deployment.');
    const block=await client.getBlock({blockNumber:receipt.blockNumber});if(block.hash!==receipt.blockHash)throw new Error('Deployment was reorganized.');await runtime(receipt.contractAddress,bundleName,receipt.blockNumber);

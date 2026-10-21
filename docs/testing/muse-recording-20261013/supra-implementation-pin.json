@@ -1,0 +1,11 @@
+{
+  "proxy": "0xF8522B7fcE37439b98A2be282d413A44269028bE",
+  "proxyCodeHash": "0x6e3a6d42335ec651bf68b1ad923f7a3d7b2e81c8d7801f81ec9aa8c705ba320e",
+  "blockHash": "0x08a027f9bdf42b00b0f446fed4dc2ef7cd50714d73a453ba173a32ec13f87c61",
+  "implementation": "0xCcd0bFDCC6AE1e7d706c404462a615092A8a83a0",
+  "implementationCodeHash": "0x62f26eec2b3deb403f40e2fbda2a0cb5b1086bc393138ff6a7f2d2badd4e5ecf",
+  "blockNumber": "70791999",
+  "providerChecks": 1,
+  "source": "https://docs.supra.com/oracles/data-feeds/pull-oracle/networks",
+  "scope": "Current implementation of the documented Supra Monad testnet pull-oracle proxy. Original RPC observation is canonical; the secondary provider was rate-limited if providerChecks is 1. Implementation source verification was unavailable. This is an observed runtime pin, not a source audit, independent quorum or execution attestation."
+}

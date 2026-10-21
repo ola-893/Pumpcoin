@@ -1,3 +1,5 @@
+import { exportDecisions } from '../agent-registration/verify-evidence.js';
+import { verifyBundle } from '../agent-registration/decision-receipt.js';
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import { spawn } from 'node:child_process';
@@ -74,7 +76,7 @@ test('Headless signer trades on real EVM, recovers pending receipt on restart an
     const deployment: AutonomousDeployment = { ...network, vault, vaultCodeHash: await codeHash(vault), adapter, adapterCodeHash: await codeHash(adapter), venue, venueCodeHash: await codeHash(venue), source, sourceCodeHash: await codeHash(source), dependencies: [dependency] };
     await assert.rejects(tradingSnapshot(prepared, { ...deployment, dependencies: [{ ...dependency, codeHash: `0x${'f'.repeat(64)}` }] }, client), /dependency runtime/);
     await assert.rejects(tradingSnapshot(prepared, { ...deployment, dependencies: [{ ...dependency, implementation: source, implementationCodeHash: dependency.codeHash }] }, client), /implementation changed/);
-    const workerConfig = { registrationId: record.id, deployment };
+    const workerConfig = { registrationId: record.id, deployment, economy: { maxTransactionGasWei:'100000000000000000', maxDailyGasWei:'1000000000000000000', gasReserveWei:'100000000000000000', minimumTradeIntervalMs:0, maxTradesPerDay:24 } };
     const tick = (action: 'BUY' | 'SELL') => runAutonomous(workerConfig, { once: true, directory, registrations, propose: async () => ({ action, quoteUnits: '10000000' }) });
     const failedJournal = join(directory, `31337-${vault.toLowerCase()}.json.tmp`);
     await mkdir(failedJournal, { recursive: true });
@@ -91,13 +93,32 @@ test('Headless signer trades on real EVM, recovers pending receipt on restart an
     const receipt = await client.getTransactionReceipt({ hash: journal.pending.hash }); assert.equal(receipt.status, 'success');
     assert.equal(await client.readContract({ address: position, abi: token, functionName: 'balanceOf', args: [vault] }), 10n ** 19n);
     const firstNonce = await client.getTransactionCount({ address: executionKey });
+    const pendingBundle = await exportDecisions(workerConfig, registrations, directory);
+    assert.equal(pendingBundle.receipts.length, 1);
+    assert.equal(pendingBundle.receipts[0].body.evidence, 'injected-test-proposal');
+    const replayed = await verifyBundle(pendingBundle, undefined, client);
+    assert.equal(replayed.chainChecked, true); assert.equal(replayed.linkedTransactions, 1);
+    const txWithCommitment = await client.getTransaction({ hash: journal.pending.hash });
+    assert.ok(txWithCommitment.input.endsWith('50434431' + pendingBundle.receipts[0].hash.slice(2)), 'same mined trade anchors the decision hash');
+    const brokenLink = structuredClone(pendingBundle); brokenLink.transactions[0].transactionHash = deploymentHash;
+    await assert.rejects(verifyBundle(brokenLink, undefined, client), /does not anchor/);
+    const brokenStateClient = new Proxy(client, { get(target, key) { if (key === 'getBlock') return async (args:any) => ({ ...await target.getBlock(args), hash: `0x${'f'.repeat(64)}` }); return Reflect.get(target,key); } });
+    await assert.rejects(verifyBundle(pendingBundle, undefined, brokenStateClient), /snapshot differs/);
+
     await client.request({ method: 'evm_mine' as any });
     await tick('BUY'); // New process lifecycle recovers prior receipt, does not submit again.
     assert.equal(await client.getTransactionCount({ address: executionKey }), firstNonce);
     assert.equal(JSON.parse(await readFile(journalPath, 'utf8')).pending, undefined);
+    const recovered = JSON.parse(await readFile(journalPath, 'utf8')); assert.equal(recovered.gasBudget.trades, 1); assert.equal(recovered.gasBudget.spentWei, String(receipt.gasUsed * receipt.effectiveGasPrice)); assert.equal(recovered.receipts[0].hash, receipt.transactionHash);
+    await assert.rejects(runAutonomous({ ...workerConfig, economy: { ...workerConfig.economy, minimumTradeIntervalMs:300000 } }, { once:true, directory, registrations, propose:async()=>({action:'BUY',quoteUnits:'10000000'}) }), /cooldown/); assert.equal(await client.getTransactionCount({address:executionKey}),firstNonce);
     await client.request({ method: 'evm_mine' as any }); await tick('SELL'); await client.request({ method: 'evm_mine' as any }); await tick('SELL');
     assert.equal(await read('dailyQuoteTraded', [(await client.getBlock()).timestamp / 86400n]), 20000000n);
     assert.equal(await client.readContract({ address: position, abi: token, functionName: 'balanceOf', args: [vault] }), 0n);
+    const completedBundle = await exportDecisions(workerConfig, registrations, directory);
+    assert.equal(completedBundle.receipts.length, 2); assert.equal(completedBundle.transactions.length, 2);
+    assert.equal((await verifyBundle(completedBundle, undefined, client)).decisions, 2);
+    const reordered = structuredClone(completedBundle); reordered.receipts.reverse(); await assert.rejects(verifyBundle(reordered), /reordered/);
+    const missing = structuredClone(completedBundle); missing.receipts.shift(); missing.transactions.shift(); await assert.rejects(verifyBundle(missing), /gap/);
     const before = await client.getTransactionCount({ address: executionKey });
     await client.request({ method: 'evm_mine' as any }); await tick('BUY'); assert.equal(await client.getTransactionCount({ address: executionKey }), before, 'daily cap HOLD does not sign a transaction');
     const revoke = await permissionPlan(prepared, vault, network, 'revoke', { days: 0, dailyQuoteCap: '0' }, client);

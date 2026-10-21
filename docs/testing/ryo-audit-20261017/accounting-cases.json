@@ -1,0 +1,462 @@
+{
+  "classification": "SYNTHETIC ACCOUNTING TESTS \u2014 NOT LIVE PERFORMANCE",
+  "seed": 20261017,
+  "cases": [
+    {
+      "case": 0,
+      "quote": "160588157",
+      "notional": "26284868",
+      "slippageBps": 28,
+      "feeBps": 5,
+      "exitQuote": "128470525",
+      "expected": {
+        "entry": "161037804",
+        "quantity": "163221724012",
+        "cashAfterEntry": "9973701990",
+        "entryFee": "13143",
+        "exitPrice": "128110807",
+        "exitFee": "10456",
+        "totalFees": "23599",
+        "realized": "-5398000",
+        "finalCash": "9994602000"
+      }
+    },
+    {
+      "case": 1,
+      "quote": "75250272",
+      "notional": "270117481",
+      "slippageBps": 50,
+      "feeBps": 16,
+      "exitQuote": "60200217",
+      "expected": {
+        "entry": "75626524",
+        "quantity": "3571729423925",
+        "cashAfterEntry": "9729450332",
+        "entryFee": "432188",
+        "exitPrice": "59899215",
+        "exitFee": "342311",
+        "totalFees": "774499",
+        "realized": "-56948191",
+        "finalCash": "9943051809"
+      }
+    },
+    {
+      "case": 2,
+      "quote": "294819445",
+      "notional": "290013640",
+      "slippageBps": 48,
+      "feeBps": 17,
+      "exitQuote": "235855556",
+      "expected": {
+        "entry": "296234579",
+        "quantity": "978999956652",
+        "cashAfterEntry": "9709493337",
+        "entryFee": "493024",
+        "exitPrice": "234723449",
+        "exitFee": "390651",
+        "totalFees": "883675",
+        "realized": "-61103068",
+        "finalCash": "9938896932"
+      }
+    },
+    {
+      "case": 3,
+      "quote": "187063008",
+      "notional": "325209752",
+      "slippageBps": 11,
+      "feeBps": 15,
+      "exitQuote": "149650406",
+      "expected": {
+        "entry": "187268778",
+        "quantity": "1736593550047",
+        "cashAfterEntry": "9674302434",
+        "entryFee": "487815",
+        "exitPrice": "149485790",
+        "exitFee": "389395",
+        "totalFees": "877210",
+        "realized": "-66490903",
+        "finalCash": "9933509097"
+      }
+    },
+    {
+      "case": 4,
+      "quote": "285409700",
+      "notional": "223064402",
+      "slippageBps": 35,
+      "feeBps": 18,
+      "exitQuote": "228327760",
+      "expected": {
+        "entry": "286408634",
+        "quantity": "778832673040",
+        "cashAfterEntry": "9776534083",
+        "entryFee": "401516",
+        "exitPrice": "227528612",
+        "exitFee": "318973",
+        "totalFees": "720489",
+        "realized": "-46578173",
+        "finalCash": "9953421827"
+      }
+    },
+    {
+      "case": 5,
+      "quote": "56381384",
+      "notional": "105783494",
+      "slippageBps": 45,
+      "feeBps": 5,
+      "exitQuote": "45105107",
+      "expected": {
+        "entry": "56635101",
+        "quantity": "1867807987135",
+        "cashAfterEntry": "9894163615",
+        "entryFee": "52892",
+        "exitPrice": "44902134",
+        "exitFee": "41935",
+        "totalFees": "94827",
+        "realized": "-22009756",
+        "finalCash": "9977990244"
+      }
+    },
+    {
+      "case": 6,
+      "quote": "97825333",
+      "notional": "145725580",
+      "slippageBps": 20,
+      "feeBps": 28,
+      "exitQuote": "78260266",
+      "expected": {
+        "entry": "98020984",
+        "quantity": "1486677383283",
+        "cashAfterEntry": "9853866389",
+        "entryFee": "408032",
+        "exitPrice": "78103745",
+        "exitFee": "325123",
+        "totalFees": "733155",
+        "realized": "-30343663",
+        "finalCash": "9969656337"
+      }
+    },
+    {
+      "case": 7,
+      "quote": "251294856",
+      "notional": "419922037",
+      "slippageBps": 36,
+      "feeBps": 4,
+      "exitQuote": "201035884",
+      "expected": {
+        "entry": "252199518",
+        "quantity": "1665039014864",
+        "cashAfterEntry": "9579909995",
+        "entryFee": "167969",
+        "exitPrice": "200312154",
+        "exitFee": "133412",
+        "totalFees": "301381",
+        "realized": "-86695866",
+        "finalCash": "9913304134"
+      }
+    },
+    {
+      "case": 8,
+      "quote": "12328959",
+      "notional": "185488231",
+      "slippageBps": 11,
+      "feeBps": 25,
+      "exitQuote": "9863167",
+      "expected": {
+        "entry": "12342521",
+        "quantity": "15028390958378",
+        "cashAfterEntry": "9814048049",
+        "entryFee": "463721",
+        "exitPrice": "9852317",
+        "exitFee": "370162",
+        "totalFees": "833883",
+        "realized": "-38257642",
+        "finalCash": "9961742358"
+      }
+    },
+    {
+      "case": 9,
+      "quote": "16710482",
+      "notional": "308002168",
+      "slippageBps": 5,
+      "feeBps": 25,
+      "exitQuote": "13368385",
+      "expected": {
+        "entry": "16718838",
+        "quantity": "18422462613729",
+        "cashAfterEntry": "9691227827",
+        "entryFee": "770006",
+        "exitPrice": "13361700",
+        "exitFee": "615389",
+        "totalFees": "1385395",
+        "realized": "-63232144",
+        "finalCash": "9936767856"
+      }
+    },
+    {
+      "case": 10,
+      "quote": "203557269",
+      "notional": "183586649",
+      "slippageBps": 24,
+      "feeBps": 16,
+      "exitQuote": "162845815",
+      "expected": {
+        "entry": "204045807",
+        "quantity": "899732524275",
+        "cashAfterEntry": "9816119613",
+        "entryFee": "293739",
+        "exitPrice": "162454985",
+        "exitFee": "233866",
+        "totalFees": "527605",
+        "realized": "-37948220",
+        "finalCash": "9962051780"
+      }
+    },
+    {
+      "case": 11,
+      "quote": "193884695",
+      "notional": "275786223",
+      "slippageBps": 24,
+      "feeBps": 24,
+      "exitQuote": "155107756",
+      "expected": {
+        "entry": "194350019",
+        "quantity": "1419018245632",
+        "cashAfterEntry": "9723551891",
+        "entryFee": "661887",
+        "exitPrice": "154735497",
+        "exitFee": "526974",
+        "totalFees": "1188861",
+        "realized": "-57402590",
+        "finalCash": "9942597410"
+      }
+    },
+    {
+      "case": 12,
+      "quote": "98119117",
+      "notional": "139186711",
+      "slippageBps": 19,
+      "feeBps": 10,
+      "exitQuote": "78495293",
+      "expected": {
+        "entry": "98305544",
+        "quantity": "1415858204294",
+        "cashAfterEntry": "9860674103",
+        "entryFee": "139187",
+        "exitPrice": "78346151",
+        "exitFee": "110928",
+        "totalFees": "250115",
+        "realized": "-28509785",
+        "finalCash": "9971490215"
+      }
+    },
+    {
+      "case": 13,
+      "quote": "199409949",
+      "notional": "225227818",
+      "slippageBps": 20,
+      "feeBps": 13,
+      "exitQuote": "159527959",
+      "expected": {
+        "entry": "199808769",
+        "quantity": "1127216884059",
+        "cashAfterEntry": "9774479386",
+        "entryFee": "292797",
+        "exitPrice": "159208903",
+        "exitFee": "233302",
+        "totalFees": "526099",
+        "realized": "-46290953",
+        "finalCash": "9953709047"
+      }
+    },
+    {
+      "case": 14,
+      "quote": "172322833",
+      "notional": "206482056",
+      "slippageBps": 4,
+      "feeBps": 4,
+      "exitQuote": "137858266",
+      "expected": {
+        "entry": "172391763",
+        "quantity": "1197748966695",
+        "cashAfterEntry": "9793435352",
+        "entryFee": "82593",
+        "exitPrice": "137803122",
+        "exitFee": "66022",
+        "totalFees": "148615",
+        "realized": "-41577124",
+        "finalCash": "9958422876"
+      }
+    },
+    {
+      "case": 15,
+      "quote": "103304120",
+      "notional": "461624725",
+      "slippageBps": 36,
+      "feeBps": 23,
+      "exitQuote": "82643296",
+      "expected": {
+        "entry": "103676015",
+        "quantity": "4452570105052",
+        "cashAfterEntry": "9537313539",
+        "entryFee": "1061737",
+        "exitPrice": "82345780",
+        "exitFee": "843296",
+        "totalFees": "1905033",
+        "realized": "-96879399",
+        "finalCash": "9903120601"
+      }
+    },
+    {
+      "case": 16,
+      "quote": "199185537",
+      "notional": "233678328",
+      "slippageBps": 24,
+      "feeBps": 1,
+      "exitQuote": "159348429",
+      "expected": {
+        "entry": "199663583",
+        "quantity": "1170360285480",
+        "cashAfterEntry": "9766298305",
+        "entryFee": "23368",
+        "exitPrice": "158965992",
+        "exitFee": "18605",
+        "totalFees": "41973",
+        "realized": "-47672817",
+        "finalCash": "9952327183"
+      }
+    },
+    {
+      "case": 17,
+      "quote": "164966183",
+      "notional": "346273552",
+      "slippageBps": 18,
+      "feeBps": 9,
+      "exitQuote": "131972946",
+      "expected": {
+        "entry": "165263123",
+        "quantity": "2095286266616",
+        "cashAfterEntry": "9653414802",
+        "entryFee": "311647",
+        "exitPrice": "131735394",
+        "exitFee": "248422",
+        "totalFees": "560069",
+        "realized": "-70810259",
+        "finalCash": "9929189741"
+      }
+    },
+    {
+      "case": 18,
+      "quote": "95094016",
+      "notional": "173599705",
+      "slippageBps": 27,
+      "feeBps": 24,
+      "exitQuote": "76075212",
+      "expected": {
+        "entry": "95350770",
+        "quantity": "1820642927162",
+        "cashAfterEntry": "9825983656",
+        "entryFee": "416640",
+        "exitPrice": "75869808",
+        "exitFee": "331517",
+        "totalFees": "748157",
+        "realized": "-36216032",
+        "finalCash": "9963783968"
+      }
+    },
+    {
+      "case": 19,
+      "quote": "258536905",
+      "notional": "53950873",
+      "slippageBps": 9,
+      "feeBps": 22,
+      "exitQuote": "206829524",
+      "expected": {
+        "entry": "258769589",
+        "quantity": "208490005369",
+        "cashAfterEntry": "9945930436",
+        "entryFee": "118692",
+        "exitPrice": "206643377",
+        "exitFee": "94783",
+        "totalFees": "213475",
+        "realized": "-11081269",
+        "finalCash": "9988918731"
+      }
+    },
+    {
+      "case": 20,
+      "quote": "234544528",
+      "notional": "12986976",
+      "slippageBps": 18,
+      "feeBps": 15,
+      "exitQuote": "187635622",
+      "expected": {
+        "entry": "234966709",
+        "quantity": "55271557640",
+        "cashAfterEntry": "9986993544",
+        "entryFee": "19481",
+        "exitPrice": "187297877",
+        "exitFee": "15529",
+        "totalFees": "35010",
+        "realized": "-2669740",
+        "finalCash": "9997330260"
+      }
+    },
+    {
+      "case": 21,
+      "quote": "273800837",
+      "notional": "497177310",
+      "slippageBps": 50,
+      "feeBps": 11,
+      "exitQuote": "219040669",
+      "expected": {
+        "entry": "275169842",
+        "quantity": "1806801597102",
+        "cashAfterEntry": "9502275795",
+        "entryFee": "546896",
+        "exitPrice": "217945465",
+        "exitFee": "433163",
+        "totalFees": "980059",
+        "realized": "-104373154",
+        "finalCash": "9895626846"
+      }
+    },
+    {
+      "case": 22,
+      "quote": "78440936",
+      "notional": "57282564",
+      "slippageBps": 49,
+      "feeBps": 3,
+      "exitQuote": "62752748",
+      "expected": {
+        "entry": "78825297",
+        "quantity": "726702799483",
+        "cashAfterEntry": "9942700252",
+        "entryFee": "17185",
+        "exitPrice": "62445259",
+        "exitFee": "13614",
+        "totalFees": "30799",
+        "realized": "-11934218",
+        "finalCash": "9988065782"
+      }
+    },
+    {
+      "case": 23,
+      "quote": "216087229",
+      "notional": "104488605",
+      "slippageBps": 21,
+      "feeBps": 2,
+      "exitQuote": "172869783",
+      "expected": {
+        "entry": "216541013",
+        "quantity": "482534941313",
+        "cashAfterEntry": "9895490498",
+        "entryFee": "20898",
+        "exitPrice": "172506756",
+        "exitFee": "16649",
+        "totalFees": "37547",
+        "realized": "-21285614",
+        "finalCash": "9978714386"
+      }
+    }
+  ]
+}
