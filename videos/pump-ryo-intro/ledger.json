@@ -1,0 +1,95 @@
+{
+  "fps": 30,
+  "seams": [
+    {
+      "id": "context-introduce",
+      "cut": 8.466667,
+      "technique": "cut-the-curve LEFT",
+      "exit": {
+        "selector": "#stage-context",
+        "axis": "x",
+        "dir": -1,
+        "dur": 0.34
+      },
+      "entry": {
+        "selector": "#stage-introduce",
+        "axis": "x",
+        "dir": -1,
+        "dur": 0.42,
+        "travel": 12
+      }
+    },
+    {
+      "id": "introduce-inputs",
+      "cut": 17.766667,
+      "technique": "cut-the-curve LEFT",
+      "exit": {
+        "selector": "#stage-introduce",
+        "axis": "x",
+        "dir": -1,
+        "dur": 0.34
+      },
+      "entry": {
+        "selector": "#stage-inputs",
+        "axis": "x",
+        "dir": -1,
+        "dur": 0.42,
+        "travel": 12
+      }
+    },
+    {
+      "id": "inputs-rules",
+      "cut": 29.633333,
+      "technique": "cut-the-curve LEFT",
+      "exit": {
+        "selector": "#stage-inputs",
+        "axis": "x",
+        "dir": -1,
+        "dur": 0.34
+      },
+      "entry": {
+        "selector": "#stage-rules",
+        "axis": "x",
+        "dir": -1,
+        "dur": 0.42,
+        "travel": 12
+      }
+    },
+    {
+      "id": "rules-history",
+      "cut": 39.7,
+      "technique": "cut-the-curve LEFT",
+      "exit": {
+        "selector": "#stage-rules",
+        "axis": "x",
+        "dir": -1,
+        "dur": 0.34
+      },
+      "entry": {
+        "selector": "#stage-history",
+        "axis": "x",
+        "dir": -1,
+        "dur": 0.42,
+        "travel": 12
+      }
+    },
+    {
+      "id": "history-handoff",
+      "cut": 51.966667,
+      "technique": "cut-the-curve LEFT",
+      "exit": {
+        "selector": "#stage-history",
+        "axis": "x",
+        "dir": -1,
+        "dur": 0.34
+      },
+      "entry": {
+        "selector": "#stage-handoff",
+        "axis": "x",
+        "dir": -1,
+        "dur": 0.42,
+        "travel": 12
+      }
+    }
+  ]
+}

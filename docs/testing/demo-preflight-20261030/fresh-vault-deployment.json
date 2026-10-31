@@ -1,0 +1,35 @@
+{
+  "scope": "Confirmed new-agent deployment, independently checked by Pump against exact constructor input, runtime, registry, authority and canonical block.",
+  "binding": {
+    "identityPublication": "commitment-only-v1",
+    "instantTestnetDemo": true,
+    "configurationNoticeSeconds": 0,
+    "status": "binding-checked-at-block",
+    "chainId": 11155111,
+    "mode": "ethereum-sepolia",
+    "vault": "0x44E9E1a6A7eeDAfdA49f8F7d94AA1C2Bfa691ff6",
+    "identityRegistry": "0x8004A818BFB912233c491871b3d84c89A494BD9e",
+    "agentId": "11242",
+    "blockNumber": "12029020",
+    "blockHash": "0x4df556b0086f28c971c46a3477b3717a2ac13c710734eb7d9344f47ed40c6c05",
+    "configHash": "0x4bb4d024b2471b73778ad7a71f1996c69a0876d411f08f35049468ef3b83239b",
+    "checkedAt": "2026-10-30T20:22:56.057Z",
+    "investmentEligible": false,
+    "evidence": "controller-deployment-receipt-and-runtime-verification",
+    "scope": "Dedicated vault and ERC-8004 identity created and bound. Vault starts paused with unavailable valuation and no trading adapter. Trading and investment remain blocked. Historical deployment snapshot; configured RPC and registry implementation are trust boundaries.",
+    "deploymentTransaction": "0x770ec01fbc47c700e2416001dce13236ef0addd3f9ab09cf190c3cd0f2279dd3",
+    "tradingReady": false
+  },
+  "transaction": {
+    "hash": "0x770ec01fbc47c700e2416001dce13236ef0addd3f9ab09cf190c3cd0f2279dd3",
+    "status": "success",
+    "from": "0xe26468ae02368a75dbdbea58f367b7313942ad26",
+    "valueWei": "0",
+    "contractAddress": "0x44e9e1a6a7eedafda49f8f7d94aa1c2bfa691ff6",
+    "blockNumber": "12029020",
+    "blockHash": "0x4df556b0086f28c971c46a3477b3717a2ac13c710734eb7d9344f47ed40c6c05",
+    "gasUsed": "41766974",
+    "effectiveGasPrice": "114",
+    "gasPaidWei": "4761435036"
+  }
+}

@@ -1,0 +1,64 @@
+{
+  "id": "0xcfc74daed65c3ff80671a6892c32edfbc75798378f84dc8da7bf958f3705a8b6",
+  "policy": {
+    "ryoResearch": {
+      "version": 1,
+      "required": true,
+      "maxPriceDeviationBps": 500,
+      "blockAvoidVerdict": true
+    },
+    "version": "PUMPCOIN-RESEARCH-POLICY-v2",
+    "registrationId": "0x19e7d9336937879d074a36f5abb7708ddde0ef701e06852484f3efac4daacf3c",
+    "manifestCommitment": "0x91b3d75368a43db632780c531de766ee261f5fb4b2e310a26301ccad28cd156a",
+    "strategies": [
+      "market-news"
+    ],
+    "symbols": [
+      "ETH"
+    ],
+    "voices": [],
+    "newsFeeds": [
+      "https://decrypt.co/feed"
+    ],
+    "marketRules": {
+      "source": "coinbase-exchange",
+      "instruments": [
+        {
+          "id": "coinbase:ETH-USD",
+          "symbol": "ETH",
+          "network": "coinbase-exchange"
+        }
+      ],
+      "minimumLiquidityUsd": "100000000",
+      "maximumLiquidityBps": 100,
+      "riskEvidence": "record-unavailable-block-reported"
+    },
+    "initialCash": "10000000000",
+    "riskBps": 100,
+    "positionBps": 2000,
+    "exposureBps": 4000,
+    "stopBps": 500,
+    "targetBps": 1000,
+    "dailyLossBps": 500,
+    "maxPositions": 3,
+    "convergence": 2,
+    "maxAgeSeconds": 3600,
+    "intervalSeconds": 300,
+    "cooldownSeconds": 300,
+    "feeBps": 10,
+    "slippageBps": 20,
+    "executionDelaySeconds": 5,
+    "maxHoldingSeconds": 86400,
+    "engineDigest": "sha256:293bdd9b6adcdbfd15c107e1b18a50945803ee7b098fce73661a24fb6d226a1c",
+    "engineVersion": "pump-research-spot-v1",
+    "promptVersion": "pump-research-v1"
+  },
+  "hash": "0x9adf6aaeb22ffaef817f6e2870f03873d58d4463d4bfe66563ff1683ed5d06c3",
+  "origin": "http://127.0.0.1:5173",
+  "expiresAt": 1793390320567,
+  "controller": "0xe26468ae02368a75DBDBea58F367B7313942ad26",
+  "executionKey": "0x5996880a2Fc9E0Ce362ef73FdbdE6E785593b28f",
+  "controllerSignature": "0x1670a0c572ee534286f3dbdf3a9a020599875fc14faee79e253001fe057759342e42874f8f71cec5d5c75897cc0969eb35b720d8ba649335ba3ca27b92ecfb171c",
+  "executionSignature": "0x4e268e3dd685d77ed1fbd819ff43363d97b067b7e6515e6468433d9c83c3d60d3b894e278aec9dd9c729b7eef68e05c9b65a8b62c583462343f5b7401defbda01b",
+  "createdAt": "2026-10-30T19:49:41.972Z"
+}

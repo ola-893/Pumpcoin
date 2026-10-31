@@ -1,0 +1,28 @@
+{
+  "recordId": "0x19e7d9336937879d074a36f5abb7708ddde0ef701e06852484f3efac4daacf3c",
+  "plan": {
+    "id": "0x76be62e348775208eebbeb1fa223c36cfe8d848e4141f3e0169c3673841b53f7",
+    "action": "approve-native-exit",
+    "chainId": 11155111,
+    "from": "0xe26468ae02368a75DBDBea58F367B7313942ad26",
+    "to": "0x44E9E1a6A7eeDAfdA49f8F7d94AA1C2Bfa691ff6",
+    "data": "0x095ea7b3000000000000000000000000769cc5cbd4734e6bddea6d884dd4f5d2c8ae8f9d0000000000000000000000000000000000000000000000000000000085746dc0",
+    "value": "0x0",
+    "gas": "0x25d13",
+    "estimatedFee": "3252879",
+    "native": {
+      "action": "approve-native-exit",
+      "gateway": "0x769CC5cBd4734E6bDdEa6D884DD4F5D2c8ae8f9D",
+      "vault": "0x44E9E1a6A7eeDAfdA49f8F7d94AA1C2Bfa691ff6",
+      "amount": "2239000000",
+      "minQuote": "0",
+      "minOutput": "0",
+      "deadline": 1793461344
+    },
+    "quote": {
+      "expiresAt": 1793461102953
+    },
+    "scope": "Approve only this Pump amount for this vault\u2019s native-token gateway."
+  },
+  "source": "0x4b5945629f74357E43c5F7119c3429CF185AD026"
+}

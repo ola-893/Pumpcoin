@@ -8,6 +8,7 @@ import { decide, replay } from './decision.js';
 import { policyMessage, validatePolicy, verifyPolicy, receiptMessage, checkpointMessage } from './policy.js';
 import { researchSources, sourceConfig } from './providers.js';
 import { researchInference } from './inference.js';
+import { hasInterpretationInput } from './request.js';
 import { ResearchStore } from './store.js';
 import { researchEngineDigest } from './engine.js';
 import { evaluate } from './evaluation.js';
@@ -41,6 +42,8 @@ export function researchService(options:ResearchOptions){
   async function context(id:string){if(!/^0x[0-9a-f]{64}$/.test(id))throw new Error('Invalid registered agent identifier.');return options.resolve(id);}
   async function challenge(id:string,value:unknown,origin:string){
     const {record}=await context(id),policy=validatePolicy(value,record.id,record.commitment);
+    if(policy.strategies.length!==1||policy.strategies[0]!=='market-news'||policy.voices.length)throw new Error('New research policies use market/news only. X and Multi-KOL collection have been removed; historical records remain unchanged.');
+    if(!policy.newsFeeds.length)throw new Error('Select at least one free operator-allowlisted news feed.');
     if(policy.engineDigest!==await researchEngineDigest())throw new Error('Research engine changed; refresh and review the policy again.');
     if(store.policies(id).some(p=>p.hash===digest(policy)))throw new Error('This exact policy already has practice sessions. Select its retained sessions instead of resetting capital.');
     if(store.sessions(id).some(s=>s.portfolio.positions.length||s.portfolio.pending.length))throw new Error('Close existing practice positions/orders before changing the research policy.');
@@ -57,13 +60,13 @@ export function researchService(options:ResearchOptions){
     store.savePolicy(signed,sessions);return signed;
   }
   async function view(id:string):Promise<ResearchView>{
-    const {record}=await context(id);let capabilities={ryo:false,ryoMapping:false,x:false,news:false};const errors:string[]=[];
-    try{capabilities=(await sources()).capabilities;}catch{errors.push('Research source configuration could not be read.');}
+    const {record}=await context(id);let capabilities={ryo:false,ryoMapping:false,x:false,news:false};const errors:string[]=[];let proposedFeeds:string[]=[];
+    try{const client=await sources();capabilities=client.capabilities;proposedFeeds=client.proposedFeeds;}catch{errors.push('Research source configuration could not be read.');}
     const sessions=store.sessions(id).map(s=>s.state==='running'&&!store.leased(s.id)&&!store.runtimeOwner(s.id)?{...s,state:'error' as const,message:'No active local worker lease remains. Stored decisions and positions are retained.'}:s),histories=new Map<string,Awaited<ReturnType<typeof checked>>>();
     for(const s of sessions)histories.set(s.id,await checked(s,record));
     const latest=sessions.slice(0,20).flatMap(s=>{const row=histories.get(s.id)!.at(-1);return row?[{sessionId:s.id,...row}]:[];});
     const policies=store.policies(id),paired=policies.find(p=>p.policy.strategies.length===2);
-    return {registrationId:id as Hex,hosted:false,engineDigest:await researchEngineDigest(),capabilities:{...capabilities,signer:options.signerConfigured},policies,sessions,latest,errors,...(paired?{comparison:evaluate(paired,sessions,s=>histories.get(s)!)}:{})};
+    return {registrationId:id as Hex,hosted:false,proposedFeeds,engineDigest:await researchEngineDigest(),capabilities:{...capabilities,signer:options.signerConfigured},policies,sessions,latest,errors,...(paired?{comparison:evaluate(paired,sessions,s=>histories.get(s)!)}:{})};
   }
   function belongs(id:string,sessionId:string){const s=store.session(sessionId);if(s.registrationId!==id)throw new Error('Practice session belongs to another agent.');return s;}
   async function cycle(id:string,sessionId:string){
@@ -73,11 +76,11 @@ export function researchService(options:ResearchOptions){
     if(s.mode!=='live-observed')throw new Error('Live worker cannot execute a replay or synthetic session.');
     const owner=randomBytes(16).toString('hex');store.acquire(s.id,owner,Date.now());const heartbeat=setInterval(()=>{try{store.heartbeat(s.id,owner);}catch{}},60000);
     try{
-      store.status(s.id,'running','Collecting RYO market evidence and configured sources.');
+      store.status(s.id,'running','Collecting the signed market source, RYO observations and news.');
       let evidence:Evidence,trace:Trace|null=null,error:string|undefined;
       try{evidence=await (await sources()).collect(signed.policy);}catch{evidence={version:'PUMPCOIN-RESEARCH-EVIDENCE-v1',mode:'live-observed',capturedAt:new Date().toISOString(),markets:[],posts:[],sources:[{source:'ryo',available:false,reason:'Source configuration or collection failed.',retrievedAt:new Date().toISOString()}],raw:[]};}
       validateTimeline(evidence,new Date().toISOString());verifyNormalization(evidence,signed.policy);
-      if(evidence.sources.some(x=>x.source==='ryo'&&x.available)&&evidence.sources.some(x=>x.source===(s.strategy==='multi-kol'?'x':'news')&&x.available)){
+      if(hasInterpretationInput(evidence,signed.policy,s.strategy)){
         store.status(s.id,'running','Checking the registered local model and interpreting sourced evidence.');
         try{trace=await (options.infer??researchInference)(prepared,signed.policy,s.strategy,evidence);}catch{error='Local inference or model-artifact verification failed; no proposal was accepted.';}
       }
@@ -107,7 +110,7 @@ export function researchService(options:ResearchOptions){
     const hash=digest(value),signature=await options.sign(record,checkpointMessage(hash));return {...value,hash,signature};
   }
   const sourceChecks=new Map<string,{at:number;value:Promise<Evidence>}>();
-  return {challenge,authorize,view,start,stop,run,async sourceCheck(id:string,symbol:string){await context(id);if(typeof symbol!=='string'||!/^[A-Z0-9]{2,15}$/.test(symbol))throw new Error('Provide a market symbol.');const old=sourceChecks.get(symbol);if(old&&Date.now()-old.at<30000)return old.value;if(sourceChecks.size>=10)sourceChecks.clear();const value=(await sources()).check(symbol);sourceChecks.set(symbol,{at:Date.now(),value});try{return await value;}catch(error){sourceChecks.delete(symbol);throw error;}},async kickoff(id:string,sessionId:string){await context(id);belongs(id,sessionId);if(store.runtimeOwner(sessionId))throw new Error('Stop the supervised practice runtime before an extra observation.');store.requestStop(sessionId,false);void run(id,sessionId).catch(()=>{store.status(sessionId,'error','Practice observation could not start.');});},bundle,
+  return {challenge,authorize,view,start,stop,run,async sourceCheck(id:string,symbol:string,marketSource:'ryo'|'coinbase-exchange'='ryo'){await context(id);if(typeof symbol!=='string'||!/^[A-Z0-9]{2,15}$/.test(symbol))throw new Error('Provide a market symbol.');if(!['ryo','coinbase-exchange'].includes(marketSource))throw new Error('Unsupported market source.');const key=`${marketSource}:${symbol}`,old=sourceChecks.get(key);if(old&&Date.now()-old.at<30000)return old.value;if(sourceChecks.size>=10)sourceChecks.clear();const value=(await sources()).check(symbol,marketSource);sourceChecks.set(key,{at:Date.now(),value});try{return await value;}catch(error){sourceChecks.delete(key);throw error;}},async kickoff(id:string,sessionId:string){await context(id);belongs(id,sessionId);if(store.runtimeOwner(sessionId))throw new Error('Stop the supervised practice runtime before an extra observation.');store.requestStop(sessionId,false);void run(id,sessionId).catch(()=>{store.status(sessionId,'error','Practice observation could not start.');});},bundle,
     async history(id:string,sessionId:string){await context(id);const s=belongs(id,sessionId);return {rows:await checked(s),events:store.events(sessionId)};},
     async close(){for(const c of loops.values())c.abort();await Promise.all([...loopTasks.values(),...running.values()]);},store};
 }

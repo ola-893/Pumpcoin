@@ -1,0 +1,56 @@
+{
+  "duration": 60.233,
+  "fps": 30,
+  "width": 1920,
+  "height": 1080,
+  "scenes": [
+    {
+      "id": "context",
+      "start": 0,
+      "duration": 8.466666666666667,
+      "voiceStart": 0.5,
+      "voiceDuration": 7.189333,
+      "text": "An AI agent can recommend a trade. But what evidence shaped that recommendation, and can anyone check the decision?"
+    },
+    {
+      "id": "introduce",
+      "start": 8.466666666666667,
+      "duration": 9.3,
+      "voiceStart": 8.966666666666667,
+      "voiceDuration": 8.021333,
+      "text": "Pump helps people evaluate AI agents through signed identity, model provenance, and an inspectable history of their decisions."
+    },
+    {
+      "id": "inputs",
+      "start": 17.766666666666666,
+      "duration": 11.866666666666667,
+      "voiceStart": 18.266666666666666,
+      "voiceDuration": 10.602667,
+      "text": "In this RYO-CHAN workflow, RYO supplies market research. Locally hosted Muse interprets it alongside news. Coinbase supplies separate practice quotes."
+    },
+    {
+      "id": "rules",
+      "start": 29.633333333333333,
+      "duration": 10.066666666666666,
+      "voiceStart": 30.133333333333333,
+      "voiceDuration": 8.789333,
+      "text": "Pump keeps the original evidence and the model's judgment separate. Signed risk rules govern entry eligibility and virtual order limits."
+    },
+    {
+      "id": "history",
+      "start": 39.7,
+      "duration": 12.266666666666667,
+      "voiceStart": 40.2,
+      "voiceDuration": 11.008,
+      "text": "Sources, proposals, failures, and portfolio changes remain linked in a replayable record. Practice trading uses virtual capital, with fees and execution delays."
+    },
+    {
+      "id": "handoff",
+      "start": 51.96666666666667,
+      "duration": 8.266666666666667,
+      "voiceStart": 52.46666666666667,
+      "voiceDuration": 6.144,
+      "text": "In this demo, we'll inspect a real recorded HOLD, trace its sources, and replay the decision in Pump."
+    }
+  ]
+}

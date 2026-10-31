@@ -1,0 +1,452 @@
+{
+  "scope": "Authentic read-only RYO token probes; no model decisions, ledger events or funded trades. Credentials and response headers excluded.",
+  "startedAt": "2026-10-23T15-57-09-375Z",
+  "catalog": [
+    {
+      "name": "market_overview",
+      "description": "Delivery: a compact market-regime evidence pack with sentiment, market totals, dominance, movers, and explicit data gaps. Use when: an agent needs a broad market briefing before token research. Core inputs: none. Limits: research context only; incomplete lanes are marked partial or unavailable.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {},
+        "additionalProperties": false
+      }
+    },
+    {
+      "name": "scan_market",
+      "description": "Delivery: a ranked candidate set with price, momentum, market-activity evidence, filters, and reasons where available. Use when: an agent needs a shortlist before deeper token analysis. Core inputs: optional chain, theme, and top_n. Limits: theme is contextual rather than a strict filter; a scan is not a trade instruction.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "chain": {
+            "type": "string",
+            "description": "Chain slug e.g. eth/bsc (optional)."
+          },
+          "theme": {
+            "type": "string",
+            "description": "Narrative/theme filter (optional)."
+          },
+          "top_n": {
+            "type": "number",
+            "description": "How many candidates to return."
+          },
+          "filter_direction": {
+            "type": "string",
+            "description": "Direction filter: 'positive' (gainers only), 'negative' (losers only), or 'all' (default)."
+          }
+        },
+        "additionalProperties": false
+      }
+    },
+    {
+      "name": "analyze_token",
+      "description": "Delivery: a single-token research pack with USD market data, multi-window performance, calculated RSI and ATR, intelligence, summary, and warnings. Use when: an agent needs a quick structured token read. Core input: symbol. Limits: missing measurements are reported as unavailable and the result is not execution advice.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "symbol": {
+            "type": "string",
+            "description": "Token symbol, e.g. INJ."
+          },
+          "chain": {
+            "type": "string",
+            "description": "Chain slug for contract-specific safety, e.g. eth/bsc (optional)."
+          }
+        },
+        "required": [
+          "symbol"
+        ],
+        "additionalProperties": false
+      }
+    },
+    {
+      "name": "deep_analysis",
+      "description": "Delivery: a deeper token evidence pack combining market context, confluence, technicals, an optional Skill Hub token profile, derivatives, catalysts, risks, and a measured-ATR preview plan. Use when: an agent needs one comprehensive token read. Core input: token symbol; optional include_perp. Limits: token analysis only, not wallet analysis; unavailable lanes remain explicit and no trade is placed.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "symbol": {
+            "type": "string",
+            "description": "Token symbol, e.g. SOL."
+          },
+          "chain": {
+            "type": "string",
+            "description": "Chain slug for contract-specific safety (optional)."
+          },
+          "include_perp": {
+            "type": "boolean",
+            "description": "Include derivatives/perp posture (default true)."
+          }
+        },
+        "required": [
+          "symbol"
+        ],
+        "additionalProperties": false
+      }
+    },
+    {
+      "name": "compare_tokens",
+      "description": "Delivery: a side-by-side comparison of two to four tokens with factor winners, coverage by token, an overall pick, rationale, confidence, and conclusion method. Use when: an agent must compare relative momentum, market activity, and volatility using common data. Core inputs: symbols; optional intent. Limits: missing factors are disclosed and deterministic conclusions are labelled.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "symbols": {
+            "type": "string",
+            "description": "2-4 token symbols to compare, comma- or space-separated, e.g. 'SOL, AVAX'."
+          },
+          "intent": {
+            "type": "string",
+            "description": "Trade horizon the pick is for: swing | hold | spot (optional).",
+            "enum": [
+              "swing",
+              "hold",
+              "spot"
+            ]
+          }
+        },
+        "required": [
+          "symbols"
+        ],
+        "additionalProperties": false
+      }
+    },
+    {
+      "name": "monitor_market_sentiment_shift",
+      "description": "Delivery: a seven-day market sentiment evidence pack containing Fear & Greed level and change, BTC perpetual funding crowding, BTC liquidation pressure and side, altseason phase, the combined regime, observation dates, coverage scope, and full measurements. Use when: an agent needs to check whether market sentiment materially shifted. Core inputs: optional time_window fixed to 7d. Limits: market-wide context except for BTC-referenced derivatives; no causality claim or advice.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "time_window": {
+            "type": "string",
+            "enum": [
+              "7d"
+            ],
+            "default": "7d",
+            "description": "Sentiment comparison window; currently fixed to seven days."
+          }
+        },
+        "additionalProperties": false
+      }
+    }
+  ],
+  "transport": [
+    {
+      "url": "https://app-ryochan.com/api/mcp",
+      "request": {
+        "jsonrpc": "2.0",
+        "id": 1,
+        "method": "initialize",
+        "params": {
+          "protocolVersion": "2025-06-18",
+          "capabilities": {},
+          "clientInfo": {
+            "name": "pumpcoin-research",
+            "version": "1.0.0"
+          }
+        }
+      },
+      "requestedAt": "2026-10-23T15:57:09.476Z",
+      "receivedAt": "2026-10-23T15:57:10.412Z",
+      "httpStatus": 200,
+      "contentType": "application/json",
+      "body": "{\"jsonrpc\": \"2.0\", \"id\": 1, \"result\": {\"protocolVersion\": \"2024-11-05\", \"capabilities\": {\"tools\": {\"listChanged\": false}}, \"serverInfo\": {\"name\": \"ryo-chan\", \"version\": \"1.0.0\"}}}"
+    },
+    {
+      "url": "https://app-ryochan.com/api/mcp",
+      "request": {
+        "jsonrpc": "2.0",
+        "method": "notifications/initialized",
+        "params": {}
+      },
+      "requestedAt": "2026-10-23T15:57:10.416Z",
+      "receivedAt": "2026-10-23T15:57:10.784Z",
+      "httpStatus": 202,
+      "contentType": null,
+      "body": ""
+    },
+    {
+      "url": "https://app-ryochan.com/api/mcp",
+      "request": {
+        "jsonrpc": "2.0",
+        "id": 2,
+        "method": "tools/list",
+        "params": {}
+      },
+      "requestedAt": "2026-10-23T15:57:10.786Z",
+      "receivedAt": "2026-10-23T15:57:11.118Z",
+      "httpStatus": 200,
+      "contentType": "application/json",
+      "body": "{\"jsonrpc\": \"2.0\", \"id\": 2, \"result\": {\"tools\": [{\"name\": \"market_overview\", \"description\": \"Delivery: a compact market-regime evidence pack with sentiment, market totals, dominance, movers, and explicit data gaps. Use when: an agent needs a broad market briefing before token research. Core inputs: none. Limits: research context only; incomplete lanes are marked partial or unavailable.\", \"inputSchema\": {\"type\": \"object\", \"properties\": {}, \"additionalProperties\": false}}, {\"name\": \"scan_market\", \"description\": \"Delivery: a ranked candidate set with price, momentum, market-activity evidence, filters, and reasons where available. Use when: an agent needs a shortlist before deeper token analysis. Core inputs: optional chain, theme, and top_n. Limits: theme is contextual rather than a strict filter; a scan is not a trade instruction.\", \"inputSchema\": {\"type\": \"object\", \"properties\": {\"chain\": {\"type\": \"string\", \"description\": \"Chain slug e.g. eth/bsc (optional).\"}, \"theme\": {\"type\": \"string\", \"description\": \"Narrative/theme filter (optional).\"}, \"top_n\": {\"type\": \"number\", \"description\": \"How many candidates to return.\"}, \"filter_direction\": {\"type\": \"string\", \"description\": \"Direction filter: 'positive' (gainers only), 'negative' (losers only), or 'all' (default).\"}}, \"additionalProperties\": false}}, {\"name\": \"analyze_token\", \"description\": \"Delivery: a single-token research pack with USD market data, multi-window performance, calculated RSI and ATR, intelligence, summary, and warnings. Use when: an agent needs a quick structured token read. Core input: symbol. Limits: missing measurements are reported as unavailable and the result is not execution advice.\", \"inputSchema\": {\"type\": \"object\", \"properties\": {\"symbol\": {\"type\": \"string\", \"description\": \"Token symbol, e.g. INJ.\"}, \"chain\": {\"type\": \"string\", \"description\": \"Chain slug for contract-specific safety, e.g. eth/bsc (optional).\"}}, \"required\": [\"symbol\"], \"additionalProperties\": false}}, {\"name\": \"deep_analysis\", \"description\": \"Delivery: a deeper token evidence pack combining market context, confluence, technicals, an optional Skill Hub token profile, derivatives, catalysts, risks, and a measured-ATR preview plan. Use when: an agent needs one comprehensive token read. Core input: token symbol; optional include_perp. Limits: token analysis only, not wallet analysis; unavailable lanes remain explicit and no trade is placed.\", \"inputSchema\": {\"type\": \"object\", \"properties\": {\"symbol\": {\"type\": \"string\", \"description\": \"Token symbol, e.g. SOL.\"}, \"chain\": {\"type\": \"string\", \"description\": \"Chain slug for contract-specific safety (optional).\"}, \"include_perp\": {\"type\": \"boolean\", \"description\": \"Include derivatives/perp posture (default true).\"}}, \"required\": [\"symbol\"], \"additionalProperties\": false}}, {\"name\": \"compare_tokens\", \"description\": \"Delivery: a side-by-side comparison of two to four tokens with factor winners, coverage by token, an overall pick, rationale, confidence, and conclusion method. Use when: an agent must compare relative momentum, market activity, and volatility using common data. Core inputs: symbols; optional intent. Limits: missing factors are disclosed and deterministic conclusions are labelled.\", \"inputSchema\": {\"type\": \"object\", \"properties\": {\"symbols\": {\"type\": \"string\", \"description\": \"2-4 token symbols to compare, comma- or space-separated, e.g. 'SOL, AVAX'.\"}, \"intent\": {\"type\": \"string\", \"description\": \"Trade horizon the pick is for: swing | hold | spot (optional).\", \"enum\": [\"swing\", \"hold\", \"spot\"]}}, \"required\": [\"symbols\"], \"additionalProperties\": false}}, {\"name\": \"monitor_market_sentiment_shift\", \"description\": \"Delivery: a seven-day market sentiment evidence pack containing Fear & Greed level and change, BTC perpetual funding crowding, BTC liquidation pressure and side, altseason phase, the combined regime, observation dates, coverage scope, and full measurements. Use when: an agent needs to check whether market sentiment materially shifted. Core inputs: optional time_window fixed to 7d. Limits: market-wide context except for BTC-referenced derivatives; no causality claim or advice.\", \"inputSchema\": {\"type\": \"object\", \"properties\": {\"time_window\": {\"type\": \"string\", \"enum\": [\"7d\"], \"default\": \"7d\", \"description\": \"Sentiment comparison window; currently fixed to seven days.\"}}, \"additionalProperties\": false}}]}}"
+    },
+    {
+      "url": "https://app-ryochan.com/api/mcp",
+      "request": {
+        "jsonrpc": "2.0",
+        "id": 3,
+        "method": "tools/call",
+        "params": {
+          "name": "analyze_token",
+          "arguments": {
+            "symbol": "BNB"
+          }
+        }
+      },
+      "requestedAt": "2026-10-23T15:57:11.123Z",
+      "receivedAt": "2026-10-23T15:57:11.772Z",
+      "httpStatus": 200,
+      "contentType": "application/json",
+      "body": "{\"jsonrpc\": \"2.0\", \"id\": 3, \"result\": {\"content\": [{\"type\": \"text\", \"text\": \"couldn't analyze BNB right now (trace_id: 2bfddcc92164495582750b6d48f7deb7)\"}], \"isError\": true}}"
+    },
+    {
+      "url": "https://app-ryochan.com/api/mcp",
+      "request": {
+        "jsonrpc": "2.0",
+        "id": 4,
+        "method": "tools/call",
+        "params": {
+          "name": "analyze_token",
+          "arguments": {
+            "symbol": "XRP"
+          }
+        }
+      },
+      "requestedAt": "2026-10-23T15:57:23.125Z",
+      "receivedAt": "2026-10-23T15:57:24.302Z",
+      "httpStatus": 200,
+      "contentType": "application/json",
+      "body": "{\"jsonrpc\": \"2.0\", \"id\": 4, \"result\": {\"content\": [{\"type\": \"text\", \"text\": \"couldn't analyze XRP right now (trace_id: 2779081d07654692a62fb340720abc04)\"}], \"isError\": true}}"
+    },
+    {
+      "url": "https://app-ryochan.com/api/mcp",
+      "request": {
+        "jsonrpc": "2.0",
+        "id": 5,
+        "method": "tools/call",
+        "params": {
+          "name": "analyze_token",
+          "arguments": {
+            "symbol": "DOGE"
+          }
+        }
+      },
+      "requestedAt": "2026-10-23T15:57:35.126Z",
+      "receivedAt": "2026-10-23T15:57:36.370Z",
+      "httpStatus": 200,
+      "contentType": "application/json",
+      "body": "{\"jsonrpc\": \"2.0\", \"id\": 5, \"result\": {\"content\": [{\"type\": \"text\", \"text\": \"couldn't analyze DOGE right now (trace_id: d319613347c44691a422a89cd4fe18c0)\"}], \"isError\": true}}"
+    },
+    {
+      "url": "https://app-ryochan.com/api/mcp",
+      "request": {
+        "jsonrpc": "2.0",
+        "id": 6,
+        "method": "tools/call",
+        "params": {
+          "name": "analyze_token",
+          "arguments": {
+            "symbol": "ADA"
+          }
+        }
+      },
+      "requestedAt": "2026-10-23T15:58:10.481Z",
+      "receivedAt": "2026-10-23T15:58:11.857Z",
+      "httpStatus": 200,
+      "contentType": "application/json",
+      "body": "{\"jsonrpc\": \"2.0\", \"id\": 6, \"result\": {\"content\": [{\"type\": \"text\", \"text\": \"couldn't analyze ADA right now (trace_id: 6b9fdb3f01b04a4aa1a4f411d5f826ec)\"}], \"isError\": true}}"
+    },
+    {
+      "url": "https://app-ryochan.com/api/mcp",
+      "request": {
+        "jsonrpc": "2.0",
+        "id": 7,
+        "method": "tools/call",
+        "params": {
+          "name": "analyze_token",
+          "arguments": {
+            "symbol": "AVAX"
+          }
+        }
+      },
+      "requestedAt": "2026-10-23T15:58:22.484Z",
+      "receivedAt": "2026-10-23T15:58:23.593Z",
+      "httpStatus": 200,
+      "contentType": "application/json",
+      "body": "{\"jsonrpc\": \"2.0\", \"id\": 7, \"result\": {\"content\": [{\"type\": \"text\", \"text\": \"couldn't analyze AVAX right now (trace_id: 3ed104c7f60c45228cf07ec24ea3b091)\"}], \"isError\": true}}"
+    },
+    {
+      "url": "https://app-ryochan.com/api/mcp",
+      "request": {
+        "jsonrpc": "2.0",
+        "id": 8,
+        "method": "tools/call",
+        "params": {
+          "name": "analyze_token",
+          "arguments": {
+            "symbol": "LINK"
+          }
+        }
+      },
+      "requestedAt": "2026-10-23T15:58:34.484Z",
+      "receivedAt": "2026-10-23T15:58:35.646Z",
+      "httpStatus": 200,
+      "contentType": "application/json",
+      "body": "{\"jsonrpc\": \"2.0\", \"id\": 8, \"result\": {\"content\": [{\"type\": \"text\", \"text\": \"couldn't analyze LINK right now (trace_id: f6cd8bd00a5d48b4ba6860e9c95c2edb)\"}], \"isError\": true}}"
+    },
+    {
+      "url": "https://app-ryochan.com/api/mcp",
+      "request": {
+        "jsonrpc": "2.0",
+        "id": 9,
+        "method": "tools/call",
+        "params": {
+          "name": "analyze_token",
+          "arguments": {
+            "symbol": "INJ"
+          }
+        }
+      },
+      "requestedAt": "2026-10-23T15:58:46.484Z",
+      "receivedAt": "2026-10-23T15:58:47.868Z",
+      "httpStatus": 200,
+      "contentType": "application/json",
+      "body": "{\"jsonrpc\": \"2.0\", \"id\": 9, \"result\": {\"content\": [{\"type\": \"text\", \"text\": \"couldn't analyze INJ right now (trace_id: 881911ed15e34d6fadd408863ee9fa7f)\"}], \"isError\": true}}"
+    },
+    {
+      "url": "https://app-ryochan.com/api/mcp",
+      "request": {
+        "jsonrpc": "2.0",
+        "id": 10,
+        "method": "tools/call",
+        "params": {
+          "name": "analyze_token",
+          "arguments": {
+            "symbol": "CAKE"
+          }
+        }
+      },
+      "requestedAt": "2026-10-23T15:58:58.485Z",
+      "receivedAt": "2026-10-23T15:58:59.560Z",
+      "httpStatus": 200,
+      "contentType": "application/json",
+      "body": "{\"jsonrpc\": \"2.0\", \"id\": 10, \"result\": {\"content\": [{\"type\": \"text\", \"text\": \"couldn't analyze CAKE right now (trace_id: abb35580e3ed41aa834fc176499898bd)\"}], \"isError\": true}}"
+    }
+  ],
+  "probes": [
+    {
+      "symbol": "BNB",
+      "tool": "analyze_token",
+      "arguments": {
+        "symbol": "BNB"
+      },
+      "at": "2026-10-23T15:57:11.120Z",
+      "result": null,
+      "error": "RYO returned an unavailable or incompatible tool result.",
+      "transportIndices": [
+        3
+      ]
+    },
+    {
+      "symbol": "XRP",
+      "tool": "analyze_token",
+      "arguments": {
+        "symbol": "XRP"
+      },
+      "at": "2026-10-23T15:57:23.122Z",
+      "result": null,
+      "error": "RYO returned an unavailable or incompatible tool result.",
+      "transportIndices": [
+        4
+      ]
+    },
+    {
+      "symbol": "DOGE",
+      "tool": "analyze_token",
+      "arguments": {
+        "symbol": "DOGE"
+      },
+      "at": "2026-10-23T15:57:35.123Z",
+      "result": null,
+      "error": "RYO returned an unavailable or incompatible tool result.",
+      "transportIndices": [
+        5
+      ]
+    },
+    {
+      "symbol": "ADA",
+      "tool": "analyze_token",
+      "arguments": {
+        "symbol": "ADA"
+      },
+      "at": "2026-10-23T15:58:10.478Z",
+      "result": null,
+      "error": "RYO returned an unavailable or incompatible tool result.",
+      "transportIndices": [
+        6
+      ]
+    },
+    {
+      "symbol": "AVAX",
+      "tool": "analyze_token",
+      "arguments": {
+        "symbol": "AVAX"
+      },
+      "at": "2026-10-23T15:58:22.480Z",
+      "result": null,
+      "error": "RYO returned an unavailable or incompatible tool result.",
+      "transportIndices": [
+        7
+      ]
+    },
+    {
+      "symbol": "LINK",
+      "tool": "analyze_token",
+      "arguments": {
+        "symbol": "LINK"
+      },
+      "at": "2026-10-23T15:58:34.480Z",
+      "result": null,
+      "error": "RYO returned an unavailable or incompatible tool result.",
+      "transportIndices": [
+        8
+      ]
+    },
+    {
+      "symbol": "INJ",
+      "tool": "analyze_token",
+      "arguments": {
+        "symbol": "INJ"
+      },
+      "at": "2026-10-23T15:58:46.481Z",
+      "result": null,
+      "error": "RYO returned an unavailable or incompatible tool result.",
+      "transportIndices": [
+        9
+      ]
+    },
+    {
+      "symbol": "CAKE",
+      "tool": "analyze_token",
+      "arguments": {
+        "symbol": "CAKE"
+      },
+      "at": "2026-10-23T15:58:58.482Z",
+      "result": null,
+      "error": "RYO returned an unavailable or incompatible tool result.",
+      "transportIndices": [
+        10
+      ]
+    },
+    {
+      "symbol": "INJ",
+      "transport": "documented-rest",
+      "tool": "analyze_token",
+      "arguments": {
+        "symbol": "INJ"
+      },
+      "url": "https://app-ryochan.com/api/mcp/tools/analyze_token/call",
+      "at": "2026-10-23T15:59:10.483Z",
+      "receivedAt": "2026-10-23T15:59:12.007Z",
+      "httpStatus": 400,
+      "body": "{\"code\":\"VALIDATION_FAILED\",\"message\":\"couldn't analyze INJ right now\",\"details\":{\"tool\":\"analyze_token\",\"latency_ms\":188},\"trace_id\":\"6f86605ac23b4c518b090ba2b67bc7ab\"}"
+    }
+  ]
+}

@@ -1,0 +1,141 @@
+{
+  "version": 1,
+  "items": [
+    {
+      "file": "renders/pump-explainer-intro-final.mp4",
+      "ref": null,
+      "element": null,
+      "placement": null,
+      "timebase": "file",
+      "window": {
+        "from": 0,
+        "to": 60.245
+      },
+      "duration": 60.3,
+      "sampleRate": 48000,
+      "channels": 2,
+      "provenance": {
+        "loudness": "signal",
+        "silence": "signal"
+      },
+      "warnings": [],
+      "loudness": {
+        "lufsIntegrated": -16.1,
+        "lufsShortTermMax": -14.9,
+        "samplePeakDb": -1.5,
+        "truePeakDb": -1.5,
+        "clipping": {
+          "count": 0,
+          "firstAt": null
+        }
+      },
+      "silence": [
+        {
+          "start": 0,
+          "end": 0.535
+        },
+        {
+          "start": 2.745,
+          "end": 3.285
+        },
+        {
+          "start": 5.585,
+          "end": 5.91
+        },
+        {
+          "start": 7.61,
+          "end": 8.425
+        },
+        {
+          "start": 8.635,
+          "end": 9.01
+        },
+        {
+          "start": 12.995,
+          "end": 13.35
+        },
+        {
+          "start": 14.27,
+          "end": 14.64
+        },
+        {
+          "start": 16.92,
+          "end": 17.725
+        },
+        {
+          "start": 17.935,
+          "end": 18.295
+        },
+        {
+          "start": 20.14,
+          "end": 20.49
+        },
+        {
+          "start": 22.45,
+          "end": 22.945
+        },
+        {
+          "start": 26.015,
+          "end": 26.495
+        },
+        {
+          "start": 28.82,
+          "end": 29.595
+        },
+        {
+          "start": 29.8,
+          "end": 30.17
+        },
+        {
+          "start": 31.985,
+          "end": 32.27
+        },
+        {
+          "start": 33.985,
+          "end": 34.59
+        },
+        {
+          "start": 37.255,
+          "end": 37.48
+        },
+        {
+          "start": 38.86,
+          "end": 39.66
+        },
+        {
+          "start": 39.87,
+          "end": 40.23
+        },
+        {
+          "start": 46.07,
+          "end": 46.72
+        },
+        {
+          "start": 48.895,
+          "end": 49.235
+        },
+        {
+          "start": 51.15,
+          "end": 51.925
+        },
+        {
+          "start": 52.135,
+          "end": 52.495
+        },
+        {
+          "start": 55.315,
+          "end": 55.685
+        },
+        {
+          "start": 58.545,
+          "end": 60.245
+        }
+      ]
+    }
+  ],
+  "_meta": {
+    "version": "0.8.223",
+    "latestVersion": "0.8.223",
+    "updateAvailable": false
+  }
+}

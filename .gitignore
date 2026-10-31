@@ -9,6 +9,11 @@ contracts/broadcast/
 .local/
 .DS_Store
 node_modules/
+.netlify/
+videos/**/.hyperframes/
+videos/**/.waveform-cache/
+videos/**/.media/
+videos/**/.thumbnails/
 indexer/generated/
 indexer/config.yaml
 cre/eligibility/config.monad.local.json

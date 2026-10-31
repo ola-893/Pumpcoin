@@ -16,7 +16,7 @@ export function chainlinkObservation(round: readonly [bigint, bigint, bigint, bi
   return { price: answer, conf: 0n, expo: -decimals, publishTime: updated };
 }
 export async function readChainlinkFeed(
-  feed: ChainlinkFeedPin | null | undefined, asset: 'MON' | 'USDC',
+  feed: ChainlinkFeedPin | null | undefined, asset: 'MON' | 'ETH' | 'USDC',
   read: (address: Address, name: string, args: unknown[], abi: typeof chainlinkAbi) => Promise<any>,
   pin: (address: Address, hash: Hex) => Promise<void>,
 ) {

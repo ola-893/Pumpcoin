@@ -5,6 +5,7 @@
   "scripts": {
     "dev": "npm --prefix app run dev",
     "build": "npm --prefix app run build",
+    "build:netlify": "npm --prefix app ci && npm run build && node scripts/build-netlify.mjs",
     "lint": "npm --prefix app run lint",
     "typecheck": "tsc --noEmit",
     "test": "node --import tsx --test tests/*.test.ts",
@@ -16,7 +17,9 @@
     "agent:research": "node --env-file-if-exists=.env --import tsx research/run.ts",
     "oracle:keeper": "node --import tsx agent-registration/run-oracle-keeper.ts",
     "oracle:guard-plan": "node --import tsx agent-registration/valuation-guard-plan.ts",
-    "operator:deploy": "node --import tsx agent-registration/run-deployment.ts"
+    "execution:sepolia": "node --import tsx agent-registration/run-sepolia-validation.ts",
+    "operator:deploy": "node --import tsx agent-registration/run-deployment.ts",
+    "execution:verify-sepolia": "node --import tsx agent-registration/verify-sepolia-execution.ts"
   },
   "dependencies": {
     "@vercel/blob": "^2.8.1",

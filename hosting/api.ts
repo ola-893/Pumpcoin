@@ -28,27 +28,41 @@ async function initialize() {
   const seed = await json('hosted-public.json') as Seed;
   await readDirectory({ records: seed.records }); // Verify commitments and enrollment signatures before serving records.
   const records = async () => seed.records;
-  const network = await json('pumpcoin-vault-network.json') as VaultNetwork;
-  const tradingNetwork = await json('pumpcoin-trading-network.json') as TradingNetwork;
+  const network = await json('pumpcoin-sepolia-vault-network.json') as VaultNetwork;
   const directory = join(tmpdir(), 'pumpcoin-hosted');
   for (const [path, value] of Object.entries(seed.metadata)) {
     if (!/^vault-(?:trading|native|liquidity)\/[0-9a-f]{64}(?:-[0-9a-f]{40})?\.json$/.test(path)) throw new Error('Invalid public infrastructure metadata.');
     await mkdir(join(directory, path.split('/')[0]), { recursive: true });
     await writeFile(join(directory, path), JSON.stringify(value));
   }
-  const live = liveVaultService(network, records);
+  const profiles = await Promise.all([
+    ['pumpcoin-sepolia-vault-network.json', 'pumpcoin-sepolia-trading-network.json'],
+    ['pumpcoin-vault-network.json', 'pumpcoin-trading-network.json'],
+  ].map(async ([vaultFile, tradingFile]) => {
+    const network = await json(vaultFile) as VaultNetwork;
+    const tradingNetwork = await json(tradingFile) as TradingNetwork;
+    const live = liveVaultService(network, records);
+    const trading = tradingService(network, tradingNetwork, join(directory, 'vault-trading'), records);
+    return { network, live, trading,
+      native: nativeInvestmentService(network, tradingNetwork, join(directory, 'vault-native'), records, trading, undefined, reviewStorage('vault-native', seed.metadata)),
+      pool: poolFundingService(network, tradingNetwork, join(directory, 'vault-liquidity'), trading, undefined, reviewStorage('vault-liquidity', seed.metadata)) };
+  }));
+  const target = (id: string) => {
+    const r = seed.records.find(r => r.id === id);
+    const profile = profiles.find(p => p.network.chainId === r?.authorization.challenge.chainId);
+    if (!r || !profile || (r.binding && r.binding.chainId !== profile.network.chainId)) throw new Error('No reviewed execution profile matches this signed agent chain.');
+    return profile;
+  };
+  const live = { inspect: (id: string, policy?: {allowStale?: boolean;force?: boolean}) => target(id).live.inspect(id, policy), cacheStatus: (id: string) => target(id).live.cacheStatus(id) };
   const state = agentStateService(records, live, runtime);
-  const trading = tradingService(network, tradingNetwork, join(directory, 'vault-trading'), records);
-  const native = nativeInvestmentService(network, tradingNetwork, join(directory, 'vault-native'), records, trading, undefined, reviewStorage('vault-native', seed.metadata));
-  const pool = poolFundingService(network, tradingNetwork, join(directory, 'vault-liquidity'), trading, undefined, reviewStorage('vault-liquidity', seed.metadata));
   const prepared = (id: string) => {
     const r = seed.records.find(x => x.id === id);
     if (!r?.binding) throw new Error('Select a bound agent registration.');
     // These readers use only the signed public declaration. No inference is called.
     const p = { manifest: r.manifest, commitment: r.commitment } as Prepared;
-    return { r, p };
+    return { r, p, network: target(id).network };
   };
-  return { seed, records, network, live, state, trading, native, pool, prepared };
+  return { seed, records, network, live, state, target, prepared };
 }
 
 export function sessionToken(host: string, expiry: number, secret: string) {
@@ -84,7 +98,7 @@ export async function hostedApi(req: IncomingMessage & { body?: unknown }, res: 
     if (!path.startsWith('/api/agent-registration/')) { send(404, { error: 'API route not found.' }); return; }
     const secret = process.env.PUMPCOIN_HOSTED_SESSION_SECRET;
     if (!secret || secret.length < 32) throw new Error('Hosted session configuration is unavailable.');
-    if (path === '/api/agent-registration/status' && req.method === 'GET') { send(200, { token: sessionToken(host, Date.now() + 3600000, secret), configured: false, vaultSetupConfigured: false, executionSignerConfigured: false, hosted: true }); return; }
+    if (path === '/api/agent-registration/status' && req.method === 'GET') { send(200, { token: sessionToken(host, Date.now() + 3600000, secret), configured: false, vaultSetupConfigured: false, executionSignerConfigured: false, hosted: true, readOnly: process.env.PUMPCOIN_HOSTED_READ_ONLY === 'true' }); return; }
     if (!validSession(req.headers['x-pumpcoin-registration-token'], host, secret)) { send(403, { error: 'Refresh to establish a new session.' }); return; }
     const s = await (services ??= initialize());
     if (path === '/api/agent-registration/records' && req.method === 'GET') { send(200, { records: await s.records() }); return; }
@@ -99,22 +113,24 @@ export async function hostedApi(req: IncomingMessage & { body?: unknown }, res: 
     if (!b || typeof b !== 'object' || Array.isArray(b) || Object.keys(b).sort().join(',') !== fields[route].slice().sort().join(',')) throw new Error('Invalid request fields.');
     if (typeof b.id !== 'string' || !/^0x[a-f0-9]{64}$/.test(b.id) || !s.seed.records.some(r => r.id === b.id)) throw new Error('Select a published agent registration.');
     if(route.startsWith('/research-')){await hostedResearchRoute(res,route,b,s.seed.records);return;}
+    if (process.env.PUMPCOIN_HOSTED_READ_ONLY === 'true' && !['/agent-state','/agent-state-refresh','/live-vault','/trading-state','/native-state','/pool-state','/autonomy-status','/trader-status'].includes(route)) { send(409, { error: 'This deployment is an evidence reader. Use the local operator app for transaction reviews and execution.' }); return; }
+    const {trading,native,pool} = s.target(b.id);
     let result: unknown;
     switch (route) {
       case '/agent-state': case '/agent-state-refresh': result = { state: await s.state.inspect(b.id, route.endsWith('-refresh')) }; break;
       case '/live-vault': result = { observation: await s.live.inspect(b.id, { allowStale: true }) }; break;
-      case '/trading-state': result = { state: await s.trading.inspect(b.id, b.account || undefined) }; break;
-      case '/trading-plan': requireBrowserTradeAction(b.action); result = { plan: await s.trading.plan(b.id, b.action, b.account, b.amount) }; break;
-      case '/trading-receipt': result = { receipt: await s.trading.receipt(b.id, b.transactionHash) }; break;
-      case '/native-state': result = { state: await s.native.inspect(b.id, b.account || undefined) }; break;
-      case '/native-plan': if (b.action === 'deploy-native') throw new Error('Use the operator CLI to deploy infrastructure.'); result = { plan: await s.native.plan(b.id, b.action, b.account, b.amount) }; break;
-      case '/native-receipt': result = { receipt: await s.native.receipt(b.id, b.planId, b.transactionHash) }; break;
-      case '/pool-state': result = { state: await s.pool.inspect(b.id, b.account || undefined) }; break;
-      case '/pool-plan': if (b.action === 'deploy-pool-funder') throw new Error('Use the operator CLI to deploy infrastructure.'); result = { plan: await s.pool.plan(b.id, b.action, b.account) }; break;
-      case '/pool-receipt': result = { receipt: await s.pool.receipt(b.id, b.planId, b.transactionHash) }; break;
-      case '/autonomy-status': { const {r,p} = s.prepared(b.id); result = { status: await permissionStatus(p, r.binding!.vault, s.network) }; break; }
-      case '/autonomy-plan': { const {r,p} = s.prepared(b.id); result = { plan: await permissionPlan(p, r.binding!.vault, s.network, b.action, { days: b.days, dailyQuoteCap: b.dailyQuoteCap }) }; break; }
-      case '/execution-funding-plan': { const {r,p} = s.prepared(b.id); result = { plan: await executionFundingPlan(p, r.binding!.vault, s.network) }; break; }
+      case '/trading-state': result = { state: await trading.inspect(b.id, b.account || undefined) }; break;
+      case '/trading-plan': requireBrowserTradeAction(b.action); result = { plan: await trading.plan(b.id, b.action, b.account, b.amount) }; break;
+      case '/trading-receipt': result = { receipt: await trading.receipt(b.id, b.transactionHash) }; break;
+      case '/native-state': result = { state: await native.inspect(b.id, b.account || undefined) }; break;
+      case '/native-plan': if (b.action === 'deploy-native') throw new Error('Use the operator CLI to deploy infrastructure.'); result = { plan: await native.plan(b.id, b.action, b.account, b.amount) }; break;
+      case '/native-receipt': result = { receipt: await native.receipt(b.id, b.planId, b.transactionHash) }; break;
+      case '/pool-state': result = { state: await pool.inspect(b.id, b.account || undefined) }; break;
+      case '/pool-plan': if (b.action === 'deploy-pool-funder') throw new Error('Use the operator CLI to deploy infrastructure.'); result = { plan: await pool.plan(b.id, b.action, b.account) }; break;
+      case '/pool-receipt': result = { receipt: await pool.receipt(b.id, b.planId, b.transactionHash) }; break;
+      case '/autonomy-status': { const {r,p,network} = s.prepared(b.id); result = { status: await permissionStatus(p, r.binding!.vault, network) }; break; }
+      case '/autonomy-plan': { const {r,p,network} = s.prepared(b.id); result = { plan: await permissionPlan(p, r.binding!.vault, network, b.action, { days: b.days, dailyQuoteCap: b.dailyQuoteCap }) }; break; }
+      case '/execution-funding-plan': { const {r,p,network} = s.prepared(b.id); result = { plan: await executionFundingPlan(p, r.binding!.vault, network) }; break; }
       case '/trader-status': result = { runtime: await runtime.status() }; break;
       case '/request-prices': send(503, { error: 'The on-demand oracle keeper runs on the operator computer. Ask the operator to refresh prices before retrying.' }); return;
     }

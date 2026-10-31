@@ -6,7 +6,7 @@ import { writeFileSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 import { createServer, type IncomingMessage } from 'node:http';
-import { ArtifactHasher, inferenceEndpoint, mappedNames, runtimeNames, sourceFromRecord, oneListener, mappedWeights } from '../local-inference/discovery.js';
+import { ArtifactHasher, inferenceEndpoint, mappedNames, runtimeNames, sourceFromRecord, oneListener, mappedWeights,reportedWeightsPath } from '../local-inference/discovery.js';
 import { allowedRequest, localInferencePlugin, LOCAL_API, localError } from '../local-inference/vite.js';
 import { detectionMatches } from '../app/src/lib/local-inference.js';
 import { initialDraft, prepareManifest } from '../app/src/lib/registration.js';
@@ -30,6 +30,13 @@ test('Download source is recovered only for exact filename, bytes, revision and 
   const r={repository:'unsloth/Qwen3.8-27B-GGUF',revision:'c'.repeat(40),filename:'weights.gguf',size_bytes:100,sha256:'a'.repeat(64)};
   assert.match(sourceFromRecord(r,'weights.gguf','a'.repeat(64),100)!,/resolve\/c{40}\/weights.gguf$/);
   for (const changed of [{sha256:'b'.repeat(64)},{size_bytes:99},{filename:'other.gguf'},{revision:'main'},{repository:'https://evil.test'}]) assert.equal(sourceFromRecord({...r,...changed},'weights.gguf','a'.repeat(64),100),undefined);
+});
+test('Relative weights resolve against the inspected process directory, never the helper cwd',()=>{
+  assert.equal(reportedWeightsPath('.local/model.gguf','/operator/pump'),'/operator/pump/.local/model.gguf');
+  assert.equal(reportedWeightsPath('/models/model.gguf'),'/models/model.gguf');
+  assert.throws(()=>reportedWeightsPath('.local/model.gguf'),/process directory/);
+  assert.throws(()=>reportedWeightsPath('.local/model.gguf','relative'),/process directory/);
+  assert.throws(()=>mappedWeights(['/different/model.gguf'],reportedWeightsPath('.local/model.gguf','/operator/pump')),/exactly one/);
 });
 test('Hasher reads actual bytes, rejects non-GGUF, and invalidates its cache after changes', async () => {
   const dir=await mkdtemp(join(tmpdir(),'pumpcoin-hash-'));try {

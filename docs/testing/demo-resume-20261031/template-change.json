@@ -1,0 +1,11 @@
+{
+  "scope": "Local inference configuration experiment, not official Muse default or hardware attestation. Only generation recipient prefix changes; source inputs and generated answers are not edited.",
+  "source": "Embedded chat template from the registered GGUF",
+  "sourceSha256": "114f55ebdc1804c1af371197b9fdf2d6bb925966c9dfe46b73782a71bc07965e",
+  "modifiedSha256": "fa922fe422b6e83dd86560df7037f3ad2e7b5aa1c51b39fcc51bc48258e54e89",
+  "change": {
+    "from": "<|start|>assistant",
+    "to": "<|start|>assistant to=user<|message|>"
+  },
+  "reference": "https://dev.meta.ai/docs/muse-glimmer/prompting"
+}

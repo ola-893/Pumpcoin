@@ -1,4 +1,37 @@
-# Vercel deployment
+# Hosting
+
+## Netlify
+
+Production: **https://pump-ryo.netlify.app**.
+
+Netlify serves the frontend and a public evidence-reader API. It publishes exact signed registrations and a verified historical practice checkpoint, retaining raw provider responses, signed policy, decisions and ledger events. Public RPC observations use the chain signed by each registration (Sepolia or historical Monad). The hosted process cannot observe the operator's running model.
+
+This deployment sets `PUMPCOIN_HOSTED_READ_ONLY=true`: registration, inference, new observations, transaction reviews and funded execution remain in the local operator app. The interface labels this boundary. No controller private key, execution keystore, model endpoint, RYO credential or root `.env` is uploaded. Public chain observations and connected-wallet balances can still be read.
+
+Build from a clean checkout with Node 22:
+
+```sh
+npm ci
+npm run build:netlify
+npx netlify deploy --prod --no-build
+```
+
+`netlify.toml` supplies API rewrites, SPA routing and asset/security headers. `build-netlify.mjs` packages the API with public data, reduced reviewed contract artifacts and original research source files required for engine-digest verification. Builds use committed public snapshots, without accessing a developer's `.local` directory or requiring Foundry on Netlify.
+
+To deliberately update public evidence locally:
+
+```sh
+node --import tsx scripts/export-hosted-public.ts
+node --import tsx scripts/export-hosted-evidence.ts docs/testing/ryo-bounty-demo-20261031/checkpoint-eight-observations.json
+```
+
+The second exporter verifies signatures and deterministic replay before writing `deployments/hosted-research.json`. It also exports reduced artifacts from the reviewed Foundry build into `deployments/hosted-contracts.json`. Rebuilding those artifacts requires Foundry and the pinned Solidity dependencies. The snapshot's eight observations include two HOLD decisions and six inference errors, with no practice fills. Publication does not upgrade outcomes or prove model execution.
+
+Configure a separate random `PUMPCOIN_HOSTED_SESSION_SECRET` (at least 32 characters) as a server-only Netlify environment variable. A manual CLI deployment is configured; pushing to GitHub alone does not enable automatic deployment.
+
+Verification: `/api/health`, `/api/agent-registration/status`, and session-authenticated `/records`, `/research-state`, `/research-history`, `/research-export` under `/api/agent-registration`. Export hashes must match the committed snapshot. Unknown origins and local operator actions are rejected. `tests/netlify-hosting.test.ts` checks the adapter and these boundaries.
+
+## Vercel (alternative)
 
 The hosted app uses Vercel for the frontend and Node API, with a private Vercel Blob store retaining exact native-investment and pool-funding transaction reviews across cold starts. Wallet signing remains in the browser. Infrastructure addresses, runtime pins and historical signed public registrations ship with the deployment. Secrets stay in server-only environment variables.
 

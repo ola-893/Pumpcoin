@@ -1,0 +1,13 @@
+import assert from 'node:assert/strict';
+import {readFile,writeFile} from 'node:fs/promises';
+import {verifyCheckpoint} from '../../../research/checkpoint.js';
+import {verifyPolicy} from '../../../research/policy.js';
+import {readDirectory} from '../../../app/src/lib/agent-directory.js';
+const load=async(name:string)=>JSON.parse(await readFile(new URL(name,import.meta.url),'utf8'));
+const c=await load('checkpoint-seven-observations.json'),before=await load('checkpoint-six-observations.json'),registration=await load('../demo-preflight-20261030/fresh-registration.json');
+await readDirectory({records:[registration]});await verifyPolicy(c.policy);await verifyCheckpoint(c,registration);
+assert.deepEqual(c.receipts.slice(0,6),before.receipts);assert.deepEqual(c.evidence.slice(0,6),before.evidence);assert.equal(c.session.errors,6);assert.equal(c.receipts.length,7);
+const latest=c.receipts.at(-1),trace=latest.body.trace;assert.equal(latest.body.outcome,'hold');assert.equal(trace.interpretation.action,'HOLD');assert.deepEqual(JSON.parse(trace.rawResponse),trace.response);assert.deepEqual(JSON.parse(trace.rawContent),trace.interpretation);
+assert.equal(c.session.portfolio.cash,c.policy.policy.initialCash);assert.equal(c.session.portfolio.realized,'0');assert.equal(c.session.portfolio.fees,'0');assert.equal(c.session.portfolio.positions.length,0);assert.equal(c.session.portfolio.pending.length,0);assert.equal(c.events.length,7);assert.ok(c.events.every((e:any)=>e.kind==='mark'));assert.deepEqual(c.events.slice(0,6),before.events);assert.deepEqual(c.session.portfolio,before.session.portfolio.updatedAt?{...before.session.portfolio,updatedAt:c.session.portfolio.updatedAt}:before.session.portfolio);
+const result={verified:true,checkpoint:c.hash,head:c.session.head,observations:7,retainedErrors:6,acceptedProposals:1,latestOutcome:'hold',latestAt:latest.body.at,traceStartedAt:trace.startedAt,traceFinishedAt:trace.finishedAt,virtualCash:c.session.portfolio.cash,virtualCashDecimals:6,fees:'0',realized:'0',positions:0,pending:0,valuationMarks:c.events.length,tradeEvents:0,scope:'Original signatures and policy, exact request/response, normalization, chronology, deterministic replay, unchanged six-receipt prefix and independent zero-order accounting. No fresh inference, provider-truth, complete coverage or hardware-attestation claim.'};
+console.log(JSON.stringify(result,null,2));if(process.argv.includes('--save'))await writeFile(new URL('research-verification.json',import.meta.url),JSON.stringify(result,null,2)+'\n');

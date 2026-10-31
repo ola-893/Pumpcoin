@@ -1,0 +1,37 @@
+{
+  "chainId": 11155111,
+  "oracle": "chainlink",
+  "poolManager": "0xE03A1074c86CFeDd5C142C4F04F1a1536e203543",
+  "poolManagerCodeHash": "0x09930125a49f5b95caf8052991cc14d1240dca8b43f42b899115b86867e4bce1",
+  "stateView": "0xE1Dd9c3fA50EDB962E442f60DfBc432e24537E4C",
+  "stateViewCodeHash": "0xaaed3db8eb8ebde8014ce4c8a3938496687f4c6374e17a7d735288f6c65ceb9e",
+  "fee": 1000,
+  "tickSpacing": 10,
+  "minimumQuoteLiquidity": "100000000",
+  "maxDeviationBps": 500,
+  "maxStaleness": 7200,
+  "maxConfidenceBps": 100,
+  "monOracle": {
+    "proxy": "0x694AA1769357215DE4FAC081bf1f309aDC325306",
+    "aggregator": "0x719E22E3D4b690E5d96cCb40619180B5427F14AE",
+    "proxyCodeHash": "0x9190afba2a699a9627d64ed68c7cc60e4005a8830b33183c4413b4e1a93b9ccd",
+    "aggregatorCodeHash": "0xe8d8ecdad84b79464c08db80dac98dfb3727d14cabf9ad0fcd248c3a0d246712",
+    "decimals": 8
+  },
+  "usdOracle": {
+    "proxy": "0xA2F78ab2355fe2f984D808B5CeE7FD0A93D5270E",
+    "aggregator": "0x0524b20f305e2e2F7990B9AfE28B4D5e4a76eA0C",
+    "proxyCodeHash": "0x9190afba2a699a9627d64ed68c7cc60e4005a8830b33183c4413b4e1a93b9ccd",
+    "aggregatorCodeHash": "0xe8d8ecdad84b79464c08db80dac98dfb3727d14cabf9ad0fcd248c3a0d246712",
+    "decimals": 8
+  },
+  "quoteMaxStaleness": 172800,
+  "nativeSymbol": "ETH",
+  "observedAtBlock": "11968666",
+  "observedAtBlockHash": "0x624c9a0e0382cf97c2a43d23daa13ef3461dfee4b4bbb5ca544726e58579ea4c",
+  "sources": [
+    "https://developers.uniswap.org/docs/protocols/v4/deployments",
+    "https://reference-data-directory.vercel.app/feeds-ethereum-testnet-sepolia.json"
+  ],
+  "scope": "Ethereum Sepolia test tokens only. Project-funded, hook-free demo pool; not mainnet price discovery or investment performance."
+}

@@ -1,0 +1,10 @@
+{
+  "scope": "Read-only RYO recovery check; authentic provider responses, not agent decisions or trades. Credentials, identity metadata and session headers excluded.",
+  "records": [],
+  "checks": [
+    {
+      "check": "diagnostic-error",
+      "message": "fetch failed"
+    }
+  ]
+}

@@ -1,0 +1,81 @@
+{
+  "scope": "Authentic read-only provider probes; not local-model output, signed policy, decision or trading evidence",
+  "probes": [
+    {
+      "tool": "analyze_token",
+      "arguments": {
+        "symbol": "SOL"
+      },
+      "startedAt": "2026-10-21T09:36:56.471Z",
+      "finishedAt": "2026-10-21T09:36:59.586Z",
+      "httpStatus": null,
+      "httpStatusNote": "The transport accepted a successful HTTP status; the exact status code was not retained in this capture.",
+      "exchanges": [
+        {
+          "method": "tools/call",
+          "params": {
+            "name": "analyze_token",
+            "arguments": {
+              "symbol": "SOL"
+            }
+          },
+          "id": 3,
+          "body": "{\"jsonrpc\": \"2.0\", \"id\": 3, \"result\": {\"content\": [{\"type\": \"text\", \"text\": \"couldn't analyze SOL right now (trace_id: 7e214b46a89d41389a7de45efb746618)\"}], \"isError\": true}}",
+          "contentType": "application/json",
+          "receivedAt": "2026-10-21T09:36:59.586Z"
+        }
+      ]
+    },
+    {
+      "tool": "scan_market",
+      "arguments": {
+        "chain": "eth",
+        "top_n": 1
+      },
+      "startedAt": "2026-10-21T09:36:59.588Z",
+      "finishedAt": "2026-10-21T09:37:00.326Z",
+      "httpStatus": null,
+      "httpStatusNote": "The transport accepted a successful HTTP status; the exact status code was not retained in this capture.",
+      "exchanges": [
+        {
+          "method": "tools/call",
+          "params": {
+            "name": "scan_market",
+            "arguments": {
+              "chain": "eth",
+              "top_n": 1
+            }
+          },
+          "id": 4,
+          "body": "{\"jsonrpc\": \"2.0\", \"id\": 4, \"result\": {\"content\": [{\"type\": \"text\", \"text\": \"{\\\"schema_version\\\": \\\"1.0\\\", \\\"tool\\\": \\\"scan_market\\\", \\\"status\\\": \\\"unavailable\\\", \\\"data_mode\\\": \\\"unknown\\\", \\\"as_of\\\": \\\"2026-10-21T09:37:00Z\\\", \\\"request\\\": {\\\"chain\\\": \\\"eth\\\", \\\"top_n\\\": 1}, \\\"data\\\": {\\\"filters\\\": {\\\"chain\\\": \\\"eth\\\", \\\"theme\\\": null, \\\"limit\\\": 1}, \\\"selection_method\\\": \\\"Ranked by 24-hour momentum and market activity.\\\", \\\"candidate_count\\\": 0, \\\"candidates\\\": [], \\\"excluded_candidate_count\\\": 0}, \\\"summary\\\": {\\\"headline\\\": \\\"No ranked market candidates were available.\\\", \\\"key_points\\\": []}, \\\"availability\\\": {\\\"ranked_candidates\\\": \\\"unavailable\\\", \\\"theme_filter\\\": \\\"not_requested\\\"}, \\\"warnings\\\": [\\\"No candidates matched the current scan filters.\\\"]}\"}], \"isError\": false}}",
+          "contentType": "application/json",
+          "receivedAt": "2026-10-21T09:37:00.326Z"
+        }
+      ]
+    }
+  ],
+  "credentialCheck": {
+    "startedAt": "2026-10-21T09:53:31.873Z",
+    "finishedAt": "2026-10-21T09:53:33.437Z",
+    "httpStatus": 200,
+    "scopes": [
+      "tools:read"
+    ],
+    "expiresAt": "2026-12-17T02:33:00Z",
+    "rateLimitPerMinute": 60,
+    "rateLimitRemaining": 60,
+    "tools": [
+      "market_overview",
+      "scan_market",
+      "analyze_token",
+      "deep_analysis",
+      "compare_tokens",
+      "monitor_market_sentiment_shift"
+    ],
+    "redactions": [
+      "credential",
+      "key identifier",
+      "label"
+    ]
+  }
+}

@@ -22,7 +22,7 @@ const eventAbi = parseAbi(['event Deposit(address indexed sender,address indexed
 const log = { address: vault, transactionHash: hash(7), blockNumber: 950n, blockHash: hash(950), logIndex: 0, removed: false,
   topics: encodeEventTopics({ abi: eventAbi, eventName: 'Deposit', args: { sender: address(8), owner: address(8) } }),
   data: encodeAbiParameters([{ type: 'uint256' }, { type: 'uint256' }], [1000000n, 1000000000000n]) };
-function mock(options: { missingReceiptLog?: boolean; reorg?: boolean; wrongCommitment?: boolean; wrongChain?: boolean; permission?: boolean; changedOwner?: boolean; editedURI?: boolean; wrongRuntime?: boolean; availableNav?: boolean; changedStrategy?: boolean } = {}) {
+function mock(options: { identityPublication?:'commitment-only-v1'; missingReceiptLog?: boolean; reorg?: boolean; wrongCommitment?: boolean; wrongChain?: boolean; permission?: boolean; changedOwner?: boolean; editedURI?: boolean; wrongRuntime?: boolean; availableNav?: boolean; changedStrategy?: boolean } = {}) {
   let calls = 0;
   const client = {
     getChainId: async () => options.wrongChain ? 31337 : 10143,
@@ -38,7 +38,7 @@ function mock(options: { missingReceiptLog?: boolean; reorg?: boolean; wrongComm
       if (f === 'identityRegistry') return network.identityRegistry;
       if (f === 'agentId') return 42n;
       if (f === 'ownerOf') return options.changedOwner ? address(10) : address(8);
-      if (f === 'tokenURI') return options.editedURI ? 'edited' : identityURI(prepared);
+      if (f === 'tokenURI') return options.editedURI ? 'edited' : identityURI(prepared,options.identityPublication);
       if (f === 'symbol') return a === network.quote ? 'pUSD' : 'WMON';
       if (f === 'valuationSource') return address(11);
       if (f === 'perTradeCap') return 10000000n;
@@ -105,6 +105,14 @@ test('current identity changes are returned as mismatches, never as fixed verifi
   assert.equal(data.activity.depositedQuoteUnits, '1000000');
   assert.equal(data.activity.deposits, 1);
   assert.equal(data.activity.trades, 0);
+});
+test('live identity comparison uses the persisted publication mode and rejects substituted metadata',async()=>{
+ const compact={...record,binding:{...record.binding!,identityPublication:'commitment-only-v1' as const}};
+ const inspect=(r:RegistrationRecord,options:Parameters<typeof mock>[0])=>liveVaultService(network,async()=>[r],mock(options).client).inspect(id);
+ assert.equal((await inspect(compact,{identityPublication:'commitment-only-v1'})).identity.manifestMatchesDeclaration,true);
+ assert.equal((await inspect(record,{identityPublication:'commitment-only-v1'})).identity.manifestMatchesDeclaration,false);
+ assert.equal((await inspect(compact,{})).identity.manifestMatchesDeclaration,false);
+ assert.equal((await inspect(compact,{identityPublication:'commitment-only-v1',editedURI:true})).identity.manifestMatchesDeclaration,false);
 });
 test('agent state preserves independent chain/runtime failures and rejects foreign or altered observations', async () => {
   const fixture = mock({ availableNav: true });

@@ -1,0 +1,30 @@
+{
+  "scope": "Native external Chrome accessibility observations, not a cryptographic screen attestation or proof that a recording file captured these scenes. Compared with the saved public records and checkpoint.",
+  "browserProfile": "Olaoluwa (Your Chrome)",
+  "freshRegistration": {
+    "name": "Muse RYO Recording",
+    "savedMessage": "Registration saved",
+    "registeredAtLocal": "10/31/2026, 2:46:02 PM",
+    "manifest": "0x856fefad106d752bb06187d58116e94b736a85cf6f9b101d88f64d6445c4dedd",
+    "workerReceipt": "0x57672b1d39187e4defd53fc444c90c546b0600a46c173507acb37b5c64f3fcbd",
+    "sourceDigest": "sha256:a91c83665820d75b6b3d3065d0869ab33c13f327170126bf0e53bd8115de0766",
+    "vaultLinked": false
+  },
+  "originalAgent": {
+    "name": "Muse RYO Demo",
+    "lastObservedLocal": "10/31/2026, 2:41:47 PM",
+    "observations": 7,
+    "inferenceErrors": 6,
+    "virtualEquity": "10,000 virtual USD",
+    "practiceReturn": "0.00%",
+    "closedPositions": 0,
+    "proposal": "HOLD",
+    "decision": "0x40b10a1773a1c407b4884c34445aa83ea1849e7f9cd582a4329260014d276577",
+    "evidence": "0x88504b1e3f0f88508b95c0c20e9db180700fbba1da1ff8a56ed214d1b9047efd",
+    "modelJudgmentsLabel": "Model interpretation \u00b7 not source-verified facts",
+    "browserReplayResult": "Deterministic replay matched 7 decisions before export. This does not re-run or attest the model.",
+    "ryoTokenCoverage": "partial",
+    "ryoSentimentCoverage": "ok",
+    "ryoExecutableDepthMapping": "unavailable"
+  }
+}

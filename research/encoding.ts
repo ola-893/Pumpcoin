@@ -2,6 +2,9 @@ import { keccak256, stringToHex, type Hex } from 'viem';
 export function canonical(value: unknown): string {
   if (value === null || typeof value === 'boolean' || typeof value === 'string') return JSON.stringify(value);
   if (typeof value === 'number' && Number.isSafeInteger(value)) return String(value);
+  // Local inference envelopes include fractional timing telemetry. Financial
+  // amounts remain decimal strings; policy/count fields require safe integers.
+  if (typeof value === 'number' && Number.isFinite(value) && !Number.isInteger(value)) return JSON.stringify(value);
   if (Array.isArray(value)) return `[${value.map(canonical).join(',')}]`;
   if (value && typeof value === 'object' && Object.getPrototypeOf(value) === Object.prototype)
     return `{${Object.keys(value).sort().map(k => `${JSON.stringify(k)}:${canonical((value as Record<string, unknown>)[k])}`).join(',')}}`;

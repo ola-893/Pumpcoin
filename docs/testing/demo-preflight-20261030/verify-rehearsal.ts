@@ -1,0 +1,17 @@
+import {readFile} from 'node:fs/promises';
+import assert from 'node:assert/strict';
+import {researchEngineDigest} from './engine/research/engine.js';
+import {validatePolicy} from './engine/research/policy.js';
+import {validateTimeline,verifyNormalization} from './engine/research/evidence.js';
+import {researchRequest,interpretationEvidence} from './engine/research/request.js';
+import {validateInterpretation,signal} from './engine/research/signals.js';
+import {digest} from './engine/research/encoding.js';
+const json=async(name:string)=>JSON.parse(await readFile(new URL(name,import.meta.url),'utf8'));
+const p=await json('policy-proposal.json'),e=await json('evidence.json'),t=await json('trace.json');
+assert.equal(p.engineDigest,await researchEngineDigest(),'Use the captured engine artifact version for replay.');
+validatePolicy(p,p.registrationId,p.manifestCommitment);verifyNormalization(e,p);validateTimeline(e,t.finishedAt,t);
+assert.equal(digest(t.request),digest(researchRequest(t.model,p,'market-news',e)));
+assert.equal(digest(JSON.parse(t.rawResponse)),digest(t.response));
+assert.equal(t.response.model,t.model);assert.equal(t.response.choices.length,1);assert.equal(t.response.choices[0].finish_reason,'stop');assert.equal(t.response.choices[0].message.content,t.rawContent);
+assert.deepEqual(validateInterpretation(JSON.parse(t.rawContent),interpretationEvidence(e,p,'market-news'),p.symbols),t.interpretation);
+console.log(JSON.stringify({scope:'Unsigned rehearsal consistency replay; no signatures, provider/model attestation or funded-performance proof.',evidenceHash:digest(e),action:t.interpretation.action,entryGuard:signal(p,'market-news',e,t.interpretation,Date.parse(t.finishedAt))},null,2));

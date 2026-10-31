@@ -1,0 +1,49 @@
+{
+  "scope": "Unsigned source preflight; not an agent decision or performance record",
+  "evidence": {
+    "version": "PUMPCOIN-RESEARCH-EVIDENCE-v1",
+    "mode": "live-observed",
+    "capturedAt": "2026-10-23T15:37:06.659Z",
+    "markets": [],
+    "posts": [],
+    "sources": [
+      {
+        "source": "coinbase-exchange:ETH",
+        "available": false,
+        "reason": "Public Coinbase quote could not be retrieved within the capture budget.",
+        "retrievedAt": "2026-10-23T15:37:06.656Z"
+      },
+      {
+        "source": "ryo:ETH",
+        "available": false,
+        "reason": "RYO observation could not be retrieved.",
+        "retrievedAt": "2026-10-23T15:37:06.658Z"
+      },
+      {
+        "source": "ryo",
+        "available": false,
+        "reason": "RYO priced watchlist coverage is incomplete. Raw tool responses are separate from executable quotes.",
+        "retrievedAt": "2026-10-23T15:37:06.658Z"
+      },
+      {
+        "source": "coinbase-exchange",
+        "available": false,
+        "reason": "Selected USD spot-book coverage is incomplete.",
+        "retrievedAt": "2026-10-23T15:37:06.658Z"
+      },
+      {
+        "source": "news:https://www.coindesk.com/arc/outboundfeeds/rss",
+        "available": false,
+        "reason": "Selected source observation failed or could not be normalized.",
+        "retrievedAt": "2026-10-23T15:37:06.659Z"
+      },
+      {
+        "source": "news",
+        "available": false,
+        "reason": "Select operator-allowlisted accessible news feeds.",
+        "retrievedAt": "2026-10-23T15:37:06.659Z"
+      }
+    ],
+    "raw": []
+  }
+}

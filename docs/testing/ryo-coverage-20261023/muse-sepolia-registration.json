@@ -1,0 +1,380 @@
+{
+  "scope": "Public local enrollment, historical authorizations and synthetic admission record. No private runtime configuration, secrets, funded execution or live strategy performance.",
+  "registration": {
+    "version": "PUMPCOIN-LOCAL-REGISTRATION-v1",
+    "id": "0x26286ce4d945639b89e24022f35a6e6e7b1963f933126fc7332491e9acd5ff07",
+    "localAgentId": "0xd91de8b48cc02151ebed8ee7875fd74b03635bfe9c590736245df6b5c3590240",
+    "registeredAt": "2026-10-23T14:52:15.875Z",
+    "manifest": {
+      "version": "PUMPCOIN-DEPLOYMENT-DRAFT-v1",
+      "inferencePolicy": "PUMPCOIN-SELF-HOSTED-v1",
+      "evidenceLevel": "operator-declared",
+      "registrationStatus": "unpublished-draft",
+      "vaultPolicy": {
+        "mode": "instant-testnet-demo",
+        "chainId": 11155111,
+        "configurationNoticeSeconds": 0
+      },
+      "name": "Muse Sepolia",
+      "controller": "0xe26468ae02368a75DBDBea58F367B7313942ad26",
+      "executionKey": "0x60Fb5776E808DB05465c684284cC2828Efdc051F",
+      "model": {
+        "id": "muse-glimmer-30b",
+        "source": "https://huggingface.co/unsloth/Muse-Glimmer-30B-GGUF/resolve/faa5b025c584459c13febfa5c59883516710ae39/Muse-Glimmer-30B-UD-Q4_K_XL.gguf",
+        "weightsDigest": "sha256:82bece304887a313ece08400bc030f6066c7bff5b906b0cd40308ec8a409fd38",
+        "runtimeDigest": "sha256:41f2fdddcb093047df14f70f8904c686f2ea99043348032d2386d54241068461",
+        "localMeasurements": {
+          "evidence": "locally-detected-not-attested",
+          "checkedAt": "2026-10-23T14:36:41.822Z",
+          "quantization": "Q4_K - Medium",
+          "context": 8192,
+          "weightsBytes": 15878222368,
+          "sourceStatus": "local-download-record-matched",
+          "runtimeManifest": {
+            "version": "PUMPCOIN-MAPPED-RUNTIME-v1",
+            "scope": "llama-server executable and mapped non-system native libraries; excludes OS, GPU driver, strategy and proof of execution",
+            "build": "b11429-d81235049",
+            "artifacts": [
+              {
+                "name": "libcrypto.3.dylib",
+                "sha256": "6c7139ae515b274286b2f62d662a173e32d34854e1fc26cca46ee08efe16ae45",
+                "bytes": 4874336
+              },
+              {
+                "name": "libggml-base.0.26.0.dylib",
+                "sha256": "0bb8b0aef84f3fe9d352e570ef58da97e736ecea15f9fba44ab4c3d4f951e324",
+                "bytes": 537424
+              },
+              {
+                "name": "libggml-blas.so",
+                "sha256": "b60f01874e149a4c67d9d171923cc28cb0add3ad9485de06d4a73f086bdb5a59",
+                "bytes": 59424
+              },
+              {
+                "name": "libggml-cpu-apple_m4.so",
+                "sha256": "46103dd30440b3eef9a54e732cb46e693fad148d58be587d3319f6c0e3e9c8a5",
+                "bytes": 589520
+              },
+              {
+                "name": "libggml-metal.so",
+                "sha256": "eb1ca2de17ea7663781b9b3012a95e39ecd9ae54db2c76968b346c9fc6fddac3",
+                "bytes": 5517520
+              },
+              {
+                "name": "libggml.0.26.0.dylib",
+                "sha256": "d9fdae8264f577300ecc8c3b634165dbac14b794a1399cdaa422b4ab8c925722",
+                "bytes": 61232
+              },
+              {
+                "name": "libllama-common.0.6.0.dylib",
+                "sha256": "fab2fde1a21bb9920b6f14cf39924b7379a3b789d1abcbeb3e9ca014fb145d33",
+                "bytes": 5060704
+              },
+              {
+                "name": "libllama-server-impl.dylib",
+                "sha256": "5fc7d59cc85e16adaa84211b63c60c17e33c0c8715624b23e2507a76e032b73a",
+                "bytes": 6538800
+              },
+              {
+                "name": "libllama.0.6.0.dylib",
+                "sha256": "810ad2c4e137dc75daa33297e1c8f32d1e35d72eccf4eaaa6fbf8793169253ab",
+                "bytes": 3130208
+              },
+              {
+                "name": "libmtmd.0.6.0.dylib",
+                "sha256": "5c503d28b9455466e85e20134b5febaa279a1cdf26a3850fd762c7f07aebab95",
+                "bytes": 1186816
+              },
+              {
+                "name": "libomp.dylib",
+                "sha256": "cb679440b0af57131274b6c0bcc11b8c18ef7ad45e2a6625ef57e90379fc2ae4",
+                "bytes": 725984
+              },
+              {
+                "name": "libssl.3.dylib",
+                "sha256": "2b343dc7a88d6e49720ae6b939a178b5e688912e682044250203770b8acc2a08",
+                "bytes": 890256
+              },
+              {
+                "name": "llama-server",
+                "sha256": "1579d2139003a9f1b5ddccbab0a019054859fa546f724657ca7c301819240cf5",
+                "bytes": 33616
+              }
+            ]
+          }
+        }
+      },
+      "strategy": {
+        "description": "Muse Sepolia uses locally hosted Muse Glimmer 30B to interpret RYO market evidence, allowlisted news and separately authorized X creator posts. Market/news and Multi-KOL research use signed practice policies, virtual capital, retained evidence and delayed simulated fills. Funded WETH/test-USDC spot execution on Ethereum Sepolia is separate from practice. Guards require current valuation, liquidity, applied configuration, expiring permission and bounded amounts. Per-trade cap 0.01 test-USDC; maximum position 0.05 test-USDC; slippage ceiling 50 basis points. HOLD when required evidence is missing, stale or incompatible. No leverage or guaranteed return. Missing RYO prices and X access remain visible; enrollment is not proof of a verified live strategy or hardware-attested execution.",
+        "codeDigest": "sha256:226b15ed80cbe3b6484968a0575acd2ae565985ac94e9ec134b86c2ad0ef6c99",
+        "pair": "WETH / USDC"
+      },
+      "proposedMandate": {
+        "quoteDecimals": 6,
+        "perTradeQuoteUnits": "10000",
+        "maxPositionQuoteUnits": "50000",
+        "slippageBps": 50,
+        "leverage": false
+      },
+      "dependencies": [
+        "Local Muse Glimmer 30B and llama-server",
+        "RYO-CHAN MCP with reviewed priced-response mapping required",
+        "allowlisted news feeds",
+        "separate authorized X API for selected creator posts",
+        "Ethereum Sepolia RPC",
+        "Chainlink ETH/USD and USDC/USD",
+        "WETH/test-USDC Uniswap v4 liquidity",
+        "encrypted execution signer. Research practice is separate from funded execution."
+      ]
+    },
+    "commitment": "0x92067204bc466d7b90f36a3882f00f4bfbdb055752e8408ef72191d19e3654b7",
+    "authorization": {
+      "challenge": {
+        "id": "ff37dfd6a4dd8c347ffac7d1cceaef90e8d1ea60ce16ffcc8e455f17fffb4c53",
+        "origin": "http://127.0.0.1:5173",
+        "chainId": 11155111,
+        "commitment": "0x92067204bc466d7b90f36a3882f00f4bfbdb055752e8408ef72191d19e3654b7",
+        "runtimeConfigHash": "0x32f68d9159b0dbb16058ba45b4fc09238e8d3fd3c855fb0d8e3e3237b563f192",
+        "controller": "0xe26468ae02368a75DBDBea58F367B7313942ad26",
+        "executionKey": "0x60Fb5776E808DB05465c684284cC2828Efdc051F",
+        "expiresAt": 1792767491325,
+        "demoMode": true
+      },
+      "controllerSignature": "0x4e930a116304e03b50bcee9167c3e40d3a12740b3ba13971893e500fd36d74192b263745d1e5ff164c2ade56edda140b71700340b9383048825a707ebecc20ee1c",
+      "executionSignature": "0xfb2cfea8ab5784ef7b197b80e008902350e8b2f50d74752df2d01731ca2621fb58df3ade9a1ef6a68751730c0eed9f2738c3438f4d69b67603f7f1329d0d7a7f1b"
+    },
+    "worker": {
+      "version": "PUMPCOIN-LOCAL-WORKER-CHECK-v2",
+      "mode": "synthetic-paper-only",
+      "evidence": "locally-observed-not-attested",
+      "model": "muse-glimmer-30b",
+      "weightsDigest": "sha256:82bece304887a313ece08400bc030f6066c7bff5b906b0cd40308ec8a409fd38",
+      "runtimeDigest": "sha256:41f2fdddcb093047df14f70f8904c686f2ea99043348032d2386d54241068461",
+      "checkedAt": "2026-10-23T14:50:43.574Z",
+      "input": {
+        "fresh": false,
+        "valued": false,
+        "positionQuoteUnits": "0",
+        "cashQuoteUnits": "0"
+      },
+      "rawProposal": {
+        "action": "HOLD",
+        "quoteUnits": "0"
+      },
+      "guardedProposal": {
+        "action": "HOLD",
+        "quoteUnits": "0"
+      },
+      "scenarios": [
+        {
+          "id": "fresh-cash",
+          "input": {
+            "fresh": true,
+            "valued": true,
+            "positionQuoteUnits": "0",
+            "cashQuoteUnits": "10000"
+          },
+          "rawProposal": {
+            "action": "HOLD",
+            "quoteUnits": "0"
+          },
+          "guardedProposal": {
+            "action": "HOLD",
+            "quoteUnits": "0"
+          }
+        },
+        {
+          "id": "fresh-position",
+          "input": {
+            "fresh": true,
+            "valued": true,
+            "positionQuoteUnits": "10000",
+            "cashQuoteUnits": "0"
+          },
+          "rawProposal": {
+            "action": "HOLD",
+            "quoteUnits": "0"
+          },
+          "guardedProposal": {
+            "action": "HOLD",
+            "quoteUnits": "0"
+          }
+        }
+      ],
+      "guardChallenges": [
+        {
+          "id": "allowed-buy",
+          "input": {
+            "fresh": true,
+            "valued": true,
+            "positionQuoteUnits": "0",
+            "cashQuoteUnits": "10000"
+          },
+          "proposal": {
+            "action": "BUY",
+            "quoteUnits": "10000"
+          },
+          "expected": {
+            "action": "BUY",
+            "quoteUnits": "10000"
+          },
+          "result": {
+            "action": "BUY",
+            "quoteUnits": "10000"
+          }
+        },
+        {
+          "id": "allowed-sell",
+          "input": {
+            "fresh": true,
+            "valued": true,
+            "positionQuoteUnits": "10000",
+            "cashQuoteUnits": "0"
+          },
+          "proposal": {
+            "action": "SELL",
+            "quoteUnits": "10000"
+          },
+          "expected": {
+            "action": "SELL",
+            "quoteUnits": "10000"
+          },
+          "result": {
+            "action": "SELL",
+            "quoteUnits": "10000"
+          }
+        },
+        {
+          "id": "stale-buy",
+          "input": {
+            "fresh": false,
+            "valued": true,
+            "positionQuoteUnits": "0",
+            "cashQuoteUnits": "10000"
+          },
+          "proposal": {
+            "action": "BUY",
+            "quoteUnits": "10000"
+          },
+          "expected": {
+            "action": "HOLD",
+            "quoteUnits": "0"
+          },
+          "result": {
+            "action": "HOLD",
+            "quoteUnits": "0"
+          }
+        },
+        {
+          "id": "unvalued-buy",
+          "input": {
+            "fresh": true,
+            "valued": false,
+            "positionQuoteUnits": "0",
+            "cashQuoteUnits": "10000"
+          },
+          "proposal": {
+            "action": "BUY",
+            "quoteUnits": "10000"
+          },
+          "expected": {
+            "action": "HOLD",
+            "quoteUnits": "0"
+          },
+          "result": {
+            "action": "HOLD",
+            "quoteUnits": "0"
+          }
+        },
+        {
+          "id": "oversized-buy",
+          "input": {
+            "fresh": true,
+            "valued": true,
+            "positionQuoteUnits": "0",
+            "cashQuoteUnits": "10000"
+          },
+          "proposal": {
+            "action": "BUY",
+            "quoteUnits": "10001"
+          },
+          "expected": {
+            "action": "HOLD",
+            "quoteUnits": "0"
+          },
+          "result": {
+            "action": "HOLD",
+            "quoteUnits": "0"
+          }
+        },
+        {
+          "id": "overexposed-buy",
+          "input": {
+            "fresh": true,
+            "valued": true,
+            "positionQuoteUnits": "50000",
+            "cashQuoteUnits": "10000"
+          },
+          "proposal": {
+            "action": "BUY",
+            "quoteUnits": "10000"
+          },
+          "expected": {
+            "action": "HOLD",
+            "quoteUnits": "0"
+          },
+          "result": {
+            "action": "HOLD",
+            "quoteUnits": "0"
+          }
+        },
+        {
+          "id": "cashless-buy",
+          "input": {
+            "fresh": true,
+            "valued": true,
+            "positionQuoteUnits": "0",
+            "cashQuoteUnits": "0"
+          },
+          "proposal": {
+            "action": "BUY",
+            "quoteUnits": "10000"
+          },
+          "expected": {
+            "action": "HOLD",
+            "quoteUnits": "0"
+          },
+          "result": {
+            "action": "HOLD",
+            "quoteUnits": "0"
+          }
+        },
+        {
+          "id": "positionless-sell",
+          "input": {
+            "fresh": true,
+            "valued": true,
+            "positionQuoteUnits": "0",
+            "cashQuoteUnits": "10000"
+          },
+          "proposal": {
+            "action": "SELL",
+            "quoteUnits": "10000"
+          },
+          "expected": {
+            "action": "HOLD",
+            "quoteUnits": "0"
+          },
+          "result": {
+            "action": "HOLD",
+            "quoteUnits": "0"
+          }
+        }
+      ],
+      "receiptHash": "0x4dcee4385c3ae06fa7ba291d812dbee41a4899d4ed3c74ed5940d11f03432b16",
+      "scope": "Three local inferences: stale/unvalued, fresh cash and fresh position; eight injected deterministic guard challenges. Synthetic inputs, no token movements. Does not prove host integrity, strategy-code execution, continuous operation or profitability."
+    },
+    "status": "registered-locally-vault-pending",
+    "investmentEligible": false
+  }
+}

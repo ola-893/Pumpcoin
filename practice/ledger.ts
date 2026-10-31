@@ -1,5 +1,7 @@
 import { digest, fresh, integer, time } from '../research/encoding.js';
 import type { Evidence, Market, Order, Policy, Portfolio, PracticeEvent } from '../research/types.js';
+import {ryoEntryReasons} from '../research/ryo-research.js';
+import { marketEligibility } from '../research/eligibility.js';
 const Q = 1000000000000n, B = 10000n;
 const fee = (n: bigint, bps: number) => (n * BigInt(bps) + B - 1n) / B;
 export function initialPortfolio(p: Policy): Portfolio {
@@ -39,10 +41,10 @@ export function advancePortfolio(previous: Portfolio, p: Policy, e: Evidence, at
     const notional = integer(o.notional), charged = fee(notional,p.feeBps);
     const equity = mark(v,e,now,p), exposure = equity === null ? null : equity-integer(v.cash);
     const dayEquity = v.day === at.slice(0,10) && v.dayOpeningEquity !== null ? integer(v.dayOpeningEquity) : equity;
-    if (!m.safe || integer(m.liquidity)===0n || v.positions.some(x=>x.marketId===o.marketId) || v.positions.length>=p.maxPositions || equity===null || exposure===null || equity===0n || dayEquity===null || dayEquity===0n ||
+    if (marketEligibility(p,m,now).length || ryoEntryReasons(p,e,o.symbol,now).length || v.positions.some(x=>x.marketId===o.marketId) || v.positions.length>=p.maxPositions || equity===null || exposure===null || equity===0n || dayEquity===null || dayEquity===0n ||
       (v.lastEntryAt!==null&&now-time(v.lastEntryAt)<p.cooldownSeconds*1000) || notional*BigInt(p.stopBps+2*p.feeBps+2*p.slippageBps)>equity*BigInt(p.riskBps) ||
-      (dayEquity-equity)*B>=dayEquity*BigInt(p.dailyLossBps) || notional+charged>integer(v.cash) || notional*B>equity*BigInt(p.positionBps) || (exposure+notional)*B>equity*BigInt(p.exposureBps) || notional>integer(m.liquidity)/100n) {
-      event({kind:'rejected',orderId:o.id,symbol:o.symbol,reason:'Fill-time safety, cash, exposure, liquidity or loss-limit check failed.'}); continue;
+      (dayEquity-equity)*B>=dayEquity*BigInt(p.dailyLossBps) || notional+charged>integer(v.cash) || notional*B>equity*BigInt(p.positionBps) || (exposure+notional)*B>equity*BigInt(p.exposureBps) || notional*B>integer(m.liquidity)*BigInt(p.marketRules.maximumLiquidityBps)) {
+      event({kind:'rejected',orderId:o.id,symbol:o.symbol,reason:'Fill-time instrument, risk-flag, cash, exposure, liquidity or loss-limit check failed.'}); continue;
     }
     const price = (integer(m.price)*(B+BigInt(p.slippageBps))+B-1n)/B, quantity = notional*Q/price;
     if (!quantity) { event({kind:'rejected',orderId:o.id,symbol:o.symbol,reason:'Order is below practice precision.'}); continue; }
@@ -77,7 +79,7 @@ export function sizeEntry(v: Portfolio,p: Policy,m: Market,at: string): { notion
   if (v.lastEntryAt && time(at)-time(v.lastEntryAt)<p.cooldownSeconds*1000) reasons.push('Entry cooldown active.');
   if (v.dayOpeningEquity===null || (integer(v.dayOpeningEquity)-equity)*B>=integer(v.dayOpeningEquity)*BigInt(p.dailyLossBps)) reasons.push('Daily loss limit reached or day-opening equity unavailable.');
   const cap=equity*BigInt(p.positionBps)/B, budget=equity*BigInt(p.riskBps)/BigInt(p.stopBps+2*p.feeBps+2*p.slippageBps), remaining=equity*BigInt(p.exposureBps)/B-exposure-pendingBuy;
-  const amount=[(cash-pendingCash)*B/(B+BigInt(p.feeBps)),cap,budget,remaining,integer(m.liquidity)/100n].reduce((a,b)=>a<b?a:b);
+  const amount=[(cash-pendingCash)*B/(B+BigInt(p.feeBps)),cap,budget,remaining,integer(m.liquidity)*BigInt(p.marketRules.maximumLiquidityBps)/B].reduce((a,b)=>a<b?a:b);
   if (amount<=0n) reasons.push('No virtual cash or remaining exposure capacity.');
   return {notional:amount>0n?String(amount):'0',reasons};
 }

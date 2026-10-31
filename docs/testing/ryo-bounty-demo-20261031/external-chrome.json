@@ -1,0 +1,28 @@
+{
+  "scope": "Native external Chrome UI observations during corrected bounty walkthrough; compared with stored checkpoint, not screen-recording file verification.",
+  "agent": "Muse RYO Demo",
+  "session": "0xdb1ae65154fdbe510fb2241425855b29635d667deb492f7bba2c77706625ea64",
+  "lastObservedLocal": "2026-10-31 16:57:06 Africa/Lagos",
+  "observations": 8,
+  "errors": 6,
+  "proposal": "HOLD",
+  "virtualEquity": "10,000 virtual USD",
+  "closedPositions": 0,
+  "openPositions": 0,
+  "pendingOrders": 0,
+  "fees": "0 virtual USD",
+  "realizedPnL": "0 virtual USD",
+  "unrealizedPnL": "0 virtual USD",
+  "ryoToolsShown": [
+    {
+      "tool": "analyze_token",
+      "symbol": "ETH",
+      "coverage": "partial",
+      "providerLocalTime": "2026-10-31 16:55:15 Africa/Lagos"
+    }
+  ],
+  "missingCoverage": "monitor_market_sentiment_shift unavailable in latest capture",
+  "browserReplay": "Deterministic replay matched 8 decisions before export. This does not re-run or attest the model.",
+  "originalExchangeDisplayed": true,
+  "practiceFillDemonstrated": false
+}

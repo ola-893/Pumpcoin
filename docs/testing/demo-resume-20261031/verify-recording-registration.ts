@@ -1,0 +1,14 @@
+import assert from 'node:assert/strict';
+import {readFile,writeFile} from 'node:fs/promises';
+import {createHash} from 'node:crypto';
+import {readDirectory} from '../../../app/src/lib/agent-directory.js';
+const load=async(name:string)=>JSON.parse(await readFile(new URL(name,import.meta.url),'utf8'));
+const r=await load('recording-registration.json'),i=await load('recording-source-inventory.json');
+await readDirectory({records:[r]});
+const sha=(bytes:Uint8Array)=>createHash('sha256').update(bytes).digest('hex');
+assert.equal(r.manifest.strategy.codeDigest,'sha256:'+sha(await readFile(new URL('recording-source-inventory.json',import.meta.url))));
+for(const a of i.artifacts)assert.equal(sha(await readFile(new URL('../../../'+a.path,import.meta.url))),a.sha256,a.path);
+assert.equal(sha(await readFile(new URL('direct-answer-template.jinja',import.meta.url))),i.runtimeConfiguration.templateSha256);
+assert.equal(r.worker.scenarios.length,2);assert.equal(r.worker.guardChallenges.length,8);assert.equal(r.manifest.name,'Muse RYO Recording');assert.equal(r.manifest.vaultPolicy.chainId,11155111);assert.equal(r.binding,undefined);
+const result={verified:true,registration:r.id,localAgentId:r.localAgentId,commitment:r.commitment,registeredAt:r.registeredAt,controller:r.manifest.controller,executionKey:r.manifest.executionKey,model:r.manifest.model.id,weightsDigest:r.worker.weightsDigest,runtimeDigest:r.worker.runtimeDigest,workerReceipt:r.worker.receiptHash,inferences:3,injectedGuardChallenges:8,sourceAndTemplateHashesMatch:true,vaultLinked:false,scope:'Controller/execution signatures, manifest and local-worker receipt consistency, current source inventory and template bytes. Local declarations and host observations; no hardware attestation, training-data provenance, funded permission or performance proof.'};
+console.log(JSON.stringify(result,null,2));if(process.argv.includes('--save'))await writeFile(new URL('recording-registration-verification.json',import.meta.url),JSON.stringify(result,null,2)+'\n');

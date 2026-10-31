@@ -18,3 +18,9 @@
 .research-mode { display:flex; gap:8px; margin:16px 0; }
 .research-mode [aria-pressed="true"] { background:#f0e6ff; border-color:#a778ef; color:#6531a6; }
 @media(max-width:480px) { .research-metrics,.research-limit-grid { grid-template-columns:1fr; } }
+.agent-research details { margin: 16px 0; border-top: 1px solid #ece4f4; padding-top: 8px; }
+.agent-research summary { cursor: pointer; min-height: 44px; align-content: center; color: #694398; font-size: 13px; font-weight: 500; }
+.agent-research .research-sources { margin-top: 12px; }
+.research-metrics { grid-template-columns: repeat(4,minmax(0,1fr)); }
+.agent-research .research-table-wrap { margin-top: 16px; }
+@media(max-width:700px) { .research-metrics { grid-template-columns:repeat(2,minmax(0,1fr)); } }

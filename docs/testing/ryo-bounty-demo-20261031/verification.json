@@ -1,0 +1,137 @@
+{
+  "verified": true,
+  "checkpoint": "0x41531561340425ae647d92d6d37825578eda854d8b526714b63c815da4f0e455",
+  "receipt": "0x805d8809155f3695ee77a845a2a18a45ca244fe04ab2d5c2995a6aa7a1792d02",
+  "evidence": "0xd903182153fe4ba0c2dc6a05b261b93fb78177a83fa3f477e15405cc615e33e4",
+  "policy": "0x9adf6aaeb22ffaef817f6e2870f03873d58d4463d4bfe66563ff1683ed5d06c3",
+  "observations": 8,
+  "modelHolds": 2,
+  "retainedErrors": 6,
+  "at": "2026-10-31T15:57:06.416Z",
+  "inference": {
+    "started": "2026-10-31T15:55:18.415Z",
+    "finished": "2026-10-31T15:57:06.416Z"
+  },
+  "sources": [
+    {
+      "source": "coinbase-exchange:ETH",
+      "available": true,
+      "retrievedAt": "2026-10-31T15:55:13.678Z"
+    },
+    {
+      "source": "ryo-research:ETH",
+      "available": true,
+      "retrievedAt": "2026-10-31T15:55:15.872Z"
+    },
+    {
+      "source": "ryo:ETH",
+      "available": false,
+      "reason": "RYO research is separately attributed; this response does not establish an executable market/depth mapping.",
+      "retrievedAt": "2026-10-31T15:55:15.872Z"
+    },
+    {
+      "source": "ryo-sentiment",
+      "available": false,
+      "reason": "Required RYO research is unavailable or incompatible; any received raw response is retained.",
+      "retrievedAt": "2026-10-31T15:55:17.396Z"
+    },
+    {
+      "source": "ryo-research",
+      "available": false,
+      "reason": "Signed RYO token/sentiment coverage is incomplete.",
+      "retrievedAt": "2026-10-31T15:55:17.397Z"
+    },
+    {
+      "source": "ryo",
+      "available": false,
+      "reason": "RYO priced watchlist coverage is incomplete. Raw tool responses are separate from executable quotes.",
+      "retrievedAt": "2026-10-31T15:55:17.397Z"
+    },
+    {
+      "source": "coinbase-exchange",
+      "available": true,
+      "retrievedAt": "2026-10-31T15:55:17.397Z"
+    },
+    {
+      "source": "news:https://decrypt.co/feed",
+      "available": true,
+      "retrievedAt": "2026-10-31T15:55:18.087Z"
+    },
+    {
+      "source": "news",
+      "available": true,
+      "retrievedAt": "2026-10-31T15:55:18.087Z"
+    }
+  ],
+  "selection": {
+    "observedPosts": 39,
+    "selectedPosts": 1,
+    "selectedIds": [
+      "0xa4535da7cee5c6b4e4d39dc73c31925e9d745c8bed82a255c09d9dded7e3d375"
+    ],
+    "rule": "Fresh within signed 3600-second window; latest ten news posts; text capped at 500 characters. Full stored posts/raw feed retained."
+  },
+  "modelInterpretation": {
+    "action": "HOLD",
+    "symbol": "ETH",
+    "factors": [
+      {
+        "evidenceId": "0xaafdf5c1ee97e97fe91f61ee36c84d62236e39d110670b8c285d863da9c18a0a",
+        "stance": "oppose",
+        "explanation": "Market price and liquidity observed on Coinbase; risk evidence unavailable per policy, so no BUY signal can be confirmed."
+      },
+      {
+        "evidenceId": "0xc2498cbd649fb0088f3cff43a02a21d9b1659ff5792de7fa3ede50078b13c2cf",
+        "stance": "oppose",
+        "explanation": "RYO research verdict is neutral with -16% 30d performance and sideways trend; technical indicators missing, so insufficient bullish evidence."
+      },
+      {
+        "evidenceId": "0xa4535da7cee5c6b4e4d39dc73c31925e9d745c8bed82a255c09d9dded7e3d375",
+        "stance": "oppose",
+        "explanation": "News post about Binance hack is negative crypto sentiment, no direct bullish catalyst for ETH."
+      }
+    ],
+    "classifications": [
+      {
+        "postId": "0xa4535da7cee5c6b4e4d39dc73c31925e9d745c8bed82a255c09d9dded7e3d375",
+        "symbol": "ETH",
+        "sentiment": "bearish",
+        "conviction": "low",
+        "urgency": "low"
+      }
+    ]
+  },
+  "actualOutcome": {
+    "outcome": "hold",
+    "reasons": [
+      "The local model proposed HOLD."
+    ],
+    "order": null
+  },
+  "entryDiagnostic": {
+    "scope": "Read-only hypothetical entry-eligibility evaluation using the recorded factors/classifications. The actual proposal was HOLD, so this was not an executed BUY guard decision and no history is changed.",
+    "passes": false,
+    "reasons": [
+      "Required RYO research coverage is unavailable.",
+      "Fresh RYO token research and market sentiment are required.",
+      "A cited monitor_market_sentiment_shift observation is required by the RYO policy.",
+      "A cited, fresh supporting news catalyst is required.",
+      "Conflicting news evidence blocks a new entry."
+    ],
+    "marketOnlyReasons": []
+  },
+  "modelJudgmentCaution": "The first model factor implies unknown risk coverage prevents confirmation. Under the signed policy unavailable risk is recorded, not automatically rejected; model explanations are not the deterministic policy. RYO sentiment coverage is unavailable in this capture and fresh required research remains incomplete.",
+  "practiceAccounting": {
+    "startingMicroUSD": "10000000000",
+    "cashMicroUSD": "10000000000",
+    "equityMicroUSD": "10000000000",
+    "feesMicroUSD": "0",
+    "realizedMicroUSD": "0",
+    "orders": 0,
+    "fills": 0,
+    "positions": 0,
+    "valuationMarks": 8
+  },
+  "acceptanceGap": "No genuine accepted BUY/SELL order or delayed practice fill has been recorded. Practice-trade demonstration remains incomplete. No Multi-KOL collection or source-truth verification claimed.",
+  "scope": "Exact stored model request/response, source normalization/timeline, controller/execution policy and receipt signatures, unchanged historical prefix, deterministic replay and independent zero-trade accounting. No provider-truth, model-execution attestation or profitability claim."
+}

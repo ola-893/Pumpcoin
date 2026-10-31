@@ -1,0 +1,231 @@
+{
+  "version": "PUMPCOIN-LOCAL-WORKER-CHECK-v2",
+  "mode": "synthetic-paper-only",
+  "evidence": "locally-observed-not-attested",
+  "model": "muse-glimmer-30b",
+  "weightsDigest": "sha256:82bece304887a313ece08400bc030f6066c7bff5b906b0cd40308ec8a409fd38",
+  "runtimeDigest": "sha256:41f2fdddcb093047df14f70f8904c686f2ea99043348032d2386d54241068461",
+  "checkedAt": "2026-10-30T19:44:42.224Z",
+  "input": {
+    "fresh": false,
+    "valued": false,
+    "positionQuoteUnits": "0",
+    "cashQuoteUnits": "0"
+  },
+  "rawProposal": {
+    "action": "HOLD",
+    "quoteUnits": "0"
+  },
+  "guardedProposal": {
+    "action": "HOLD",
+    "quoteUnits": "0"
+  },
+  "scenarios": [
+    {
+      "id": "fresh-cash",
+      "input": {
+        "fresh": true,
+        "valued": true,
+        "positionQuoteUnits": "0",
+        "cashQuoteUnits": "10000"
+      },
+      "rawProposal": {
+        "action": "HOLD",
+        "quoteUnits": "0"
+      },
+      "guardedProposal": {
+        "action": "HOLD",
+        "quoteUnits": "0"
+      }
+    },
+    {
+      "id": "fresh-position",
+      "input": {
+        "fresh": true,
+        "valued": true,
+        "positionQuoteUnits": "10000",
+        "cashQuoteUnits": "0"
+      },
+      "rawProposal": {
+        "action": "HOLD",
+        "quoteUnits": "0"
+      },
+      "guardedProposal": {
+        "action": "HOLD",
+        "quoteUnits": "0"
+      }
+    }
+  ],
+  "guardChallenges": [
+    {
+      "id": "allowed-buy",
+      "input": {
+        "fresh": true,
+        "valued": true,
+        "positionQuoteUnits": "0",
+        "cashQuoteUnits": "10000"
+      },
+      "proposal": {
+        "action": "BUY",
+        "quoteUnits": "10000"
+      },
+      "expected": {
+        "action": "BUY",
+        "quoteUnits": "10000"
+      },
+      "result": {
+        "action": "BUY",
+        "quoteUnits": "10000"
+      }
+    },
+    {
+      "id": "allowed-sell",
+      "input": {
+        "fresh": true,
+        "valued": true,
+        "positionQuoteUnits": "10000",
+        "cashQuoteUnits": "0"
+      },
+      "proposal": {
+        "action": "SELL",
+        "quoteUnits": "10000"
+      },
+      "expected": {
+        "action": "SELL",
+        "quoteUnits": "10000"
+      },
+      "result": {
+        "action": "SELL",
+        "quoteUnits": "10000"
+      }
+    },
+    {
+      "id": "stale-buy",
+      "input": {
+        "fresh": false,
+        "valued": true,
+        "positionQuoteUnits": "0",
+        "cashQuoteUnits": "10000"
+      },
+      "proposal": {
+        "action": "BUY",
+        "quoteUnits": "10000"
+      },
+      "expected": {
+        "action": "HOLD",
+        "quoteUnits": "0"
+      },
+      "result": {
+        "action": "HOLD",
+        "quoteUnits": "0"
+      }
+    },
+    {
+      "id": "unvalued-buy",
+      "input": {
+        "fresh": true,
+        "valued": false,
+        "positionQuoteUnits": "0",
+        "cashQuoteUnits": "10000"
+      },
+      "proposal": {
+        "action": "BUY",
+        "quoteUnits": "10000"
+      },
+      "expected": {
+        "action": "HOLD",
+        "quoteUnits": "0"
+      },
+      "result": {
+        "action": "HOLD",
+        "quoteUnits": "0"
+      }
+    },
+    {
+      "id": "oversized-buy",
+      "input": {
+        "fresh": true,
+        "valued": true,
+        "positionQuoteUnits": "0",
+        "cashQuoteUnits": "10000"
+      },
+      "proposal": {
+        "action": "BUY",
+        "quoteUnits": "10001"
+      },
+      "expected": {
+        "action": "HOLD",
+        "quoteUnits": "0"
+      },
+      "result": {
+        "action": "HOLD",
+        "quoteUnits": "0"
+      }
+    },
+    {
+      "id": "overexposed-buy",
+      "input": {
+        "fresh": true,
+        "valued": true,
+        "positionQuoteUnits": "50000",
+        "cashQuoteUnits": "10000"
+      },
+      "proposal": {
+        "action": "BUY",
+        "quoteUnits": "10000"
+      },
+      "expected": {
+        "action": "HOLD",
+        "quoteUnits": "0"
+      },
+      "result": {
+        "action": "HOLD",
+        "quoteUnits": "0"
+      }
+    },
+    {
+      "id": "cashless-buy",
+      "input": {
+        "fresh": true,
+        "valued": true,
+        "positionQuoteUnits": "0",
+        "cashQuoteUnits": "0"
+      },
+      "proposal": {
+        "action": "BUY",
+        "quoteUnits": "10000"
+      },
+      "expected": {
+        "action": "HOLD",
+        "quoteUnits": "0"
+      },
+      "result": {
+        "action": "HOLD",
+        "quoteUnits": "0"
+      }
+    },
+    {
+      "id": "positionless-sell",
+      "input": {
+        "fresh": true,
+        "valued": true,
+        "positionQuoteUnits": "0",
+        "cashQuoteUnits": "10000"
+      },
+      "proposal": {
+        "action": "SELL",
+        "quoteUnits": "10000"
+      },
+      "expected": {
+        "action": "HOLD",
+        "quoteUnits": "0"
+      },
+      "result": {
+        "action": "HOLD",
+        "quoteUnits": "0"
+      }
+    }
+  ],
+  "receiptHash": "0xe48bea4362f9c61a5861640d0c146cd1b6ab27d07ebd3e014a4f5e5075f8f6f8",
+  "scope": "Three local inferences: stale/unvalued, fresh cash and fresh position; eight injected deterministic guard challenges. Synthetic inputs, no token movements. Does not prove host integrity, strategy-code execution, continuous operation or profitability."
+}

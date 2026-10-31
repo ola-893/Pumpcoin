@@ -18,3 +18,10 @@ test('Submitted hash survives a subsequent wallet change; exact zero-value creat
  const p:Provider={request:async({method,params})=>{if(method==='eth_accounts')return [address];if(method==='eth_chainId')return '0x279f';assert.equal(method,'eth_sendTransaction');assert.deepEqual(params,[{from:address,data:tx.data,value:'0x0',gas:tx.gas,chainId:'0x279f'}]);sends++;current=undefined;return hash;}};
  assert.equal(await sendBrowserVaultTransaction(p,binding,()=>current,tx),hash);assert.equal(sends,1);
 });
+test('Deployment forwards the reviewed gas price and rejects malformed fees before contacting the wallet',async()=>{
+ const priced={...tx,gasPrice:'0x64' as const};let sends=0;
+ const p:Provider={request:async({method,params})=>{if(method==='eth_accounts')return [address];if(method==='eth_chainId')return '0x279f';sends++;assert.equal((params as any)[0].gasPrice,priced.gasPrice);return hash;}};
+ assert.equal(await sendBrowserVaultTransaction(p,binding,()=>binding,priced),hash);assert.equal(sends,1);
+ for(const gasPrice of ['0x0','-1','0x','0xzz'])await assert.rejects(sendBrowserVaultTransaction(p,binding,()=>binding,{...tx,gasPrice:gasPrice as any}),/gas price/);
+ assert.equal(sends,1);
+});

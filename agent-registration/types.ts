@@ -3,7 +3,7 @@ import type { Challenge, Prepared } from './core.js';
 export type Proposal = { action: 'HOLD' | 'BUY' | 'SELL'; quoteUnits: string };
 export type PaperInput = { fresh: boolean; valued: boolean; positionQuoteUnits: string; cashQuoteUnits: string };
 export type WorkerReceipt = { version: string; mode: string; evidence: string; model: string; weightsDigest: string; runtimeDigest: string; checkedAt: string; input: PaperInput; rawProposal: Proposal; guardedProposal: Proposal; receiptHash: Hex; scope: string; scenarios?: { id: string; input: PaperInput; rawProposal: Proposal; guardedProposal: Proposal }[]; guardChallenges?: { id: string; input: PaperInput; proposal: Proposal; expected: Proposal; result: Proposal }[] };
-export type BindingReceipt = { status: string; chainId: number; mode: string; vault: string; identityRegistry: string; agentId: string; blockNumber: string; blockHash: Hex; configHash: Hex; checkedAt: string; investmentEligible: boolean; evidence: string; scope: string; deploymentTransaction?: Hex; tradingReady?: false; instantTestnetDemo?: true; configurationNoticeSeconds?: number };
+export type BindingReceipt = { identityPublication?:'commitment-only-v1'; status: string; chainId: number; mode: string; vault: string; identityRegistry: string; agentId: string; blockNumber: string; blockHash: Hex; configHash: Hex; checkedAt: string; investmentEligible: boolean; evidence: string; scope: string; deploymentTransaction?: Hex; tradingReady?: false; instantTestnetDemo?: true; configurationNoticeSeconds?: number };
 export type RegistrationRecord = { version: 'PUMPCOIN-LOCAL-REGISTRATION-v1'; id: Hex; localAgentId: Hex; registeredAt: string; manifest: Prepared['manifest']; commitment: Hex; authorization: { challenge: Challenge; controllerSignature: Hex; executionSignature: Hex }; worker: WorkerReceipt; binding?: BindingReceipt; status: 'registered-locally-vault-pending' | 'registered-locally-binding-checked'; investmentEligible: false };
 
 export type TradeAction='deploy-valuation-guard'|'checkpoint-valuation'|'update-prices'|'update-mon-price'|'deploy'|'propose'|'apply'|'unpause'|'pause'|'approve-deposit'|'deposit'|'approve-redeem'|'redeem'|'buy'|'sell';
@@ -17,7 +17,7 @@ export type RuntimeStatus = {
 };
 
 export type LiveVaultObservation = {
-  chainId: 10143; vault: string; blockNumber: string; blockHash: Hex; checkedAt: string;
+  chainId: 10143 | 11155111; vault: string; blockNumber: string; blockHash: Hex; checkedAt: string;
   controller: string; manager: string; paused: boolean; configHash: Hex; cash: string; position: string; positionDecimals: number;
   shares: string; shareDecimals: number; nav?: string; permissionSupported: boolean;
   quote: { address: string; decimals: number; symbol: string }; positionToken: { address: string; decimals: number; symbol: string };

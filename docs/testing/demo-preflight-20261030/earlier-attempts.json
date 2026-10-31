@@ -1,0 +1,23 @@
+[
+  {
+    "scope": "Unsigned rehearsal of authentic source collection and local Muse inference. No saved policy/session/receipt, token movement or funded performance.",
+    "startedAt": "2026-10-30T19:08:06.735Z",
+    "finishedAt": "2026-10-30T19:09:53.387Z",
+    "status": "failed",
+    "error": "The operation was aborted due to timeout"
+  },
+  {
+    "scope": "Unsigned rehearsal of authentic source collection and local Muse inference. No saved policy/session/receipt, token movement or funded performance.",
+    "startedAt": "2026-10-30T19:11:08.017Z",
+    "finishedAt": "2026-10-30T19:14:22.750Z",
+    "status": "failed",
+    "error": "The operation was aborted due to timeout"
+  },
+  {
+    "scope": "Unsigned rehearsal of authentic source collection and local Muse inference. No saved policy/session/receipt, token movement or funded performance.",
+    "startedAt": "2026-10-30T19:16:00.741Z",
+    "finishedAt": "2026-10-30T19:18:07.319Z",
+    "status": "failed",
+    "error": "Unsupported research encoding."
+  }
+]

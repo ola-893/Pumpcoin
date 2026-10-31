@@ -5,12 +5,16 @@ import type { Checkpoint,ResearchView } from '../research/types.js';
 import { verifyCheckpoint,selectCheckpoint } from '../research/checkpoint.js';
 import { researchEngineDigest } from '../research/engine.js';
 import { evaluate } from '../research/evaluation.js';
+import { readFile } from 'node:fs/promises';
 
 const cache=new Map<string,{until:number;value:Checkpoint[]}>(),pending=new Map<string,Promise<Checkpoint[]>>();
 async function checkpoints(id:string){
   const saved=cache.get(id);if(saved&&saved.until>Date.now())return saved.value;
   const work=pending.get(id);if(work)return work;
-  const task=(async()=>{if(!process.env.BLOB_READ_WRITE_TOKEN)return [];const result=await list({prefix:`research/${id}/`,limit:1000});if(result.hasMore)throw new Error('Published practice coverage exceeds the reader limit.');const bySession=new Map<string,Checkpoint[]>();
+  const task=(async()=>{const bySession=new Map<string,Checkpoint[]>();
+    const seeded=JSON.parse(await readFile(new URL('../deployments/hosted-research.json',import.meta.url),'utf8').catch((e:NodeJS.ErrnoException)=>{if(e.code==='ENOENT')return '[]';throw e;})) as Checkpoint[];
+    for(const c of seeded.filter(c=>c.session.registrationId===id)){const rows=bySession.get(c.session.id)??[];rows.push(c);bySession.set(c.session.id,rows);}
+    const result=process.env.BLOB_READ_WRITE_TOKEN?await list({prefix:`research/${id}/`,limit:1000}):{blobs:[],hasMore:false};if(result.hasMore)throw new Error('Published practice coverage exceeds the reader limit.');
     for(const blob of result.blobs){const response=await get(blob.pathname,{access:'private',useCache:false});if(!response||response.statusCode!==200)throw new Error('A published checkpoint is unavailable.');if(blob.size>5000000)throw new Error('Published checkpoint exceeds the reader limit.');const c=JSON.parse(await new Response(response.stream).text()) as Checkpoint;const rows=bySession.get(c.session.id)??[];rows.push(c);bySession.set(c.session.id,rows);}
     return [...bySession.values()].map(rows=>selectCheckpoint(rows)!);})();pending.set(id,task);try{const value=await task;cache.set(id,{until:Date.now()+30000,value});return value;}finally{pending.delete(id);}
 }
@@ -18,6 +22,7 @@ export async function hostedResearchRoute(res:ServerResponse,route:string,body:R
   const r=records.find(x=>x.id===body.id);if(!r)throw new Error('Select a published agent registration.');
   const send=(value:unknown)=>{res.writeHead(200,{'Content-Type':'application/json','Cache-Control':'no-store','X-Content-Type-Options':'nosniff'});res.end(JSON.stringify(value));};
   if(route==='/research-publish'){
+    if(process.env.PUMPCOIN_HOSTED_READ_ONLY==='true')throw new Error('This deployment reads immutable evidence. Publish a verified snapshot by redeploying.');
     if(!process.env.BLOB_READ_WRITE_TOKEN)throw new Error('Hosted practice publication storage is not configured.');
     const c=await verifyCheckpoint(body.checkpoint,r),values=await checkpoints(r.id);
     const existing=values.find(x=>x.session.id===c.session.id);if(existing)selectCheckpoint([existing,c]);
@@ -28,7 +33,7 @@ export async function hostedResearchRoute(res:ServerResponse,route:string,body:R
   }
   const values=await checkpoints(r.id);for(const c of values)await verifyCheckpoint(c,r);
   if(route==='/research-state'){
-    const unique=new Map(values.map(c=>[c.policy.hash,c.policy]));const view:ResearchView={registrationId:r.id,hosted:true,engineDigest:await researchEngineDigest(),capabilities:{ryo:false,ryoMapping:false,x:false,news:false,signer:false},policies:[...unique.values()].sort((a,b)=>b.createdAt.localeCompare(a.createdAt)),sessions:values.map(c=>({...c.session,state:'stopped',message:'Published historical checkpoint. The hosted app cannot observe the local runtime.'})),latest:values.flatMap(c=>{const receipt=c.receipts.at(-1),evidence=c.evidence.at(-1)?.value;return receipt&&evidence?[{sessionId:c.session.id,receipt,evidence}]:[];}),errors:process.env.BLOB_READ_WRITE_TOKEN?[]:['Hosted practice publication storage is not configured.']};const paired=view.policies.find(p=>p.policy.strategies.length===2);if(paired)view.comparison=evaluate(paired,view.sessions,id=>{const c=values.find(v=>v.session.id===id)!;return c.receipts.map((receipt,i)=>({receipt,evidence:c.evidence[i].value}));});send({research:view});return;
+    const unique=new Map(values.map(c=>[c.policy.hash,c.policy]));const view:ResearchView={registrationId:r.id,hosted:true,engineDigest:await researchEngineDigest(),capabilities:{ryo:false,ryoMapping:false,x:false,news:false,signer:false},policies:[...unique.values()].sort((a,b)=>b.createdAt.localeCompare(a.createdAt)),sessions:values.map(c=>({...c.session,state:'stopped',message:'Published historical checkpoint. The hosted app cannot observe the local runtime.'})),latest:values.flatMap(c=>{const receipt=c.receipts.at(-1),evidence=c.evidence.at(-1)?.value;return receipt&&evidence?[{sessionId:c.session.id,receipt,evidence}]:[];}),errors:[]};const paired=view.policies.find(p=>p.policy.strategies.length===2);if(paired)view.comparison=evaluate(paired,view.sessions,id=>{const c=values.find(v=>v.session.id===id)!;return c.receipts.map((receipt,i)=>({receipt,evidence:c.evidence[i].value}));});send({research:view});return;
   }
   const c=values.find(c=>c.session.id===body.sessionId);if(!c)throw new Error('No verified checkpoint published for this practice session.');
   if(route==='/research-export'){send({checkpoint:c});return;}

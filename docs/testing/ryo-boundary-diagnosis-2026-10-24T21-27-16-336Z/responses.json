@@ -1,0 +1,5 @@
+{
+  "scope": "Read-only fault isolation across published RYO tools; no agent or production state changes, credential identities or secrets.",
+  "records": [],
+  "results": []
+}

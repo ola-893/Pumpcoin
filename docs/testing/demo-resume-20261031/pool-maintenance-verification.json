@@ -1,0 +1,14 @@
+{
+  "verified": true,
+  "chainId": 11155111,
+  "atBlock": "12032161",
+  "canonicalTransactions": 9,
+  "gasPaidWei": "51863350",
+  "swapWethPaid": "32246374726915",
+  "swapTestUsdcReceived": "77113",
+  "wrappedDeposits": "200000000000000",
+  "wrappedWithdrawals": "215819468582217",
+  "allowancesCleared": true,
+  "sourceHealthy": true,
+  "scope": "Controller-funded testnet pool maintenance. Swap/LP flows are not an AI decision, vault profit or investor deposit."
+}

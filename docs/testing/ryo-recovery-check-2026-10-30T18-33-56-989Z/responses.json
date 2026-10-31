@@ -1,0 +1,343 @@
+{
+  "scope": "Read-only RYO recovery check; authentic provider responses, not agent decisions or trades. Credentials, identity metadata and session headers excluded.",
+  "records": [
+    {
+      "path": "/health",
+      "at": "2026-10-30T18:33:56.997Z",
+      "receivedAt": "2026-10-30T18:33:58.053Z",
+      "httpStatus": 200,
+      "rateHeaders": {},
+      "body": "{\"status\":\"ok\",\"protocol_version\":\"2024-11-05\",\"server\":\"ryo-chan\",\"tools\":6}"
+    },
+    {
+      "path": "/whoami",
+      "at": "2026-10-30T18:33:58.054Z",
+      "receivedAt": "2026-10-30T18:33:58.512Z",
+      "httpStatus": 200,
+      "rateHeaders": {},
+      "identityFieldsRedacted": true,
+      "scopes": [
+        "tools:read"
+      ],
+      "expiresAt": "2026-12-17T02:33:00Z",
+      "limit": 60,
+      "remaining": 60
+    },
+    {
+      "path": "/api/mcp",
+      "at": "2026-10-30T18:33:58.515Z",
+      "receivedAt": "2026-10-30T18:33:58.853Z",
+      "httpStatus": 200,
+      "rateHeaders": {},
+      "request": {
+        "jsonrpc": "2.0",
+        "id": 1,
+        "method": "initialize",
+        "params": {
+          "protocolVersion": "2025-06-18",
+          "capabilities": {},
+          "clientInfo": {
+            "name": "pumpcoin-research",
+            "version": "1.0.0"
+          }
+        }
+      },
+      "contentType": "application/json",
+      "body": "{\"jsonrpc\": \"2.0\", \"id\": 1, \"result\": {\"protocolVersion\": \"2024-11-05\", \"capabilities\": {\"tools\": {\"listChanged\": false}}, \"serverInfo\": {\"name\": \"ryo-chan\", \"version\": \"1.0.0\"}}}"
+    },
+    {
+      "path": "/api/mcp",
+      "at": "2026-10-30T18:33:58.856Z",
+      "receivedAt": "2026-10-30T18:33:59.431Z",
+      "httpStatus": 202,
+      "rateHeaders": {},
+      "request": {
+        "jsonrpc": "2.0",
+        "method": "notifications/initialized",
+        "params": {}
+      },
+      "contentType": "",
+      "body": ""
+    },
+    {
+      "path": "/api/mcp",
+      "at": "2026-10-30T18:33:59.433Z",
+      "receivedAt": "2026-10-30T18:33:59.797Z",
+      "httpStatus": 200,
+      "rateHeaders": {},
+      "request": {
+        "jsonrpc": "2.0",
+        "id": 2,
+        "method": "tools/list",
+        "params": {}
+      },
+      "contentType": "application/json",
+      "body": "{\"jsonrpc\": \"2.0\", \"id\": 2, \"result\": {\"tools\": [{\"name\": \"market_overview\", \"description\": \"Delivery: a compact market-regime evidence pack with sentiment, market totals, dominance, movers, and explicit data gaps. Use when: an agent needs a broad market briefing before token research. Core inputs: none. Limits: research context only; incomplete lanes are marked partial or unavailable.\", \"inputSchema\": {\"type\": \"object\", \"properties\": {}, \"additionalProperties\": false}}, {\"name\": \"scan_market\", \"description\": \"Delivery: a ranked candidate set with price, momentum, market-activity evidence, filters, and reasons where available. Use when: an agent needs a shortlist before deeper token analysis. Core inputs: optional chain, theme, and top_n. Limits: theme is contextual rather than a strict filter; a scan is not a trade instruction.\", \"inputSchema\": {\"type\": \"object\", \"properties\": {\"chain\": {\"type\": \"string\", \"description\": \"Chain slug e.g. eth/bsc (optional).\"}, \"theme\": {\"type\": \"string\", \"description\": \"Narrative/theme filter (optional).\"}, \"top_n\": {\"type\": \"number\", \"description\": \"How many candidates to return.\"}, \"filter_direction\": {\"type\": \"string\", \"description\": \"Direction filter: 'positive' (gainers only), 'negative' (losers only), or 'all' (default).\"}}, \"additionalProperties\": false}}, {\"name\": \"analyze_token\", \"description\": \"Delivery: a single-token research pack with USD market data, multi-window performance, calculated RSI and ATR, intelligence, summary, and warnings. Use when: an agent needs a quick structured token read. Core input: symbol. Limits: missing measurements are reported as unavailable and the result is not execution advice.\", \"inputSchema\": {\"type\": \"object\", \"properties\": {\"symbol\": {\"type\": \"string\", \"description\": \"Token symbol, e.g. INJ.\"}, \"chain\": {\"type\": \"string\", \"description\": \"Chain slug for contract-specific safety, e.g. eth/bsc (optional).\"}}, \"required\": [\"symbol\"], \"additionalProperties\": false}}, {\"name\": \"deep_analysis\", \"description\": \"Delivery: a deeper token evidence pack combining market context, confluence, technicals, an optional Skill Hub token profile, derivatives, catalysts, risks, and a measured-ATR preview plan. Use when: an agent needs one comprehensive token read. Core input: token symbol; optional include_perp. Limits: token analysis only, not wallet analysis; unavailable lanes remain explicit and no trade is placed.\", \"inputSchema\": {\"type\": \"object\", \"properties\": {\"symbol\": {\"type\": \"string\", \"description\": \"Token symbol, e.g. SOL.\"}, \"chain\": {\"type\": \"string\", \"description\": \"Chain slug for contract-specific safety (optional).\"}, \"include_perp\": {\"type\": \"boolean\", \"description\": \"Include derivatives/perp posture (default true).\"}}, \"required\": [\"symbol\"], \"additionalProperties\": false}}, {\"name\": \"compare_tokens\", \"description\": \"Delivery: a side-by-side comparison of two to four tokens with factor winners, coverage by token, an overall pick, rationale, confidence, and conclusion method. Use when: an agent must compare relative momentum, market activity, and volatility using common data. Core inputs: symbols; optional intent. Limits: missing factors are disclosed and deterministic conclusions are labelled.\", \"inputSchema\": {\"type\": \"object\", \"properties\": {\"symbols\": {\"type\": \"string\", \"description\": \"2-4 token symbols to compare, comma- or space-separated, e.g. 'SOL, AVAX'.\"}, \"intent\": {\"type\": \"string\", \"description\": \"Trade horizon the pick is for: swing | hold | spot (optional).\", \"enum\": [\"swing\", \"hold\", \"spot\"]}}, \"required\": [\"symbols\"], \"additionalProperties\": false}}, {\"name\": \"monitor_market_sentiment_shift\", \"description\": \"Delivery: a seven-day market sentiment evidence pack containing Fear & Greed level and change, BTC perpetual funding crowding, BTC liquidation pressure and side, altseason phase, the combined regime, observation dates, coverage scope, and full measurements. Use when: an agent needs to check whether market sentiment materially shifted. Core inputs: optional time_window fixed to 7d. Limits: market-wide context except for BTC-referenced derivatives; no causality claim or advice.\", \"inputSchema\": {\"type\": \"object\", \"properties\": {\"time_window\": {\"type\": \"string\", \"enum\": [\"7d\"], \"default\": \"7d\", \"description\": \"Sentiment comparison window; currently fixed to seven days.\"}}, \"additionalProperties\": false}}]}}"
+    },
+    {
+      "path": "/api/mcp",
+      "at": "2026-10-30T18:33:59.799Z",
+      "receivedAt": "2026-10-30T18:34:01.144Z",
+      "httpStatus": 200,
+      "rateHeaders": {
+        "x-ratelimit-limit": "60",
+        "x-ratelimit-remaining": "59",
+        "x-ratelimit-reset": "1793385300"
+      },
+      "request": {
+        "jsonrpc": "2.0",
+        "id": 3,
+        "method": "tools/call",
+        "params": {
+          "name": "analyze_token",
+          "arguments": {
+            "symbol": "ETH"
+          }
+        }
+      },
+      "contentType": "application/json",
+      "body": "{\"jsonrpc\": \"2.0\", \"id\": 3, \"result\": {\"content\": [{\"type\": \"text\", \"text\": \"{\\\"schema_version\\\": \\\"1.0\\\", \\\"tool\\\": \\\"analyze_token\\\", \\\"status\\\": \\\"partial\\\", \\\"data_mode\\\": \\\"live\\\", \\\"as_of\\\": \\\"2026-10-30T18:34:00Z\\\", \\\"request\\\": {\\\"symbol\\\": \\\"ETH\\\"}, \\\"data\\\": {\\\"asset\\\": {\\\"symbol\\\": \\\"ETH\\\", \\\"name\\\": \\\"Ethereum\\\", \\\"chain\\\": null, \\\"contract\\\": null, \\\"rank\\\": 2}, \\\"market\\\": {\\\"price_usd\\\": 2225.893527293818, \\\"market_cap_usd\\\": 271947418589.0781, \\\"fully_diluted_value_usd\\\": 271947418589.08, \\\"volume_24h_usd\\\": 27992573338.89106}, \\\"performance\\\": {\\\"change_1h_pct\\\": -0.58252206, \\\"change_24h_pct\\\": -4.24839588, \\\"change_7d_pct\\\": -7.33110591, \\\"change_30d_pct\\\": -16.85063273}, \\\"technical_analysis\\\": {\\\"trend\\\": \\\"down\\\", \\\"rsi_14\\\": null, \\\"momentum_30d_pct\\\": -16.85063273, \\\"atr_14_pct\\\": null}, \\\"intelligence\\\": {\\\"narrative\\\": \\\"Ethereum ranks #2 by market cap (coin) — pos, smart-contracts, ethereum-ecosystem\\\", \\\"catalysts\\\": [\\\"Top-2 asset — deep liquidity\\\"], \\\"risks\\\": [\\\"-17% over 30d — sustained downtrend\\\"]}, \\\"verdict\\\": \\\"avoid\\\"}, \\\"summary\\\": {\\\"headline\\\": \\\"ETH analysis: avoid.\\\", \\\"key_points\\\": [\\\"Price: $2,225.89.\\\", \\\"24h change: -4.25%.\\\"]}, \\\"availability\\\": {\\\"market_data\\\": \\\"available\\\", \\\"technical_analysis\\\": \\\"partial\\\", \\\"market_intelligence\\\": \\\"available\\\"}, \\\"warnings\\\": [\\\"Technical indicators were not calculated; null values must not be treated as neutral or zero.\\\"]}\"}], \"isError\": false}}"
+    },
+    {
+      "path": "/api/mcp",
+      "at": "2026-10-30T18:34:19.516Z",
+      "receivedAt": "2026-10-30T18:34:21.465Z",
+      "httpStatus": 200,
+      "rateHeaders": {
+        "x-ratelimit-limit": "60",
+        "x-ratelimit-remaining": "58",
+        "x-ratelimit-reset": "1793385300"
+      },
+      "request": {
+        "jsonrpc": "2.0",
+        "id": 4,
+        "method": "tools/call",
+        "params": {
+          "name": "monitor_market_sentiment_shift",
+          "arguments": {
+            "time_window": "7d"
+          }
+        }
+      },
+      "contentType": "application/json",
+      "body": "{\"jsonrpc\": \"2.0\", \"id\": 4, \"result\": {\"content\": [{\"type\": \"text\", \"text\": \"{\\\"schema_version\\\": \\\"1.0\\\", \\\"tool\\\": \\\"monitor_market_sentiment_shift\\\", \\\"status\\\": \\\"ok\\\", \\\"data_mode\\\": \\\"live\\\", \\\"as_of\\\": \\\"2026-10-30T18:34:20Z\\\", \\\"request\\\": {\\\"time_window\\\": \\\"7d\\\"}, \\\"data\\\": {\\\"observation_as_of\\\": \\\"2026-10-30T18:34:20Z\\\", \\\"status\\\": \\\"ok\\\", \\\"source_attribution\\\": \\\"Powered by CoinMarketCap\\\", \\\"summary\\\": \\\"Fear & Greed is 35, down 12 points over seven days (a material move). BTC perpetual daily funding averages 0.801971 bps per day over the latest seven days, up 0.125514 bps per day week over week, with long-side funding crowding. BTC perpetual daily liquidations total $235.19 million, with long liquidations dominant and extreme pressure. Overall sentiment regime: mixed sentiment.\\\", \\\"evidence\\\": {\\\"fear_greed\\\": {\\\"data_date\\\": \\\"2026-10-30\\\", \\\"value\\\": 35, \\\"label\\\": \\\"fear\\\", \\\"baseline_7d_date\\\": \\\"2026-10-23\\\", \\\"baseline_7d_value\\\": 47, \\\"change_7d_points\\\": -12, \\\"change_direction\\\": \\\"down\\\", \\\"material_shift\\\": true}, \\\"funding\\\": {\\\"data_date\\\": \\\"2026-10-29\\\", \\\"latest_bps\\\": 0.8259, \\\"current_7d_window\\\": {\\\"start_date\\\": \\\"2026-10-23\\\", \\\"end_date\\\": \\\"2026-10-29\\\", \\\"mean_bps\\\": 0.801971}, \\\"previous_7d_window\\\": {\\\"start_date\\\": \\\"2026-10-16\\\", \\\"end_date\\\": \\\"2026-10-22\\\", \\\"mean_bps\\\": 0.676457}, \\\"wow_change_bps\\\": 0.125514, \\\"current_7d_percentile_90d\\\": 100, \\\"crowding_state\\\": \\\"long_crowding\\\", \\\"wow_change_pct\\\": 18.554655}, \\\"liquidation\\\": {\\\"data_date\\\": \\\"2026-10-29\\\", \\\"total_usd\\\": 235186796.89, \\\"dominant_liquidated_side\\\": \\\"longs\\\", \\\"percentile_90d\\\": 96.666667, \\\"pressure_state\\\": \\\"extreme\\\", \\\"coverage_scope\\\": \\\"BTC perpetuals across major derivatives markets\\\", \\\"long_share_pct\\\": 86.573746}, \\\"altseason\\\": {\\\"data_date\\\": \\\"2026-10-30\\\", \\\"index\\\": 48, \\\"phase\\\": \\\"transition\\\"}, \\\"sentiment_regime\\\": \\\"mixed_sentiment\\\"}, \\\"source\\\": {\\\"type\\\": \\\"evidence_pack\\\", \\\"skill_id\\\": \\\"monitor_market_sentiment_shift\\\", \\\"timestamp\\\": \\\"2026-10-30T18:34:20Z\\\", \\\"attribution\\\": \\\"Powered by CoinMarketCap\\\"}, \\\"diagnostics\\\": {\\\"execution\\\": {\\\"status\\\": \\\"completed\\\", \\\"elapsed_ms\\\": 803}}}, \\\"summary\\\": {\\\"headline\\\": \\\"Fear & Greed is 35, down 12 points over seven days (a material move). BTC perpetual daily funding averages 0.801971 bps per day over the latest seven days, up 0.125514 bps per day week over week, with long-side funding crowding. BTC perpetual daily liquidations total $235.19 million, with long liquidations dominant and extreme pressure. Overall sentiment regime: mixed sentiment.\\\", \\\"key_points\\\": [\\\"Sentiment regime: mixed sentiment.\\\"]}, \\\"availability\\\": {\\\"research\\\": \\\"available\\\", \\\"evidence\\\": \\\"available\\\", \\\"diagnostics\\\": \\\"available\\\"}, \\\"warnings\\\": []}\"}], \"isError\": false}}"
+    }
+  ],
+  "checks": [
+    {
+      "check": "/health",
+      "path": "/health",
+      "at": "2026-10-30T18:33:56.997Z",
+      "receivedAt": "2026-10-30T18:33:58.053Z",
+      "httpStatus": 200,
+      "rateHeaders": {},
+      "body": "{\"status\":\"ok\",\"protocol_version\":\"2024-11-05\",\"server\":\"ryo-chan\",\"tools\":6}"
+    },
+    {
+      "check": "/whoami",
+      "path": "/whoami",
+      "at": "2026-10-30T18:33:58.054Z",
+      "receivedAt": "2026-10-30T18:33:58.512Z",
+      "httpStatus": 200,
+      "rateHeaders": {},
+      "identityFieldsRedacted": true,
+      "scopes": [
+        "tools:read"
+      ],
+      "expiresAt": "2026-12-17T02:33:00Z",
+      "limit": 60,
+      "remaining": 60
+    },
+    {
+      "check": "tool",
+      "tool": "analyze_token",
+      "arguments": {
+        "symbol": "ETH"
+      },
+      "result": {
+        "schema_version": "1.0",
+        "tool": "analyze_token",
+        "status": "partial",
+        "data_mode": "live",
+        "as_of": "2026-10-30T18:34:00Z",
+        "request": {
+          "symbol": "ETH"
+        },
+        "data": {
+          "asset": {
+            "symbol": "ETH",
+            "name": "Ethereum",
+            "chain": null,
+            "contract": null,
+            "rank": 2
+          },
+          "market": {
+            "price_usd": 2225.893527293818,
+            "market_cap_usd": 271947418589.0781,
+            "fully_diluted_value_usd": 271947418589.08,
+            "volume_24h_usd": 27992573338.89106
+          },
+          "performance": {
+            "change_1h_pct": -0.58252206,
+            "change_24h_pct": -4.24839588,
+            "change_7d_pct": -7.33110591,
+            "change_30d_pct": -16.85063273
+          },
+          "technical_analysis": {
+            "trend": "down",
+            "rsi_14": null,
+            "momentum_30d_pct": -16.85063273,
+            "atr_14_pct": null
+          },
+          "intelligence": {
+            "narrative": "Ethereum ranks #2 by market cap (coin) — pos, smart-contracts, ethereum-ecosystem",
+            "catalysts": [
+              "Top-2 asset — deep liquidity"
+            ],
+            "risks": [
+              "-17% over 30d — sustained downtrend"
+            ]
+          },
+          "verdict": "avoid"
+        },
+        "summary": {
+          "headline": "ETH analysis: avoid.",
+          "key_points": [
+            "Price: $2,225.89.",
+            "24h change: -4.25%."
+          ]
+        },
+        "availability": {
+          "market_data": "available",
+          "technical_analysis": "partial",
+          "market_intelligence": "available"
+        },
+        "warnings": [
+          "Technical indicators were not calculated; null values must not be treated as neutral or zero."
+        ]
+      },
+      "exchanges": [
+        {
+          "method": "tools/call",
+          "params": {
+            "name": "analyze_token",
+            "arguments": {
+              "symbol": "ETH"
+            }
+          },
+          "id": 3,
+          "body": "{\"jsonrpc\": \"2.0\", \"id\": 3, \"result\": {\"content\": [{\"type\": \"text\", \"text\": \"{\\\"schema_version\\\": \\\"1.0\\\", \\\"tool\\\": \\\"analyze_token\\\", \\\"status\\\": \\\"partial\\\", \\\"data_mode\\\": \\\"live\\\", \\\"as_of\\\": \\\"2026-10-30T18:34:00Z\\\", \\\"request\\\": {\\\"symbol\\\": \\\"ETH\\\"}, \\\"data\\\": {\\\"asset\\\": {\\\"symbol\\\": \\\"ETH\\\", \\\"name\\\": \\\"Ethereum\\\", \\\"chain\\\": null, \\\"contract\\\": null, \\\"rank\\\": 2}, \\\"market\\\": {\\\"price_usd\\\": 2225.893527293818, \\\"market_cap_usd\\\": 271947418589.0781, \\\"fully_diluted_value_usd\\\": 271947418589.08, \\\"volume_24h_usd\\\": 27992573338.89106}, \\\"performance\\\": {\\\"change_1h_pct\\\": -0.58252206, \\\"change_24h_pct\\\": -4.24839588, \\\"change_7d_pct\\\": -7.33110591, \\\"change_30d_pct\\\": -16.85063273}, \\\"technical_analysis\\\": {\\\"trend\\\": \\\"down\\\", \\\"rsi_14\\\": null, \\\"momentum_30d_pct\\\": -16.85063273, \\\"atr_14_pct\\\": null}, \\\"intelligence\\\": {\\\"narrative\\\": \\\"Ethereum ranks #2 by market cap (coin) — pos, smart-contracts, ethereum-ecosystem\\\", \\\"catalysts\\\": [\\\"Top-2 asset — deep liquidity\\\"], \\\"risks\\\": [\\\"-17% over 30d — sustained downtrend\\\"]}, \\\"verdict\\\": \\\"avoid\\\"}, \\\"summary\\\": {\\\"headline\\\": \\\"ETH analysis: avoid.\\\", \\\"key_points\\\": [\\\"Price: $2,225.89.\\\", \\\"24h change: -4.25%.\\\"]}, \\\"availability\\\": {\\\"market_data\\\": \\\"available\\\", \\\"technical_analysis\\\": \\\"partial\\\", \\\"market_intelligence\\\": \\\"available\\\"}, \\\"warnings\\\": [\\\"Technical indicators were not calculated; null values must not be treated as neutral or zero.\\\"]}\"}], \"isError\": false}}",
+          "contentType": "application/json",
+          "receivedAt": "2026-10-30T18:34:01.145Z"
+        }
+      ]
+    },
+    {
+      "check": "tool",
+      "tool": "monitor_market_sentiment_shift",
+      "arguments": {
+        "time_window": "7d"
+      },
+      "result": {
+        "schema_version": "1.0",
+        "tool": "monitor_market_sentiment_shift",
+        "status": "ok",
+        "data_mode": "live",
+        "as_of": "2026-10-30T18:34:20Z",
+        "request": {
+          "time_window": "7d"
+        },
+        "data": {
+          "observation_as_of": "2026-10-30T18:34:20Z",
+          "status": "ok",
+          "source_attribution": "Powered by CoinMarketCap",
+          "summary": "Fear & Greed is 35, down 12 points over seven days (a material move). BTC perpetual daily funding averages 0.801971 bps per day over the latest seven days, up 0.125514 bps per day week over week, with long-side funding crowding. BTC perpetual daily liquidations total $235.19 million, with long liquidations dominant and extreme pressure. Overall sentiment regime: mixed sentiment.",
+          "evidence": {
+            "fear_greed": {
+              "data_date": "2026-10-30",
+              "value": 35,
+              "label": "fear",
+              "baseline_7d_date": "2026-10-23",
+              "baseline_7d_value": 47,
+              "change_7d_points": -12,
+              "change_direction": "down",
+              "material_shift": true
+            },
+            "funding": {
+              "data_date": "2026-10-29",
+              "latest_bps": 0.8259,
+              "current_7d_window": {
+                "start_date": "2026-10-23",
+                "end_date": "2026-10-29",
+                "mean_bps": 0.801971
+              },
+              "previous_7d_window": {
+                "start_date": "2026-10-16",
+                "end_date": "2026-10-22",
+                "mean_bps": 0.676457
+              },
+              "wow_change_bps": 0.125514,
+              "current_7d_percentile_90d": 100,
+              "crowding_state": "long_crowding",
+              "wow_change_pct": 18.554655
+            },
+            "liquidation": {
+              "data_date": "2026-10-29",
+              "total_usd": 235186796.89,
+              "dominant_liquidated_side": "longs",
+              "percentile_90d": 96.666667,
+              "pressure_state": "extreme",
+              "coverage_scope": "BTC perpetuals across major derivatives markets",
+              "long_share_pct": 86.573746
+            },
+            "altseason": {
+              "data_date": "2026-10-30",
+              "index": 48,
+              "phase": "transition"
+            },
+            "sentiment_regime": "mixed_sentiment"
+          },
+          "source": {
+            "type": "evidence_pack",
+            "skill_id": "monitor_market_sentiment_shift",
+            "timestamp": "2026-10-30T18:34:20Z",
+            "attribution": "Powered by CoinMarketCap"
+          },
+          "diagnostics": {
+            "execution": {
+              "status": "completed",
+              "elapsed_ms": 803
+            }
+          }
+        },
+        "summary": {
+          "headline": "Fear & Greed is 35, down 12 points over seven days (a material move). BTC perpetual daily funding averages 0.801971 bps per day over the latest seven days, up 0.125514 bps per day week over week, with long-side funding crowding. BTC perpetual daily liquidations total $235.19 million, with long liquidations dominant and extreme pressure. Overall sentiment regime: mixed sentiment.",
+          "key_points": [
+            "Sentiment regime: mixed sentiment."
+          ]
+        },
+        "availability": {
+          "research": "available",
+          "evidence": "available",
+          "diagnostics": "available"
+        },
+        "warnings": []
+      },
+      "exchanges": [
+        {
+          "method": "tools/call",
+          "params": {
+            "name": "monitor_market_sentiment_shift",
+            "arguments": {
+              "time_window": "7d"
+            }
+          },
+          "id": 4,
+          "body": "{\"jsonrpc\": \"2.0\", \"id\": 4, \"result\": {\"content\": [{\"type\": \"text\", \"text\": \"{\\\"schema_version\\\": \\\"1.0\\\", \\\"tool\\\": \\\"monitor_market_sentiment_shift\\\", \\\"status\\\": \\\"ok\\\", \\\"data_mode\\\": \\\"live\\\", \\\"as_of\\\": \\\"2026-10-30T18:34:20Z\\\", \\\"request\\\": {\\\"time_window\\\": \\\"7d\\\"}, \\\"data\\\": {\\\"observation_as_of\\\": \\\"2026-10-30T18:34:20Z\\\", \\\"status\\\": \\\"ok\\\", \\\"source_attribution\\\": \\\"Powered by CoinMarketCap\\\", \\\"summary\\\": \\\"Fear & Greed is 35, down 12 points over seven days (a material move). BTC perpetual daily funding averages 0.801971 bps per day over the latest seven days, up 0.125514 bps per day week over week, with long-side funding crowding. BTC perpetual daily liquidations total $235.19 million, with long liquidations dominant and extreme pressure. Overall sentiment regime: mixed sentiment.\\\", \\\"evidence\\\": {\\\"fear_greed\\\": {\\\"data_date\\\": \\\"2026-10-30\\\", \\\"value\\\": 35, \\\"label\\\": \\\"fear\\\", \\\"baseline_7d_date\\\": \\\"2026-10-23\\\", \\\"baseline_7d_value\\\": 47, \\\"change_7d_points\\\": -12, \\\"change_direction\\\": \\\"down\\\", \\\"material_shift\\\": true}, \\\"funding\\\": {\\\"data_date\\\": \\\"2026-10-29\\\", \\\"latest_bps\\\": 0.8259, \\\"current_7d_window\\\": {\\\"start_date\\\": \\\"2026-10-23\\\", \\\"end_date\\\": \\\"2026-10-29\\\", \\\"mean_bps\\\": 0.801971}, \\\"previous_7d_window\\\": {\\\"start_date\\\": \\\"2026-10-16\\\", \\\"end_date\\\": \\\"2026-10-22\\\", \\\"mean_bps\\\": 0.676457}, \\\"wow_change_bps\\\": 0.125514, \\\"current_7d_percentile_90d\\\": 100, \\\"crowding_state\\\": \\\"long_crowding\\\", \\\"wow_change_pct\\\": 18.554655}, \\\"liquidation\\\": {\\\"data_date\\\": \\\"2026-10-29\\\", \\\"total_usd\\\": 235186796.89, \\\"dominant_liquidated_side\\\": \\\"longs\\\", \\\"percentile_90d\\\": 96.666667, \\\"pressure_state\\\": \\\"extreme\\\", \\\"coverage_scope\\\": \\\"BTC perpetuals across major derivatives markets\\\", \\\"long_share_pct\\\": 86.573746}, \\\"altseason\\\": {\\\"data_date\\\": \\\"2026-10-30\\\", \\\"index\\\": 48, \\\"phase\\\": \\\"transition\\\"}, \\\"sentiment_regime\\\": \\\"mixed_sentiment\\\"}, \\\"source\\\": {\\\"type\\\": \\\"evidence_pack\\\", \\\"skill_id\\\": \\\"monitor_market_sentiment_shift\\\", \\\"timestamp\\\": \\\"2026-10-30T18:34:20Z\\\", \\\"attribution\\\": \\\"Powered by CoinMarketCap\\\"}, \\\"diagnostics\\\": {\\\"execution\\\": {\\\"status\\\": \\\"completed\\\", \\\"elapsed_ms\\\": 803}}}, \\\"summary\\\": {\\\"headline\\\": \\\"Fear & Greed is 35, down 12 points over seven days (a material move). BTC perpetual daily funding averages 0.801971 bps per day over the latest seven days, up 0.125514 bps per day week over week, with long-side funding crowding. BTC perpetual daily liquidations total $235.19 million, with long liquidations dominant and extreme pressure. Overall sentiment regime: mixed sentiment.\\\", \\\"key_points\\\": [\\\"Sentiment regime: mixed sentiment.\\\"]}, \\\"availability\\\": {\\\"research\\\": \\\"available\\\", \\\"evidence\\\": \\\"available\\\", \\\"diagnostics\\\": \\\"available\\\"}, \\\"warnings\\\": []}\"}], \"isError\": false}}",
+          "contentType": "application/json",
+          "receivedAt": "2026-10-30T18:34:21.466Z"
+        }
+      ]
+    }
+  ]
+}

@@ -1,7 +1,7 @@
 import { committedTradeData } from './trade-commitment.js';
 import { requireGasBudget, type EconomyPolicy } from './gas-budget.js';
 import { createPublicClient, createWalletClient, getAddress, http, keccak256, parseAbi, type Address, type Hex, type Chain } from 'viem';
-import { monadTestnet, foundry } from 'viem/chains';
+import { monadTestnet, sepolia, foundry } from 'viem/chains';
 import type { PrivateKeyAccount } from 'viem/accounts';
 import { type Prepared, riskBindingHash, strategyBindingHash } from './core.js';
 import { type VaultNetwork, vaultNetwork, networkChecks } from './vault-setup.js';
@@ -36,14 +36,14 @@ export function autonomousDeployment(value: AutonomousDeployment) {
   for (const key of ['vault', 'adapter', 'venue', 'source'] as const) {
     if (getAddress(value[key]) !== value[key] || /^0x0{40}$/i.test(value[key]) || !/^0x[0-9a-f]{64}$/i.test(value[`${key}CodeHash`]) || /^0x0{64}$/i.test(value[`${key}CodeHash`])) throw new Error('Pin all reviewed autonomy contracts and runtime hashes.');
   }
-  if ((value.chainId === 10143 && !value.dependencies?.length) || (value.dependencies && (!Array.isArray(value.dependencies) || value.dependencies.length > 32))) throw new Error('Pin the reviewed oracle and exchange dependencies.');
+  if (([10143,11155111].includes(value.chainId) && !value.dependencies?.length) || (value.dependencies && (!Array.isArray(value.dependencies) || value.dependencies.length > 32))) throw new Error('Pin the reviewed oracle and exchange dependencies.');
   for (const pin of value.dependencies ?? []) {
     if (getAddress(pin.address) !== pin.address || /^0x0{40}$/i.test(pin.address) || !/^0x[0-9a-f]{64}$/i.test(pin.codeHash) || /^0x0{64}$/i.test(pin.codeHash)
         || !!pin.implementation !== !!pin.implementationCodeHash || (pin.implementation && (getAddress(pin.implementation) !== pin.implementation || /^0x0{40}$/i.test(pin.implementation) || !/^0x[0-9a-f]{64}$/i.test(pin.implementationCodeHash!) || /^0x0{64}$/i.test(pin.implementationCodeHash!)))) throw new Error('Invalid external dependency pin.');
   }
   return c as AutonomousDeployment;
 }
-const chainFor = (id: number): Chain => id === 10143 ? monadTestnet : foundry;
+const chainFor = (id: number): Chain => id === 10143 ? monadTestnet : id===11155111?sepolia:foundry;
 export const autonomousClient = (c: AutonomousDeployment) => createPublicClient({ chain: chainFor(c.chainId), transport: http(c.rpcUrl, { retryCount: 0, timeout: 15000 }), cacheTime: 0 });
 export type TradeSnapshot = { blockNumber: bigint; blockHash: Hex; timestamp: bigint; price: bigint; configHash: Hex; input: PaperInput; cash: bigint; positions: bigint; permission: readonly [bigint, number, bigint, bigint, bigint]; spent: bigint };
 

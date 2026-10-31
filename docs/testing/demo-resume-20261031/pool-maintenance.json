@@ -1,0 +1,98 @@
+{
+  "scope": "Public controller maintenance of project-funded Sepolia test pool; not AI trading or investor performance.",
+  "chainId": 11155111,
+  "controller": "0xe26468ae02368a75DBDBea58F367B7313942ad26",
+  "router": "0x9B6b46e2c869aa39918Db7f52f5557FE577B6eEe",
+  "routerHash": "0xf8a61d4430eff587aa3c2fea734e3a5e54125a7e516fe1734b2c3c5f0cf1ac39",
+  "funder": "0x184299685D95F31cCd4ADc0222367C4bd6Df0631",
+  "source": "0x4b5945629f74357E43c5F7119c3429CF185AD026",
+  "poolId": "0x066523b002ff65e79b7ed1dd4358d8b4cce7a1e5951ce7a0a58b2845910fd73c",
+  "verifiedAt": "2026-10-31T06:52:13.304Z",
+  "gasPaidWei": "51863350",
+  "steps": [
+    {
+      "step": "wrap-repair-input",
+      "hash": "0x15669e5ea212d3c110d802518914dfd4916999f091a57e115e88d1ff79f376f2",
+      "address": null,
+      "blockNumber": "12032150",
+      "blockHash": "0x78cd73609dada31ca93c80647c08cb25fe0affd5c1e9dfee5fa723c19ee7aa5a",
+      "gasPaidWei": "2924460",
+      "valueWei": "100000000000000"
+    },
+    {
+      "step": "approve-repair-input",
+      "hash": "0x4ec20452369d38ac866fb0aa5b1b054e68e31243c347b7b461c120d38d8ac848",
+      "address": null,
+      "blockNumber": "12032151",
+      "blockHash": "0xf2bae9c14228f5c1de76c0fcf8ed25c385f8cef32f84853734cb5522e4536732",
+      "gasPaidWei": "2814680",
+      "valueWei": "0"
+    },
+    {
+      "step": "realign-pool",
+      "hash": "0xee36369294af2c97925047ec3155d55023c88aafdbc4108a2c23875ebeca7a7e",
+      "address": null,
+      "blockNumber": "12032152",
+      "blockHash": "0x7a3148eab661429aecbee4fa6f5fa1c8bd02f0b77f8cd4a345b614f53087b54e",
+      "gasPaidWei": "8959962",
+      "valueWei": "0"
+    },
+    {
+      "step": "clear-repair-approval",
+      "hash": "0x694411e3ff9cf0e903c2f128c2b3742ff780d4e885d5c26337e064cf00376a01",
+      "address": null,
+      "blockNumber": "12032153",
+      "blockHash": "0x53ae432f4be414799ab3e3b197f20f6b340ee67eeae5cb240ecb602baa00f289",
+      "gasPaidWei": "527296",
+      "valueWei": "0"
+    },
+    {
+      "step": "unwrap-unused-repair-input",
+      "hash": "0x0342022215fe1f3ffe4a18162ee142f32698d4bd8aef94abb90e894a4d73dd84",
+      "address": null,
+      "blockNumber": "12032154",
+      "blockHash": "0xf6bebd92b58366ee5eda1414e9abd4dc63ebe3c180f6f77cfca821b62e6f5130",
+      "gasPaidWei": "680240",
+      "valueWei": "0"
+    },
+    {
+      "step": "remove-old-demo-range",
+      "hash": "0xdb04b2021cb826b011928ce01c308bfd4c6c072996f9cc9a6aad004eb408452d",
+      "address": null,
+      "blockNumber": "12032157",
+      "blockHash": "0xab637a708acda45fc66a2f7b08511140277a84f7cbe45b38cdfda874432cd2cf",
+      "gasPaidWei": "8666702",
+      "valueWei": "0"
+    },
+    {
+      "step": "approve-demo-range",
+      "hash": "0x2fcac044f197cf9572e4574aa6462cc9f66275df8185adcc88900db6c1618a49",
+      "address": null,
+      "blockNumber": "12032158",
+      "blockHash": "0x27cb9a084ba55005b8b960cb78aa62f3375db09bd8886a74b8fe80d8ba4341e0",
+      "gasPaidWei": "3030654",
+      "valueWei": "0"
+    },
+    {
+      "step": "seed-aligned-demo-range",
+      "hash": "0xcd2790fb95ff111954585aa851404dcfa0e68adcbf177368918d376efa966212",
+      "address": null,
+      "blockNumber": "12032159",
+      "blockHash": "0x448b41a19fd808ea45e023c065145b1c4a5204f3a6e38be7beaacf4cbd17701b",
+      "gasPaidWei": "23603734",
+      "valueWei": "100000000000000"
+    },
+    {
+      "step": "clear-demo-range-approval",
+      "hash": "0x5bf971681be7172c538ff9154acf0bc7143bd05f81be344b21c89fd76a129b87",
+      "address": null,
+      "blockNumber": "12032161",
+      "blockHash": "0xe405f11f0bd35719560858ad565397636cc47eef87900f6d2d4c4129efaf5c55",
+      "gasPaidWei": "655622",
+      "valueWei": "0"
+    }
+  ],
+  "healthy": true,
+  "wrappedAllowance": "0",
+  "quoteAllowance": "0"
+}

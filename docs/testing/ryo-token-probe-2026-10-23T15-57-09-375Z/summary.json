@@ -1,0 +1,113 @@
+{
+  "scope": "Observed responses for eight selected additional symbols; not exhaustive provider coverage or a tradable-asset list.",
+  "tokens": [
+    {
+      "symbol": "BNB",
+      "at": "2026-10-23T15:57:11.120Z",
+      "httpStatus": 200,
+      "isError": true,
+      "message": "couldn't analyze BNB right now (trace_id: 2bfddcc92164495582750b6d48f7deb7)",
+      "priceReturned": false
+    },
+    {
+      "symbol": "XRP",
+      "at": "2026-10-23T15:57:23.122Z",
+      "httpStatus": 200,
+      "isError": true,
+      "message": "couldn't analyze XRP right now (trace_id: 2779081d07654692a62fb340720abc04)",
+      "priceReturned": false
+    },
+    {
+      "symbol": "DOGE",
+      "at": "2026-10-23T15:57:35.123Z",
+      "httpStatus": 200,
+      "isError": true,
+      "message": "couldn't analyze DOGE right now (trace_id: d319613347c44691a422a89cd4fe18c0)",
+      "priceReturned": false
+    },
+    {
+      "symbol": "ADA",
+      "at": "2026-10-23T15:58:10.478Z",
+      "httpStatus": 200,
+      "isError": true,
+      "message": "couldn't analyze ADA right now (trace_id: 6b9fdb3f01b04a4aa1a4f411d5f826ec)",
+      "priceReturned": false
+    },
+    {
+      "symbol": "AVAX",
+      "at": "2026-10-23T15:58:22.480Z",
+      "httpStatus": 200,
+      "isError": true,
+      "message": "couldn't analyze AVAX right now (trace_id: 3ed104c7f60c45228cf07ec24ea3b091)",
+      "priceReturned": false
+    },
+    {
+      "symbol": "LINK",
+      "at": "2026-10-23T15:58:34.480Z",
+      "httpStatus": 200,
+      "isError": true,
+      "message": "couldn't analyze LINK right now (trace_id: f6cd8bd00a5d48b4ba6860e9c95c2edb)",
+      "priceReturned": false
+    },
+    {
+      "symbol": "INJ",
+      "at": "2026-10-23T15:58:46.481Z",
+      "httpStatus": 200,
+      "isError": true,
+      "message": "couldn't analyze INJ right now (trace_id: 881911ed15e34d6fadd408863ee9fa7f)",
+      "priceReturned": false
+    },
+    {
+      "symbol": "CAKE",
+      "at": "2026-10-23T15:58:58.482Z",
+      "httpStatus": 200,
+      "isError": true,
+      "message": "couldn't analyze CAKE right now (trace_id: abb35580e3ed41aa834fc176499898bd)",
+      "priceReturned": false
+    }
+  ],
+  "restCrossCheck": [
+    {
+      "symbol": "INJ",
+      "transport": "documented-rest",
+      "tool": "analyze_token",
+      "arguments": {
+        "symbol": "INJ"
+      },
+      "url": "https://app-ryochan.com/api/mcp/tools/analyze_token/call",
+      "at": "2026-10-23T15:59:10.483Z",
+      "receivedAt": "2026-10-23T15:59:12.007Z",
+      "httpStatus": 400,
+      "body": "{\"code\":\"VALIDATION_FAILED\",\"message\":\"couldn't analyze INJ right now\",\"details\":{\"tool\":\"analyze_token\",\"latency_ms\":188},\"trace_id\":\"6f86605ac23b4c518b090ba2b67bc7ab\"}"
+    }
+  ],
+  "alternativeTool": [
+    {
+      "tool": "deep_analysis",
+      "arguments": {
+        "symbol": "BNB",
+        "include_perp": false
+      },
+      "transport": "documented-rest",
+      "url": "https://app-ryochan.com/api/mcp/tools/deep_analysis/call",
+      "at": "2026-10-23T20:53:04.506Z",
+      "receivedAt": "2026-10-23T20:53:06.701Z",
+      "httpStatus": 400,
+      "body": "{\"code\":\"VALIDATION_FAILED\",\"message\":\"Current USD market data is unavailable for BNB.\",\"details\":{\"tool\":\"deep_analysis\",\"latency_ms\":426},\"trace_id\":\"b5c5ae2d36504604bd95a84681349c6a\"}"
+    },
+    {
+      "tool": "deep_analysis",
+      "arguments": {
+        "symbol": "CAKE",
+        "include_perp": false
+      },
+      "transport": "documented-rest",
+      "url": "https://app-ryochan.com/api/mcp/tools/deep_analysis/call",
+      "at": "2026-10-23T20:53:16.508Z",
+      "receivedAt": "2026-10-23T20:53:18.092Z",
+      "httpStatus": 400,
+      "body": "{\"code\":\"VALIDATION_FAILED\",\"message\":\"Current USD market data is unavailable for CAKE.\",\"details\":{\"tool\":\"deep_analysis\",\"latency_ms\":406},\"trace_id\":\"d4e46ee300944459af27f3e1b06fc85b\"}"
+    }
+  ],
+  "conclusion": "0 of 8 additional token analyses returned a price. Direct REST INJ analysis and BNB/CAKE deep analysis without derivatives also returned errors. Authentication/discovery worked; observed MCP tool failures used HTTP 200, REST failures HTTP 400 VALIDATION_FAILED. Internal provider cause is not established."
+}

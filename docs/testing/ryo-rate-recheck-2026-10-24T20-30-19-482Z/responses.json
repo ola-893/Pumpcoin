@@ -1,0 +1,162 @@
+{
+  "scope": "Paced read-only RYO recheck. No agent decisions, trades or policy changes. Credentials, key identities, session IDs and non-quota headers excluded.",
+  "records": [
+    {
+      "url": "https://app-ryochan.com/api/mcp/health",
+      "method": "GET",
+      "request": null,
+      "at": "2026-10-24T20:30:19.484Z",
+      "receivedAt": "2026-10-24T20:30:21.558Z",
+      "httpStatus": 200,
+      "rateHeaders": {},
+      "body": "{\"status\":\"ok\",\"protocol_version\":\"2024-11-05\",\"server\":\"ryo-chan\",\"tools\":6}"
+    },
+    {
+      "url": "https://app-ryochan.com/api/mcp/whoami",
+      "method": "GET",
+      "request": null,
+      "at": "2026-10-24T20:30:21.561Z",
+      "receivedAt": "2026-10-24T20:30:21.944Z",
+      "httpStatus": 200,
+      "rateHeaders": {},
+      "quota": [
+        {
+          "field": "rate_limit_per_min",
+          "value": 60
+        },
+        {
+          "field": "rate_limit_remaining",
+          "value": 60
+        }
+      ]
+    },
+    {
+      "url": "https://app-ryochan.com/api/mcp/tools",
+      "method": "GET",
+      "request": null,
+      "at": "2026-10-24T20:30:21.946Z",
+      "receivedAt": "2026-10-24T20:30:22.360Z",
+      "httpStatus": 200,
+      "rateHeaders": {},
+      "body": "[{\"name\":\"market_overview\",\"description\":\"Delivery: a compact market-regime evidence pack with sentiment, market totals, dominance, movers, and explicit data gaps. Use when: an agent needs a broad market briefing before token research. Core inputs: none. Limits: research context only; incomplete lanes are marked partial or unavailable.\",\"inputSchema\":{\"type\":\"object\",\"properties\":{},\"additionalProperties\":false}},{\"name\":\"scan_market\",\"description\":\"Delivery: a ranked candidate set with price, momentum, market-activity evidence, filters, and reasons where available. Use when: an agent needs a shortlist before deeper token analysis. Core inputs: optional chain, theme, and top_n. Limits: theme is contextual rather than a strict filter; a scan is not a trade instruction.\",\"inputSchema\":{\"type\":\"object\",\"properties\":{\"chain\":{\"type\":\"string\",\"description\":\"Chain slug e.g. eth/bsc (optional).\"},\"theme\":{\"type\":\"string\",\"description\":\"Narrative/theme filter (optional).\"},\"top_n\":{\"type\":\"number\",\"description\":\"How many candidates to return.\"},\"filter_direction\":{\"type\":\"string\",\"description\":\"Direction filter: 'positive' (gainers only), 'negative' (losers only), or 'all' (default).\"}},\"additionalProperties\":false}},{\"name\":\"analyze_token\",\"description\":\"Delivery: a single-token research pack with USD market data, multi-window performance, calculated RSI and ATR, intelligence, summary, and warnings. Use when: an agent needs a quick structured token read. Core input: symbol. Limits: missing measurements are reported as unavailable and the result is not execution advice.\",\"inputSchema\":{\"type\":\"object\",\"properties\":{\"symbol\":{\"type\":\"string\",\"description\":\"Token symbol, e.g. INJ.\"},\"chain\":{\"type\":\"string\",\"description\":\"Chain slug for contract-specific safety, e.g. eth/bsc (optional).\"}},\"required\":[\"symbol\"],\"additionalProperties\":false}},{\"name\":\"deep_analysis\",\"description\":\"Delivery: a deeper token evidence pack combining market context, confluence, technicals, an optional Skill Hub token profile, derivatives, catalysts, risks, and a measured-ATR preview plan. Use when: an agent needs one comprehensive token read. Core input: token symbol; optional include_perp. Limits: token analysis only, not wallet analysis; unavailable lanes remain explicit and no trade is placed.\",\"inputSchema\":{\"type\":\"object\",\"properties\":{\"symbol\":{\"type\":\"string\",\"description\":\"Token symbol, e.g. SOL.\"},\"chain\":{\"type\":\"string\",\"description\":\"Chain slug for contract-specific safety (optional).\"},\"include_perp\":{\"type\":\"boolean\",\"description\":\"Include derivatives/perp posture (default true).\"}},\"required\":[\"symbol\"],\"additionalProperties\":false}},{\"name\":\"compare_tokens\",\"description\":\"Delivery: a side-by-side comparison of two to four tokens with factor winners, coverage by token, an overall pick, rationale, confidence, and conclusion method. Use when: an agent must compare relative momentum, market activity, and volatility using common data. Core inputs: symbols; optional intent. Limits: missing factors are disclosed and deterministic conclusions are labelled.\",\"inputSchema\":{\"type\":\"object\",\"properties\":{\"symbols\":{\"type\":\"string\",\"description\":\"2-4 token symbols to compare, comma- or space-separated, e.g. 'SOL, AVAX'.\"},\"intent\":{\"type\":\"string\",\"description\":\"Trade horizon the pick is for: swing | hold | spot (optional).\",\"enum\":[\"swing\",\"hold\",\"spot\"]}},\"required\":[\"symbols\"],\"additionalProperties\":false}},{\"name\":\"monitor_market_sentiment_shift\",\"description\":\"Delivery: a seven-day market sentiment evidence pack containing Fear & Greed level and change, BTC perpetual funding crowding, BTC liquidation pressure and side, altseason phase, the combined regime, observation dates, coverage scope, and full measurements. Use when: an agent needs to check whether market sentiment materially shifted. Core inputs: optional time_window fixed to 7d. Limits: market-wide context except for BTC-referenced derivatives; no causality claim or advice.\",\"inputSchema\":{\"type\":\"object\",\"properties\":{\"time_window\":{\"type\":\"string\",\"enum\":[\"7d\"],\"default\":\"7d\",\"description\":\"Sentiment comparison window; currently fixed to seven days.\"}},\"additionalProperties\":false}}]"
+    },
+    {
+      "url": "https://app-ryochan.com/api/mcp/tools/analyze_token/call",
+      "method": "POST",
+      "request": {
+        "symbol": "ETH"
+      },
+      "at": "2026-10-24T20:30:22.362Z",
+      "receivedAt": "2026-10-24T20:30:23.041Z",
+      "httpStatus": 400,
+      "rateHeaders": {
+        "x-ratelimit-limit": "60",
+        "x-ratelimit-remaining": "59",
+        "x-ratelimit-reset": "1792873882"
+      },
+      "body": "{\"code\":\"VALIDATION_FAILED\",\"message\":\"couldn't analyze ETH right now\",\"details\":{\"tool\":\"analyze_token\",\"latency_ms\":166},\"trace_id\":\"eb34b8adc77c47d7a083431f32680ef5\"}"
+    },
+    {
+      "url": "https://app-ryochan.com/api/mcp/tools/analyze_token/call",
+      "method": "POST",
+      "request": {
+        "symbol": "SOL"
+      },
+      "at": "2026-10-24T20:30:42.364Z",
+      "receivedAt": "2026-10-24T20:30:44.677Z",
+      "httpStatus": 400,
+      "rateHeaders": {
+        "x-ratelimit-limit": "60",
+        "x-ratelimit-remaining": "58",
+        "x-ratelimit-reset": "1792873882"
+      },
+      "body": "{\"code\":\"VALIDATION_FAILED\",\"message\":\"couldn't analyze SOL right now\",\"details\":{\"tool\":\"analyze_token\",\"latency_ms\":154},\"trace_id\":\"c1d0985ca82d40fbac8551006217c6de\"}"
+    },
+    {
+      "url": "https://app-ryochan.com/api/mcp",
+      "method": "POST",
+      "request": {
+        "jsonrpc": "2.0",
+        "id": 1,
+        "method": "initialize",
+        "params": {
+          "protocolVersion": "2025-06-18",
+          "capabilities": {},
+          "clientInfo": {
+            "name": "pumpcoin-research",
+            "version": "1.0.0"
+          }
+        }
+      },
+      "at": "2026-10-24T20:30:44.682Z",
+      "receivedAt": "2026-10-24T20:30:45.072Z",
+      "httpStatus": 200,
+      "rateHeaders": {},
+      "body": "{\"jsonrpc\": \"2.0\", \"id\": 1, \"result\": {\"protocolVersion\": \"2024-11-05\", \"capabilities\": {\"tools\": {\"listChanged\": false}}, \"serverInfo\": {\"name\": \"ryo-chan\", \"version\": \"1.0.0\"}}}"
+    },
+    {
+      "url": "https://app-ryochan.com/api/mcp/whoami",
+      "method": "GET",
+      "request": null,
+      "at": "2026-10-24T20:31:22.563Z",
+      "receivedAt": "2026-10-24T20:31:23.529Z",
+      "httpStatus": 200,
+      "rateHeaders": {},
+      "quota": [
+        {
+          "field": "rate_limit_per_min",
+          "value": 60
+        },
+        {
+          "field": "rate_limit_remaining",
+          "value": 59
+        }
+      ]
+    }
+  ],
+  "checks": [
+    {
+      "check": "health",
+      "httpStatus": 200,
+      "status": "ok",
+      "protocol_version": "2024-11-05",
+      "server": "ryo-chan",
+      "tools": 6
+    },
+    {
+      "check": "tools",
+      "httpStatus": 200,
+      "names": [
+        "market_overview",
+        "scan_market",
+        "analyze_token",
+        "deep_analysis",
+        "compare_tokens",
+        "monitor_market_sentiment_shift"
+      ]
+    },
+    {
+      "check": "price",
+      "transport": "documented-rest",
+      "symbol": "ETH",
+      "recordIndex": 3,
+      "httpStatus": 400
+    },
+    {
+      "check": "price",
+      "transport": "documented-rest",
+      "symbol": "SOL",
+      "recordIndex": 4,
+      "httpStatus": 400
+    },
+    {
+      "check": "price",
+      "transport": "mcp",
+      "symbol": "ETH",
+      "error": "No usable MCP response; inspect transport records.",
+      "recordIndices": [
+        5
+      ]
+    }
+  ]
+}

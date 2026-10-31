@@ -1,0 +1,23 @@
+{
+  "chainId": 11155111,
+  "blockHash": "0xee67797ddf0ff74fd39fcd24e66bcac84e77567c5dd391861e1da1f641bf7ba8",
+  "account": "0xe26468ae02368a75DBDBea58F367B7313942ad26",
+  "quoteDecimals": 6,
+  "shareDecimals": 12,
+  "ready": false,
+  "blockers": [
+    "DEX spot price differs from the independent reference by more than 5%.",
+    "The complete trading configuration has not been applied through notice.",
+    "Vault is paused."
+  ],
+  "vault": "0x44E9E1a6A7eeDAfdA49f8F7d94AA1C2Bfa691ff6",
+  "gateway": "0x769CC5cBd4734E6bDdEa6D884DD4F5D2c8ae8f9D",
+  "controller": "0xe26468ae02368a75DBDBea58F367B7313942ad26",
+  "blockNumber": "12031775",
+  "checkedAt": "2026-10-31T05:34:54.690Z",
+  "firstDepositMinimumQuote": "1000000",
+  "nativeBalance": "66748955710465482",
+  "shares": "0",
+  "maxRedeem": "0",
+  "allowance": "0"
+}

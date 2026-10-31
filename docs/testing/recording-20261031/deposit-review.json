@@ -1,0 +1,30 @@
+{
+  "recordId": "0x19e7d9336937879d074a36f5abb7708ddde0ef701e06852484f3efac4daacf3c",
+  "plan": {
+    "id": "0x04d9c926c9f2e5be5a77e8510acf45a75231335f45af60c63326fb6e5ff433c2",
+    "action": "deposit-mon",
+    "chainId": 11155111,
+    "from": "0xe26468ae02368a75DBDBea58F367B7313942ad26",
+    "to": "0x769CC5cBd4734E6bDdEa6D884DD4F5D2c8ae8f9D",
+    "data": "0xf2841bd100000000000000000000000000000000000000000000000000000000000008bc00000000000000000000000000000000000000000000000000000000855243a8000000000000000000000000000000000000000000000000000000006ae60b7c",
+    "value": "0xe8d4a51000",
+    "gas": "0xe32b9",
+    "estimatedFee": "19540269",
+    "native": {
+      "action": "deposit-mon",
+      "gateway": "0x769CC5cBd4734E6bDdEa6D884DD4F5D2c8ae8f9D",
+      "vault": "0x44E9E1a6A7eeDAfdA49f8F7d94AA1C2Bfa691ff6",
+      "amount": "1000000000000",
+      "minQuote": "2236",
+      "minOutput": "2236761000",
+      "deadline": 1793461116
+    },
+    "quote": {
+      "expiresAt": 1793460883635
+    },
+    "output": "2239000000",
+    "quoteAssets": "2239",
+    "scope": "Convert native tokens through the fixed pool and mint Pump shares at current vault value."
+  },
+  "source": "0x4b5945629f74357E43c5F7119c3429CF185AD026"
+}

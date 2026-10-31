@@ -1,0 +1,13 @@
+{
+  "file": "renders/pump-explainer-intro-final.mp4",
+  "sha256": "d2160e00d9b1a98c8fdfd9ec3e9b5f3891764f4213494ed2cf95696e0d075348",
+  "bytes": 3847903,
+  "width": 1920,
+  "height": 1080,
+  "fps": 30,
+  "durationSeconds": 60.3,
+  "narration": "free-local-kokoro-af_heart",
+  "clippingSamples": 0,
+  "integratedLUFS": -16.1,
+  "truePeakDbTP": -1.5
+}

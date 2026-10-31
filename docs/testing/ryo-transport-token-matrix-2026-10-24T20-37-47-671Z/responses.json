@@ -1,0 +1,999 @@
+{
+  "scope": "Authentic read-only analyze_token probes over eleven named symbols and both MCP/REST. Not exhaustive provider token coverage, trading eligibility or model decisions. Credentials, identity metadata and session IDs excluded.",
+  "symbols": [
+    "ETH",
+    "BTC",
+    "SOL",
+    "BNB",
+    "XRP",
+    "DOGE",
+    "ADA",
+    "AVAX",
+    "LINK",
+    "INJ",
+    "CAKE"
+  ],
+  "quotas": [
+    {
+      "at": "2026-10-24T20:37:47.674Z",
+      "receivedAt": "2026-10-24T20:37:48.766Z",
+      "httpStatus": 200,
+      "rateHeaders": {},
+      "quota": [
+        {
+          "field": "rate_limit_per_min",
+          "value": 60
+        },
+        {
+          "field": "rate_limit_remaining",
+          "value": 60
+        }
+      ]
+    },
+    {
+      "at": "2026-10-24T20:45:10.070Z",
+      "receivedAt": "2026-10-24T20:45:10.458Z",
+      "httpStatus": 200,
+      "rateHeaders": {},
+      "quota": [
+        {
+          "field": "rate_limit_per_min",
+          "value": 60
+        },
+        {
+          "field": "rate_limit_remaining",
+          "value": 57
+        }
+      ]
+    }
+  ],
+  "records": [
+    {
+      "url": "https://app-ryochan.com/api/mcp",
+      "method": "POST",
+      "request": {
+        "jsonrpc": "2.0",
+        "id": 1,
+        "method": "initialize",
+        "params": {
+          "protocolVersion": "2025-06-18",
+          "capabilities": {},
+          "clientInfo": {
+            "name": "pumpcoin-research",
+            "version": "1.0.0"
+          }
+        }
+      },
+      "at": "2026-10-24T20:37:48.769Z",
+      "receivedAt": "2026-10-24T20:37:49.175Z",
+      "httpStatus": 200,
+      "rateHeaders": {},
+      "contentType": "application/json",
+      "body": "{\"jsonrpc\": \"2.0\", \"id\": 1, \"result\": {\"protocolVersion\": \"2024-11-05\", \"capabilities\": {\"tools\": {\"listChanged\": false}}, \"serverInfo\": {\"name\": \"ryo-chan\", \"version\": \"1.0.0\"}}}"
+    },
+    {
+      "url": "https://app-ryochan.com/api/mcp",
+      "method": "POST",
+      "request": {
+        "jsonrpc": "2.0",
+        "method": "notifications/initialized",
+        "params": {}
+      },
+      "at": "2026-10-24T20:37:49.178Z",
+      "receivedAt": "2026-10-24T20:37:49.576Z",
+      "httpStatus": 202,
+      "rateHeaders": {},
+      "contentType": "",
+      "body": ""
+    },
+    {
+      "url": "https://app-ryochan.com/api/mcp",
+      "method": "POST",
+      "request": {
+        "jsonrpc": "2.0",
+        "id": 2,
+        "method": "tools/list",
+        "params": {}
+      },
+      "at": "2026-10-24T20:37:49.579Z",
+      "receivedAt": "2026-10-24T20:37:50.013Z",
+      "httpStatus": 200,
+      "rateHeaders": {},
+      "contentType": "application/json",
+      "body": "{\"jsonrpc\": \"2.0\", \"id\": 2, \"result\": {\"tools\": [{\"name\": \"market_overview\", \"description\": \"Delivery: a compact market-regime evidence pack with sentiment, market totals, dominance, movers, and explicit data gaps. Use when: an agent needs a broad market briefing before token research. Core inputs: none. Limits: research context only; incomplete lanes are marked partial or unavailable.\", \"inputSchema\": {\"type\": \"object\", \"properties\": {}, \"additionalProperties\": false}}, {\"name\": \"scan_market\", \"description\": \"Delivery: a ranked candidate set with price, momentum, market-activity evidence, filters, and reasons where available. Use when: an agent needs a shortlist before deeper token analysis. Core inputs: optional chain, theme, and top_n. Limits: theme is contextual rather than a strict filter; a scan is not a trade instruction.\", \"inputSchema\": {\"type\": \"object\", \"properties\": {\"chain\": {\"type\": \"string\", \"description\": \"Chain slug e.g. eth/bsc (optional).\"}, \"theme\": {\"type\": \"string\", \"description\": \"Narrative/theme filter (optional).\"}, \"top_n\": {\"type\": \"number\", \"description\": \"How many candidates to return.\"}, \"filter_direction\": {\"type\": \"string\", \"description\": \"Direction filter: 'positive' (gainers only), 'negative' (losers only), or 'all' (default).\"}}, \"additionalProperties\": false}}, {\"name\": \"analyze_token\", \"description\": \"Delivery: a single-token research pack with USD market data, multi-window performance, calculated RSI and ATR, intelligence, summary, and warnings. Use when: an agent needs a quick structured token read. Core input: symbol. Limits: missing measurements are reported as unavailable and the result is not execution advice.\", \"inputSchema\": {\"type\": \"object\", \"properties\": {\"symbol\": {\"type\": \"string\", \"description\": \"Token symbol, e.g. INJ.\"}, \"chain\": {\"type\": \"string\", \"description\": \"Chain slug for contract-specific safety, e.g. eth/bsc (optional).\"}}, \"required\": [\"symbol\"], \"additionalProperties\": false}}, {\"name\": \"deep_analysis\", \"description\": \"Delivery: a deeper token evidence pack combining market context, confluence, technicals, an optional Skill Hub token profile, derivatives, catalysts, risks, and a measured-ATR preview plan. Use when: an agent needs one comprehensive token read. Core input: token symbol; optional include_perp. Limits: token analysis only, not wallet analysis; unavailable lanes remain explicit and no trade is placed.\", \"inputSchema\": {\"type\": \"object\", \"properties\": {\"symbol\": {\"type\": \"string\", \"description\": \"Token symbol, e.g. SOL.\"}, \"chain\": {\"type\": \"string\", \"description\": \"Chain slug for contract-specific safety (optional).\"}, \"include_perp\": {\"type\": \"boolean\", \"description\": \"Include derivatives/perp posture (default true).\"}}, \"required\": [\"symbol\"], \"additionalProperties\": false}}, {\"name\": \"compare_tokens\", \"description\": \"Delivery: a side-by-side comparison of two to four tokens with factor winners, coverage by token, an overall pick, rationale, confidence, and conclusion method. Use when: an agent must compare relative momentum, market activity, and volatility using common data. Core inputs: symbols; optional intent. Limits: missing factors are disclosed and deterministic conclusions are labelled.\", \"inputSchema\": {\"type\": \"object\", \"properties\": {\"symbols\": {\"type\": \"string\", \"description\": \"2-4 token symbols to compare, comma- or space-separated, e.g. 'SOL, AVAX'.\"}, \"intent\": {\"type\": \"string\", \"description\": \"Trade horizon the pick is for: swing | hold | spot (optional).\", \"enum\": [\"swing\", \"hold\", \"spot\"]}}, \"required\": [\"symbols\"], \"additionalProperties\": false}}, {\"name\": \"monitor_market_sentiment_shift\", \"description\": \"Delivery: a seven-day market sentiment evidence pack containing Fear & Greed level and change, BTC perpetual funding crowding, BTC liquidation pressure and side, altseason phase, the combined regime, observation dates, coverage scope, and full measurements. Use when: an agent needs to check whether market sentiment materially shifted. Core inputs: optional time_window fixed to 7d. Limits: market-wide context except for BTC-referenced derivatives; no causality claim or advice.\", \"inputSchema\": {\"type\": \"object\", \"properties\": {\"time_window\": {\"type\": \"string\", \"enum\": [\"7d\"], \"default\": \"7d\", \"description\": \"Sentiment comparison window; currently fixed to seven days.\"}}, \"additionalProperties\": false}}]}}"
+    },
+    {
+      "url": "https://app-ryochan.com/api/mcp",
+      "method": "POST",
+      "request": {
+        "jsonrpc": "2.0",
+        "id": 3,
+        "method": "tools/call",
+        "params": {
+          "name": "analyze_token",
+          "arguments": {
+            "symbol": "ETH"
+          }
+        }
+      },
+      "at": "2026-10-24T20:37:50.016Z",
+      "receivedAt": "2026-10-24T20:37:50.670Z",
+      "httpStatus": 200,
+      "rateHeaders": {
+        "x-ratelimit-limit": "60",
+        "x-ratelimit-remaining": "59",
+        "x-ratelimit-reset": "1792874330"
+      },
+      "contentType": "application/json",
+      "body": "{\"jsonrpc\": \"2.0\", \"id\": 3, \"result\": {\"content\": [{\"type\": \"text\", \"text\": \"couldn't analyze ETH right now (trace_id: e180ac2d193b48b2a5e617870c06176c)\"}], \"isError\": true}}"
+    },
+    {
+      "url": "https://app-ryochan.com/api/mcp/tools/analyze_token/call",
+      "method": "POST",
+      "request": {
+        "symbol": "ETH"
+      },
+      "at": "2026-10-24T20:38:10.018Z",
+      "receivedAt": "2026-10-24T20:38:11.883Z",
+      "httpStatus": 400,
+      "rateHeaders": {
+        "x-ratelimit-limit": "60",
+        "x-ratelimit-remaining": "58",
+        "x-ratelimit-reset": "1792874330"
+      },
+      "contentType": "application/json",
+      "body": "{\"code\":\"VALIDATION_FAILED\",\"message\":\"couldn't analyze ETH right now\",\"details\":{\"tool\":\"analyze_token\",\"latency_ms\":178},\"trace_id\":\"1dc541f8d0e148779c8438af6ca6d2bf\"}"
+    },
+    {
+      "url": "https://app-ryochan.com/api/mcp",
+      "method": "POST",
+      "request": {
+        "jsonrpc": "2.0",
+        "id": 4,
+        "method": "tools/call",
+        "params": {
+          "name": "analyze_token",
+          "arguments": {
+            "symbol": "BTC"
+          }
+        }
+      },
+      "at": "2026-10-24T20:38:48.680Z",
+      "receivedAt": "2026-10-24T20:38:49.969Z",
+      "httpStatus": 200,
+      "rateHeaders": {
+        "x-ratelimit-limit": "60",
+        "x-ratelimit-remaining": "57",
+        "x-ratelimit-reset": "1792874330"
+      },
+      "contentType": "application/json",
+      "body": "{\"jsonrpc\": \"2.0\", \"id\": 4, \"result\": {\"content\": [{\"type\": \"text\", \"text\": \"couldn't analyze BTC right now (trace_id: af8c0529e01c482a8bf44d10236e09cc)\"}], \"isError\": true}}"
+    },
+    {
+      "url": "https://app-ryochan.com/api/mcp/tools/analyze_token/call",
+      "method": "POST",
+      "request": {
+        "symbol": "BTC"
+      },
+      "at": "2026-10-24T20:39:08.681Z",
+      "receivedAt": "2026-10-24T20:39:09.895Z",
+      "httpStatus": 400,
+      "rateHeaders": {
+        "x-ratelimit-limit": "60",
+        "x-ratelimit-remaining": "57",
+        "x-ratelimit-reset": "1792874351"
+      },
+      "contentType": "application/json",
+      "body": "{\"code\":\"VALIDATION_FAILED\",\"message\":\"couldn't analyze BTC right now\",\"details\":{\"tool\":\"analyze_token\",\"latency_ms\":164},\"trace_id\":\"03f0a9d5cebf49759eb4afcf38ecb693\"}"
+    },
+    {
+      "url": "https://app-ryochan.com/api/mcp",
+      "method": "POST",
+      "request": {
+        "jsonrpc": "2.0",
+        "id": 5,
+        "method": "tools/call",
+        "params": {
+          "name": "analyze_token",
+          "arguments": {
+            "symbol": "SOL"
+          }
+        }
+      },
+      "at": "2026-10-24T20:39:28.684Z",
+      "receivedAt": "2026-10-24T20:39:29.935Z",
+      "httpStatus": 200,
+      "rateHeaders": {
+        "x-ratelimit-limit": "60",
+        "x-ratelimit-remaining": "57",
+        "x-ratelimit-reset": "1792874389"
+      },
+      "contentType": "application/json",
+      "body": "{\"jsonrpc\": \"2.0\", \"id\": 5, \"result\": {\"content\": [{\"type\": \"text\", \"text\": \"couldn't analyze SOL right now (trace_id: 0badce9360754327ae4c59d973ad7188)\"}], \"isError\": true}}"
+    },
+    {
+      "url": "https://app-ryochan.com/api/mcp/tools/analyze_token/call",
+      "method": "POST",
+      "request": {
+        "symbol": "SOL"
+      },
+      "at": "2026-10-24T20:39:48.686Z",
+      "receivedAt": "2026-10-24T20:39:50.925Z",
+      "httpStatus": 400,
+      "rateHeaders": {
+        "x-ratelimit-limit": "60",
+        "x-ratelimit-remaining": "57",
+        "x-ratelimit-reset": "1792874409"
+      },
+      "contentType": "application/json",
+      "body": "{\"code\":\"VALIDATION_FAILED\",\"message\":\"couldn't analyze SOL right now\",\"details\":{\"tool\":\"analyze_token\",\"latency_ms\":149},\"trace_id\":\"dbd6677c8fe54c23ab3b2d11e2b06360\"}"
+    },
+    {
+      "url": "https://app-ryochan.com/api/mcp",
+      "method": "POST",
+      "request": {
+        "jsonrpc": "2.0",
+        "id": 6,
+        "method": "tools/call",
+        "params": {
+          "name": "analyze_token",
+          "arguments": {
+            "symbol": "BNB"
+          }
+        }
+      },
+      "at": "2026-10-24T20:40:08.690Z",
+      "receivedAt": "2026-10-24T20:40:09.912Z",
+      "httpStatus": 200,
+      "rateHeaders": {
+        "x-ratelimit-limit": "60",
+        "x-ratelimit-remaining": "57",
+        "x-ratelimit-reset": "1792874429"
+      },
+      "contentType": "application/json",
+      "body": "{\"jsonrpc\": \"2.0\", \"id\": 6, \"result\": {\"content\": [{\"type\": \"text\", \"text\": \"couldn't analyze BNB right now (trace_id: 8643c679b7334c3494701652cb533416)\"}], \"isError\": true}}"
+    },
+    {
+      "url": "https://app-ryochan.com/api/mcp/tools/analyze_token/call",
+      "method": "POST",
+      "request": {
+        "symbol": "BNB"
+      },
+      "at": "2026-10-24T20:40:28.691Z",
+      "receivedAt": "2026-10-24T20:40:29.937Z",
+      "httpStatus": 400,
+      "rateHeaders": {
+        "x-ratelimit-limit": "60",
+        "x-ratelimit-remaining": "57",
+        "x-ratelimit-reset": "1792874450"
+      },
+      "contentType": "application/json",
+      "body": "{\"code\":\"VALIDATION_FAILED\",\"message\":\"couldn't analyze BNB right now\",\"details\":{\"tool\":\"analyze_token\",\"latency_ms\":177},\"trace_id\":\"ce17ae4d1de54b69bbdd0800f7dfe7a2\"}"
+    },
+    {
+      "url": "https://app-ryochan.com/api/mcp",
+      "method": "POST",
+      "request": {
+        "jsonrpc": "2.0",
+        "id": 7,
+        "method": "tools/call",
+        "params": {
+          "name": "analyze_token",
+          "arguments": {
+            "symbol": "XRP"
+          }
+        }
+      },
+      "at": "2026-10-24T20:40:48.695Z",
+      "receivedAt": "2026-10-24T20:40:51.861Z",
+      "httpStatus": 200,
+      "rateHeaders": {
+        "x-ratelimit-limit": "60",
+        "x-ratelimit-remaining": "57",
+        "x-ratelimit-reset": "1792874469"
+      },
+      "contentType": "application/json",
+      "body": "{\"jsonrpc\": \"2.0\", \"id\": 7, \"result\": {\"content\": [{\"type\": \"text\", \"text\": \"couldn't analyze XRP right now (trace_id: 32417cf7d17c40109f95985a62c76994)\"}], \"isError\": true}}"
+    },
+    {
+      "url": "https://app-ryochan.com/api/mcp/tools/analyze_token/call",
+      "method": "POST",
+      "request": {
+        "symbol": "XRP"
+      },
+      "at": "2026-10-24T20:41:08.696Z",
+      "receivedAt": "2026-10-24T20:41:09.998Z",
+      "httpStatus": 400,
+      "rateHeaders": {
+        "x-ratelimit-limit": "60",
+        "x-ratelimit-remaining": "57",
+        "x-ratelimit-reset": "1792874489"
+      },
+      "contentType": "application/json",
+      "body": "{\"code\":\"VALIDATION_FAILED\",\"message\":\"couldn't analyze XRP right now\",\"details\":{\"tool\":\"analyze_token\",\"latency_ms\":189},\"trace_id\":\"f11599a0ff8341eda274c685ea676710\"}"
+    },
+    {
+      "url": "https://app-ryochan.com/api/mcp",
+      "method": "POST",
+      "request": {
+        "jsonrpc": "2.0",
+        "id": 8,
+        "method": "tools/call",
+        "params": {
+          "name": "analyze_token",
+          "arguments": {
+            "symbol": "DOGE"
+          }
+        }
+      },
+      "at": "2026-10-24T20:41:28.701Z",
+      "receivedAt": "2026-10-24T20:41:30.322Z",
+      "httpStatus": 200,
+      "rateHeaders": {
+        "x-ratelimit-limit": "60",
+        "x-ratelimit-remaining": "57",
+        "x-ratelimit-reset": "1792874510"
+      },
+      "contentType": "application/json",
+      "body": "{\"jsonrpc\": \"2.0\", \"id\": 8, \"result\": {\"content\": [{\"type\": \"text\", \"text\": \"couldn't analyze DOGE right now (trace_id: 362ada57b0864ca3a9e2a83ffd2de293)\"}], \"isError\": true}}"
+    },
+    {
+      "url": "https://app-ryochan.com/api/mcp/tools/analyze_token/call",
+      "method": "POST",
+      "request": {
+        "symbol": "DOGE"
+      },
+      "at": "2026-10-24T20:41:48.702Z",
+      "receivedAt": "2026-10-24T20:41:49.962Z",
+      "httpStatus": 400,
+      "rateHeaders": {
+        "x-ratelimit-limit": "60",
+        "x-ratelimit-remaining": "56",
+        "x-ratelimit-reset": "1792874510"
+      },
+      "contentType": "application/json",
+      "body": "{\"code\":\"VALIDATION_FAILED\",\"message\":\"couldn't analyze DOGE right now\",\"details\":{\"tool\":\"analyze_token\",\"latency_ms\":186},\"trace_id\":\"b43419e4c4aa4e1aad6d8f960770ea3f\"}"
+    },
+    {
+      "url": "https://app-ryochan.com/api/mcp",
+      "method": "POST",
+      "request": {
+        "jsonrpc": "2.0",
+        "id": 9,
+        "method": "tools/call",
+        "params": {
+          "name": "analyze_token",
+          "arguments": {
+            "symbol": "ADA"
+          }
+        }
+      },
+      "at": "2026-10-24T20:42:08.706Z",
+      "receivedAt": "2026-10-24T20:42:09.969Z",
+      "httpStatus": 200,
+      "rateHeaders": {
+        "x-ratelimit-limit": "60",
+        "x-ratelimit-remaining": "56",
+        "x-ratelimit-reset": "1792874529"
+      },
+      "contentType": "application/json",
+      "body": "{\"jsonrpc\": \"2.0\", \"id\": 9, \"result\": {\"content\": [{\"type\": \"text\", \"text\": \"couldn't analyze ADA right now (trace_id: 97259ceb122a40209dc50bbeeab186c1)\"}], \"isError\": true}}"
+    },
+    {
+      "url": "https://app-ryochan.com/api/mcp/tools/analyze_token/call",
+      "method": "POST",
+      "request": {
+        "symbol": "ADA"
+      },
+      "at": "2026-10-24T20:42:28.707Z",
+      "receivedAt": "2026-10-24T20:42:29.974Z",
+      "httpStatus": 400,
+      "rateHeaders": {
+        "x-ratelimit-limit": "60",
+        "x-ratelimit-remaining": "56",
+        "x-ratelimit-reset": "1792874549"
+      },
+      "contentType": "application/json",
+      "body": "{\"code\":\"VALIDATION_FAILED\",\"message\":\"couldn't analyze ADA right now\",\"details\":{\"tool\":\"analyze_token\",\"latency_ms\":161},\"trace_id\":\"cf1eeb6a04d34b31804e0b8d168e72ab\"}"
+    },
+    {
+      "url": "https://app-ryochan.com/api/mcp",
+      "method": "POST",
+      "request": {
+        "jsonrpc": "2.0",
+        "id": 10,
+        "method": "tools/call",
+        "params": {
+          "name": "analyze_token",
+          "arguments": {
+            "symbol": "AVAX"
+          }
+        }
+      },
+      "at": "2026-10-24T20:42:48.711Z",
+      "receivedAt": "2026-10-24T20:42:50.766Z",
+      "httpStatus": 200,
+      "rateHeaders": {
+        "x-ratelimit-limit": "60",
+        "x-ratelimit-remaining": "57",
+        "x-ratelimit-reset": "1792874589"
+      },
+      "contentType": "application/json",
+      "body": "{\"jsonrpc\": \"2.0\", \"id\": 10, \"result\": {\"content\": [{\"type\": \"text\", \"text\": \"couldn't analyze AVAX right now (trace_id: dd8709cfd59d40b284b4f98a03a5456d)\"}], \"isError\": true}}"
+    },
+    {
+      "url": "https://app-ryochan.com/api/mcp/tools/analyze_token/call",
+      "method": "POST",
+      "request": {
+        "symbol": "AVAX"
+      },
+      "at": "2026-10-24T20:43:08.712Z",
+      "receivedAt": "2026-10-24T20:43:09.987Z",
+      "httpStatus": 400,
+      "rateHeaders": {
+        "x-ratelimit-limit": "60",
+        "x-ratelimit-remaining": "57",
+        "x-ratelimit-reset": "1792874609"
+      },
+      "contentType": "application/json",
+      "body": "{\"code\":\"VALIDATION_FAILED\",\"message\":\"couldn't analyze AVAX right now\",\"details\":{\"tool\":\"analyze_token\",\"latency_ms\":161},\"trace_id\":\"7e91f394db1b42e5bd9d8cfa36585dae\"}"
+    },
+    {
+      "url": "https://app-ryochan.com/api/mcp",
+      "method": "POST",
+      "request": {
+        "jsonrpc": "2.0",
+        "id": 11,
+        "method": "tools/call",
+        "params": {
+          "name": "analyze_token",
+          "arguments": {
+            "symbol": "LINK"
+          }
+        }
+      },
+      "at": "2026-10-24T20:43:28.764Z",
+      "receivedAt": "2026-10-24T20:43:30.240Z",
+      "httpStatus": 200,
+      "rateHeaders": {
+        "x-ratelimit-limit": "60",
+        "x-ratelimit-remaining": "57",
+        "x-ratelimit-reset": "1792874629"
+      },
+      "contentType": "application/json",
+      "body": "{\"jsonrpc\": \"2.0\", \"id\": 11, \"result\": {\"content\": [{\"type\": \"text\", \"text\": \"couldn't analyze LINK right now (trace_id: 3f78618cf40149eeafe04c8eb8e4f49c)\"}], \"isError\": true}}"
+    },
+    {
+      "url": "https://app-ryochan.com/api/mcp/tools/analyze_token/call",
+      "method": "POST",
+      "request": {
+        "symbol": "LINK"
+      },
+      "at": "2026-10-24T20:43:48.766Z",
+      "receivedAt": "2026-10-24T20:43:50.092Z",
+      "httpStatus": 400,
+      "rateHeaders": {
+        "x-ratelimit-limit": "60",
+        "x-ratelimit-remaining": "57",
+        "x-ratelimit-reset": "1792874649"
+      },
+      "contentType": "application/json",
+      "body": "{\"code\":\"VALIDATION_FAILED\",\"message\":\"couldn't analyze LINK right now\",\"details\":{\"tool\":\"analyze_token\",\"latency_ms\":159},\"trace_id\":\"24cbfe5b2c2848a284bd4cc314b19ea3\"}"
+    },
+    {
+      "url": "https://app-ryochan.com/api/mcp",
+      "method": "POST",
+      "request": {
+        "jsonrpc": "2.0",
+        "id": 12,
+        "method": "tools/call",
+        "params": {
+          "name": "analyze_token",
+          "arguments": {
+            "symbol": "INJ"
+          }
+        }
+      },
+      "at": "2026-10-24T20:44:08.774Z",
+      "receivedAt": "2026-10-24T20:44:10.054Z",
+      "httpStatus": 200,
+      "rateHeaders": {
+        "x-ratelimit-limit": "60",
+        "x-ratelimit-remaining": "57",
+        "x-ratelimit-reset": "1792874669"
+      },
+      "contentType": "application/json",
+      "body": "{\"jsonrpc\": \"2.0\", \"id\": 12, \"result\": {\"content\": [{\"type\": \"text\", \"text\": \"couldn't analyze INJ right now (trace_id: 8e6987a61fc14813a6d34879e0bcbb6f)\"}], \"isError\": true}}"
+    },
+    {
+      "url": "https://app-ryochan.com/api/mcp/tools/analyze_token/call",
+      "method": "POST",
+      "request": {
+        "symbol": "INJ"
+      },
+      "at": "2026-10-24T20:44:28.776Z",
+      "receivedAt": "2026-10-24T20:44:31.062Z",
+      "httpStatus": 400,
+      "rateHeaders": {
+        "x-ratelimit-limit": "60",
+        "x-ratelimit-remaining": "57",
+        "x-ratelimit-reset": "1792874689"
+      },
+      "contentType": "application/json",
+      "body": "{\"code\":\"VALIDATION_FAILED\",\"message\":\"couldn't analyze INJ right now\",\"details\":{\"tool\":\"analyze_token\",\"latency_ms\":158},\"trace_id\":\"bc0832de9dc04120bc95203a2658c1b9\"}"
+    },
+    {
+      "url": "https://app-ryochan.com/api/mcp",
+      "method": "POST",
+      "request": {
+        "jsonrpc": "2.0",
+        "id": 13,
+        "method": "tools/call",
+        "params": {
+          "name": "analyze_token",
+          "arguments": {
+            "symbol": "CAKE"
+          }
+        }
+      },
+      "at": "2026-10-24T20:44:48.783Z",
+      "receivedAt": "2026-10-24T20:44:50.007Z",
+      "httpStatus": 200,
+      "rateHeaders": {
+        "x-ratelimit-limit": "60",
+        "x-ratelimit-remaining": "56",
+        "x-ratelimit-reset": "1792874689"
+      },
+      "contentType": "application/json",
+      "body": "{\"jsonrpc\": \"2.0\", \"id\": 13, \"result\": {\"content\": [{\"type\": \"text\", \"text\": \"couldn't analyze CAKE right now (trace_id: 2723c127b47447eb86af22106ba101e0)\"}], \"isError\": true}}"
+    },
+    {
+      "url": "https://app-ryochan.com/api/mcp/tools/analyze_token/call",
+      "method": "POST",
+      "request": {
+        "symbol": "CAKE"
+      },
+      "at": "2026-10-24T20:45:08.786Z",
+      "receivedAt": "2026-10-24T20:45:10.067Z",
+      "httpStatus": 400,
+      "rateHeaders": {
+        "x-ratelimit-limit": "60",
+        "x-ratelimit-remaining": "57",
+        "x-ratelimit-reset": "1792874730"
+      },
+      "contentType": "application/json",
+      "body": "{\"code\":\"VALIDATION_FAILED\",\"message\":\"couldn't analyze CAKE right now\",\"details\":{\"tool\":\"analyze_token\",\"latency_ms\":160},\"trace_id\":\"c3bda1305b85474aa80a60575eea90a9\"}"
+    }
+  ],
+  "results": [
+    {
+      "symbol": "ETH",
+      "transport": "mcp",
+      "tool": "analyze_token",
+      "arguments": {
+        "symbol": "ETH"
+      },
+      "recordIndex": 3,
+      "at": "2026-10-24T20:37:50.016Z",
+      "httpStatus": 200,
+      "rateHeaders": {
+        "x-ratelimit-limit": "60",
+        "x-ratelimit-remaining": "59",
+        "x-ratelimit-reset": "1792874330"
+      },
+      "outcome": "tool-error",
+      "message": "couldn't analyze ETH right now (trace_id: e180ac2d193b48b2a5e617870c06176c)",
+      "traceId": "e180ac2d193b48b2a5e617870c06176c"
+    },
+    {
+      "symbol": "ETH",
+      "transport": "rest",
+      "tool": "analyze_token",
+      "arguments": {
+        "symbol": "ETH"
+      },
+      "recordIndex": 4,
+      "at": "2026-10-24T20:38:10.018Z",
+      "httpStatus": 400,
+      "rateHeaders": {
+        "x-ratelimit-limit": "60",
+        "x-ratelimit-remaining": "58",
+        "x-ratelimit-reset": "1792874330"
+      },
+      "outcome": "http-error",
+      "code": "VALIDATION_FAILED",
+      "message": "couldn't analyze ETH right now",
+      "traceId": "1dc541f8d0e148779c8438af6ca6d2bf"
+    },
+    {
+      "symbol": "BTC",
+      "transport": "mcp",
+      "tool": "analyze_token",
+      "arguments": {
+        "symbol": "BTC"
+      },
+      "recordIndex": 5,
+      "at": "2026-10-24T20:38:48.680Z",
+      "httpStatus": 200,
+      "rateHeaders": {
+        "x-ratelimit-limit": "60",
+        "x-ratelimit-remaining": "57",
+        "x-ratelimit-reset": "1792874330"
+      },
+      "outcome": "tool-error",
+      "message": "couldn't analyze BTC right now (trace_id: af8c0529e01c482a8bf44d10236e09cc)",
+      "traceId": "af8c0529e01c482a8bf44d10236e09cc"
+    },
+    {
+      "symbol": "BTC",
+      "transport": "rest",
+      "tool": "analyze_token",
+      "arguments": {
+        "symbol": "BTC"
+      },
+      "recordIndex": 6,
+      "at": "2026-10-24T20:39:08.681Z",
+      "httpStatus": 400,
+      "rateHeaders": {
+        "x-ratelimit-limit": "60",
+        "x-ratelimit-remaining": "57",
+        "x-ratelimit-reset": "1792874351"
+      },
+      "outcome": "http-error",
+      "code": "VALIDATION_FAILED",
+      "message": "couldn't analyze BTC right now",
+      "traceId": "03f0a9d5cebf49759eb4afcf38ecb693"
+    },
+    {
+      "symbol": "SOL",
+      "transport": "mcp",
+      "tool": "analyze_token",
+      "arguments": {
+        "symbol": "SOL"
+      },
+      "recordIndex": 7,
+      "at": "2026-10-24T20:39:28.684Z",
+      "httpStatus": 200,
+      "rateHeaders": {
+        "x-ratelimit-limit": "60",
+        "x-ratelimit-remaining": "57",
+        "x-ratelimit-reset": "1792874389"
+      },
+      "outcome": "tool-error",
+      "message": "couldn't analyze SOL right now (trace_id: 0badce9360754327ae4c59d973ad7188)",
+      "traceId": "0badce9360754327ae4c59d973ad7188"
+    },
+    {
+      "symbol": "SOL",
+      "transport": "rest",
+      "tool": "analyze_token",
+      "arguments": {
+        "symbol": "SOL"
+      },
+      "recordIndex": 8,
+      "at": "2026-10-24T20:39:48.686Z",
+      "httpStatus": 400,
+      "rateHeaders": {
+        "x-ratelimit-limit": "60",
+        "x-ratelimit-remaining": "57",
+        "x-ratelimit-reset": "1792874409"
+      },
+      "outcome": "http-error",
+      "code": "VALIDATION_FAILED",
+      "message": "couldn't analyze SOL right now",
+      "traceId": "dbd6677c8fe54c23ab3b2d11e2b06360"
+    },
+    {
+      "symbol": "BNB",
+      "transport": "mcp",
+      "tool": "analyze_token",
+      "arguments": {
+        "symbol": "BNB"
+      },
+      "recordIndex": 9,
+      "at": "2026-10-24T20:40:08.690Z",
+      "httpStatus": 200,
+      "rateHeaders": {
+        "x-ratelimit-limit": "60",
+        "x-ratelimit-remaining": "57",
+        "x-ratelimit-reset": "1792874429"
+      },
+      "outcome": "tool-error",
+      "message": "couldn't analyze BNB right now (trace_id: 8643c679b7334c3494701652cb533416)",
+      "traceId": "8643c679b7334c3494701652cb533416"
+    },
+    {
+      "symbol": "BNB",
+      "transport": "rest",
+      "tool": "analyze_token",
+      "arguments": {
+        "symbol": "BNB"
+      },
+      "recordIndex": 10,
+      "at": "2026-10-24T20:40:28.691Z",
+      "httpStatus": 400,
+      "rateHeaders": {
+        "x-ratelimit-limit": "60",
+        "x-ratelimit-remaining": "57",
+        "x-ratelimit-reset": "1792874450"
+      },
+      "outcome": "http-error",
+      "code": "VALIDATION_FAILED",
+      "message": "couldn't analyze BNB right now",
+      "traceId": "ce17ae4d1de54b69bbdd0800f7dfe7a2"
+    },
+    {
+      "symbol": "XRP",
+      "transport": "mcp",
+      "tool": "analyze_token",
+      "arguments": {
+        "symbol": "XRP"
+      },
+      "recordIndex": 11,
+      "at": "2026-10-24T20:40:48.695Z",
+      "httpStatus": 200,
+      "rateHeaders": {
+        "x-ratelimit-limit": "60",
+        "x-ratelimit-remaining": "57",
+        "x-ratelimit-reset": "1792874469"
+      },
+      "outcome": "tool-error",
+      "message": "couldn't analyze XRP right now (trace_id: 32417cf7d17c40109f95985a62c76994)",
+      "traceId": "32417cf7d17c40109f95985a62c76994"
+    },
+    {
+      "symbol": "XRP",
+      "transport": "rest",
+      "tool": "analyze_token",
+      "arguments": {
+        "symbol": "XRP"
+      },
+      "recordIndex": 12,
+      "at": "2026-10-24T20:41:08.696Z",
+      "httpStatus": 400,
+      "rateHeaders": {
+        "x-ratelimit-limit": "60",
+        "x-ratelimit-remaining": "57",
+        "x-ratelimit-reset": "1792874489"
+      },
+      "outcome": "http-error",
+      "code": "VALIDATION_FAILED",
+      "message": "couldn't analyze XRP right now",
+      "traceId": "f11599a0ff8341eda274c685ea676710"
+    },
+    {
+      "symbol": "DOGE",
+      "transport": "mcp",
+      "tool": "analyze_token",
+      "arguments": {
+        "symbol": "DOGE"
+      },
+      "recordIndex": 13,
+      "at": "2026-10-24T20:41:28.701Z",
+      "httpStatus": 200,
+      "rateHeaders": {
+        "x-ratelimit-limit": "60",
+        "x-ratelimit-remaining": "57",
+        "x-ratelimit-reset": "1792874510"
+      },
+      "outcome": "tool-error",
+      "message": "couldn't analyze DOGE right now (trace_id: 362ada57b0864ca3a9e2a83ffd2de293)",
+      "traceId": "362ada57b0864ca3a9e2a83ffd2de293"
+    },
+    {
+      "symbol": "DOGE",
+      "transport": "rest",
+      "tool": "analyze_token",
+      "arguments": {
+        "symbol": "DOGE"
+      },
+      "recordIndex": 14,
+      "at": "2026-10-24T20:41:48.702Z",
+      "httpStatus": 400,
+      "rateHeaders": {
+        "x-ratelimit-limit": "60",
+        "x-ratelimit-remaining": "56",
+        "x-ratelimit-reset": "1792874510"
+      },
+      "outcome": "http-error",
+      "code": "VALIDATION_FAILED",
+      "message": "couldn't analyze DOGE right now",
+      "traceId": "b43419e4c4aa4e1aad6d8f960770ea3f"
+    },
+    {
+      "symbol": "ADA",
+      "transport": "mcp",
+      "tool": "analyze_token",
+      "arguments": {
+        "symbol": "ADA"
+      },
+      "recordIndex": 15,
+      "at": "2026-10-24T20:42:08.706Z",
+      "httpStatus": 200,
+      "rateHeaders": {
+        "x-ratelimit-limit": "60",
+        "x-ratelimit-remaining": "56",
+        "x-ratelimit-reset": "1792874529"
+      },
+      "outcome": "tool-error",
+      "message": "couldn't analyze ADA right now (trace_id: 97259ceb122a40209dc50bbeeab186c1)",
+      "traceId": "97259ceb122a40209dc50bbeeab186c1"
+    },
+    {
+      "symbol": "ADA",
+      "transport": "rest",
+      "tool": "analyze_token",
+      "arguments": {
+        "symbol": "ADA"
+      },
+      "recordIndex": 16,
+      "at": "2026-10-24T20:42:28.707Z",
+      "httpStatus": 400,
+      "rateHeaders": {
+        "x-ratelimit-limit": "60",
+        "x-ratelimit-remaining": "56",
+        "x-ratelimit-reset": "1792874549"
+      },
+      "outcome": "http-error",
+      "code": "VALIDATION_FAILED",
+      "message": "couldn't analyze ADA right now",
+      "traceId": "cf1eeb6a04d34b31804e0b8d168e72ab"
+    },
+    {
+      "symbol": "AVAX",
+      "transport": "mcp",
+      "tool": "analyze_token",
+      "arguments": {
+        "symbol": "AVAX"
+      },
+      "recordIndex": 17,
+      "at": "2026-10-24T20:42:48.711Z",
+      "httpStatus": 200,
+      "rateHeaders": {
+        "x-ratelimit-limit": "60",
+        "x-ratelimit-remaining": "57",
+        "x-ratelimit-reset": "1792874589"
+      },
+      "outcome": "tool-error",
+      "message": "couldn't analyze AVAX right now (trace_id: dd8709cfd59d40b284b4f98a03a5456d)",
+      "traceId": "dd8709cfd59d40b284b4f98a03a5456d"
+    },
+    {
+      "symbol": "AVAX",
+      "transport": "rest",
+      "tool": "analyze_token",
+      "arguments": {
+        "symbol": "AVAX"
+      },
+      "recordIndex": 18,
+      "at": "2026-10-24T20:43:08.712Z",
+      "httpStatus": 400,
+      "rateHeaders": {
+        "x-ratelimit-limit": "60",
+        "x-ratelimit-remaining": "57",
+        "x-ratelimit-reset": "1792874609"
+      },
+      "outcome": "http-error",
+      "code": "VALIDATION_FAILED",
+      "message": "couldn't analyze AVAX right now",
+      "traceId": "7e91f394db1b42e5bd9d8cfa36585dae"
+    },
+    {
+      "symbol": "LINK",
+      "transport": "mcp",
+      "tool": "analyze_token",
+      "arguments": {
+        "symbol": "LINK"
+      },
+      "recordIndex": 19,
+      "at": "2026-10-24T20:43:28.764Z",
+      "httpStatus": 200,
+      "rateHeaders": {
+        "x-ratelimit-limit": "60",
+        "x-ratelimit-remaining": "57",
+        "x-ratelimit-reset": "1792874629"
+      },
+      "outcome": "tool-error",
+      "message": "couldn't analyze LINK right now (trace_id: 3f78618cf40149eeafe04c8eb8e4f49c)",
+      "traceId": "3f78618cf40149eeafe04c8eb8e4f49c"
+    },
+    {
+      "symbol": "LINK",
+      "transport": "rest",
+      "tool": "analyze_token",
+      "arguments": {
+        "symbol": "LINK"
+      },
+      "recordIndex": 20,
+      "at": "2026-10-24T20:43:48.766Z",
+      "httpStatus": 400,
+      "rateHeaders": {
+        "x-ratelimit-limit": "60",
+        "x-ratelimit-remaining": "57",
+        "x-ratelimit-reset": "1792874649"
+      },
+      "outcome": "http-error",
+      "code": "VALIDATION_FAILED",
+      "message": "couldn't analyze LINK right now",
+      "traceId": "24cbfe5b2c2848a284bd4cc314b19ea3"
+    },
+    {
+      "symbol": "INJ",
+      "transport": "mcp",
+      "tool": "analyze_token",
+      "arguments": {
+        "symbol": "INJ"
+      },
+      "recordIndex": 21,
+      "at": "2026-10-24T20:44:08.774Z",
+      "httpStatus": 200,
+      "rateHeaders": {
+        "x-ratelimit-limit": "60",
+        "x-ratelimit-remaining": "57",
+        "x-ratelimit-reset": "1792874669"
+      },
+      "outcome": "tool-error",
+      "message": "couldn't analyze INJ right now (trace_id: 8e6987a61fc14813a6d34879e0bcbb6f)",
+      "traceId": "8e6987a61fc14813a6d34879e0bcbb6f"
+    },
+    {
+      "symbol": "INJ",
+      "transport": "rest",
+      "tool": "analyze_token",
+      "arguments": {
+        "symbol": "INJ"
+      },
+      "recordIndex": 22,
+      "at": "2026-10-24T20:44:28.776Z",
+      "httpStatus": 400,
+      "rateHeaders": {
+        "x-ratelimit-limit": "60",
+        "x-ratelimit-remaining": "57",
+        "x-ratelimit-reset": "1792874689"
+      },
+      "outcome": "http-error",
+      "code": "VALIDATION_FAILED",
+      "message": "couldn't analyze INJ right now",
+      "traceId": "bc0832de9dc04120bc95203a2658c1b9"
+    },
+    {
+      "symbol": "CAKE",
+      "transport": "mcp",
+      "tool": "analyze_token",
+      "arguments": {
+        "symbol": "CAKE"
+      },
+      "recordIndex": 23,
+      "at": "2026-10-24T20:44:48.783Z",
+      "httpStatus": 200,
+      "rateHeaders": {
+        "x-ratelimit-limit": "60",
+        "x-ratelimit-remaining": "56",
+        "x-ratelimit-reset": "1792874689"
+      },
+      "outcome": "tool-error",
+      "message": "couldn't analyze CAKE right now (trace_id: 2723c127b47447eb86af22106ba101e0)",
+      "traceId": "2723c127b47447eb86af22106ba101e0"
+    },
+    {
+      "symbol": "CAKE",
+      "transport": "rest",
+      "tool": "analyze_token",
+      "arguments": {
+        "symbol": "CAKE"
+      },
+      "recordIndex": 24,
+      "at": "2026-10-24T20:45:08.786Z",
+      "httpStatus": 400,
+      "rateHeaders": {
+        "x-ratelimit-limit": "60",
+        "x-ratelimit-remaining": "57",
+        "x-ratelimit-reset": "1792874730"
+      },
+      "outcome": "http-error",
+      "code": "VALIDATION_FAILED",
+      "message": "couldn't analyze CAKE right now",
+      "traceId": "c3bda1305b85474aa80a60575eea90a9"
+    }
+  ]
+}

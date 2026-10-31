@@ -13,8 +13,8 @@ test('native MON approval is specific to exact calldata, value, amount, chain an
  assert.throws(()=>validateTradingTransaction({...tx,to:vault},binding),/destination changed/);
  assert.throws(()=>validateTradingTransaction({...tx,data:(tx.data+'00') as Hex},binding),/calldata differs/);
  assert.throws(()=>validateTradingTransaction({...tx,native:{...tx.native,amount:'1'}},binding),/value differs/);
- assert.throws(()=>validateTradingTransaction({...tx,chainId:1},binding),/Invalid MON/);
- assert.throws(()=>validateTradingTransaction({...tx,from:vault},binding),/Invalid MON/);
+ assert.throws(()=>validateTradingTransaction({...tx,chainId:1},binding),/Invalid MON|execution testnet/);
+ assert.throws(()=>validateTradingTransaction({...tx,from:vault},binding),/Invalid MON|execution testnet/);
  const {native,...ordinary}=tx;assert.throws(()=>validateTradingTransaction(ordinary,binding),/Invalid testnet/);
  assert.throws(()=>validateTradingTransaction({...tx,quote:{expiresAt:Date.now()-1}},binding),/expired/);
 });

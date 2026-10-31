@@ -1,0 +1,31 @@
+{
+  "scope": "Authentic read-only alternative-tool probes; no agent inference or execution. Credentials and response headers excluded.",
+  "results": [
+    {
+      "tool": "deep_analysis",
+      "arguments": {
+        "symbol": "BNB",
+        "include_perp": false
+      },
+      "transport": "documented-rest",
+      "url": "https://app-ryochan.com/api/mcp/tools/deep_analysis/call",
+      "at": "2026-10-23T20:53:04.506Z",
+      "receivedAt": "2026-10-23T20:53:06.701Z",
+      "httpStatus": 400,
+      "body": "{\"code\":\"VALIDATION_FAILED\",\"message\":\"Current USD market data is unavailable for BNB.\",\"details\":{\"tool\":\"deep_analysis\",\"latency_ms\":426},\"trace_id\":\"b5c5ae2d36504604bd95a84681349c6a\"}"
+    },
+    {
+      "tool": "deep_analysis",
+      "arguments": {
+        "symbol": "CAKE",
+        "include_perp": false
+      },
+      "transport": "documented-rest",
+      "url": "https://app-ryochan.com/api/mcp/tools/deep_analysis/call",
+      "at": "2026-10-23T20:53:16.508Z",
+      "receivedAt": "2026-10-23T20:53:18.092Z",
+      "httpStatus": 400,
+      "body": "{\"code\":\"VALIDATION_FAILED\",\"message\":\"Current USD market data is unavailable for CAKE.\",\"details\":{\"tool\":\"deep_analysis\",\"latency_ms\":406},\"trace_id\":\"d4e46ee300944459af27f3e1b06fc85b\"}"
+    }
+  ]
+}

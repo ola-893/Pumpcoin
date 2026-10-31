@@ -1,0 +1,35 @@
+{
+  "scope": "Read-only authentication negative control. Authenticated identity metadata and credentials excluded. Tests credential acceptance, not market-data entitlement.",
+  "results": [
+    {
+      "transport": "REST",
+      "method": "GET",
+      "path": "/api/mcp/whoami",
+      "authenticated": false,
+      "at": "2026-10-24T21:08:56.923Z",
+      "receivedAt": "2026-10-24T21:08:58.027Z",
+      "httpStatus": 401,
+      "body": "{\"code\":\"UNAUTHENTICATED\",\"message\":\"Missing credential. Send 'Authorization: Bearer ryo_mcp_...'.\",\"details\":null,\"trace_id\":\"fae18b2733804ced8d0af02cd6ec850d\"}"
+    },
+    {
+      "transport": "REST",
+      "method": "GET",
+      "path": "/api/mcp/whoami",
+      "authenticated": true,
+      "at": "2026-10-24T21:08:58.027Z",
+      "receivedAt": "2026-10-24T21:08:59.026Z",
+      "httpStatus": 200,
+      "identityFieldsRedacted": true,
+      "numericQuota": [
+        {
+          "field": "rate_limit_per_min",
+          "value": 60
+        },
+        {
+          "field": "rate_limit_remaining",
+          "value": 60
+        }
+      ]
+    }
+  ]
+}

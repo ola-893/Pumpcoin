@@ -1,0 +1,111 @@
+{
+  "checkedAt": "2026-10-30T18:48:01.342Z",
+  "scope": "Read-only local readiness check; no signatures, model inference, RYO calls or transactions",
+  "frontend": {
+    "origin": "http://127.0.0.1:5173",
+    "reachable": true
+  },
+  "helper": {
+    "configured": false,
+    "signerConfigured": true,
+    "vaultSetupConfigured": true,
+    "executionNetwork": {
+      "chainId": 11155111,
+      "quote": "0x1c7D4B196Cb0C7B01d743Fbc6116a902379C7238",
+      "position": "0x7b79995e5f793A07Bc00c21412e50Ecae098E7f9"
+    }
+  },
+  "agents": [
+    {
+      "id": "0x26286ce4d945639b89e24022f35a6e6e7b1963f933126fc7332491e9acd5ff07",
+      "name": "Muse Sepolia",
+      "model": "muse-glimmer-30b",
+      "status": "registered-locally-vault-pending",
+      "investmentEligible": false,
+      "chainId": 11155111
+    },
+    {
+      "id": "0x006c0d9546c588ab272f046ea2f716ba3020b1078efa537acddb1ce0bcf53ddd",
+      "name": "Gemma Demo",
+      "model": "gemma-4-26b-a4b",
+      "status": "registered-locally-binding-checked",
+      "investmentEligible": false,
+      "chainId": 10143
+    },
+    {
+      "id": "0xd5083af412bd7922876c428f3555aba21e90ee7ed03e2913ed37e0f96693e1f9",
+      "name": "Muse Demo",
+      "model": "muse-glimmer-30b",
+      "status": "registered-locally-binding-checked",
+      "investmentEligible": false,
+      "chainId": 10143
+    },
+    {
+      "id": "0x550f734ecb97f8bcf800f3855a73b804e9f9a622acc6db6158e19d1b853bbfd9",
+      "name": "Muse",
+      "model": "muse-glimmer-30b",
+      "status": "registered-locally-binding-checked",
+      "investmentEligible": false,
+      "chainId": 10143
+    },
+    {
+      "id": "0xac8b58d31c0464df2efed441e3e0187cf3e16f6b0cdcafce87be86732dc2dd95",
+      "name": "Muse",
+      "model": "muse-glimmer-30b",
+      "status": "registered-locally-binding-checked",
+      "investmentEligible": false,
+      "chainId": 10143
+    },
+    {
+      "id": "0xbc00cf26449e93bf64c799fa4adcdb6423ec14ab2b941e6643fd5cc934a397bc",
+      "name": "azula",
+      "model": "qwen3.8-27b",
+      "status": "registered-locally-binding-checked",
+      "investmentEligible": false,
+      "chainId": 10143
+    },
+    {
+      "id": "0x35ee2fb845f6eb6c358f99a8aa5dd363b5906182445485597e1387ef069a415c",
+      "name": "klaris",
+      "model": "qwen3.8-27b",
+      "status": "registered-locally-binding-checked",
+      "investmentEligible": false,
+      "chainId": 10143
+    }
+  ],
+  "muse": {
+    "reachable": true,
+    "modelIds": [
+      "muse-glimmer-30b"
+    ],
+    "note": "Endpoint identity only; fresh file/process inspection and synthetic worker check still required."
+  },
+  "news": {
+    "capturedAt": "2026-10-30T18:48:02.184Z",
+    "configuredFeeds": [
+      "https://www.coindesk.com/arc/outboundfeeds/rss"
+    ],
+    "items": 25,
+    "freshWithinOneHour": 0,
+    "sources": [
+      {
+        "source": "news:https://www.coindesk.com/arc/outboundfeeds/rss",
+        "available": true,
+        "retrievedAt": "2026-10-30T18:48:02.184Z"
+      },
+      {
+        "source": "news",
+        "available": true,
+        "retrievedAt": "2026-10-30T18:48:02.184Z"
+      }
+    ]
+  },
+  "researchDatabaseBaseline": {
+    "policies": 0,
+    "sessions": 0,
+    "decisions": 0,
+    "evidence": 0,
+    "events": 0,
+    "scope": "Read-only SQLite counts at this preflight; no history reset"
+  }
+}

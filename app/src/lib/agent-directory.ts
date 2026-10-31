@@ -25,11 +25,11 @@ export async function readDirectory(value: unknown): Promise<DirectoryAgent[]> {
       if (!m || m.version !== 'PUMPCOIN-DEPLOYMENT-DRAFT-v1' || m.inferencePolicy !== 'PUMPCOIN-SELF-HOSTED-v1' || m.evidenceLevel !== 'operator-declared' || m.registrationStatus !== 'unpublished-draft') invalid();
       if (!text(m.name, 64) || !address(m.controller) || !address(m.executionKey) || m.controller === m.executionKey || !text(m.model?.id, 100) || !digest(m.model.weightsDigest) || !digest(m.model.runtimeDigest)) invalid();
       const source = new URL(m.model.source); if (source.protocol !== 'https:' || source.username || source.password) invalid();
-      if (!text(m.strategy?.description, 2000) || !digest(m.strategy.codeDigest) || !['MON / USDC', 'WMON / USDC'].includes(m.strategy.pair) || !Array.isArray(m.dependencies) || !m.dependencies.every(d => text(d, 1000))) invalid();
-      if (m.vaultPolicy !== undefined && (m.vaultPolicy.mode !== 'instant-testnet-demo' || m.vaultPolicy.chainId !== 10143 || m.vaultPolicy.configurationNoticeSeconds !== 0 || c?.demoMode !== true || Object.keys(m.vaultPolicy).sort().join(',') !== 'chainId,configurationNoticeSeconds,mode')) invalid();
+      if (!text(m.strategy?.description, 2000) || !digest(m.strategy.codeDigest) || !['MON / USDC', 'WMON / USDC','ETH / USDC','WETH / USDC'].includes(m.strategy.pair) || !Array.isArray(m.dependencies) || !m.dependencies.every(d => text(d, 1000))) invalid();
+      if (m.vaultPolicy !== undefined && (m.vaultPolicy.mode !== 'instant-testnet-demo' || (![10143,11155111].includes(m.vaultPolicy.chainId)||m.vaultPolicy.chainId!==c?.chainId) || m.vaultPolicy.configurationNoticeSeconds !== 0 || c?.demoMode !== true || Object.keys(m.vaultPolicy).sort().join(',') !== 'chainId,configurationNoticeSeconds,mode')) invalid();
       const mandate = m.proposedMandate;
       if (mandate?.quoteDecimals !== 6 || mandate.leverage !== false || !units(mandate.perTradeQuoteUnits) || !units(mandate.maxPositionQuoteUnits) || BigInt(mandate.perTradeQuoteUnits) > BigInt(mandate.maxPositionQuoteUnits) || !Number.isInteger(mandate.slippageBps) || mandate.slippageBps < 1 || mandate.slippageBps > 500) invalid();
-      if (!hash(r.commitment) || keccak256(stringToHex(JSON.stringify(m))) !== r.commitment || !c || c.commitment !== r.commitment || c.controller !== m.controller || c.executionKey !== m.executionKey || !hash(c.runtimeConfigHash) || !/^[a-f0-9]{64}$/.test(c.id) || ![10143, 31337].includes(c.chainId) || !Number.isSafeInteger(c.expiresAt)) invalid();
+      if (!hash(r.commitment) || keccak256(stringToHex(JSON.stringify(m))) !== r.commitment || !c || c.commitment !== r.commitment || c.controller !== m.controller || c.executionKey !== m.executionKey || !hash(c.runtimeConfigHash) || !/^[a-f0-9]{64}$/.test(c.id) || ![10143,11155111,31337].includes(c.chainId) || !Number.isSafeInteger(c.expiresAt)) invalid();
       const origin = new URL(c.origin); if (origin.protocol !== 'http:' || !['localhost', '127.0.0.1', '[::1]'].includes(origin.hostname) || origin.origin !== c.origin) invalid();
       if (r.id !== keccak256(stringToHex(c.id)) || r.localAgentId !== keccak256(stringToHex(JSON.stringify([c.chainId, m.controller, m.name])))) invalid();
       const registered = Date.parse(r.registeredAt);
@@ -53,7 +53,7 @@ export async function readDirectory(value: unknown): Promise<DirectoryAgent[]> {
       if (w.receiptHash !== keccak256(stringToHex(JSON.stringify(receiptBody)))) invalid();
       if (r.binding) {
         const b = r.binding;
-        if (r.status !== 'registered-locally-binding-checked' || b.status !== 'binding-checked-at-block' || b.investmentEligible !== false || b.chainId !== c.chainId || b.mode !== (b.chainId === 10143 ? 'monad-testnet' : 'local-simulation') || !address(b.vault) || !address(b.identityRegistry) || !/^(0|[1-9]\d*)$/.test(b.agentId) || !/^(0|[1-9]\d*)$/.test(b.blockNumber) || !hash(b.blockHash) || !hash(b.configHash) || !date(b.checkedAt)) invalid();
+        if (r.status !== 'registered-locally-binding-checked' || b.status !== 'binding-checked-at-block' || b.investmentEligible !== false || b.chainId !== c.chainId || b.mode !== (b.chainId === 10143 ? 'monad-testnet' : b.chainId===11155111?'ethereum-sepolia':'local-simulation') || !address(b.vault) || !address(b.identityRegistry) || !/^(0|[1-9]\d*)$/.test(b.agentId) || !/^(0|[1-9]\d*)$/.test(b.blockNumber) || !hash(b.blockHash) || !hash(b.configHash) || !date(b.checkedAt)) invalid();
       } else if (r.status !== 'registered-locally-vault-pending') invalid();
       ids.add(r.id);
       const versions = groups.get(r.localAgentId) ?? []; versions.push(r); groups.set(r.localAgentId, versions);

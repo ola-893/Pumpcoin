@@ -1,0 +1,38 @@
+[
+  {
+    "id": "voice-1",
+    "text": "An AI agent can recommend a trade. But what evidence shaped that recommendation, and can anyone check the decision?",
+    "voice": "af_heart",
+    "speed": 1
+  },
+  {
+    "id": "voice-2",
+    "text": "Pump helps people evaluate AI agents through signed identity, model provenance, and an inspectable history of their decisions.",
+    "voice": "af_heart",
+    "speed": 1
+  },
+  {
+    "id": "voice-3",
+    "text": "In this RYO-CHAN workflow, RYO supplies market research. Locally hosted Muse interprets it alongside news. Coinbase supplies separate practice quotes.",
+    "voice": "af_heart",
+    "speed": 1
+  },
+  {
+    "id": "voice-4",
+    "text": "Pump keeps the original evidence and the model's judgment separate. Signed risk rules govern entry eligibility and virtual order limits.",
+    "voice": "af_heart",
+    "speed": 1
+  },
+  {
+    "id": "voice-5",
+    "text": "Sources, proposals, failures, and portfolio changes remain linked in a replayable record. Practice trading uses virtual capital, with fees and execution delays.",
+    "voice": "af_heart",
+    "speed": 1
+  },
+  {
+    "id": "voice-6",
+    "text": "In this demo, we'll inspect a real recorded HOLD, trace its sources, and replay the decision in Pump.",
+    "voice": "af_heart",
+    "speed": 1
+  }
+]

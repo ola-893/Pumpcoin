@@ -1,0 +1,13 @@
+{
+  "scope": "Independent Decimal calculation of authentic unsigned preflight; no model inference or trade",
+  "capturedAt": "2026-10-23T15:46:41.655Z",
+  "providerTime": "2026-10-23T15:46:38.301048694Z",
+  "instrument": "coinbase:ETH-USD",
+  "midpointUsd": "2399.05",
+  "minimumTwoSidedDepthWithin10bpsUsd": "1047597.465817",
+  "midpointMatches": true,
+  "depthMatches": true,
+  "newsItems": 25,
+  "freshWithinOneHour": 0,
+  "ryoPricingAvailable": false
+}

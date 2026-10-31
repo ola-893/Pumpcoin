@@ -9,7 +9,8 @@ export function evaluate(policy:SignedPolicy,sessions:Session[],rows:(id:string)
   const from=hasPair&&windows.every(Boolean)?windows.map(w=>w!.from).sort().at(-1)!:null,to=hasPair&&windows.every(Boolean)?windows.map(w=>w!.to).sort()[0]:null;
   const commonWindow=from&&to&&from<to?{from,to}:null;
   const within=(r:Row)=>!!commonWindow&&r.receipt.body.at>=commonWindow.from&&r.receipt.body.at<=commonWindow.to;
-  const qualified=(r:Row,s:Strategy)=>!!r.receipt.body.trace&&r.evidence.sources.some(v=>v.source==='ryo'&&v.available)&&r.evidence.sources.some(v=>v.source===(s==='multi-kol'?'x':'news')&&v.available);
+  const ryoCovered=(e:Evidence)=>e.sources.some(v=>v.source===(policy.policy.ryoResearch?'ryo-research':'ryo')&&v.available);
+  const qualified=(r:Row,s:Strategy)=>!!r.receipt.body.trace&&(!policy.policy.ryoResearch||ryoCovered(r.evidence))&&r.evidence.sources.some(v=>v.source===(policy.policy.marketRules.source??'ryo')&&v.available)&&r.evidence.sources.some(v=>v.source===(s==='multi-kol'?'x':'news')&&v.available);
   const sets=data.map(({s,rows})=>new Set(rows.filter(r=>within(r)&&qualified(r,s.strategy)).map(r=>r.receipt.body.evidenceHash)));
   const matchedEvidenceCycles=hasPair?[...sets[0]].filter(hash=>sets[1].has(hash)).length:0;
   const lanes=data.map(({s,rows:r},i)=>{
@@ -20,7 +21,7 @@ export function evaluate(policy:SignedPolicy,sessions:Session[],rows:(id:string)
     if(points.length>=2&&points.every(x=>x.v.equity!==null)&&BigInt(first.v.equity!)>0n){let peak=BigInt(first.v.equity!),dd=0;for(const point of points){const eq=BigInt(point.v.equity!);if(eq>peak)peak=eq;dd=Math.max(dd,Number((peak-eq)*10000n/peak));}period={from:first.at,to:last!.at,openingEquity:first.v.equity!,closingEquity:last!.v.equity!,returnBps:Number((BigInt(last!.v.equity!)-BigInt(first.v.equity!))*10000n/BigInt(first.v.equity!)),drawdownBps:dd,closedPositions:last!.v.closed-first.v.closed};}
     return {sessionId:s.id,strategy:s.strategy,window:windows[i],cycles:r.length,commonWindowCycles:r.filter(within).length,period,
       accepted:r.filter(x=>x.receipt.body.outcome==='accepted').length,holds:r.filter(x=>x.receipt.body.outcome==='hold').length,blocked:r.filter(x=>x.receipt.body.outcome==='blocked').length,errors:r.filter(x=>x.receipt.body.outcome==='error').length,
-      ryoAvailable:r.filter(x=>x.evidence.sources.some(v=>v.source==='ryo'&&v.available)).length,strategySourceAvailable:r.filter(x=>x.evidence.sources.some(v=>v.source===(s.strategy==='multi-kol'?'x':'news')&&v.available)).length,
+      ryoAvailable:r.filter(x=>ryoCovered(x.evidence)).length,strategySourceAvailable:r.filter(x=>x.evidence.sources.some(v=>v.source===(s.strategy==='multi-kol'?'x':'news')&&v.available)).length,
       meanInferenceMs:durations.length?Math.round(durations.reduce((a,b)=>a+b,0)/durations.length):null,providerCost:null,originality:'Requires human review; no automatic innovation score.'};});
   return {policyHash:policy.hash,commonWindow,matchedEvidenceCycles,lanes,
     conclusion:!commonWindow?'Comparison is inconclusive: both strategies need observations over a common window.':!matchedEvidenceCycles||lanes.some(l=>!l.period||!l.period.closedPositions)?'Comparison is inconclusive: shared qualified evidence and closed-position samples are insufficient. No winner is assigned.':'Overlapping period metrics and shared evidence are available. Boundaries and coverage still differ; no winner or profitability claim is assigned.'};

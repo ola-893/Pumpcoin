@@ -1,0 +1,17 @@
+External Chrome native accessibility observation. Read-only preflight, not an agent decision.
+Profile: Muse Sepolia, /agents/0xd91de8b48cc02151ebed8ee7875fd74b03635bfe9c590736245df6b5c3590240
+Selected market source: Coinbase public USD spot book · no API key
+Observed 10/23/2026, 4:46:41 PM · 1 mapped markets · 25 normalized news items.
+coinbase-exchange:ETH: observed
+coinbase-exchange: observed
+ETH · coinbase-exchange
+Observed midpoint 2,399.05 virtual USD · observed depth / liquidity 1,047,597.4658 virtual USD · provider time 10/23/2026, 4:46:38 PM
+Instrument authorization: coinbase:ETH-USD | ETH | coinbase-exchange
+Risk coverage: unavailable. The quote is an observation, not a token-safety verdict or guaranteed fill.
+
+Time zone: Africa/Lagos, UTC+01:00.
+Matches browser-helper-preflight.json: capturedAt 2026-10-23T15:46:41.655Z;
+provider observedAt 2026-10-23T15:46:38.301Z; price 2399050000 micro-USD;
+depth 1047597465817 micro-USD. Display formatting rounds depth to four decimal places.
+The helper call returned the cached browser source-check capture without new provider requests.
+Native automation intermittently returned noWindowsAvailable; keyboard navigation completed the probe.

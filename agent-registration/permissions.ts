@@ -6,7 +6,7 @@ import { strategyBindingHash, riskBindingHash, type Prepared } from './core.js';
 export async function permissionStatus(p: Prepared, vault: string, c: VaultNetwork, client: any = vaultClient(c)) {
   const address = getAddress(vault), block = await client.getBlock({ blockTag: 'latest' });
   await networkChecks(c, client, block.number);
-  const artifact = vaultArtifact(p.manifest.vaultPolicy?.mode === 'instant-testnet-demo'), code = await client.getCode({ address, blockNumber: block.number });
+  const artifact = vaultArtifact(p.manifest.vaultPolicy?.mode === 'instant-testnet-demo', c.chainId), code = await client.getCode({ address, blockNumber: block.number });
   if (!code || normalized(code, artifact.deployedBytecode.immutableReferences) !== normalized(artifact.deployedBytecode.object, artifact.deployedBytecode.immutableReferences)) throw new Error('This vault needs the reviewed autonomy-enabled deployment before granting permissions.');
   const read = (functionName: string, args: unknown[] = []) => client.readContract({ address, abi: autonomousAbi, functionName, args, blockNumber: block.number });
   const names = ['admin', 'manager', 'registrationCommitment', 'currentConfigHash', 'paused', 'adapter', 'valuationSource', 'tradingPermission', 'managerVersion', 'tradeConfigVersion', 'strategyHash', 'riskHash', 'perTradeCap', 'maxPositionValue', 'asset', 'positionAsset'];
@@ -42,12 +42,12 @@ export async function permissionPlan(p: Prepared, vault: string, c: VaultNetwork
 
 export async function executionFundingPlan(p: Prepared, vault: string, c: VaultNetwork, client: any = vaultClient(c)) {
   await permissionStatus(p, vault, c, client); // Verify current declaration and authority before offering a destination.
-  // Covers the reviewed worker's 0.1 MON reserve plus one 0.1 MON transaction cap.
-  const from = getAddress(p.manifest.controller), to = getAddress(p.manifest.executionKey), amount = 200000000000000000n;
+  const from = getAddress(p.manifest.controller), to = getAddress(p.manifest.executionKey), amount = c.chainId === 11155111 ? 100000000000000n : 200000000000000000n;
+  const fundingLabel = c.chainId === 11155111 ? '0.0001 testnet ETH' : '0.2 testnet MON';
   const code = await client.getCode({ address: to }); if (code && code !== '0x') throw new Error('Execution signer must be an EOA for this funding flow.');
   const gas = await client.estimateGas({ account: from, to, value: amount }), fee = gas * 12n / 10n * await client.getGasPrice();
-  const balance = await client.getBalance({ address: from }); if (balance < amount + fee) throw new Error('Controller needs 0.2 testnet MON plus gas to fund this agent.');
+  const balance = await client.getBalance({ address: from }); if (balance < amount + fee) throw new Error(`Controller needs ${fundingLabel} plus gas to fund this agent.`);
   return { chainId: c.chainId, from, to, data: '0x' as Hex, value: `0x${amount.toString(16)}` as Hex, gas: `0x${(gas * 12n / 10n).toString(16)}` as Hex,
     executionFunding: { controller: from, manager: to, amount: amount.toString() }, quote: { expiresAt: Date.now() + 60000 },
-    scope: 'Send 0.2 testnet MON to this registered execution wallet for gas, covering its 0.1 MON reserve and one maximum-budget trade. This grants no vault permission and is not an investor deposit.' };
+    scope: `Send ${fundingLabel} to this registered execution wallet for gas. Worker spending and reserve limits must be reviewed separately. This grants no vault permission and is not an investor deposit.` };
 }

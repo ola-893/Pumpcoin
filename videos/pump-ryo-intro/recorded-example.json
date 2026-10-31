@@ -1,0 +1,8 @@
+{
+  "registration": "0x19e7d9336937879d074a36f5abb7708ddde0ef701e06852484f3efac4daacf3c",
+  "receipt": "0x805d8809155f3695ee77a845a2a18a45ca244fe04ab2d5c2995a6aa7a1792d02",
+  "evidence": "0xd903182153fe4ba0c2dc6a05b261b93fb78177a83fa3f477e15405cc615e33e4",
+  "at": "2026-10-31T15:57:06.416Z",
+  "action": "HOLD",
+  "scope": "Actual stored outcome; no live data fetch, no claim of filled trade."
+}

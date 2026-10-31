@@ -5,7 +5,7 @@ import { Link } from 'react-router-dom';
 export function Eyebrow({ children }: { children: ReactNode }) { return <p className="eyebrow">{children}</p>; }
 export function Badge({ children, tone = 'purple' }: { children: ReactNode; tone?: 'purple' | 'neutral' | 'amber' | 'green' }) { return <span className={`badge ${tone}`}><span className="badge-dot" />{children}</span>; }
 export function ActionLink({ to, children, secondary = false }: { to: string; children: ReactNode; secondary?: boolean }) { return <Link to={to} className={`button ${secondary ? 'secondary' : ''}`}>{children}<ArrowUpRight size={17} /></Link>; }
-export function PageTitle({ eyebrow, title, body, children }: { eyebrow: string; title: ReactNode; body: string; children?: ReactNode }) { return <div className="page-heading"><div><Eyebrow>{eyebrow}</Eyebrow><h1>{title}</h1><p className="lede">{body}</p></div>{children}</div>; }
+export function PageTitle({ eyebrow, title, body, children }: { eyebrow?: string; title: ReactNode; body?: string; children?: ReactNode }) { return <div className="page-heading"><div>{eyebrow&&<Eyebrow>{eyebrow}</Eyebrow>}<h1>{title}</h1>{body&&<p className="lede">{body}</p>}</div>{children}</div>; }
 export function Note({ children }: { children: ReactNode }) { return <div className="note"><AlertCircle size={17} /><div>{children}</div></div>; }
 export function Empty({ title, children }: { title: string; children: ReactNode }) { return <div className="empty"><span className="empty-mark">∅</span><h2>{title}</h2>{children}</div>; }
 export function CopyValue({ value, label }: { value: string; label: string }) {

@@ -14,12 +14,12 @@ export function requireCreation(plan: CreationPlan, address: Address, chainId: n
 
 /** The CLI owns this signer. No HTTP handler imports or invokes this module. */
 export async function deployReviewed(options: {
-  directory: string; id: Hex; kind: DeploymentKind; chainId: 10143 | 31337;
+  directory: string; id: Hex; kind: DeploymentKind; chainId: 10143 | 11155111 | 31337;
   account: PrivateKeyAccount; client: any; broadcastClient: any; broadcast: boolean;
   maxCostWei: bigint; prepare: () => Promise<CreationPlan>; confirm: (hash: Hex, plan: CreationPlan) => Promise<unknown>;
 }): Promise<Result> {
   const { account, client, id, kind, chainId, maxCostWei } = options;
-  if (!/^0x[0-9a-f]{64}$/.test(id) || !['vault', 'trading', 'guard', 'native', 'native-guard', 'pool-funder'].includes(kind) || ![10143,31337].includes(chainId) || maxCostWei <= 0n) throw new Error('Invalid deployment scope.');
+  if (!/^0x[0-9a-f]{64}$/.test(id) || !['vault', 'trading', 'guard', 'native', 'native-guard', 'pool-funder'].includes(kind) || ![10143,11155111,31337].includes(chainId) || maxCostWei <= 0n) throw new Error('Invalid deployment scope.');
   if (await client.getChainId() !== chainId) throw new Error('Deployment RPC is on the wrong chain.');
   await mkdir(options.directory, { recursive: true, mode: 0o700 });
   const file = join(options.directory, `${id.slice(2)}-${kind}.json`);
@@ -36,7 +36,7 @@ export async function deployReviewed(options: {
       const maxFeePerGas: bigint = fees.maxFeePerGas, maxPriorityFeePerGas: bigint = fees.maxPriorityFeePerGas;
       if (maxFeePerGas <= 0n || maxPriorityFeePerGas < 0n || maxPriorityFeePerGas > maxFeePerGas || gas * maxFeePerGas + BigInt(plan.value) > maxCostWei) throw new Error('Deployment exceeds the maximum gas cost.');
       const balance = await client.getBalance({ address: account.address });
-      if (balance < gas * maxFeePerGas + BigInt(plan.value)) throw new Error('Deployer has insufficient test-MON for the maximum gas cost.');
+      if (balance < gas * maxFeePerGas + BigInt(plan.value)) throw new Error('Deployer has insufficient testnet native tokens for the maximum gas cost.');
       if (!options.broadcast) return { state: 'planned', from: account.address, kind, estimatedMaximumCostWei: String(gas * maxFeePerGas + BigInt(plan.value)) };
       const nonce = await client.getTransactionCount({ address: account.address, blockTag: 'pending' });
       if (nonce !== await client.getTransactionCount({ address: account.address, blockTag: 'latest' })) throw new Error('Resolve the controller’s pending transaction before deploying.');

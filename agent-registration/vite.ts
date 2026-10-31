@@ -1,3 +1,4 @@
+import {executionServices} from './execution-services.js';
 import { requireBrowserTradeAction } from './browser-actions.js';
 import { requestOracleRefresh } from './oracle-demand.js';
 import { randomBytes } from 'node:crypto';
@@ -9,32 +10,25 @@ import { registrationService } from './service.js';
 import { configuredSigner } from './signer.js';
 import { autonomyRuntime } from './autonomy-runtime.js';
 import { agentStateService } from './agent-state.js';
-import { liveVaultService } from './live-vault.js';
 let signer: ReturnType<typeof configuredSigner> | undefined;
-import { tradingService } from './trading.js';
-import { nativeInvestmentService } from './native-investment.js';
-import { poolFundingService } from './pool-funding.js';
 import { researchService } from '../research/service.js';
 import { ResearchStore } from '../research/store.js';
 export const REGISTRATION_API = '/api/agent-registration';
-const defaultNetwork = fileURLToPath(new URL('../deployments/pumpcoin-vault-network.json', import.meta.url));
-export function registrationPlugin(service = registrationService({ signer: process.env.PUMPCOIN_SIGNER_PASSWORD_FILE ? () => signer ??= configuredSigner() : undefined, vaultNetwork: JSON.parse(readFileSync(process.env.PUMPCOIN_VAULT_NETWORK_CONFIG ?? defaultNetwork, 'utf8')), directory: fileURLToPath(new URL('../.local/agent-registrations/', import.meta.url)), config: process.env.PUMPCOIN_BINDING_CONFIG ? JSON.parse(readFileSync(process.env.PUMPCOIN_BINDING_CONFIG, 'utf8')) : undefined }), pythApiKey?: string) {
+const defaultNetwork = fileURLToPath(new URL('../deployments/pumpcoin-sepolia-vault-network.json', import.meta.url));
+export function registrationPlugin(service = registrationService({ signer: process.env.PUMPCOIN_SIGNER_PASSWORD_FILE ? () => signer ??= configuredSigner() : undefined, vaultNetwork: JSON.parse(readFileSync(process.env.PUMPCOIN_VAULT_NETWORK_CONFIG ?? defaultNetwork, 'utf8')), historicalVaultNetworks:[JSON.parse(readFileSync(new URL('../deployments/pumpcoin-vault-network.json',import.meta.url),'utf8'))], directory: fileURLToPath(new URL('../.local/agent-registrations/', import.meta.url)), config: process.env.PUMPCOIN_BINDING_CONFIG ? JSON.parse(readFileSync(process.env.PUMPCOIN_BINDING_CONFIG, 'utf8')) : undefined }), pythApiKey?: string) {
   const token = randomBytes(32).toString('hex');
   const research = researchService({ store: new ResearchStore(fileURLToPath(new URL('../.local/research/pump.sqlite', import.meta.url))),
     resolve: id => service.researchPrepared(id), signerConfigured: service.executionSignerConfigured,
     sign: async (record, message) => { const store = await (signer ??= configuredSigner()); if (!store) throw new Error('Configure the local execution signer.'); const account = await store.account(record.manifest.controller, record.manifest.name); if (account.address !== record.manifest.executionKey) throw new Error('Research signer differs from the registered agent.'); return account.signMessage({message}); } });
   const runtime = autonomyRuntime({ configFile: process.env.PUMPCOIN_AUTONOMY_CONFIG, configDirectory: process.env.PUMPCOIN_AUTONOMY_DIRECTORY });
-  const live = liveVaultService(JSON.parse(readFileSync(process.env.PUMPCOIN_VAULT_NETWORK_CONFIG ?? defaultNetwork, 'utf8')), () => service.records());
-  const agentState = agentStateService(() => service.records(), live, runtime);
-  const trading = tradingService(JSON.parse(readFileSync(process.env.PUMPCOIN_VAULT_NETWORK_CONFIG ?? defaultNetwork, 'utf8')), JSON.parse(readFileSync(new URL('../deployments/pumpcoin-trading-network.json', import.meta.url), 'utf8')), fileURLToPath(new URL('../.local/vault-trading/', import.meta.url)), () => service.records(), undefined, () => pythApiKey ?? process.env.PUMPCOIN_PYTH_API_KEY);
-  const native = nativeInvestmentService(JSON.parse(readFileSync(process.env.PUMPCOIN_VAULT_NETWORK_CONFIG ?? defaultNetwork, 'utf8')), JSON.parse(readFileSync(new URL('../deployments/pumpcoin-trading-network.json', import.meta.url), 'utf8')), fileURLToPath(new URL('../.local/vault-native/', import.meta.url)), () => service.records(), trading);
-  const pool = poolFundingService(JSON.parse(readFileSync(process.env.PUMPCOIN_VAULT_NETWORK_CONFIG ?? defaultNetwork, 'utf8')), JSON.parse(readFileSync(new URL('../deployments/pumpcoin-trading-network.json', import.meta.url), 'utf8')), fileURLToPath(new URL('../.local/vault-liquidity/', import.meta.url)), trading);
+  const {live,trading,native,pool}=executionServices(()=>service.records(),()=>pythApiKey??process.env.PUMPCOIN_PYTH_API_KEY);
+  const agentState=agentStateService(()=>service.records(),live,runtime);
   const send = (res: ServerResponse, code: number, body: unknown) => { res.writeHead(code, { 'Content-Type': 'application/json', 'Cache-Control': 'no-store', 'X-Content-Type-Options': 'nosniff' }); res.end(JSON.stringify(body)); };
   async function handle(req: IncomingMessage, res: ServerResponse, next: () => void) {
     if (!req.url?.startsWith(REGISTRATION_API)) { next(); return; }
     if (!allowedRequest(req)) { send(res, 403, { error: 'Registration helper accepts only this local PumpCoin origin.' }); return; }
     const origin = `http://${req.headers.host}`;
-    if (req.url === REGISTRATION_API + '/status' && req.method === 'GET') { send(res, 200, { token, configured: service.configured, vaultSetupConfigured: service.vaultSetupConfigured, executionSignerConfigured: service.executionSignerConfigured }); return; }
+    if (req.url === REGISTRATION_API + '/status' && req.method === 'GET') { send(res, 200, { token, configured: service.configured, vaultSetupConfigured: service.vaultSetupConfigured, executionSignerConfigured: service.executionSignerConfigured,executionNetwork:service.executionNetwork }); return; }
     if (req.headers['x-pumpcoin-registration-token'] !== token) { send(res, 403, { error: 'Refresh to establish a local registration session.' }); return; }
     try {
       if (req.url === REGISTRATION_API + '/records' && req.method === 'GET') { send(res, 200, { records: await service.records() }); return; }
@@ -44,12 +38,12 @@ export function registrationPlugin(service = registrationService({ signer: proce
       const body = JSON.parse(Buffer.concat(chunks).toString('utf8'));
       if (!body || typeof body !== 'object' || Array.isArray(body)) throw new Error('Invalid registration request.');
       const route = req.url.slice(REGISTRATION_API.length);
-      const researchFields: Record<string,string[]> = { '/research-state':['id'], '/research-sources':['id','symbol'], '/research-challenge':['id','policy'], '/research-authorize':['id','challengeId','controllerSignature'], '/research-run':['id','sessionId'], '/research-start':['id','sessionId'], '/research-stop':['id','sessionId'], '/research-history':['id','sessionId'], '/research-export':['id','sessionId'] };
+      const researchFields: Record<string,string[]> = { '/research-state':['id'], '/research-sources':['id','symbol','marketSource'], '/research-challenge':['id','policy'], '/research-authorize':['id','challengeId','controllerSignature'], '/research-run':['id','sessionId'], '/research-start':['id','sessionId'], '/research-stop':['id','sessionId'], '/research-history':['id','sessionId'], '/research-export':['id','sessionId'] };
       if (researchFields[route]) {
         if (Object.keys(body).sort().join() !== researchFields[route].slice().sort().join()) throw new Error('Invalid research request fields.');
         let result: unknown;
         if (route === '/research-state') result = {research:await research.view(body.id)};
-        if (route === '/research-sources') result = {evidence:await research.sourceCheck(body.id,body.symbol)};
+        if (route === '/research-sources') result = {evidence:await research.sourceCheck(body.id,body.symbol,body.marketSource)};
         if (route === '/research-challenge') result = {challenge:await research.challenge(body.id,body.policy,origin)};
         if (route === '/research-authorize') result = {policy:await research.authorize(body.id,body.challengeId,body.controllerSignature,origin)};
         if (route === '/research-run') { await research.kickoff(body.id,body.sessionId); result={started:true}; }

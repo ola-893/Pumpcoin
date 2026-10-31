@@ -1,0 +1,7 @@
+{
+  "scope": "Historical input diagnostic; no live record modified.",
+  "startedAt": "2026-10-30T20:25:06.437Z",
+  "finishedAt": "2026-10-30T20:28:26.876Z",
+  "elapsedMs": 200439,
+  "error": "Diagnostic output was incomplete."
+}

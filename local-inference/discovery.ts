@@ -2,7 +2,7 @@ import { execFile } from 'node:child_process';
 import { promisify } from 'node:util';
 import { createHash } from 'node:crypto';
 import { open, realpath, stat } from 'node:fs/promises';
-import { basename, dirname, join } from 'node:path';
+import { basename, dirname, join, isAbsolute, resolve } from 'node:path';
 const exec = promisify(execFile);
 import type { Detection, Progress } from './types.js';
 export type { Detection, Progress } from './types.js';
@@ -27,6 +27,11 @@ export function mappedNames(output: string): string[] {
 export function mappedWeights(names: string[], path: string): void {
   const gguf = names.filter(p => p.endsWith('.gguf'));
   if (gguf.length !== 1 || gguf[0] !== path) throw new Error('Automatic detection requires exactly one mapped GGUF. Split weights and projectors need a complete manual manifest.');
+}
+export function reportedWeightsPath(path:string,processDirectory?:string):string {
+  if(isAbsolute(path))return path;
+  if(!processDirectory||!isAbsolute(processDirectory))throw new Error('Cannot resolve relative model weights without the inference process directory.');
+  return resolve(processDirectory,path);
 }
 export function runtimeNames(names: string[]): string[] {
   const binaries = names.filter(p => basename(p) === 'llama-server');
@@ -56,7 +61,13 @@ async function inspect(base: URL): Promise<Snapshot> {
   if (typeof props.model_path !== 'string' || !props.model_path.endsWith('.gguf')) throw new Error('The server must report the GGUF file it loaded.');
   const executable = await realpath((await command('/bin/ps', ['-p', String(pid), '-o', 'comm='])).trim());
   if (!runtime.includes(executable) || basename(executable) !== 'llama-server') throw new Error('The listening process executable is not llama-server.');
-  const path = await realpath(props.model_path);
+  let processDirectory:string|undefined;
+  if(!isAbsolute(props.model_path)){
+    const directories=mappedNames(await command('/usr/sbin/lsof',['-n','-a','-p',String(pid),'-d','cwd','-Fn']));
+    if(directories.length!==1)throw new Error('The inference process working directory is ambiguous.');
+    processDirectory=directories[0];
+  }
+  const path = await realpath(reportedWeightsPath(props.model_path,processDirectory));
   mappedWeights(names, path);
   const model = props.model_alias;
   if (typeof model !== 'string' || model.length > 100 || !model.trim() || !Array.isArray(models.data) || !models.data.some((x: any) => x.id === model)) throw new Error('Model identity is inconsistent between local server endpoints.');

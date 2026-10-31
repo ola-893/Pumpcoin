@@ -1,0 +1,59 @@
+{
+  "fps": 30,
+  "seams": [
+    {
+      "id": "question-problem",
+      "cut": 4,
+      "technique": "cut-the-curve LEFT",
+      "exit": {
+        "selector": "#stage-question",
+        "axis": "x",
+        "dir": -1,
+        "dur": 0.34
+      },
+      "entry": {
+        "selector": "#stage-problem",
+        "axis": "x",
+        "dir": -1,
+        "dur": 0.42,
+        "travel": 12
+      }
+    },
+    {
+      "id": "problem-solution",
+      "cut": 8,
+      "technique": "cut-the-curve LEFT",
+      "exit": {
+        "selector": "#stage-problem",
+        "axis": "x",
+        "dir": -1,
+        "dur": 0.34
+      },
+      "entry": {
+        "selector": "#stage-solution",
+        "axis": "x",
+        "dir": -1,
+        "dur": 0.42,
+        "travel": 12
+      }
+    },
+    {
+      "id": "solution-brand",
+      "cut": 15,
+      "technique": "cut-the-curve LEFT",
+      "exit": {
+        "selector": "#stage-solution",
+        "axis": "x",
+        "dir": -1,
+        "dur": 0.34
+      },
+      "entry": {
+        "selector": "#stage-brand",
+        "axis": "x",
+        "dir": -1,
+        "dur": 0.42,
+        "travel": 12
+      }
+    }
+  ]
+}

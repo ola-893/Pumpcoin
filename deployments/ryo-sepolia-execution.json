@@ -1,0 +1,425 @@
+{
+  "version": "PUMPCOIN-SEPOLIA-EXECUTION-PROOF-v1",
+  "manifest": {
+    "version": "PUMPCOIN-SEPOLIA-EXECUTION-VALIDATION-v1",
+    "name": "Pump RYO execution validation — infrastructure only",
+    "chainId": 11155111,
+    "controller": "0xe26468ae02368a75DBDBea58F367B7313942ad26",
+    "executionKey": "0xb349FDB8A798cDa18035896766dEa8990Dd2C177",
+    "modelInference": false,
+    "ryoEvidence": false,
+    "purpose": "Controller-driven testnet plumbing validation. No AI agent enrollment or performance claim.",
+    "strategy": "Buy 0.01 test-USDC of WETH, sell the acquired WETH, redeem capital. Fixed infrastructure test, not an AI recommendation.",
+    "risk": {
+      "tradeCapQuoteUnits": "100000",
+      "positionCapQuoteUnits": "1000000",
+      "slippageBps": 50,
+      "maximumGasWei": "1000000000000000",
+      "maximumLpNativeWei": "100000000000000",
+      "maximumLpQuoteUnits": "200000",
+      "capitalDepositQuoteUnits": "1000000",
+      "nativeInvestmentWei": "1000000000000"
+    },
+    "network": {
+      "chainId": 11155111,
+      "rpcUrl": "https://ethereum-sepolia-rpc.publicnode.com",
+      "identityRegistry": "0x8004A818BFB912233c491871b3d84c89A494BD9e",
+      "identityCodeHash": "0xd0e45b1d89fa9b6cc7e97c1f155d64180e5c232aaccf9900ef9d4fd738c02b41",
+      "identityImplementation": "0x7274e874CA62410a93Bd8bf61c69d8045E399c02",
+      "identityImplementationCodeHash": "0xa5f9624ea85e45b3f4b8558581f03bfb3e6cefab278d7bf0500ec9bd065dc16f",
+      "quote": "0x1c7D4B196Cb0C7B01d743Fbc6116a902379C7238",
+      "quoteCodeHash": "0xcd3f29e2ea9c61dadd48bfeaf8b2884b6de9dfee7bf45329452c4c33d0868ceb",
+      "position": "0x7b79995e5f793A07Bc00c21412e50Ecae098E7f9",
+      "positionCodeHash": "0x9efe19754cd95e93215f98c6ad2eafc84c857315bf8d39607cd485281a8d98ee",
+      "positionDecimals": 18,
+      "observedAtBlock": "11968666",
+      "observedAtBlockHash": "0x624c9a0e0382cf97c2a43d23daa13ef3461dfee4b4bbb5ca544726e58579ea4c",
+      "sources": [
+        "https://developers.circle.com/stablecoins/usdc-contract-addresses",
+        "https://github.com/erc-8004/erc-8004-contracts",
+        "https://developers.uniswap.org/deployments.json"
+      ]
+    },
+    "market": {
+      "chainId": 11155111,
+      "oracle": "chainlink",
+      "poolManager": "0xE03A1074c86CFeDd5C142C4F04F1a1536e203543",
+      "poolManagerCodeHash": "0x09930125a49f5b95caf8052991cc14d1240dca8b43f42b899115b86867e4bce1",
+      "stateView": "0xE1Dd9c3fA50EDB962E442f60DfBc432e24537E4C",
+      "stateViewCodeHash": "0xaaed3db8eb8ebde8014ce4c8a3938496687f4c6374e17a7d735288f6c65ceb9e",
+      "fee": 1000,
+      "tickSpacing": 10,
+      "minimumQuoteLiquidity": "100000000",
+      "maxDeviationBps": 500,
+      "maxStaleness": 7200,
+      "maxConfidenceBps": 100,
+      "monOracle": {
+        "proxy": "0x694AA1769357215DE4FAC081bf1f309aDC325306",
+        "aggregator": "0x719E22E3D4b690E5d96cCb40619180B5427F14AE",
+        "proxyCodeHash": "0x9190afba2a699a9627d64ed68c7cc60e4005a8830b33183c4413b4e1a93b9ccd",
+        "aggregatorCodeHash": "0xe8d8ecdad84b79464c08db80dac98dfb3727d14cabf9ad0fcd248c3a0d246712",
+        "decimals": 8
+      },
+      "usdOracle": {
+        "proxy": "0xA2F78ab2355fe2f984D808B5CeE7FD0A93D5270E",
+        "aggregator": "0x0524b20f305e2e2F7990B9AfE28B4D5e4a76eA0C",
+        "proxyCodeHash": "0x9190afba2a699a9627d64ed68c7cc60e4005a8830b33183c4413b4e1a93b9ccd",
+        "aggregatorCodeHash": "0xe8d8ecdad84b79464c08db80dac98dfb3727d14cabf9ad0fcd248c3a0d246712",
+        "decimals": 8
+      },
+      "quoteMaxStaleness": 172800,
+      "nativeSymbol": "ETH",
+      "observedAtBlock": "11968666",
+      "observedAtBlockHash": "0x624c9a0e0382cf97c2a43d23daa13ef3461dfee4b4bbb5ca544726e58579ea4c",
+      "sources": [
+        "https://developers.uniswap.org/docs/protocols/v4/deployments",
+        "https://reference-data-directory.vercel.app/feeds-ethereum-testnet-sepolia.json"
+      ],
+      "scope": "Ethereum Sepolia test tokens only. Project-funded, hook-free demo pool; not mainnet price discovery or investment performance."
+    },
+    "creationHashes": {
+      "PumpCoinSepoliaDemoRegisteredVault": "0x41042e3637cfe06cd29021aed5a0f361f1889bea00a9da23b0f0c49515eb7814",
+      "SepoliaChainlinkVaultTradingBundle": "0x7372284853231895440d2de2bfb57386482a50e5b5e650b15496579ee11c7475",
+      "TestnetPoolFunder": "0xbce6e7d298f4e496d960b33d5bedb38306f233e8fec7f434f41b9608d6ba6251",
+      "NativeVaultInvestorGateway": "0x2dfb5067495d9bacb655b8f697d94e36049e8cb6fed17f555061c7232388d883"
+    }
+  },
+  "commitment": "0xc3fc91a10bab523dbc34725627ad69326cf2ebe51e32e4ce72499285e2304d12",
+  "verifiedAt": "2026-10-23T11:24:23.298Z",
+  "chainId": 11155111,
+  "contracts": {
+    "vault": {
+      "address": "0x54dbdFD1a91fa86048e9d9A96b309B4CFFEB5Ff5",
+      "runtimeCodeHash": "0x56911c26f16f89e608120ef8f301d80e400c789e801eb2e57a5397349a090574"
+    },
+    "bundle": {
+      "address": "0x3fbACDf7a21c23EB6aa56E34cE8F5e8d0d1aa89e",
+      "runtimeCodeHash": "0xc007c7f93d8ec6b64a9a647b2c4a71ca764badd5db7057f39ff51db7c8c3c1ed"
+    },
+    "source": {
+      "address": "0xd9Ef61D081250A64aC39707863Ffd385e85d9d7f",
+      "runtimeCodeHash": "0xc2fffa6c2f08668275602f57aea8650eb88d950197a8d14aaa028879d2216c18"
+    },
+    "adapter": {
+      "address": "0x0d429Fd58Ffa02ff79f625BdC8D1B15F5A2B4C3d",
+      "runtimeCodeHash": "0x567d28249ea5e7f33c65fab46198aae19f1fbd8238da23ffe3e22d5cf583a7e2"
+    },
+    "venue": {
+      "address": "0x2ae3895403299014b2DDb54A5EA0a2eb160ebece",
+      "runtimeCodeHash": "0xf7c40489f88c70c6b2bc6b7bc23537bc818157360dd8d94ceb4b645c9d0b91f4"
+    },
+    "gateway": {
+      "address": "0x1E00E6371677E5078b7204C9B168c6892aCEfbd0",
+      "runtimeCodeHash": "0x8fdf7390e1b1090a7ac25482fdc1b5e2e6b274154240e639a4cb6b459448fdac"
+    },
+    "funder": {
+      "address": "0x184299685D95F31cCd4ADc0222367C4bd6Df0631",
+      "runtimeCodeHash": "0x1b5648cb57923e3ef47613fa224a82d2d9f30427d346243a68320b5dc722b661"
+    },
+    "nativeGateway": {
+      "address": "0x03b54B7C55FdfD4956077381c6EF1A983AfcfCb5",
+      "runtimeCodeHash": "0xd7e7ac51122efa437db5f122ad46555a3c60427ed7c62f143ff1613034926687"
+    }
+  },
+  "steps": [
+    {
+      "step": "deploy-vault",
+      "hash": "0x04f5962e138ebaa186cd8cb532e003216a80dfb1817d67e275d279a45c612d54",
+      "address": "0x54dbdfd1a91fa86048e9d9a96b309b4cffeb5ff5",
+      "blockNumber": "11976305",
+      "blockHash": "0x02ed571cebd05c12c8d6aef56fc2d57f101938501599ab17e9c931db0b6dbdc5",
+      "gasPaidWei": "696594040",
+      "valueWei": "0"
+    },
+    {
+      "step": "deploy-trading",
+      "hash": "0x45ac15376503b4e86b9604b5ef601de3d5f5494985caa97df48c8621f78b19b4",
+      "address": "0x3fbacdf7a21c23eb6aa56e34ce8f5e8d0d1aa89e",
+      "blockNumber": "11976312",
+      "blockHash": "0x614f72e6a9f21e51bc813ce3cf09c7b9238a93f0bfd5e211436b022f756ea875",
+      "gasPaidWei": "543427151",
+      "valueWei": "0"
+    },
+    {
+      "step": "deploy-pool-funder",
+      "hash": "0x91b802e01244bfe8d3239cc618d6c8030c0063f71e380c5e41d1e04bd08825ce",
+      "address": "0x184299685d95f31ccd4adc0222367c4bd6df0631",
+      "blockNumber": "11976313",
+      "blockHash": "0x1f73364caa94fe49712b5472e32aa68652d86e8a27a552ce3e1747fbcf4b5968",
+      "gasPaidWei": "208380781",
+      "valueWei": "0"
+    },
+    {
+      "step": "approve-pool-quote",
+      "hash": "0xe03fbc77b54d986ebd104e4eb15767d2dbdc2470352145012f459815be5a0e6c",
+      "address": null,
+      "blockNumber": "11976315",
+      "blockHash": "0x4470dd6100e167521db1f9a634597e11990c94d0b0cd7529a35e20cc4710d1c5",
+      "gasPaidWei": "2341869",
+      "valueWei": "0"
+    },
+    {
+      "step": "seed-pool",
+      "hash": "0xd63c7077485e457251267776bd2f9edd7c61647469782c346df4174016c16c33",
+      "address": null,
+      "blockNumber": "11976316",
+      "blockHash": "0xf260abd9be6e9d7dd976f1bad3eeff21232382943a5d6bdc25fa202cf2e71d76",
+      "gasPaidWei": "18203294",
+      "valueWei": "100000000000000"
+    },
+    {
+      "step": "propose-config",
+      "hash": "0xa51b5ae984eb570ccf60c1a1926a981ddaa2bf9bf3ac72aa5088176008db8795",
+      "address": null,
+      "blockNumber": "11976317",
+      "blockHash": "0xa5167ab46a3229bde45236dc3996f1b206544201fb544cae7594dbb81e576488",
+      "gasPaidWei": "20078751",
+      "valueWei": "0"
+    },
+    {
+      "step": "apply-config",
+      "hash": "0x25ff1e2ecdb1add222be74269044dab8ad3234bcb185138b698a923538c951b5",
+      "address": null,
+      "blockNumber": "11976318",
+      "blockHash": "0xfe04dc5cb97c060fb45bad9553f6a656b7f0d0824986f2026b461a2ea4ab87b6",
+      "gasPaidWei": "30857822",
+      "valueWei": "0"
+    },
+    {
+      "step": "unpause",
+      "hash": "0x80c2d3d1b3cda506ed5ecb5f09b6ef31be6fd6fde1b518d41934475637f5da6e",
+      "address": null,
+      "blockNumber": "11976319",
+      "blockHash": "0x133da67959da17187ba633c37027b3cc601e706a0d396ccfa1c1a989cedaf5e4",
+      "gasPaidWei": "529499",
+      "valueWei": "0"
+    },
+    {
+      "step": "approve-capital",
+      "hash": "0x511267a8f854e8735f26e1005c97af48fb74f1e3aa7f50439bc2ef8a1dd47796",
+      "address": null,
+      "blockNumber": "11976320",
+      "blockHash": "0x6ab41cc15f315011c8b6d94c289873010f068d91784dea52f9ffc3c247a72aba",
+      "gasPaidWei": "2341665",
+      "valueWei": "0"
+    },
+    {
+      "step": "deposit-capital",
+      "hash": "0x3e6d5b07b09619cf971cca6adaf8e60f745f01dc7bdb16314b51da058275f698",
+      "address": null,
+      "blockNumber": "11976321",
+      "blockHash": "0x9ac078edc8b36a1694aa1f5a0af3e242c3517623309218b33a32c01ac362bc6f",
+      "gasPaidWei": "11607719",
+      "valueWei": "0"
+    },
+    {
+      "step": "grant-test-permission",
+      "hash": "0x87c8d0e45660ac3ad5e4a244583c66c604bef62e3f2cabe844947dddbcdde5dd",
+      "address": null,
+      "blockNumber": "11976322",
+      "blockHash": "0xff5f0de2ea6e389592d4a008a4e96124b8cfe72fecae9825b6a0528dd911c3cd",
+      "gasPaidWei": "38016845",
+      "valueWei": "0"
+    },
+    {
+      "step": "fund-execution-gas",
+      "hash": "0xc6435995c6121527ea41b6865192610e8d6c65ad4afb811e35e048c0e3fce85a",
+      "address": null,
+      "blockNumber": "11976323",
+      "blockHash": "0x99b05244e2109a8df208ffe88b7246c3517943913a0574c9b7ec6f1f97b2f9c1",
+      "gasPaidWei": "3478200",
+      "valueWei": "50000000000000"
+    },
+    {
+      "step": "buy-weth",
+      "hash": "0x24a04949d27d7893911d38750703f1afdd067c0a259e8705e1a9c3c1a435a453",
+      "address": null,
+      "blockNumber": "11976325",
+      "blockHash": "0xbdd2ad20fdc9fa22b127aea5407f77a16574930e8dc801522c2db7aff58684cd",
+      "gasPaidWei": "13071351",
+      "valueWei": "0"
+    },
+    {
+      "step": "sell-weth",
+      "hash": "0x7a640b04f49b3ba62015246561217672edb3662dd32082ccdde64a88da333a9b",
+      "address": null,
+      "blockNumber": "11976326",
+      "blockHash": "0x9c455d46c9096d3db3772a4af6fdcb764bf2a4474d99ebd941424addc88ffb17",
+      "gasPaidWei": "9843918",
+      "valueWei": "0"
+    },
+    {
+      "step": "deploy-native-gateway",
+      "hash": "0x2dacf44093ad0225f9fc661cd2c92053bcd8d4a63a42649e263863b7e96b0745",
+      "address": "0x03b54b7c55fdfd4956077381c6ef1a983afcfcb5",
+      "blockNumber": "11976328",
+      "blockHash": "0x7863a56d1e166114f876556835233f0f593cde9155b9dac31f708c413e310e54",
+      "gasPaidWei": "239642132",
+      "valueWei": "0"
+    },
+    {
+      "step": "invest-eth",
+      "hash": "0x8c38067f97a5b16cf0b33ea4ba22875c65c265928be736ff5b74109c41d35303",
+      "address": null,
+      "blockNumber": "11976336",
+      "blockHash": "0x19e79387c88aab18b18a197a39f85bfff186131089834fb22ed354252ad3172c",
+      "gasPaidWei": "8829885",
+      "valueWei": "1000000000000"
+    },
+    {
+      "step": "approve-native-redemption",
+      "hash": "0xfb88fd9f7ecb9b0918152a7c8a01c6626a04f8692afcc1c6260e5eebf8959603",
+      "address": null,
+      "blockNumber": "11976337",
+      "blockHash": "0x96416489e063ff32106ab4c2fea5613ae97e55601ae540ecb4187323dce06b21",
+      "gasPaidWei": "2175864",
+      "valueWei": "0"
+    },
+    {
+      "step": "redeem-eth",
+      "hash": "0x8eb4f4429bd321d60aa242df1aa2135d676e76c13edb4cf434f41902963a09b8",
+      "address": null,
+      "blockNumber": "11976338",
+      "blockHash": "0x5c8f7cc5a570222ffe552894ac79e3127e3ea3c00b2dcfcae93b36e60a4837ac",
+      "gasPaidWei": "8202959",
+      "valueWei": "0"
+    },
+    {
+      "step": "approve-capital-redemption",
+      "hash": "0x5b7a0697b2116c60c154a25ba4051e818189dfabae16e86e54d63b5790fef37c",
+      "address": null,
+      "blockNumber": "11976339",
+      "blockHash": "0xcfb632aab42ed5a3ad53f1db90cbf1bd4d76cf49acc3117c568e225e9c63bc3b",
+      "gasPaidWei": "2175660",
+      "valueWei": "0"
+    },
+    {
+      "step": "redeem-capital",
+      "hash": "0x617bb114c4fc846f627d15dec9dfb4ec1ceffd3b341dd8a88d09c5255234106a",
+      "address": null,
+      "blockNumber": "11976341",
+      "blockHash": "0xc51b1f01ef2fde545aa1682a84c47f0d1d54acbbf9195a1bed383618a71b40a8",
+      "gasPaidWei": "5023007",
+      "valueWei": "0"
+    },
+    {
+      "step": "revoke-test-permission",
+      "hash": "0xb7c1da16faacc9926faea1b44b655f1b24ef3409140c1ac6e62eddae8883983f",
+      "address": null,
+      "blockNumber": "11976347",
+      "blockHash": "0x6e94498fde4b49d549213808bd6b8fe9359e0d7a955d8bd2b888838cbe2c5931",
+      "gasPaidWei": "23064580",
+      "valueWei": "0"
+    }
+  ],
+  "events": [
+    {
+      "step": "deposit-capital",
+      "transactionHash": "0x3e6d5b07b09619cf971cca6adaf8e60f745f01dc7bdb16314b51da058275f698",
+      "logIndex": 144,
+      "event": "Deposit",
+      "values": {
+        "sender": "0x1E00E6371677E5078b7204C9B168c6892aCEfbd0",
+        "owner": "0xe26468ae02368a75DBDBea58F367B7313942ad26",
+        "assets": "1000000",
+        "shares": "1000000000000"
+      }
+    },
+    {
+      "step": "buy-weth",
+      "transactionHash": "0x24a04949d27d7893911d38750703f1afdd067c0a259e8705e1a9c3c1a435a453",
+      "logIndex": 130,
+      "event": "ManagerTrade",
+      "values": {
+        "venue": "0x2ae3895403299014b2DDb54A5EA0a2eb160ebece",
+        "tokenIn": "0x1c7D4B196Cb0C7B01d743Fbc6116a902379C7238",
+        "tokenOut": "0x7b79995e5f793A07Bc00c21412e50Ecae098E7f9",
+        "amountIn": "10000",
+        "amountOut": "4170400975279"
+      }
+    },
+    {
+      "step": "sell-weth",
+      "transactionHash": "0x7a640b04f49b3ba62015246561217672edb3662dd32082ccdde64a88da333a9b",
+      "logIndex": 82,
+      "event": "ManagerTrade",
+      "values": {
+        "venue": "0x2ae3895403299014b2DDb54A5EA0a2eb160ebece",
+        "tokenIn": "0x7b79995e5f793A07Bc00c21412e50Ecae098E7f9",
+        "tokenOut": "0x1c7D4B196Cb0C7B01d743Fbc6116a902379C7238",
+        "amountIn": "4170400975279",
+        "amountOut": "9980"
+      }
+    },
+    {
+      "step": "invest-eth",
+      "transactionHash": "0x8c38067f97a5b16cf0b33ea4ba22875c65c265928be736ff5b74109c41d35303",
+      "logIndex": 142,
+      "event": "Deposit",
+      "values": {
+        "sender": "0x03b54B7C55FdfD4956077381c6EF1A983AfcfCb5",
+        "owner": "0xe26468ae02368a75DBDBea58F367B7313942ad26",
+        "assets": "2392",
+        "shares": "2392047840"
+      }
+    },
+    {
+      "step": "invest-eth",
+      "transactionHash": "0x8c38067f97a5b16cf0b33ea4ba22875c65c265928be736ff5b74109c41d35303",
+      "logIndex": 144,
+      "event": "NativeDeposit",
+      "values": {
+        "investor": "0xe26468ae02368a75DBDBea58F367B7313942ad26",
+        "mon": "1000000000000",
+        "quoteAssets": "2392",
+        "shares": "2392047840"
+      }
+    },
+    {
+      "step": "redeem-eth",
+      "transactionHash": "0x8eb4f4429bd321d60aa242df1aa2135d676e76c13edb4cf434f41902963a09b8",
+      "logIndex": 256,
+      "event": "Withdraw",
+      "values": {
+        "sender": "0x03b54B7C55FdfD4956077381c6EF1A983AfcfCb5",
+        "receiver": "0x03b54B7C55FdfD4956077381c6EF1A983AfcfCb5",
+        "owner": "0xe26468ae02368a75DBDBea58F367B7313942ad26",
+        "assets": "2391",
+        "shares": "2392047840"
+      }
+    },
+    {
+      "step": "redeem-eth",
+      "transactionHash": "0x8eb4f4429bd321d60aa242df1aa2135d676e76c13edb4cf434f41902963a09b8",
+      "logIndex": 263,
+      "event": "NativeRedemption",
+      "values": {
+        "investor": "0xe26468ae02368a75DBDBea58F367B7313942ad26",
+        "shares": "2392047840",
+        "quoteAssets": "2391",
+        "mon": "996987276882"
+      }
+    },
+    {
+      "step": "redeem-capital",
+      "transactionHash": "0x617bb114c4fc846f627d15dec9dfb4ec1ceffd3b341dd8a88d09c5255234106a",
+      "logIndex": 135,
+      "event": "Withdraw",
+      "values": {
+        "sender": "0x1E00E6371677E5078b7204C9B168c6892aCEfbd0",
+        "receiver": "0xe26468ae02368a75DBDBea58F367B7313942ad26",
+        "owner": "0xe26468ae02368a75DBDBea58F367B7313942ad26",
+        "assets": "999981",
+        "shares": "1000000000000"
+      }
+    }
+  ],
+  "gasPaidWei": "1887886992",
+  "endState": {
+    "totalShares": "0",
+    "positionUnits": "0",
+    "quoteUnits": "0",
+    "permissionRevoked": true
+  },
+  "scope": "Public testnet receipts for controller-driven infrastructure validation. Project-funded demo liquidity. No RYO-price coverage, AI inference or investment-performance claim."
+}

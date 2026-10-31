@@ -1,0 +1,29 @@
+{
+  "scope": "Authentic read-only MCP recovery checks, not an agent decision or trade",
+  "checkedOn": "2026-10-30",
+  "eth": {
+    "asOf": "2026-10-30T18:34:00Z",
+    "priceUsd": 2225.893527293818,
+    "status": "partial",
+    "dataMode": "live",
+    "marketAvailability": "available",
+    "technicalAvailability": "partial"
+  },
+  "sentiment": {
+    "asOf": "2026-10-30T18:34:20Z",
+    "status": "ok",
+    "dataMode": "live",
+    "fearGreed": {
+      "data_date": "2026-10-30",
+      "value": 35,
+      "label": "fear",
+      "baseline_7d_date": "2026-10-23",
+      "baseline_7d_value": 47,
+      "change_7d_points": -12,
+      "change_direction": "down",
+      "material_shift": true
+    },
+    "sourceAttribution": "Powered by CoinMarketCap"
+  },
+  "limits": "Only these two MCP tools were checked. No new REST, all-token, signed-agent-session or trade acceptance is claimed."
+}

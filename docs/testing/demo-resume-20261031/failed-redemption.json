@@ -1,0 +1,13 @@
+{
+  "scope": "Failed investor redemption retained; no shares burned or native tokens returned. Fresh quote required.",
+  "chainId": 11155111,
+  "transactionHash": "0xe6d82f3be1ec86706d2e36428a2dd0aaaf331f5d7bcaaf5b9530eeacfa8e9a5c",
+  "blockNumber": "12032477",
+  "blockHash": "0x879aac09f5cbb22a06d83c7e3a64a37ffe3f33fb05f56c809e24abfe850d8430",
+  "minedAt": "2026-10-31T07:56:00.000Z",
+  "deadline": "2026-10-31T07:55:48.000Z",
+  "deadlineExceededSeconds": 12,
+  "investorShares": "2239000000",
+  "gasPaidWei": "3225288",
+  "status": "reverted"
+}

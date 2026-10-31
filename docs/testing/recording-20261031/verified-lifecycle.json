@@ -1,0 +1,35 @@
+{
+  "verified": true,
+  "chainId": 11155111,
+  "recordingEnrollment": "0xc612e56ef6990289a2be162f1588fc9065b6892923e3a7b69adf040c1c38c4d0",
+  "financialRegistration": "0x19e7d9336937879d074a36f5abb7708ddde0ef701e06852484f3efac4daacf3c",
+  "investor": "0xe26468ae02368a75DBDBea58F367B7313942ad26",
+  "vault": "0x44E9E1a6A7eeDAfdA49f8F7d94AA1C2Bfa691ff6",
+  "gateway": "0x769CC5cBd4734E6bDdEa6D884DD4F5D2c8ae8f9D",
+  "deposit": {
+    "hash": "0x9f2982b83d3ca155dd6177a0477e16a1c1594a7ca7d314838e39e5574f7aa379",
+    "block": "12034767",
+    "at": "2026-10-31T15:35:12.000Z",
+    "nativeInputWei": "1000000000000",
+    "shares": "2239000000"
+  },
+  "approval": {
+    "hash": "0xa998e33a179fb8de39bb5d51b59e103133277f0bdb0d9b68a260cd9f48a42e7e",
+    "shares": "2239000000"
+  },
+  "redemption": {
+    "hash": "0x7c461a0f338b604ec0137180fe79a37984eb6725324a85a966192e8bfae90fa2",
+    "block": "12034809",
+    "at": "2026-10-31T15:43:48.000Z",
+    "shares": "2239000000",
+    "nativeReturnWei": "997597061804",
+    "minimumNativeWei": "996599464742"
+  },
+  "elapsedSeconds": 516,
+  "conversionDifferenceWei": "-2402938196",
+  "totalInvestorGasWei": "129359422",
+  "seedSharesRemaining": "1000000000000",
+  "allowanceRemaining": "0",
+  "navQuoteUnits": "1000000",
+  "scope": "Public canonical receipts, exact reviewed calldata, signatures and independent share/capital accounting for this recording pass. No funded AI trading, trading profit, hardware attestation or screen-recording-file verification claimed."
+}

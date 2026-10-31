@@ -1,0 +1,19 @@
+{
+  "scope": "Read-only RYO recovery check; authentic provider responses, not agent decisions or trades. Credentials, identity metadata and session headers excluded.",
+  "records": [],
+  "checks": [
+    {
+      "check": "request-start",
+      "transport": "documented-rest",
+      "tool": "analyze_token",
+      "arguments": {
+        "symbol": "ETH"
+      },
+      "at": "2026-10-29T10:25:23.013Z"
+    },
+    {
+      "check": "diagnostic-error",
+      "message": "The operation was aborted due to timeout"
+    }
+  ]
+}

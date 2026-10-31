@@ -1,0 +1,28 @@
+{
+  "scope": "Read-only RYO recovery check; authentic provider responses, not agent decisions or trades. Credentials, identity metadata and session headers excluded.",
+  "records": [
+    {
+      "path": "/health",
+      "at": "2026-10-29T09:21:40.997Z",
+      "receivedAt": "2026-10-29T09:21:49.072Z",
+      "httpStatus": 200,
+      "rateHeaders": {},
+      "body": "{\"status\":\"ok\",\"protocol_version\":\"2024-11-05\",\"server\":\"ryo-chan\",\"tools\":6}"
+    }
+  ],
+  "checks": [
+    {
+      "check": "/health",
+      "path": "/health",
+      "at": "2026-10-29T09:21:40.997Z",
+      "receivedAt": "2026-10-29T09:21:49.072Z",
+      "httpStatus": 200,
+      "rateHeaders": {},
+      "body": "{\"status\":\"ok\",\"protocol_version\":\"2024-11-05\",\"server\":\"ryo-chan\",\"tools\":6}"
+    },
+    {
+      "check": "diagnostic-error",
+      "message": "The operation was aborted due to timeout"
+    }
+  ]
+}

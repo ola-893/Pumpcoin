@@ -1,0 +1,23 @@
+{
+  "scope": "Exact upstream error excerpt from authentic RYO response, not independent access to upstream account.",
+  "requestAt": "2026-10-24T21:29:15.185Z",
+  "responseAt": "2026-10-24T21:29:16.446Z",
+  "tool": "monitor_market_sentiment_shift",
+  "arguments": {
+    "time_window": "7d"
+  },
+  "httpStatus": 200,
+  "providerStatus": "unavailable",
+  "providerDataMode": "unknown",
+  "error": {
+    "code": "1010",
+    "message": "The research provider reported that this analysis is unavailable.",
+    "details": {
+      "code": 1010,
+      "message": "Monthly credit limit reached. Your credits are shared between REST API and MCP.",
+      "detail": {
+        "upgrade_url": "https://coinmarketcap.com/api/pricing/"
+      }
+    }
+  }
+}

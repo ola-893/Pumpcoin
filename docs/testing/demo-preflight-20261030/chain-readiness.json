@@ -1,0 +1,102 @@
+{
+  "scope": "Read-only Sepolia readiness; no new vault, simulation, investment, permission or transaction.",
+  "checkedAt": "2026-10-30T19:21:45.664Z",
+  "chainId": 11155111,
+  "blockNumber": "12028727",
+  "blockHash": "0xbae53c26ed0682e8aa656ad7c636f7877fafb433af03a202c20ae58cc5ea044b",
+  "controller": "0xe26468ae02368a75DBDBea58F367B7313942ad26",
+  "balances": {
+    "testEthWei": "16748962749839820",
+    "testUsdcBaseUnits": "39873552",
+    "usdcDecimals": 6
+  },
+  "pins": [
+    {
+      "address": "0x8004A818BFB912233c491871b3d84c89A494BD9e",
+      "expected": "0xd0e45b1d89fa9b6cc7e97c1f155d64180e5c232aaccf9900ef9d4fd738c02b41",
+      "actual": "0xd0e45b1d89fa9b6cc7e97c1f155d64180e5c232aaccf9900ef9d4fd738c02b41",
+      "matches": true
+    },
+    {
+      "address": "0x7274e874CA62410a93Bd8bf61c69d8045E399c02",
+      "expected": "0xa5f9624ea85e45b3f4b8558581f03bfb3e6cefab278d7bf0500ec9bd065dc16f",
+      "actual": "0xa5f9624ea85e45b3f4b8558581f03bfb3e6cefab278d7bf0500ec9bd065dc16f",
+      "matches": true
+    },
+    {
+      "address": "0x1c7D4B196Cb0C7B01d743Fbc6116a902379C7238",
+      "expected": "0xcd3f29e2ea9c61dadd48bfeaf8b2884b6de9dfee7bf45329452c4c33d0868ceb",
+      "actual": "0xcd3f29e2ea9c61dadd48bfeaf8b2884b6de9dfee7bf45329452c4c33d0868ceb",
+      "matches": true
+    },
+    {
+      "address": "0x7b79995e5f793A07Bc00c21412e50Ecae098E7f9",
+      "expected": "0x9efe19754cd95e93215f98c6ad2eafc84c857315bf8d39607cd485281a8d98ee",
+      "actual": "0x9efe19754cd95e93215f98c6ad2eafc84c857315bf8d39607cd485281a8d98ee",
+      "matches": true
+    },
+    {
+      "address": "0xE03A1074c86CFeDd5C142C4F04F1a1536e203543",
+      "expected": "0x09930125a49f5b95caf8052991cc14d1240dca8b43f42b899115b86867e4bce1",
+      "actual": "0x09930125a49f5b95caf8052991cc14d1240dca8b43f42b899115b86867e4bce1",
+      "matches": true
+    },
+    {
+      "address": "0xE1Dd9c3fA50EDB962E442f60DfBc432e24537E4C",
+      "expected": "0xaaed3db8eb8ebde8014ce4c8a3938496687f4c6374e17a7d735288f6c65ceb9e",
+      "actual": "0xaaed3db8eb8ebde8014ce4c8a3938496687f4c6374e17a7d735288f6c65ceb9e",
+      "matches": true
+    },
+    {
+      "address": "0x694AA1769357215DE4FAC081bf1f309aDC325306",
+      "expected": "0x9190afba2a699a9627d64ed68c7cc60e4005a8830b33183c4413b4e1a93b9ccd",
+      "actual": "0x9190afba2a699a9627d64ed68c7cc60e4005a8830b33183c4413b4e1a93b9ccd",
+      "matches": true
+    },
+    {
+      "address": "0x719E22E3D4b690E5d96cCb40619180B5427F14AE",
+      "expected": "0xe8d8ecdad84b79464c08db80dac98dfb3727d14cabf9ad0fcd248c3a0d246712",
+      "actual": "0xe8d8ecdad84b79464c08db80dac98dfb3727d14cabf9ad0fcd248c3a0d246712",
+      "matches": true
+    },
+    {
+      "address": "0xA2F78ab2355fe2f984D808B5CeE7FD0A93D5270E",
+      "expected": "0x9190afba2a699a9627d64ed68c7cc60e4005a8830b33183c4413b4e1a93b9ccd",
+      "actual": "0x9190afba2a699a9627d64ed68c7cc60e4005a8830b33183c4413b4e1a93b9ccd",
+      "matches": true
+    },
+    {
+      "address": "0x0524b20f305e2e2F7990B9AfE28B4D5e4a76eA0C",
+      "expected": "0xe8d8ecdad84b79464c08db80dac98dfb3727d14cabf9ad0fcd248c3a0d246712",
+      "actual": "0xe8d8ecdad84b79464c08db80dac98dfb3727d14cabf9ad0fcd248c3a0d246712",
+      "matches": true
+    }
+  ],
+  "feeds": [
+    {
+      "asset": "ETH",
+      "proxy": "0x694AA1769357215DE4FAC081bf1f309aDC325306",
+      "answer": "222766000000",
+      "decimals": 8,
+      "updatedAt": "1793386956",
+      "ageSeconds": 1140,
+      "maximumAgeSeconds": 7200,
+      "fresh": true
+    },
+    {
+      "asset": "USDC",
+      "proxy": "0xA2F78ab2355fe2f984D808B5CeE7FD0A93D5270E",
+      "answer": "99966080",
+      "decimals": 8,
+      "updatedAt": "1793351268",
+      "ageSeconds": 36828,
+      "maximumAgeSeconds": 172800,
+      "fresh": true
+    }
+  ],
+  "pool": {
+    "id": "0x066523b002ff65e79b7ed1dd4358d8b4cce7a1e5951ce7a0a58b2845910fd73c",
+    "activeLiquidity": "2554074313386",
+    "note": "Nonzero active liquidity alone is not an executable swap quote. Check deviation, depth and exact vault readiness before funding."
+  }
+}

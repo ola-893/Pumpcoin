@@ -1,30 +1,36 @@
+import { decodeMcpResponse } from './mcp.js';
+import {normalizeRyoResearch,type RyoResearchCapture} from './ryo-research.js';
 import { XMLParser } from 'fast-xml-parser';
 import { digest,time,units } from './encoding.js';
-import type { Market,Post } from './types.js';
+import type { Market,Post,RyoResearch } from './types.js';
 import { validateTool,type Tool } from './ryo-contract.js';
+import { normalizeCoinbase,type CoinbaseCapture } from './coinbase.js';
 export type Field={tool:string;pointer:string};
-export type RyoProfile={version:1;tools:Record<string,{arguments:Record<string,unknown>}>;fields:Record<'id'|'symbol'|'network'|'price'|'liquidity'|'safe'|'observedAt'|'liquidityObservedAt'|'safetyObservedAt'|'mode',Field>};
+export type RyoProfile={version:2;tools:Record<string,{arguments:Record<string,unknown>}>;fields:Record<'id'|'symbol'|'network'|'price'|'liquidity'|'observedAt'|'liquidityObservedAt'|'mode',Field>;riskFields?:{flags:Field;observedAt:Field}};
 export type Exchange={method:string;params:unknown;id:number|null;body:string;contentType:string;receivedAt:string};
 export type Capture=
+  |CoinbaseCapture
+  |RyoResearchCapture
   |{kind:'ryo';symbol:string;profile:RyoProfile;catalog:unknown;exchanges:Exchange[];receivedAt:string}
   |{kind:'ryo-observation';symbol:string;tool:string;arguments:Record<string,unknown>;catalog:Tool[];exchanges:Exchange[];receivedAt:string}
   |{kind:'news';feed:string;body:string;contentType:string;receivedAt:string}
   |{kind:'x';account:string;body:string;receivedAt:string};
-export function decodeMcpResponse(body:string,contentType:string,id:number|null):any {
-  const values=contentType.includes('text/event-stream')?body.split(/\r?\n\r?\n/).flatMap(block=>{const data=block.split(/\r?\n/).filter(l=>l.startsWith('data:')).map(l=>l.slice(5).trimStart()).join('\n');return data?[JSON.parse(data)]:[];}):[JSON.parse(body)];
-  const value=values.find(v=>v.id===id);
-  if(!value||value.jsonrpc!=='2.0'||value.error||!('result' in value))throw new Error('MCP response does not match its request.');
-  return value.result;
-}
+export {decodeMcpResponse} from './mcp.js';
+
 function pointer(value:unknown,path:string):unknown {if(path==='')return value;if(!/^\/(?:[^~]|~[01])*$/.test(path))throw new Error('Invalid configured RYO field pointer.');return path.slice(1).split('/').reduce<unknown>((v,k)=>v&&typeof v==='object'?(v as Record<string,unknown>)[k.replace(/~1/g,'/').replace(/~0/g,'~')]:undefined,value);}
 function providerTime(value:unknown):string {if(typeof value!=='string'||!/(Z|[+-]\d\d:\d\d)$/.test(value))throw new Error('Provider timestamp needs an explicit timezone.');return new Date(time(value)).toISOString();}
-export function normalizeCapture(c:Capture):{markets:Market[];posts:Post[]} {
+export function normalizeCapture(c:Capture): {markets:Market[];posts:Post[];research?:RyoResearch[]} {
+  if(c.kind==='ryo-research'){try{return {markets:[],posts:[],research:[normalizeRyoResearch(c)]};}catch{return {markets:[],posts:[],research:[]};}}
+  // Failed/invalid responses stay in the evidence too, but cannot claim market coverage.
+  if(c.kind==='coinbase-exchange'){try{return {markets:[normalizeCoinbase(c)],posts:[]};}catch{return {markets:[],posts:[]};}}
   if(c.kind==='ryo-observation'){
     validateTool(c.tool,c.arguments,c.catalog);
     if(c.arguments.symbol!==c.symbol||c.exchanges.length!==1)throw new Error('Raw RYO observation is not bound to its symbol.');
     const x=c.exchanges[0],params=x.params as {name:string;arguments:unknown};
     if(x.method!=='tools/call'||params.name!==c.tool||digest(params.arguments)!==digest(c.arguments))throw new Error('Raw RYO observation request mismatch.');
-    decodeMcpResponse(x.body,x.contentType,x.id);
+    // An unmapped provider response (including malformed/error envelopes) is retained
+    // as an observation only. Its failure must not erase another signed source's book.
+    try{decodeMcpResponse(x.body,x.contentType,x.id);}catch{}
     // Raw observation is explicitly NOT a tradable market mapping, even if a future response has numbers.
     return {markets:[],posts:[]};
   }
@@ -39,13 +45,15 @@ export function normalizeCapture(c:Capture):{markets:Market[];posts:Post[]} {
       const payload=result?.structuredContent??JSON.parse(result?.content?.filter((v:any)=>v.type==='text').map((v:any)=>v.text).join('\n'));
       if(params.name in responses)throw new Error('Duplicate market tool response.');responses[params.name]=payload;
     }
-    if(c.profile.version!==1||Object.keys(c.profile.tools).some(name=>!(name in responses)))throw new Error('Incomplete captured RYO tool coverage.');
+    if(c.profile.version!==2||Object.keys(c.profile.tools).some(name=>!(name in responses)))throw new Error('Incomplete captured RYO tool coverage or obsolete safety mapping; review version 2.');
     const get=(name:keyof RyoProfile['fields'])=>{const f=c.profile.fields[name];if(!f||!(f.tool in responses))throw new Error('RYO field mapping is incomplete.');return pointer(responses[f.tool],f.pointer);};
-    const id=get('id'),network=get('network'),safe=get('safe');
-    if(get('mode')!=='live'||get('symbol')!==c.symbol||typeof id!=='string'||!id||typeof network!=='string'||!network||typeof safe!=='boolean')throw new Error('RYO identity, mode or safety is unavailable.');
-    const observations={price:providerTime(get('observedAt')),liquidity:providerTime(get('liquidityObservedAt')),safety:providerTime(get('safetyObservedAt'))};
+    const id=get('id'),network=get('network');
+    if(get('mode')!=='live'||get('symbol')!==c.symbol||typeof id!=='string'||!id||typeof network!=='string'||!network)throw new Error('RYO identity or live data mode is unavailable.');
+    const observations={price:providerTime(get('observedAt')),liquidity:providerTime(get('liquidityObservedAt'))};
     if(Object.values(observations).some(t=>time(t)>time(c.receivedAt)))throw new Error('RYO observation is later than receipt.');
-    return {markets:[{id,symbol:c.symbol,network,price:units(get('price')),liquidity:units(get('liquidity')),safe,observedAt:Object.values(observations).sort()[0],observations,evidenceId:digest(c)}],posts:[]};
+    let risk:Market['risk']={status:'unavailable'};
+    if(c.profile.riskFields){const read=(f:Field)=>{if(!f||!(f.tool in responses))throw new Error('Risk-field mapping is incomplete.');return pointer(responses[f.tool],f.pointer);};const flags=read(c.profile.riskFields.flags),observedAt=providerTime(read(c.profile.riskFields.observedAt));if(!Array.isArray(flags)||flags.length>30||flags.some(x=>typeof x!=='string'||!x.trim()||x.length>500)||time(observedAt)>time(c.receivedAt))throw new Error('Provider risk flags or timestamp are invalid.');risk={status:'observed',flags,observedAt,evidenceId:digest(c)};}
+    return {markets:[{id,symbol:c.symbol,network,price:units(get('price')),liquidity:units(get('liquidity')),risk,observedAt:Object.values(observations).sort()[0],observations,evidenceId:digest(c)}],posts:[]};
   }
   if(c.kind==='news') {
     let entries:any[];

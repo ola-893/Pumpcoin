@@ -7,13 +7,13 @@ export type AgentDraft = {
   modelSource: string; weightsHash: string; runtimeHash: string; endpoint: string;
   strategy: string; strategyCodeHash: string; pair: string;
   tradeCap: string; exposureCap: string; slippageBps: string; dependencies: string;
-  selfHosted: boolean; demoMode?: boolean; localDetection?: Detection;
+  selfHosted: boolean; executionChainId?: 10143 | 11155111; demoMode?: boolean; localDetection?: Detection;
 };
 export const initialDraft: AgentDraft = {
   name: '', controller: '', executionKey: '', model: '',
   modelSource: '', weightsHash: '', runtimeHash: '',
   endpoint: 'http://127.0.0.1:8080/v1', strategy: '', strategyCodeHash: '',
-  pair: 'MON / USDC', tradeCap: '100', exposureCap: '500', slippageBps: '50', dependencies: 'GeckoTerminal; Monad RPC; Uniswap', selfHosted: false,
+  pair: 'WETH / USDC', tradeCap: '100', exposureCap: '500', slippageBps: '50', dependencies: 'RYO-CHAN research; Ethereum Sepolia RPC; Chainlink; Uniswap v4', selfHosted: false,
 };
 const nonzeroHash = (x: string) => /^(?:0x)?[a-fA-F0-9]{64}$/.test(x) && !/^(?:0x)?0{64}$/.test(x);
 const sha = (x: string) => `sha256:${x.replace(/^0x/, '').toLowerCase()}`;
@@ -45,7 +45,7 @@ export function validateDraft(d: AgentDraft, step = 3): Record<string, string> {
   if (step > 1) {
     if (d.strategy.trim().length < 20 || d.strategy.length > 2000) errors.strategy = 'Describe the public strategy in 20–2,000 characters.';
     if (!nonzeroHash(d.strategyCodeHash)) errors.strategyCodeHash = 'Enter the SHA-256 of the strategy code manifest.';
-    if (!['MON / USDC', 'WMON / USDC'].includes(d.pair)) errors.pair = 'Choose one supported proposed spot pair.';
+    if (!['MON / USDC', 'WMON / USDC', 'ETH / USDC', 'WETH / USDC'].includes(d.pair)) errors.pair = 'Choose one supported proposed spot pair.';
     for (const key of ['tradeCap', 'exposureCap'] as const) try { quoteUnits(d[key]); } catch { errors[key] = 'Enter a positive quote amount, up to six decimals.'; }
     if (!errors.tradeCap && !errors.exposureCap && quoteUnits(d.tradeCap) > quoteUnits(d.exposureCap)) errors.tradeCap = 'The trade cap must not exceed the exposure cap.';
     if (!/^\d{1,3}$/.test(d.slippageBps) || Number(d.slippageBps) < 1 || Number(d.slippageBps) > 500) errors.slippageBps = 'Choose 1–500 basis points.';
@@ -59,7 +59,7 @@ export function prepareManifest(d: AgentDraft) {
   const manifest = {
     version: 'PUMPCOIN-DEPLOYMENT-DRAFT-v1', inferencePolicy: LOCAL_POLICY,
     evidenceLevel: 'operator-declared', registrationStatus: 'unpublished-draft',
-    ...(d.demoMode ? { vaultPolicy: { mode: 'instant-testnet-demo' as const, chainId: 10143 as const, configurationNoticeSeconds: 0 as const } } : {}),
+    ...(d.demoMode ? { vaultPolicy: { mode: 'instant-testnet-demo' as const, chainId: (d.executionChainId ?? (d.pair.includes('ETH') ? 11155111 : 10143)) as 10143 | 11155111, configurationNoticeSeconds: 0 as const } } : {}),
     name: d.name.trim(), controller: getAddress(d.controller), executionKey: getAddress(d.executionKey),
     model: { id: d.model.trim(), source: new URL(d.modelSource).href, weightsDigest: sha(d.weightsHash), runtimeDigest: sha(d.runtimeHash), ...(detectionMatches(d) ? { localMeasurements: { evidence: 'locally-detected-not-attested', checkedAt: d.localDetection!.checkedAt, quantization: d.localDetection!.quantization, context: d.localDetection!.context, weightsBytes: d.localDetection!.weightsBytes, sourceStatus: d.localDetection!.sourceStatus, runtimeManifest: d.localDetection!.runtimeManifest } } : {}) },
     strategy: { description: d.strategy.trim(), codeDigest: sha(d.strategyCodeHash), pair: d.pair },

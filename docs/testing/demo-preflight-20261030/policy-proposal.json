@@ -1,0 +1,53 @@
+{
+  "version": "PUMPCOIN-RESEARCH-POLICY-v2",
+  "registrationId": "0x26286ce4d945639b89e24022f35a6e6e7b1963f933126fc7332491e9acd5ff07",
+  "manifestCommitment": "0x92067204bc466d7b90f36a3882f00f4bfbdb055752e8408ef72191d19e3654b7",
+  "strategies": [
+    "market-news"
+  ],
+  "symbols": [
+    "ETH"
+  ],
+  "voices": [],
+  "newsFeeds": [
+    "https://decrypt.co/feed"
+  ],
+  "initialCash": "10000000000",
+  "riskBps": 100,
+  "positionBps": 2000,
+  "exposureBps": 4000,
+  "stopBps": 500,
+  "targetBps": 1000,
+  "dailyLossBps": 500,
+  "maxPositions": 3,
+  "convergence": 2,
+  "maxAgeSeconds": 3600,
+  "intervalSeconds": 300,
+  "cooldownSeconds": 300,
+  "feeBps": 10,
+  "slippageBps": 20,
+  "executionDelaySeconds": 5,
+  "maxHoldingSeconds": 86400,
+  "engineVersion": "pump-research-spot-v1",
+  "promptVersion": "pump-research-v1",
+  "engineDigest": "sha256:2347b0646a9d1af48e4d4b863f75e9f3244af5baa3b55cf08e92491f74ef07ee",
+  "marketRules": {
+    "source": "coinbase-exchange",
+    "instruments": [
+      {
+        "id": "coinbase:ETH-USD",
+        "symbol": "ETH",
+        "network": "coinbase-exchange"
+      }
+    ],
+    "minimumLiquidityUsd": "100000000",
+    "maximumLiquidityBps": 100,
+    "riskEvidence": "record-unavailable-block-reported"
+  },
+  "ryoResearch": {
+    "version": 1,
+    "required": true,
+    "maxPriceDeviationBps": 500,
+    "blockAvoidVerdict": true
+  }
+}

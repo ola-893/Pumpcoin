@@ -1,0 +1,32 @@
+{
+  "scope": "Exactly 1 test-USDC controller seed, capital not profit; separate from subsequent ETH investor deposit.",
+  "chainId": 11155111,
+  "vault": "0x44E9E1a6A7eeDAfdA49f8F7d94AA1C2Bfa691ff6",
+  "gateway": "0x53B5BB45d4DB11D4Ca8CfD425405C66265C4ae80",
+  "controller": "0xe26468ae02368a75DBDBea58F367B7313942ad26",
+  "seedQuoteUnits": "1000000",
+  "seedShares": "1000000000000",
+  "shareDecimals": 12,
+  "gasPaidWei": "18053200",
+  "allowance": "0",
+  "steps": [
+    {
+      "step": "approve-one-usdc-seed",
+      "hash": "0xbc065f6754a44a516b08044473b2f129ec14413555a1e2fa685eaf03d4755242",
+      "address": null,
+      "blockNumber": "12032254",
+      "blockHash": "0xb0cd55825e1fc9189098edbb2660793fb8034abe18026b92fdff9674e0b46871",
+      "gasPaidWei": "3030654",
+      "valueWei": "0"
+    },
+    {
+      "step": "deposit-one-usdc-seed",
+      "hash": "0x018cb7d7b4c73dff7eba10d51b159f67de8bc82d157c36b3b5351b0ed3d6edac",
+      "address": null,
+      "blockNumber": "12032255",
+      "blockHash": "0x4eb1a294aa0e0a8925aa6f6ff7456aaecf402320702d2a5a3fb3e38d5eeb80b5",
+      "gasPaidWei": "15022546",
+      "valueWei": "0"
+    }
+  ]
+}

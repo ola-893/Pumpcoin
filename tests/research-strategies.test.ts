@@ -3,13 +3,25 @@ import assert from 'node:assert/strict';
 import { signal,sensitivity,validateInterpretation } from '../research/signals.js';
 import { validatePolicy,verifyPolicy } from '../research/policy.js';
 import { researchSources } from '../research/providers.js';
+import { marketEligibility } from '../research/eligibility.js';
 import { policy,evidence,interpretation,registrationId,commitment,signedPolicy } from './research-fixtures.js';
 const at='2026-10-16T00:00:00.000Z',now=Date.parse(at);
 test('both strategies operate on the same evidence, with attributable different thresholds',()=>{const p=policy(),e=evidence(at),x=interpretation();assert.equal(signal(p,'market-news',e,x,now).pass,true);assert.equal(signal(p,'multi-kol',e,x,now).pass,true);assert.equal(sensitivity(p,'multi-kol',e,x,now)[0].wouldPass,false);assert.equal(sensitivity(p,'market-news',e,x,now)[0].wouldPass,false);e.posts[2].originId=e.posts[1].originId;assert.equal(signal(p,'multi-kol',e,x,now).pass,false);assert.equal(signal(p,'market-news',e,x,now).pass,true);});
-test('stale, future, synthetic, ambiguous, unsafe and missing-source inputs cannot pass entry guards',()=>{for(const mutation of [(e:any)=>e.markets[0].safe=false,(e:any)=>e.mode='synthetic-test',(e:any)=>e.markets[0].observedAt='2026-10-15T00:00:00Z',(e:any)=>e.markets[0].observedAt='2026-10-17T00:00:00Z',(e:any)=>e.markets.push({...e.markets[0],id:'other-chain'}),(e:any)=>e.sources[0].available=false]){const e=evidence(at);mutation(e);assert.equal(signal(policy(),'market-news',e,interpretation(),now).pass,false);}});
+test('stale, future, synthetic, ambiguous, flagged and missing-source inputs cannot pass entry guards',()=>{for(const mutation of [(e:any)=>e.markets[0].risk={status:'observed',flags:['Reported test risk'],observedAt:at,evidenceId:'market'},(e:any)=>e.mode='synthetic-test',(e:any)=>e.markets[0].observedAt='2026-10-15T00:00:00Z',(e:any)=>e.markets[0].observedAt='2026-10-17T00:00:00Z',(e:any)=>e.markets.push({...e.markets[0],id:'other-chain'}),(e:any)=>e.sources[0].available=false]){const e=evidence(at);mutation(e);assert.equal(signal(policy(),'market-news',e,interpretation(),now).pass,false);}});
 test('unsupported citations, duplicate post classifications and missing market identities are rejected',()=>{const x=interpretation();x.factors[0].evidenceId='invented';assert.throws(()=>validateInterpretation(x,evidence(at)),/citation/);const y=interpretation();y.classifications.push(y.classifications[0]);assert.throws(()=>validateInterpretation(y,evidence(at)),/duplicate/);});
 test('signed policy binds original agent, exact limits, origin and execution key',async()=>{const p=await signedPolicy();await verifyPolicy(p);p.policy.riskBps=1000;await assert.rejects(verifyPolicy(p));assert.throws(()=>validatePolicy({...policy(),extra:'ignored'},registrationId,commitment),/Unexpected/);assert.throws(()=>validatePolicy({...policy(),executionDelaySeconds:3600},registrationId,commitment),/delay/);});
 test('unconfigured sources fail honestly without outgoing requests or invented market data',async()=>{let requests=0;const source=researchSources({newsFeeds:[]},async()=>{requests++;throw new Error('No network expected');});const e=await source.collect(policy());assert.equal(requests,0);assert.equal(e.markets.length,0);assert.equal(e.posts.length,0);assert.equal(e.sources.find(s=>s.source==='ryo')?.available,false);assert.equal(e.sources.find(s=>s.source==='x')?.available,false);assert.equal(e.sources.find(s=>s.source==='news')?.available,false);});
+test('version 2 authorizes explicit market checks without fabricating a RYO safety verdict',async()=>{
+  const p=policy(),e=evidence(at),m=e.markets[0];
+  assert.deepEqual(m.risk,{status:'unavailable'});assert.equal('safe' in m,false);
+  assert.deepEqual(marketEligibility(p,m,now),[]);assert.equal(signal(p,'market-news',e,interpretation(),now).pass,true);
+  const changed=structuredClone(p);changed.marketRules.instruments[0].network='Different chain';assert(marketEligibility(changed,m,now).length);
+  changed.marketRules.instruments=p.marketRules.instruments;changed.marketRules.minimumLiquidityUsd=String(BigInt(m.liquidity)+1n);assert(marketEligibility(changed,m,now).length);
+  const flagged={...m,risk:{status:'observed' as const,flags:['Provider warning'],observedAt:at,evidenceId:m.evidenceId}};assert(marketEligibility(p,flagged,now).length);
+  assert.throws(()=>validatePolicy({...p,version:'PUMPCOIN-RESEARCH-POLICY-v1'},registrationId,commitment),/version 2/);
+  assert.throws(()=>validatePolicy({...p,marketRules:{...p.marketRules,maximumLiquidityBps:101}},registrationId,commitment),/liquidity/);
+  const signed=await signedPolicy();signed.policy.marketRules.minimumLiquidityUsd='1';await assert.rejects(verifyPolicy(signed),/signed research policy/);
+});
 test('copied text and transitively shared repost origins cannot inflate independent voice counts',()=>{
   const p=policy(),e=evidence(at),x=interpretation();
   e.posts[2].text=`  ${e.posts[1].text.toUpperCase()}  `;

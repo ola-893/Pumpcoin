@@ -1,24 +1,28 @@
 import { createPublicClient, encodeFunctionData, getAddress, http, keccak256, parseAbi, type Address, type Hex } from 'viem';
 import { riskBindingHash, strategyBindingHash, type Prepared } from './core.js';
-export type Deployment = { chainId: 10143 | 31337; mode: 'monad-testnet' | 'local-simulation'; rpcUrl: string; identityRegistry: Address; identityCodeHash: Hex; identityImplementation?: Address; identityImplementationCodeHash?: Hex; vault: Address; vaultCodeHash: Hex; adapter: Address; adapterCodeHash: Hex; venue: Address; venueCodeHash: Hex; quote: Address; position: Address; pair: string };
+export type Deployment = { chainId: 10143 | 11155111 | 31337; mode: 'monad-testnet' | 'ethereum-sepolia' | 'local-simulation'; rpcUrl: string; identityRegistry: Address; identityCodeHash: Hex; identityImplementation?: Address; identityImplementationCodeHash?: Hex; vault: Address; vaultCodeHash: Hex; adapter: Address; adapterCodeHash: Hex; venue: Address; venueCodeHash: Hex; quote: Address; position: Address; pair: string };
 const identityAbi = parseAbi(['function setAgentURI(uint256,string)', 'function ownerOf(uint256) view returns (address)', 'function tokenURI(uint256) view returns (string)', 'function register(string agentURI, (string metadataKey,bytes metadataValue)[] metadata) returns (uint256)']);
 const vaultAbi = parseAbi(['function admin() view returns (address)', 'function manager() view returns (address)', 'function identityRegistry() view returns (address)', 'function agentId() view returns (uint256)', 'function strategyHash() view returns (bytes32)', 'function riskHash() view returns (bytes32)', 'function perTradeCap() view returns (uint256)', 'function maxPositionValue() view returns (uint256)', 'function currentConfigHash() view returns (bytes32)', 'function asset() view returns (address)', 'function positionAsset() view returns (address)', 'function adapter() view returns (address)', 'function paused() view returns (bool)']);
 const adapterAbi = parseAbi(['function vault() view returns (address)', 'function quote() view returns (address)', 'function asset() view returns (address)', 'function allowedVenue() view returns (address)', 'function revoked() view returns (bool)']);
 const tokenAbi = parseAbi(['function decimals() view returns (uint8)']);
 export function deployment(value: unknown): Deployment {
   const c = value as Deployment;
-  if (!c || ![10143, 31337].includes(c.chainId) || c.mode !== (c.chainId === 10143 ? 'monad-testnet' : 'local-simulation')) throw new Error('Configure an explicit Monad testnet or local simulation deployment.');
+  if (!c || ![10143, 11155111, 31337].includes(c.chainId) || c.mode !== (c.chainId === 10143 ? 'monad-testnet' : c.chainId===11155111?'ethereum-sepolia':'local-simulation')) throw new Error('Configure an explicit supported testnet or local simulation deployment.');
   const url = new URL(c.rpcUrl);
   if (!['http:', 'https:'].includes(url.protocol) || url.username || url.password || url.search || url.hash || (c.chainId === 31337 && !['127.0.0.1', 'localhost', '[::1]'].includes(url.hostname))) throw new Error('Invalid configured RPC endpoint.');
   for (const k of ['identityRegistry', 'vault', 'adapter', 'venue', 'quote', 'position'] as const) if (!/^0x[a-f0-9]{40}$/i.test(c[k]) || /^0x0{40}$/i.test(c[k]) || getAddress(c[k]) !== c[k]) throw new Error('Deployment addresses must be nonzero checksummed addresses.');
   for (const k of ['identityCodeHash', 'vaultCodeHash', 'adapterCodeHash', 'venueCodeHash'] as const) if (!/^0x[a-f0-9]{64}$/i.test(c[k]) || /^0x0{64}$/i.test(c[k])) throw new Error('Pin reviewed runtime code hashes for all binding contracts.');
-  if (!['MON / USDC', 'WMON / USDC'].includes(c.pair) || c.quote === c.position) throw new Error('Invalid configured token pair.');
+  if (!(c.chainId===11155111?['ETH / USDC','WETH / USDC']:['MON / USDC','WMON / USDC']).includes(c.pair) || c.quote === c.position) throw new Error('Invalid configured token pair.');
   if (!!c.identityImplementation !== !!c.identityImplementationCodeHash) throw new Error('Pin both proxy implementation address and code hash.');
   if (c.identityImplementation && (!/^0x[a-f0-9]{40}$/i.test(c.identityImplementation) || getAddress(c.identityImplementation) !== c.identityImplementation || /^0x0{40}$/i.test(c.identityImplementation) || !/^0x[a-f0-9]{64}$/i.test(c.identityImplementationCodeHash!) || /^0x0{64}$/i.test(c.identityImplementationCodeHash!))) throw new Error('Invalid identity implementation pin.');
   return c;
 }
 export const bindingClient = (c: Deployment) => createPublicClient({ transport: http(c.rpcUrl, { timeout: 10000, retryCount: 0 }) });
-export function identityURI(p: Prepared): string {
+export function identityURI(p: Prepared, publication?: 'commitment-only-v1'): string {
+  if(publication==='commitment-only-v1'){
+    const file={type:'https://eips.ethereum.org/EIPS/eip-8004#registration-v1',name:p.manifest.name,active:false,services:[],x_pumpcoin:{manifestCommitment:p.commitment,evidence:'operator-declared-with-local-check',manifestAvailability:'Full signed manifest is retained and exportable from the registering Pump instance; this on-chain URI records its commitment only.',investmentEligible:false}};
+    return `data:application/json;base64,${Buffer.from(JSON.stringify(file)).toString('base64')}`;
+  }
   const file = { type: 'https://eips.ethereum.org/EIPS/eip-8004#registration-v1', name: p.manifest.name, description: p.manifest.strategy.description, active: false, services: [], x_pumpcoin: { manifestCommitment: p.commitment, manifest: p.manifest, evidence: 'operator-declared-with-local-check', investmentEligible: false } };
   return `data:application/json;base64,${Buffer.from(JSON.stringify(file)).toString('base64')}`;
 }

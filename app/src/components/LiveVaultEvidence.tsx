@@ -3,8 +3,8 @@ import { formatUnits } from 'viem';
 import { RefreshCw, ExternalLink } from 'lucide-react';
 import { type RegistrationRecord } from '../lib/agent-registration';
 import { Badge, CopyValue, Note } from './UI';
+import { executionNetwork, publicTestnet } from '../../../agent-registration/networks';
 
-const explorer = 'https://testnet.monadexplorer.com';
 type Observation = ReturnType<typeof useAgentState>;
 export function LiveVaultEvidence({ record, observed }: { record: RegistrationRecord; observed?: Observation }) {
   return observed ? <VaultEvidence record={record} observed={observed}/> : <StandaloneVaultEvidence record={record}/>;
@@ -15,17 +15,18 @@ function StandaloneVaultEvidence({ record }: { record: RegistrationRecord }) {
 }
 function VaultEvidence({ record, observed }: { record: RegistrationRecord; observed: Observation }) {
   const data = observed.data?.observation, busy = observed.busy, error = observed.error || observed.data?.chainError;
-  if (record.binding?.chainId !== 10143) return null;
-  return <section className="panel" aria-label="Live Monad vault evidence">
-    <div className="panel-heading"><h2>Vault activity on Monad</h2><Badge tone="neutral">Monad testnet · {record.binding.chainId}</Badge></div>
-    <p>Reads the deployed vault and mined receipts from Monad. Updates every 60 seconds while this page is visible.</p>
+  if (!record.binding || !publicTestnet(record.binding.chainId)) return null;
+  const chain = executionNetwork(record.binding.chainId), explorer = chain.explorer;
+  return <section className="panel" aria-label="Live vault evidence">
+    <div className="panel-heading"><h2>Vault activity</h2><Badge tone="neutral">{chain.name} · {record.binding.chainId}</Badge></div>
+
     <a className="text-link" href={`${explorer}/address/${record.binding.vault}`} target="_blank" rel="noreferrer">View deployed vault <ExternalLink size={14} /></a>
-    <button className="button secondary" disabled={busy} onClick={observed.refresh}><RefreshCw size={14} />{busy ? 'Reading Monad…' : 'Refresh live evidence'}</button>
+    <button className="button secondary" disabled={busy} onClick={observed.refresh}><RefreshCw size={14} />{busy ? 'Reading chain…' : 'Refresh'}</button>
     {busy && !data && <p role="status" className="small">Reading the public vault and confirmed receipts…</p>}
     {error && <p className="form-error" role="alert">{error}</p>}
     {data && <>
       {observed.stale && <Note>This is an earlier snapshot; refresh to establish current state.</Note>}
-      <p className="small muted">Observed at block {data.blockNumber} · {new Date(data.checkedAt).toLocaleString()}. Refresh to check current state.</p>
+      <p className="small muted">Block {data.blockNumber} · {new Date(data.checkedAt).toLocaleString()}</p>
       <div className="definition-grid">
         <div><small>Vault cash</small><strong>{formatUnits(BigInt(data.cash), data.quote.decimals)} {data.quote.symbol}</strong></div>
         <div><small>{data.positionToken.symbol} position</small><strong>{formatUnits(BigInt(data.position), data.positionDecimals)}</strong></div>
@@ -43,7 +44,7 @@ function VaultEvidence({ record, observed }: { record: RegistrationRecord; obser
         <td>{tx.blockNumber}<br /><Badge tone={tx.status === 'success' ? 'neutral' : 'amber'}>{tx.status === 'success' ? 'Confirmed' : 'Reverted'}</Badge></td>
         <td><a className="text-link" href={`${explorer}/tx/${tx.hash}`} target="_blank" rel="noreferrer">{tx.hash.slice(0, 10)}…{tx.hash.slice(-6)} <ExternalLink size={14} /></a></td>
       </tr>)}</tbody></table></div>}
-      <Note>This recent activity view is not complete performance history. Deposits are capital contributions; current NAV alone does not establish trading profit. Testnet tokens have no investment-performance claim.</Note>
+      <details className="native-technical"><summary>Coverage & accounting limits</summary><p>Recent events only; not complete performance history. Failed calls without events are absent. Deposits are capital, not profit; NAV alone cannot establish returns. Testnet tokens carry no investment-performance claim. Updates every 60 seconds while visible.</p></details>
     </>}
   </section>;
 }

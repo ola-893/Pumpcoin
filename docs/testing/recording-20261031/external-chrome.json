@@ -1,0 +1,25 @@
+{
+  "scope": "Native external Chrome UI observed during the user recording; matched stored registration, research checkpoint and public chain evidence. Actual video-file coverage not independently verified.",
+  "freshRegistration": {
+    "name": "Muse RYO Recording",
+    "savedAtLocal": "2026-10-31 16:27:26 Africa/Lagos",
+    "registration": "0xc612e56ef6990289a2be162f1588fc9065b6892923e3a7b69adf040c1c38c4d0",
+    "manifest": "0xccdade5532a7479513deb780478d008a286d20201561a958bdc3b40636d51f6d",
+    "sourceInventorySha256": "a91c83665820d75b6b3d3065d0869ab33c13f327170126bf0e53bd8115de0766",
+    "workerReceipt": "0x803fb866f302d681b0425e78b54f3042dd9352995908b018d8bab7d496aac610"
+  },
+  "financialAgent": {
+    "name": "Muse RYO Demo",
+    "registration": "0x19e7d9336937879d074a36f5abb7708ddde0ef701e06852484f3efac4daacf3c",
+    "latestProposal": "HOLD",
+    "observations": 7,
+    "retainedErrors": 6,
+    "browserReplay": "Deterministic replay matched 7 decisions before export. This does not re-run or attest the model.",
+    "afterDepositShares": "1.002239",
+    "afterRedemptionShares": "1",
+    "afterRedemptionNav": "1 USDC",
+    "afterRedemptionWalletETH": "0.066764769691979859",
+    "status": "Verified on execution testnet. Your balances will refresh.",
+    "fundedTradingPermission": "inactive"
+  }
+}

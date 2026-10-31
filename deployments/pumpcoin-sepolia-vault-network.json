@@ -1,0 +1,21 @@
+{
+  "chainId": 11155111,
+  "rpcUrl": "https://ethereum-sepolia-rpc.publicnode.com",
+  "identityRegistry": "0x8004A818BFB912233c491871b3d84c89A494BD9e",
+  "identityCodeHash": "0xd0e45b1d89fa9b6cc7e97c1f155d64180e5c232aaccf9900ef9d4fd738c02b41",
+  "identityImplementation": "0x7274e874CA62410a93Bd8bf61c69d8045E399c02",
+  "identityImplementationCodeHash": "0xa5f9624ea85e45b3f4b8558581f03bfb3e6cefab278d7bf0500ec9bd065dc16f",
+  "quote": "0x1c7D4B196Cb0C7B01d743Fbc6116a902379C7238",
+  "quoteCodeHash": "0xcd3f29e2ea9c61dadd48bfeaf8b2884b6de9dfee7bf45329452c4c33d0868ceb",
+  "position": "0x7b79995e5f793A07Bc00c21412e50Ecae098E7f9",
+  "positionCodeHash": "0x9efe19754cd95e93215f98c6ad2eafc84c857315bf8d39607cd485281a8d98ee",
+  "positionDecimals": 18,
+  "observedAtBlock": "11968666",
+  "observedAtBlockHash": "0x624c9a0e0382cf97c2a43d23daa13ef3461dfee4b4bbb5ca544726e58579ea4c",
+  "sources": [
+    "https://developers.circle.com/stablecoins/usdc-contract-addresses",
+    "https://github.com/erc-8004/erc-8004-contracts",
+    "https://developers.uniswap.org/deployments.json"
+  ],
+  "identityPublication": "commitment-only-v1"
+}

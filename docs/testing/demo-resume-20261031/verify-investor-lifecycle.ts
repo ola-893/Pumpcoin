@@ -1,0 +1,35 @@
+import assert from 'node:assert/strict';
+import {readFile,writeFile} from 'node:fs/promises';
+import {createPublicClient,http,parseAbi,decodeEventLog,decodeFunctionData,keccak256} from 'viem';
+const base=new URL('./',import.meta.url),load=async(path:string)=>JSON.parse(await readFile(new URL(path,base),'utf8'));
+const n=await load('../../../deployments/pumpcoin-sepolia-vault-network.json'),deposit=await load('investor-deposit.json'),seed=await load('controller-seed.json'),failure=await load('failed-redemption.json');
+const c=createPublicClient({transport:http(n.rpcUrl,{timeout:15000,retryCount:1})}),gateway=deposit.gateway,vault=deposit.review.native.vault,owner=deposit.investor;
+const nativeAbi=(await load('../../../contracts/out/NativeVaultInvestorGateway.sol/NativeVaultInvestorGateway.json')).abi;
+const vaultAbi=(await load('../../../contracts/out/PumpCoinSepoliaDemoRegisteredVault.sol/PumpCoinSepoliaDemoRegisteredVault.json')).abi;
+// Keep this historical reconciliation bounded to its recorded exit; later demo cycles remain separate.
+const archived=await load('investor-lifecycle.json'),block=await c.getBlock({blockNumber:BigInt(archived.redemption.blockNumber)});
+const events=await c.getLogs({address:gateway,fromBlock:BigInt(deposit.blockNumber),toBlock:block.number});
+const exits=events.flatMap(log=>{try{const e=decodeEventLog({abi:nativeAbi,data:log.data,topics:log.topics});return e.eventName==='NativeRedemption'&&String((e.args as any).investor).toLowerCase()===owner.toLowerCase()?[{hash:log.transactionHash,event:e}]:[];}catch{return [];}});
+if(exits.length!==1)throw new Error(`Expected one confirmed investor redemption; observed ${exits.length}. Do not mark complete.`);
+const exit=exits[0],amount=(exit.event.args as any).shares;assert.equal(amount,BigInt(deposit.investorShares));
+const r=await c.getTransactionReceipt({hash:exit.hash}),tx=await c.getTransaction({hash:exit.hash});
+assert.equal(r.status,'success');assert.equal(tx.from.toLowerCase(),owner.toLowerCase());assert.equal(tx.to!.toLowerCase(),gateway.toLowerCase());assert.equal(tx.value,0n);
+assert.equal((await c.getBlock({blockNumber:r.blockNumber})).hash,r.blockHash);
+const call=decodeFunctionData({abi:nativeAbi,data:tx.input});assert.equal(call.functionName,'redeemMON');const args=call.args as readonly bigint[];assert.equal(args[0],amount);
+const output=(exit.event.args as any).mon as bigint,quote=(exit.event.args as any).quoteAssets as bigint;assert.ok(output>=args[2]);assert.ok(quote>=args[1]);
+const minedBlock=await c.getBlock({blockNumber:r.blockNumber});assert.ok(minedBlock.timestamp<=args[3]);
+let burned=0n,withdrawn=0n;
+for(const log of r.logs)if(log.address.toLowerCase()===vault.toLowerCase())try{const e=decodeEventLog({abi:vaultAbi,data:log.data,topics:log.topics}) as any;if(e.eventName==='Transfer'&&e.args.to==='0x0000000000000000000000000000000000000000')burned+=e.args.value;if(e.eventName==='Withdraw')withdrawn+=e.args.assets;}catch{}
+assert.equal(burned,amount);assert.equal(withdrawn,quote);
+const erc=parseAbi(['function approve(address,uint256) returns(bool)','function balanceOf(address) view returns(uint256)','function allowance(address,address) view returns(uint256)','function totalSupply() view returns(uint256)','function totalAssets() view returns(uint256)','function paused() view returns(bool)']);
+const read=(address:any,functionName:string,args:any[]=[])=>c.readContract({address,abi:erc,functionName,args,blockNumber:r.blockNumber} as any) as Promise<any>;
+const [shares,supply,allowance,cash,position,nav]=await Promise.all([read(vault,'balanceOf',[owner]),read(vault,'totalSupply'),read(vault,'allowance',[owner,gateway]),read(n.quote,'balanceOf',[vault]),read(n.position,'balanceOf',[vault]),read(vault,'totalAssets')]);
+assert.equal(shares,BigInt(seed.seedShares));assert.equal(supply,shares);assert.equal(allowance,0n);assert.equal(position,0n);assert.equal(cash,1000000n);assert.equal(nav,1000000n);
+const d=await c.getTransactionReceipt({hash:deposit.transactionHash}),dblock=await c.getBlock({blockNumber:d.blockNumber});assert.equal(d.status,'success');assert.equal((await c.getBlock({blockNumber:d.blockNumber})).hash,d.blockHash);
+const approvalHash='0x6084e24647185a0ab405919e67bae31e3aabc0faee43145a2ccbaacfd52256fa' as const,ar=await c.getTransactionReceipt({hash:approvalHash}),at=await c.getTransaction({hash:approvalHash});assert.equal(ar.status,'success');assert.equal(at.to!.toLowerCase(),vault.toLowerCase());
+const approvalCall=decodeFunctionData({abi:erc,data:at.input});assert.equal(approvalCall.functionName,'approve');assert.equal((approvalCall.args as any)[1],amount);
+const exitGas=r.gasUsed*r.effectiveGasPrice,approvalGas=ar.gasUsed*ar.effectiveGasPrice,roundTripGas=BigInt(deposit.gasPaidWei)+exitGas+approvalGas+BigInt(failure.gasPaidWei);
+const elapsed=Number(minedBlock.timestamp-dblock.timestamp);
+const walletBefore=await c.getBalance({address:owner,blockNumber:r.blockNumber-1n}),walletAfter=await c.getBalance({address:owner,blockNumber:r.blockNumber});
+const out={verified:true,scope:'Public Sepolia investor deposit and redemption, conversion fees/rounding and gas. No funded agent trade or trading return claimed.',chainId:11155111,vault,gateway,investor:owner,deposit:{hash:deposit.transactionHash,blockNumber:deposit.blockNumber,at:new Date(Number(dblock.timestamp)*1000).toISOString(),nativeInputWei:deposit.valueWei,sharesMinted:deposit.investorShares,quoteAssets:deposit.quoteAssets,gasPaidWei:deposit.gasPaidWei},approval:{hash:approvalHash,shares:String(amount),gasPaidWei:String(approvalGas)},redemption:{hash:exit.hash,blockNumber:String(r.blockNumber),blockHash:r.blockHash,at:new Date(Number(minedBlock.timestamp)*1000).toISOString(),sharesBurned:String(burned),quoteAssets:String(quote),nativeReturnedWei:String(output),minimumNativeWei:String(args[2]),gasPaidWei:String(exitGas),inputHash:keccak256(tx.input)},elapsedSeconds:elapsed,conversionDifferenceWei:String(output-BigInt(deposit.valueWei)),investorTransactionGasWei:String(roundTripGas),failedAttempt:failure,walletBlockBalanceDeltaWei:String(walletAfter-walletBefore),expectedThisTransactionNetWei:String(output-exitGas),walletDeltaScope:'Block-level wallet delta can include unrelated same-block wallet transactions; event amount is the exact gateway return.',endState:{seedSharesRemaining:String(shares),totalShares:String(supply),nativeGatewayAllowance:String(allowance),vaultQuoteUnits:String(cash),vaultPositionUnits:String(position),navQuoteUnits:String(nav)}};
+await writeFile(new URL('investor-lifecycle.json',base),JSON.stringify(out,null,2)+'\n');console.log(JSON.stringify(out,null,2));

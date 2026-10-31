@@ -15,7 +15,7 @@ export function decide(session: Session, signed: SignedPolicy,e: Evidence,trace:
   if(error) {outcome='error';reasons.push(error);}
   else if(!x) {outcome='blocked';reasons.push('Required source evidence is unavailable; model inference was not requested.');}
   else {
-    validateInterpretation(x,interpretationEvidence(e,p,session.strategy));
+    validateInterpretation(x,interpretationEvidence(e,p,session.strategy),p.symbols);
     if(x.action==='HOLD') reasons.push('The local model proposed HOLD.');
     else {
       const result=signal(p,session.strategy,e,x,time(at));
@@ -39,8 +39,8 @@ export async function replay(signed:SignedPolicy,initial:Session,rows:{receipt:R
     await verifyReceipt(r,signed.executionKey);
     if(r.body.sequence!==s.sequence+1||r.body.previousHash!==s.head||r.body.sessionId!==s.id||r.body.registrationId!==signed.policy.registrationId||r.body.policyHash!==signed.hash||r.body.strategy!==s.strategy||digest(e)!==r.body.evidenceHash||e.mode!==s.mode) throw new Error('Practice history gap or binding mismatch.');
     const advanced=advancePortfolio(s.portfolio,signed.policy,e,r.body.at);events.push(...advanced.events);s={...s,portfolio:advanced.portfolio};
-    if(r.body.trace) {validateInterpretation(r.body.trace.interpretation,interpretationEvidence(e,signed.policy,s.strategy));if(digest(JSON.parse(r.body.trace.rawContent))!==digest(r.body.trace.interpretation)||digest(r.body.trace.request)!==digest(researchRequest(r.body.trace.model,signed.policy,s.strategy,e)))throw new Error('Raw local response or exact inference request differs from the recorded interpretation/evidence.');}
-    if(r.body.trace?.response){const t=r.body.trace,response=t.response as any,choice=response?.choices?.[0];if(response.model!==t.model||response.choices?.length!==1||choice?.finish_reason!=='stop'||choice?.message?.tool_calls?.length||choice?.message?.content!==t.rawContent)throw new Error('Recorded inference response envelope is inconsistent.');}
+    if(r.body.trace) {validateInterpretation(r.body.trace.interpretation,interpretationEvidence(e,signed.policy,s.strategy),signed.policy.symbols);if(digest(JSON.parse(r.body.trace.rawContent))!==digest(r.body.trace.interpretation)||digest(r.body.trace.request)!==digest(researchRequest(r.body.trace.model,signed.policy,s.strategy,e)))throw new Error('Raw local response or exact inference request differs from the recorded interpretation/evidence.');}
+    if(r.body.trace?.response){const t=r.body.trace,response=t.response as any,choice=response?.choices?.[0];if(t.rawResponse!==undefined&&digest(JSON.parse(t.rawResponse))!==digest(response))throw new Error('Raw inference response differs from its parsed envelope.');if(response.model!==t.model||response.choices?.length!==1||choice?.finish_reason!=='stop'||choice?.message?.tool_calls?.length||choice?.message?.content!==t.rawContent)throw new Error('Recorded inference response envelope is inconsistent.');}
     const expected=decide(s,signed,e,r.body.trace,r.body.at,r.body.outcome==='error'?r.body.reasons[0]:undefined);
     if(digest(expected)!==digest(r.body)) throw new Error('Practice signal, guard or order replay mismatch.');
     if(r.body.order)s.portfolio.pending.push(r.body.order);

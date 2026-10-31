@@ -1,0 +1,375 @@
+{
+  "scope": "Read-only fault isolation across published RYO tools; no agent or production state changes, credential identities or secrets.",
+  "records": [
+    {
+      "path": "/whoami",
+      "at": "2026-10-24T21:28:52.377Z",
+      "receivedAt": "2026-10-24T21:28:53.404Z",
+      "httpStatus": 200,
+      "rateHeaders": {},
+      "identityFieldsRedacted": true,
+      "scopes": [
+        "tools:read"
+      ],
+      "expiresAt": "2026-12-17T02:33:00Z",
+      "rateLimit": 60,
+      "remaining": 60,
+      "tools": [
+        "market_overview",
+        "scan_market",
+        "analyze_token",
+        "deep_analysis",
+        "compare_tokens",
+        "monitor_market_sentiment_shift"
+      ]
+    },
+    {
+      "path": "/tools",
+      "at": "2026-10-24T21:28:53.406Z",
+      "receivedAt": "2026-10-24T21:28:54.184Z",
+      "httpStatus": 200,
+      "rateHeaders": {},
+      "body": "[{\"name\":\"market_overview\",\"description\":\"Delivery: a compact market-regime evidence pack with sentiment, market totals, dominance, movers, and explicit data gaps. Use when: an agent needs a broad market briefing before token research. Core inputs: none. Limits: research context only; incomplete lanes are marked partial or unavailable.\",\"inputSchema\":{\"type\":\"object\",\"properties\":{},\"additionalProperties\":false}},{\"name\":\"scan_market\",\"description\":\"Delivery: a ranked candidate set with price, momentum, market-activity evidence, filters, and reasons where available. Use when: an agent needs a shortlist before deeper token analysis. Core inputs: optional chain, theme, and top_n. Limits: theme is contextual rather than a strict filter; a scan is not a trade instruction.\",\"inputSchema\":{\"type\":\"object\",\"properties\":{\"chain\":{\"type\":\"string\",\"description\":\"Chain slug e.g. eth/bsc (optional).\"},\"theme\":{\"type\":\"string\",\"description\":\"Narrative/theme filter (optional).\"},\"top_n\":{\"type\":\"number\",\"description\":\"How many candidates to return.\"},\"filter_direction\":{\"type\":\"string\",\"description\":\"Direction filter: 'positive' (gainers only), 'negative' (losers only), or 'all' (default).\"}},\"additionalProperties\":false}},{\"name\":\"analyze_token\",\"description\":\"Delivery: a single-token research pack with USD market data, multi-window performance, calculated RSI and ATR, intelligence, summary, and warnings. Use when: an agent needs a quick structured token read. Core input: symbol. Limits: missing measurements are reported as unavailable and the result is not execution advice.\",\"inputSchema\":{\"type\":\"object\",\"properties\":{\"symbol\":{\"type\":\"string\",\"description\":\"Token symbol, e.g. INJ.\"},\"chain\":{\"type\":\"string\",\"description\":\"Chain slug for contract-specific safety, e.g. eth/bsc (optional).\"}},\"required\":[\"symbol\"],\"additionalProperties\":false}},{\"name\":\"deep_analysis\",\"description\":\"Delivery: a deeper token evidence pack combining market context, confluence, technicals, an optional Skill Hub token profile, derivatives, catalysts, risks, and a measured-ATR preview plan. Use when: an agent needs one comprehensive token read. Core input: token symbol; optional include_perp. Limits: token analysis only, not wallet analysis; unavailable lanes remain explicit and no trade is placed.\",\"inputSchema\":{\"type\":\"object\",\"properties\":{\"symbol\":{\"type\":\"string\",\"description\":\"Token symbol, e.g. SOL.\"},\"chain\":{\"type\":\"string\",\"description\":\"Chain slug for contract-specific safety (optional).\"},\"include_perp\":{\"type\":\"boolean\",\"description\":\"Include derivatives/perp posture (default true).\"}},\"required\":[\"symbol\"],\"additionalProperties\":false}},{\"name\":\"compare_tokens\",\"description\":\"Delivery: a side-by-side comparison of two to four tokens with factor winners, coverage by token, an overall pick, rationale, confidence, and conclusion method. Use when: an agent must compare relative momentum, market activity, and volatility using common data. Core inputs: symbols; optional intent. Limits: missing factors are disclosed and deterministic conclusions are labelled.\",\"inputSchema\":{\"type\":\"object\",\"properties\":{\"symbols\":{\"type\":\"string\",\"description\":\"2-4 token symbols to compare, comma- or space-separated, e.g. 'SOL, AVAX'.\"},\"intent\":{\"type\":\"string\",\"description\":\"Trade horizon the pick is for: swing | hold | spot (optional).\",\"enum\":[\"swing\",\"hold\",\"spot\"]}},\"required\":[\"symbols\"],\"additionalProperties\":false}},{\"name\":\"monitor_market_sentiment_shift\",\"description\":\"Delivery: a seven-day market sentiment evidence pack containing Fear & Greed level and change, BTC perpetual funding crowding, BTC liquidation pressure and side, altseason phase, the combined regime, observation dates, coverage scope, and full measurements. Use when: an agent needs to check whether market sentiment materially shifted. Core inputs: optional time_window fixed to 7d. Limits: market-wide context except for BTC-referenced derivatives; no causality claim or advice.\",\"inputSchema\":{\"type\":\"object\",\"properties\":{\"time_window\":{\"type\":\"string\",\"enum\":[\"7d\"],\"default\":\"7d\",\"description\":\"Sentiment comparison window; currently fixed to seven days.\"}},\"additionalProperties\":false}}]"
+    },
+    {
+      "path": "/tools/market_overview/call",
+      "arguments": {},
+      "at": "2026-10-24T21:28:54.185Z",
+      "receivedAt": "2026-10-24T21:28:55.473Z",
+      "httpStatus": 200,
+      "rateHeaders": {
+        "x-ratelimit-limit": "60",
+        "x-ratelimit-remaining": "59",
+        "x-ratelimit-reset": "1792877394"
+      },
+      "body": "{\"tool\":\"market_overview\",\"result\":{\"schema_version\":\"1.0\",\"tool\":\"market_overview\",\"status\":\"partial\",\"data_mode\":\"live\",\"as_of\":\"2026-10-24T21:28:55Z\",\"request\":{},\"data\":{\"regime\":\"neutral\",\"sentiment\":{\"fear_greed_index\":null,\"label\":null},\"market\":{\"total_market_cap_usd\":null,\"total_volume_24h_usd\":null,\"market_cap_change_24h_pct\":0.0,\"btc_dominance_pct\":null,\"eth_dominance_pct\":null,\"breadth\":null,\"breadth_details\":null},\"top_movers\":{\"gainers\":[],\"losers\":[]}},\"summary\":{\"headline\":\"Market regime: neutral.\",\"key_points\":[\"24h market-cap change: +0.00%.\"]},\"availability\":{\"market_regime\":\"available\",\"market_totals\":\"available\",\"market_sentiment\":\"unavailable\",\"market_breadth\":\"unavailable\",\"top_movers\":\"unavailable\"},\"warnings\":[\"Market sentiment is unavailable for this snapshot.\",\"Market breadth is unavailable for this snapshot.\",\"Top movers are unavailable for this snapshot.\"]},\"latency_ms\":605}"
+    },
+    {
+      "path": "/tools/monitor_market_sentiment_shift/call",
+      "arguments": {
+        "time_window": "7d"
+      },
+      "at": "2026-10-24T21:29:15.185Z",
+      "receivedAt": "2026-10-24T21:29:16.446Z",
+      "httpStatus": 200,
+      "rateHeaders": {
+        "x-ratelimit-limit": "60",
+        "x-ratelimit-remaining": "58",
+        "x-ratelimit-reset": "1792877394"
+      },
+      "body": "{\"tool\":\"monitor_market_sentiment_shift\",\"result\":{\"schema_version\":\"1.0\",\"tool\":\"monitor_market_sentiment_shift\",\"status\":\"unavailable\",\"data_mode\":\"unknown\",\"as_of\":\"2026-10-24T21:29:16Z\",\"request\":{\"time_window\":\"7d\"},\"data\":{\"source\":{},\"evidence\":{},\"diagnostics\":{\"execution\":{\"status\":\"failed\",\"elapsed_ms\":191}},\"error\":{\"code\":\"1010\",\"message\":\"The research provider reported that this analysis is unavailable.\",\"details\":{\"code\":1010,\"message\":\"Monthly credit limit reached. Your credits are shared between REST API and MCP.\",\"detail\":{\"upgrade_url\":\"https://coinmarketcap.com/api/pricing/\"}}}},\"summary\":{\"headline\":\"The research provider reported that this analysis is unavailable.\",\"key_points\":[]},\"availability\":{\"research\":\"unavailable\"},\"warnings\":[\"No measurements were inferred from an unavailable upstream result; retry later.\"]},\"latency_ms\":191}"
+    },
+    {
+      "path": "/tools/scan_market/call",
+      "arguments": {
+        "top_n": 3
+      },
+      "at": "2026-10-24T21:29:36.186Z",
+      "receivedAt": "2026-10-24T21:29:37.455Z",
+      "httpStatus": 200,
+      "rateHeaders": {
+        "x-ratelimit-limit": "60",
+        "x-ratelimit-remaining": "57",
+        "x-ratelimit-reset": "1792877394"
+      },
+      "body": "{\"tool\":\"scan_market\",\"result\":{\"schema_version\":\"1.0\",\"tool\":\"scan_market\",\"status\":\"unavailable\",\"data_mode\":\"unknown\",\"as_of\":\"2026-10-24T21:29:37Z\",\"request\":{\"top_n\":3},\"data\":{\"filters\":{\"chain\":null,\"theme\":null,\"limit\":3},\"selection_method\":\"Ranked by 24-hour momentum and market activity.\",\"candidate_count\":0,\"candidates\":[],\"excluded_candidate_count\":0},\"summary\":{\"headline\":\"No ranked market candidates were available.\",\"key_points\":[]},\"availability\":{\"ranked_candidates\":\"unavailable\",\"theme_filter\":\"not_requested\"},\"warnings\":[\"No candidates matched the current scan filters.\"]},\"latency_ms\":181}"
+    },
+    {
+      "path": "/tools/analyze_token/call",
+      "arguments": {
+        "symbol": "ETH",
+        "chain": "eth"
+      },
+      "at": "2026-10-24T21:29:57.187Z",
+      "receivedAt": "2026-10-24T21:29:58.446Z",
+      "httpStatus": 400,
+      "rateHeaders": {
+        "x-ratelimit-limit": "60",
+        "x-ratelimit-remaining": "57",
+        "x-ratelimit-reset": "1792877416"
+      },
+      "body": "{\"code\":\"VALIDATION_FAILED\",\"message\":\"couldn't analyze ETH right now\",\"details\":{\"tool\":\"analyze_token\",\"latency_ms\":159},\"trace_id\":\"822e60f1a5504dec8959f1695a8a98bd\"}"
+    },
+    {
+      "path": "/tools/deep_analysis/call",
+      "arguments": {
+        "symbol": "SOL",
+        "include_perp": false
+      },
+      "at": "2026-10-24T21:30:18.188Z",
+      "receivedAt": "2026-10-24T21:30:20.020Z",
+      "httpStatus": 400,
+      "rateHeaders": {
+        "x-ratelimit-limit": "60",
+        "x-ratelimit-remaining": "57",
+        "x-ratelimit-reset": "1792877437"
+      },
+      "body": "{\"code\":\"VALIDATION_FAILED\",\"message\":\"Current USD market data is unavailable for SOL.\",\"details\":{\"tool\":\"deep_analysis\",\"latency_ms\":729},\"trace_id\":\"aafc8b3ee53841478ae956d631360a92\"}"
+    },
+    {
+      "path": "/tools/compare_tokens/call",
+      "arguments": {
+        "symbols": "BTC, ETH",
+        "intent": "spot"
+      },
+      "at": "2026-10-24T21:30:39.188Z",
+      "receivedAt": "2026-10-24T21:30:43.151Z",
+      "httpStatus": 400,
+      "rateHeaders": {
+        "x-ratelimit-limit": "60",
+        "x-ratelimit-remaining": "57",
+        "x-ratelimit-reset": "1792877458"
+      },
+      "body": "{\"code\":\"VALIDATION_FAILED\",\"message\":\"Current USD market data is unavailable for enough tokens to compare them.\",\"details\":{\"tool\":\"compare_tokens\",\"latency_ms\":2929},\"trace_id\":\"637f052137134e33bf8ae87c572236c5\"}"
+    },
+    {
+      "path": "/tools/analyze_token/call",
+      "arguments": {},
+      "at": "2026-10-24T21:31:00.190Z",
+      "receivedAt": "2026-10-24T21:31:01.266Z",
+      "httpStatus": 400,
+      "rateHeaders": {
+        "x-ratelimit-limit": "60",
+        "x-ratelimit-remaining": "57",
+        "x-ratelimit-reset": "1792877479"
+      },
+      "body": "{\"code\":\"VALIDATION_FAILED\",\"message\":\"analyze_token requires a 'symbol'\",\"details\":{\"tool\":\"analyze_token\",\"latency_ms\":0},\"trace_id\":\"bf1e0f66b5af46468238790f05ddd6ac\"}"
+    },
+    {
+      "path": "/whoami",
+      "at": "2026-10-24T21:31:01.268Z",
+      "receivedAt": "2026-10-24T21:31:01.650Z",
+      "httpStatus": 200,
+      "rateHeaders": {},
+      "identityFieldsRedacted": true,
+      "scopes": [
+        "tools:read"
+      ],
+      "expiresAt": "2026-12-17T02:33:00Z",
+      "rateLimit": 60,
+      "remaining": 57,
+      "tools": [
+        "market_overview",
+        "scan_market",
+        "analyze_token",
+        "deep_analysis",
+        "compare_tokens",
+        "monitor_market_sentiment_shift"
+      ]
+    }
+  ],
+  "results": [
+    {
+      "tool": "market_overview",
+      "arguments": {},
+      "httpStatus": 200,
+      "recordIndex": 2,
+      "result": {
+        "schema_version": "1.0",
+        "tool": "market_overview",
+        "status": "partial",
+        "data_mode": "live",
+        "as_of": "2026-10-24T21:28:55Z",
+        "request": {},
+        "data": {
+          "regime": "neutral",
+          "sentiment": {
+            "fear_greed_index": null,
+            "label": null
+          },
+          "market": {
+            "total_market_cap_usd": null,
+            "total_volume_24h_usd": null,
+            "market_cap_change_24h_pct": 0,
+            "btc_dominance_pct": null,
+            "eth_dominance_pct": null,
+            "breadth": null,
+            "breadth_details": null
+          },
+          "top_movers": {
+            "gainers": [],
+            "losers": []
+          }
+        },
+        "summary": {
+          "headline": "Market regime: neutral.",
+          "key_points": [
+            "24h market-cap change: +0.00%."
+          ]
+        },
+        "availability": {
+          "market_regime": "available",
+          "market_totals": "available",
+          "market_sentiment": "unavailable",
+          "market_breadth": "unavailable",
+          "top_movers": "unavailable"
+        },
+        "warnings": [
+          "Market sentiment is unavailable for this snapshot.",
+          "Market breadth is unavailable for this snapshot.",
+          "Top movers are unavailable for this snapshot."
+        ]
+      }
+    },
+    {
+      "tool": "monitor_market_sentiment_shift",
+      "arguments": {
+        "time_window": "7d"
+      },
+      "httpStatus": 200,
+      "recordIndex": 3,
+      "result": {
+        "schema_version": "1.0",
+        "tool": "monitor_market_sentiment_shift",
+        "status": "unavailable",
+        "data_mode": "unknown",
+        "as_of": "2026-10-24T21:29:16Z",
+        "request": {
+          "time_window": "7d"
+        },
+        "data": {
+          "source": {},
+          "evidence": {},
+          "diagnostics": {
+            "execution": {
+              "status": "failed",
+              "elapsed_ms": 191
+            }
+          },
+          "error": {
+            "code": "1010",
+            "message": "The research provider reported that this analysis is unavailable.",
+            "details": {
+              "code": 1010,
+              "message": "Monthly credit limit reached. Your credits are shared between REST API and MCP.",
+              "detail": {
+                "upgrade_url": "https://coinmarketcap.com/api/pricing/"
+              }
+            }
+          }
+        },
+        "summary": {
+          "headline": "The research provider reported that this analysis is unavailable.",
+          "key_points": []
+        },
+        "availability": {
+          "research": "unavailable"
+        },
+        "warnings": [
+          "No measurements were inferred from an unavailable upstream result; retry later."
+        ]
+      }
+    },
+    {
+      "tool": "scan_market",
+      "arguments": {
+        "top_n": 3
+      },
+      "httpStatus": 200,
+      "recordIndex": 4,
+      "result": {
+        "schema_version": "1.0",
+        "tool": "scan_market",
+        "status": "unavailable",
+        "data_mode": "unknown",
+        "as_of": "2026-10-24T21:29:37Z",
+        "request": {
+          "top_n": 3
+        },
+        "data": {
+          "filters": {
+            "chain": null,
+            "theme": null,
+            "limit": 3
+          },
+          "selection_method": "Ranked by 24-hour momentum and market activity.",
+          "candidate_count": 0,
+          "candidates": [],
+          "excluded_candidate_count": 0
+        },
+        "summary": {
+          "headline": "No ranked market candidates were available.",
+          "key_points": []
+        },
+        "availability": {
+          "ranked_candidates": "unavailable",
+          "theme_filter": "not_requested"
+        },
+        "warnings": [
+          "No candidates matched the current scan filters."
+        ]
+      }
+    },
+    {
+      "tool": "analyze_token",
+      "arguments": {
+        "symbol": "ETH",
+        "chain": "eth"
+      },
+      "httpStatus": 400,
+      "recordIndex": 5,
+      "result": {
+        "code": "VALIDATION_FAILED",
+        "message": "couldn't analyze ETH right now",
+        "details": {
+          "tool": "analyze_token",
+          "latency_ms": 159
+        },
+        "trace_id": "822e60f1a5504dec8959f1695a8a98bd"
+      }
+    },
+    {
+      "tool": "deep_analysis",
+      "arguments": {
+        "symbol": "SOL",
+        "include_perp": false
+      },
+      "httpStatus": 400,
+      "recordIndex": 6,
+      "result": {
+        "code": "VALIDATION_FAILED",
+        "message": "Current USD market data is unavailable for SOL.",
+        "details": {
+          "tool": "deep_analysis",
+          "latency_ms": 729
+        },
+        "trace_id": "aafc8b3ee53841478ae956d631360a92"
+      }
+    },
+    {
+      "tool": "compare_tokens",
+      "arguments": {
+        "symbols": "BTC, ETH",
+        "intent": "spot"
+      },
+      "httpStatus": 400,
+      "recordIndex": 7,
+      "result": {
+        "code": "VALIDATION_FAILED",
+        "message": "Current USD market data is unavailable for enough tokens to compare them.",
+        "details": {
+          "tool": "compare_tokens",
+          "latency_ms": 2929
+        },
+        "trace_id": "637f052137134e33bf8ae87c572236c5"
+      }
+    },
+    {
+      "tool": "analyze_token",
+      "arguments": {},
+      "control": "deliberately-missing-required-symbol; not an asset availability probe",
+      "localSchemaRejected": true,
+      "httpStatus": 400,
+      "recordIndex": 8,
+      "result": {
+        "code": "VALIDATION_FAILED",
+        "message": "analyze_token requires a 'symbol'",
+        "details": {
+          "tool": "analyze_token",
+          "latency_ms": 0
+        },
+        "trace_id": "bf1e0f66b5af46468238790f05ddd6ac"
+      }
+    }
+  ]
+}

@@ -13,13 +13,13 @@ export async function researchInference(prepared:Prepared,policy:Policy,strategy
     matchingDetection(prepared,await detectLocalModel(endpoint,()=>{}));
     const request=researchRequest(prepared.manifest.model.id,policy,strategy,evidence);
     const startedAt=new Date().toISOString();
-    const response=await fetch(new URL('/v1/chat/completions',endpoint),{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(request),redirect:'error',signal:AbortSignal.timeout(90000)});
+    const response=await fetch(new URL('/v1/chat/completions',endpoint),{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(request),redirect:'error',signal:AbortSignal.timeout(prepared.manifest.model.id==='muse-glimmer-30b'?180000:90000)});
     if(!response.ok||!response.body)throw new Error('Local research inference is unavailable.');
     const reader=response.body.getReader(),chunks:Uint8Array[]=[];let size=0;try{for(;;){const {done,value}=await reader.read();if(done)break;size+=value.length;if(size>131072)throw new Error('Local research output is too large.');chunks.push(value);}}finally{await reader.cancel();}
-    const result=JSON.parse(Buffer.concat(chunks).toString('utf8')),choice=result.choices?.[0];
+    const rawResponse=Buffer.concat(chunks).toString('utf8'),result=JSON.parse(rawResponse),choice=result.choices?.[0];
     if(result.model!==prepared.manifest.model.id||result.choices.length!==1||choice.finish_reason!=='stop'||choice.message.tool_calls?.length||typeof choice.message.content!=='string')throw new Error('Local research output is incomplete or inconsistent.');
-    const rawContent=choice.message.content,interpretation=validateInterpretation(JSON.parse(rawContent),interpretationEvidence(evidence,policy,strategy));
+    const rawContent=choice.message.content,interpretation=validateInterpretation(JSON.parse(rawContent),interpretationEvidence(evidence,policy,strategy),policy.symbols);
     matchingDetection(prepared,await detectLocalModel(endpoint,()=>{}));
-    return {request,response:result,rawContent,interpretation,model:result.model,startedAt,finishedAt:new Date().toISOString()};
+    return {request,response:result,rawResponse,rawContent,interpretation,model:result.model,startedAt,finishedAt:new Date().toISOString()};
   });
 }

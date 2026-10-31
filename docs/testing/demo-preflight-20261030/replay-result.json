@@ -1,0 +1,34 @@
+{
+  "scope": "Unsigned rehearsal consistency replay; no signatures, provider/model attestation or funded-performance proof.",
+  "evidenceHash": "0x6c8261b6627974101fc0127e6f3ac3d200de547fc7997122172231faa44c00ea",
+  "action": "HOLD",
+  "entryGuard": {
+    "pass": false,
+    "reasons": [
+      "The signed policy blocks entries when RYO reports an avoid verdict.",
+      "A cited, fresh supporting news catalyst is required."
+    ],
+    "market": {
+      "id": "coinbase:ETH-USD",
+      "symbol": "ETH",
+      "network": "coinbase-exchange",
+      "price": "2222275000",
+      "liquidity": "745046280792",
+      "risk": {
+        "status": "unavailable"
+      },
+      "observedAt": "2026-10-30T19:19:42.464Z",
+      "observations": {
+        "price": "2026-10-30T19:19:42.464Z",
+        "liquidity": "2026-10-30T19:19:42.464Z"
+      },
+      "evidenceId": "0x8e7c9f9f0cbc797670de291183c12b3cf1f4236e6744c5c7d389555cbd0633b5",
+      "quote": {
+        "provider": "coinbase-exchange",
+        "bid": "2222270000",
+        "ask": "2222280000",
+        "depth": "minimum-two-sided-notional-within-10bps-mid"
+      }
+    }
+  }
+}

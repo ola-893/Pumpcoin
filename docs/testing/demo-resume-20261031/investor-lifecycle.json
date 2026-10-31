@@ -1,0 +1,61 @@
+{
+  "verified": true,
+  "scope": "Public Sepolia investor deposit and redemption, conversion fees/rounding and gas. No funded agent trade or trading return claimed.",
+  "chainId": 11155111,
+  "vault": "0x44E9E1a6A7eeDAfdA49f8F7d94AA1C2Bfa691ff6",
+  "gateway": "0x769cc5cbd4734e6bddea6d884dd4f5d2c8ae8f9d",
+  "investor": "0xe26468ae02368a75dbdbea58f367b7313942ad26",
+  "deposit": {
+    "hash": "0x394d8ce99fea7d76a609ec729e3ea800f5187e5142cfe1132a5efe11ec8e81a6",
+    "blockNumber": "12032307",
+    "at": "2026-10-31T07:21:24.000Z",
+    "nativeInputWei": "1000000000000",
+    "sharesMinted": "2239000000",
+    "quoteAssets": "2239",
+    "gasPaidWei": "59717315"
+  },
+  "approval": {
+    "hash": "0x6084e24647185a0ab405919e67bae31e3aabc0faee43145a2ccbaacfd52256fa",
+    "shares": "2239000000",
+    "gasPaidWei": "14719080"
+  },
+  "redemption": {
+    "hash": "0x3179e51c9a920155ffc4b24767a595461ea3b5e904727640395947218ac3a020",
+    "blockNumber": "12034046",
+    "blockHash": "0x7287ddddc8f4d0711a5fe9716c59e57e2db83a71ae1648c05c7edd523f67452a",
+    "at": "2026-10-31T13:10:24.000Z",
+    "sharesBurned": "2239000000",
+    "quoteAssets": "2239",
+    "nativeReturnedWei": "997597011611",
+    "minimumNativeWei": "996599414599",
+    "gasPaidWei": "56053520",
+    "inputHash": "0xd34a2a4873bf819a34e7c1cbacf97163ac03545a494a3c5b1a11f38178077aef"
+  },
+  "elapsedSeconds": 20940,
+  "conversionDifferenceWei": "-2402988389",
+  "investorTransactionGasWei": "133715203",
+  "failedAttempt": {
+    "scope": "Failed investor redemption retained; no shares burned or native tokens returned. Fresh quote required.",
+    "chainId": 11155111,
+    "transactionHash": "0xe6d82f3be1ec86706d2e36428a2dd0aaaf331f5d7bcaaf5b9530eeacfa8e9a5c",
+    "blockNumber": "12032477",
+    "blockHash": "0x879aac09f5cbb22a06d83c7e3a64a37ffe3f33fb05f56c809e24abfe850d8430",
+    "minedAt": "2026-10-31T07:56:00.000Z",
+    "deadline": "2026-10-31T07:55:48.000Z",
+    "deadlineExceededSeconds": 12,
+    "investorShares": "2239000000",
+    "gasPaidWei": "3225288",
+    "status": "reverted"
+  },
+  "walletBlockBalanceDeltaWei": "997540958091",
+  "expectedThisTransactionNetWei": "997540958091",
+  "walletDeltaScope": "Block-level wallet delta can include unrelated same-block wallet transactions; event amount is the exact gateway return.",
+  "endState": {
+    "seedSharesRemaining": "1000000000000",
+    "totalShares": "1000000000000",
+    "nativeGatewayAllowance": "0",
+    "vaultQuoteUnits": "1000000",
+    "vaultPositionUnits": "0",
+    "navQuoteUnits": "1000000"
+  }
+}

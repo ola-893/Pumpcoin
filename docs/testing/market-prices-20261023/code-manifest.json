@@ -1,0 +1,66 @@
+{
+  "scope": "Current price repair source hashes; historical enrollment manifest retained",
+  "engineDigest": "sha256:cb187a36dd773243229de2c294b13d8b0423e6c71e128bfc06fb7ac87cfa1532",
+  "files": [
+    {
+      "path": "research/coinbase.ts",
+      "sha256": "962bf7d44f51d0712d37bb19bebf578e210e7122dcaf0b34fd95fa5c813940b6"
+    },
+    {
+      "path": "research/providers.ts",
+      "sha256": "7567839867e53b8c5e863acfbf63b4f0e854df947beaf729bfc43c70f65367e6"
+    },
+    {
+      "path": "research/normalization.ts",
+      "sha256": "ccafe70ed8fe3647fa4e762d814cacdcafa4d610e271a5417f5bf072edf3636d"
+    },
+    {
+      "path": "research/evidence.ts",
+      "sha256": "8ad0fdf44870508cd147c8ef72e293ba494b6c96e573d910782eb55bd254732c"
+    },
+    {
+      "path": "research/eligibility.ts",
+      "sha256": "cd22f96f0100dd1cdbc20e29eb2c1cf710c8f3033d283ee3d6e189313eee1a09"
+    },
+    {
+      "path": "research/policy.ts",
+      "sha256": "7ddb69788ae690c02d5cad43420d06cfee020c4f1ba00cb643971a1f93228062"
+    },
+    {
+      "path": "research/signals.ts",
+      "sha256": "fb790b4d731c215b7479ba2f247d52ceb11bd080675ddda2e612502b95d9e387"
+    },
+    {
+      "path": "research/types.ts",
+      "sha256": "86f5549c6fd47ef40d4c2cf32960d7b42075a5b2bb9f969637756a44037d64f6"
+    },
+    {
+      "path": "research/engine.ts",
+      "sha256": "8764f74d6976b2a2c44d260b5787bedf8248cd5a4c44b85129247be1da60d897"
+    },
+    {
+      "path": "research/evaluation.ts",
+      "sha256": "989a8424fbcd8c3dd39ae6aa57d58d4cdbde5ec16db603f51e54a5251780bcd4"
+    },
+    {
+      "path": "research/service.ts",
+      "sha256": "212842b2ed63d86f110193eef2dd17da66c65f9e53f8d2d26f44e3efb099e301"
+    },
+    {
+      "path": "research/run.ts",
+      "sha256": "5b05638b9dfa7df101e9fdfbf158cd7727d5aec016bb902418e5ab5f29b90ad8"
+    },
+    {
+      "path": "app/src/components/AgentResearch.tsx",
+      "sha256": "a951c8916c4763b25661a7b1bf1fbde2eef76faa7469fb299ed44bf8a0c5daec"
+    },
+    {
+      "path": "agent-registration/vite.ts",
+      "sha256": "764968d9c04e564bac35691ad49e0d1b992671a1307dd9939c0c0af9b0e29a2d"
+    },
+    {
+      "path": "tests/research-coinbase.test.ts",
+      "sha256": "9137db43fa31025b2dec5ad1fae18f2354f00b1091794e7a6953c19688e4a9a3"
+    }
+  ]
+}

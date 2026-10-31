@@ -1,0 +1,110 @@
+{
+  "scope": "Authentic RYO MCP read-only probes; unavailable results are not tradable evidence or agent decisions. Transport credentials and account quota responses are excluded.",
+  "probes": [
+    {
+      "at": "2026-10-23T11:45:31.455Z",
+      "tool": "analyze_token",
+      "arguments": {
+        "symbol": "SOL"
+      },
+      "result": null,
+      "error": "RYO returned an unavailable or incompatible tool result.",
+      "exchanges": [
+        {
+          "method": "tools/call",
+          "params": {
+            "name": "analyze_token",
+            "arguments": {
+              "symbol": "SOL"
+            }
+          },
+          "id": 3,
+          "body": "{\"jsonrpc\": \"2.0\", \"id\": 3, \"result\": {\"content\": [{\"type\": \"text\", \"text\": \"couldn't analyze SOL right now (trace_id: c521c7df5db949b5b078ebadfc29e012)\"}], \"isError\": true}}",
+          "contentType": "application/json",
+          "receivedAt": "2026-10-23T11:45:32.642Z"
+        }
+      ]
+    },
+    {
+      "at": "2026-10-23T11:45:43.646Z",
+      "tool": "scan_market",
+      "arguments": {
+        "chain": "eth",
+        "top_n": 2
+      },
+      "result": {
+        "schema_version": "1.0",
+        "tool": "scan_market",
+        "status": "unavailable",
+        "data_mode": "unknown",
+        "as_of": "2026-10-23T11:45:44Z",
+        "request": {
+          "chain": "eth",
+          "top_n": 2
+        },
+        "data": {
+          "filters": {
+            "chain": "eth",
+            "theme": null,
+            "limit": 2
+          },
+          "selection_method": "Ranked by 24-hour momentum and market activity.",
+          "candidate_count": 0,
+          "candidates": [],
+          "excluded_candidate_count": 0
+        },
+        "summary": {
+          "headline": "No ranked market candidates were available.",
+          "key_points": []
+        },
+        "availability": {
+          "ranked_candidates": "unavailable",
+          "theme_filter": "not_requested"
+        },
+        "warnings": [
+          "No candidates matched the current scan filters."
+        ]
+      },
+      "exchanges": [
+        {
+          "method": "tools/call",
+          "params": {
+            "name": "scan_market",
+            "arguments": {
+              "chain": "eth",
+              "top_n": 2
+            }
+          },
+          "id": 4,
+          "body": "{\"jsonrpc\": \"2.0\", \"id\": 4, \"result\": {\"content\": [{\"type\": \"text\", \"text\": \"{\\\"schema_version\\\": \\\"1.0\\\", \\\"tool\\\": \\\"scan_market\\\", \\\"status\\\": \\\"unavailable\\\", \\\"data_mode\\\": \\\"unknown\\\", \\\"as_of\\\": \\\"2026-10-23T11:45:44Z\\\", \\\"request\\\": {\\\"chain\\\": \\\"eth\\\", \\\"top_n\\\": 2}, \\\"data\\\": {\\\"filters\\\": {\\\"chain\\\": \\\"eth\\\", \\\"theme\\\": null, \\\"limit\\\": 2}, \\\"selection_method\\\": \\\"Ranked by 24-hour momentum and market activity.\\\", \\\"candidate_count\\\": 0, \\\"candidates\\\": [], \\\"excluded_candidate_count\\\": 0}, \\\"summary\\\": {\\\"headline\\\": \\\"No ranked market candidates were available.\\\", \\\"key_points\\\": []}, \\\"availability\\\": {\\\"ranked_candidates\\\": \\\"unavailable\\\", \\\"theme_filter\\\": \\\"not_requested\\\"}, \\\"warnings\\\": [\\\"No candidates matched the current scan filters.\\\"]}\"}], \"isError\": false}}",
+          "contentType": "application/json",
+          "receivedAt": "2026-10-23T11:45:44.917Z"
+        }
+      ]
+    },
+    {
+      "at": "2026-10-23T11:45:55.921Z",
+      "tool": "deep_analysis",
+      "arguments": {
+        "symbol": "BTC"
+      },
+      "result": null,
+      "error": "RYO returned an unavailable or incompatible tool result.",
+      "exchanges": [
+        {
+          "method": "tools/call",
+          "params": {
+            "name": "deep_analysis",
+            "arguments": {
+              "symbol": "BTC"
+            }
+          },
+          "id": 5,
+          "body": "{\"jsonrpc\": \"2.0\", \"id\": 5, \"result\": {\"content\": [{\"type\": \"text\", \"text\": \"Current USD market data is unavailable for BTC. (trace_id: 69a707850a06438b9236ffc61bcf211d)\"}], \"isError\": true}}",
+          "contentType": "application/json",
+          "receivedAt": "2026-10-23T11:45:59.353Z"
+        }
+      ]
+    }
+  ]
+}

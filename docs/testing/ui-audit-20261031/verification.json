@@ -1,0 +1,43 @@
+{
+  "date": "2026-10-31",
+  "timezone": "Africa/Lagos",
+  "scope": "UI audit and cleanup. No transaction, live research observation or new signature submitted.",
+  "checks": {
+    "regression": {
+      "passed": 207,
+      "failed": 0,
+      "log": ".local/ui-audit-20261031/tests.log"
+    },
+    "typecheck": "passed",
+    "productionBuild": "passed",
+    "lint": "completed; existing warnings retained",
+    "diffWhitespace": "passed",
+    "signedCheckpointReplay": {
+      "passed": true,
+      "engineDigestUnchanged": true,
+      "cycles": 5,
+      "inferenceErrors": 5,
+      "positions": 0,
+      "pendingOrders": 0,
+      "cashMicroUSD": "10000000000"
+    }
+  },
+  "externalChrome": {
+    "profileOverview": "visually checked against real stored Muse RYO Demo registration",
+    "navigation": "overview, research/practice and identity/evidence inspected; investment shortcut focuses the investment card",
+    "practice": "5 observations, 5 errors, no accepted decision visible; runtime run/start/stop absent for public visitor",
+    "identity": "expanded disclosure matches controller, execution key and manifest 0x91b3d75368a43db632780c531de766ee261f5fb4b2e310a26301ccad28cd156a",
+    "directory": "search Muse RYO produces one agent; status no longer duplicated",
+    "registration": "first step and three-step navigation visually checked; no model check or new enrollment executed",
+    "wallet": "MetaMask is primary; alternatives collapsed; MetaMask unavailable in this Chrome profile",
+    "mobile": "375 \u00d7 667 iPhone SE preset visually inspected after resetting emulation pan; name wraps, primary action and navigation fit. 390-pixel container width also checked using the native DevTools computed panel. No page scripts executed.",
+    "unboundProfile": "Real Muse Sepolia profile shows Vault not linked / No vault linked yet without an endless chain-check message."
+  },
+  "remainingChecks": [
+    "Controller-connected Manage agent browser interaction: active Chrome profile did not announce MetaMask. Controller/chain gating reviewed in source; API and wallet-boundary regressions pass.",
+    "Ready-vault investment, redemption and pending-receipt browser lifecycle: current vault is paused/unconfigured and the pool/reference deviation exceeds policy. Existing tests pass; no claim of a new funded live UI pass.",
+    "Physical-device wallet and assistive-technology usability testing."
+  ],
+  "references": "references.json",
+  "audit": "../../UI-AUDIT-20261031.md"
+}

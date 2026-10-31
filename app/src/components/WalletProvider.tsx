@@ -1,3 +1,5 @@
+import type {Chain} from 'viem';
+import { executionNetwork } from '../../../agent-registration/networks';
 import { useEffect, useRef, useState, type ReactNode } from 'react';
 import { ArrowRight, Fingerprint } from 'lucide-react';
 import { Modal, Badge, CopyValue } from './UI';
@@ -63,11 +65,11 @@ export function WalletProvider({ children }: { children: ReactNode }) {
     start();
     try {
       // The wallet explicitly approves switching; no background network changes.
-      await p.request({ method: 'wallet_switchEthereumChain', params: [{ chainId: '0x279f' }] });
+      await p.request({ method: 'wallet_switchEthereumChain', params: [{ chainId: `0x${PROOFLINE_CHAIN_ID.toString(16)}` }] });
       const actual = await readBrowserBinding(p);
       if (provider.current !== p || !current.current || actual.address.toLowerCase() !== selected.address.toLowerCase() || actual.chainId !== PROOFLINE_CHAIN_ID) throw new Error('Network switch did not preserve the selected wallet. Reconnect.');
       revision.current++; update({ ...selected, ...actual, revision: revision.current }); setError('');
-    } catch (e) { setError((e as { code?: number })?.code === 4902 ? 'Add Monad testnet (chain 10143) in your wallet, then reconnect. No network was added automatically.' : publicWalletError(e)); } finally { finish(); }
+    } catch (e) { setError((e as { code?: number })?.code === 4902 ? `Add ${executionNetwork(PROOFLINE_CHAIN_ID).name} (chain ${PROOFLINE_CHAIN_ID}) in your wallet, then reconnect. No network was added automatically.` : publicWalletError(e)); } finally { finish(); }
   }
   async function sign(message: string) {
     const selected = current.current; if (!selected) throw new Error('Connect a wallet first.'); start();
@@ -86,10 +88,11 @@ export function WalletProvider({ children }: { children: ReactNode }) {
   async function sendMeraTransaction(transaction: TradingWalletTransaction, selected: WalletBinding) {
     const { withMeraAccount } = await import('../lib/mera');
     const { createWalletClient, http } = await import('viem');
-    const { monadTestnet } = await import('viem/chains');
+    const { monadTestnet,sepolia } = await import('viem/chains');
     return await withMeraAccount(false, async account => {
       if (account.address.toLowerCase() !== selected.address.toLowerCase() || !sameWallet(current.current, selected)) throw new Error('Controller changed. Reconnect before submitting.');
-      const client = createWalletClient({ account, chain: monadTestnet, transport: http() });
+      const selectedChain:Chain=transaction.chainId===11155111?sepolia:monadTestnet;
+      const client = createWalletClient({ account, chain:selectedChain, transport: http() });
       const request = await client.prepareTransactionRequest({ ...(transaction.to ? { to: transaction.to } : {}), data: transaction.data, value: BigInt(transaction.value), gas: BigInt(transaction.gas) });
       if (!sameWallet(current.current, selected)) throw new Error('Controller changed before submission.');
       const serializedTransaction = await client.signTransaction(request);
@@ -114,7 +117,7 @@ export function WalletProvider({ children }: { children: ReactNode }) {
   }
   async function sendTradingTransaction(transaction: TradingWalletTransaction) {
     const selected = current.current, p = provider.current;
-    if (!selected || (selected.kind === 'browser' && !p)) throw new Error('Connect your wallet on Monad testnet.');
+    if (!selected || (selected.kind === 'browser' && !p)) throw new Error('Connect your wallet on the selected execution testnet.');
     start();
     try {
       validateTradingTransaction(transaction, selected);
@@ -129,23 +132,27 @@ export function WalletProvider({ children }: { children: ReactNode }) {
 export function WalletButton() {
   const [open, setOpen] = useState(false);
   const wallet = useWallet();
+  const metaMask = wallet.choices.find(choice => choice.name.trim().toLowerCase() === 'metamask');
+  const otherWallets = wallet.choices.filter(choice => choice !== metaMask);
   return <>
     <button className="wallet-button" onClick={() => setOpen(true)}>{wallet.binding ? short(wallet.binding.address) : 'Connect wallet'}</button>
     {open && <Modal title={wallet.binding ? 'Your connected wallet' : 'Choose your wallet'} onClose={() => setOpen(false)}>
-      <p>Connect a Mera passkey account or an EVM browser wallet. Wallet ownership and agent performance are separate checks.</p>
       {wallet.binding ? <>
         <CopyValue value={wallet.binding.address} label="wallet address" />
-        <div className="wallet-status"><Badge tone="neutral">{wallet.binding.name}</Badge><Badge tone="neutral">{wallet.binding.chainId === 10143 ? 'Monad testnet · 10143' : `Chain ${wallet.binding.chainId}`}</Badge></div>
-        {wallet.binding.chainId !== 10143 && <button className="button full" disabled={wallet.busy} onClick={() => void wallet.switchTestnet()}>Switch to Monad testnet</button>}
+        <div className="wallet-status"><Badge tone="neutral">{wallet.binding.name}</Badge><Badge tone="neutral">{`${[10143,11155111].includes(wallet.binding.chainId)?executionNetwork(wallet.binding.chainId).name:'Chain'} · ${wallet.binding.chainId}`}</Badge></div>
+        {wallet.binding.chainId !== PROOFLINE_CHAIN_ID && <button className="button full" disabled={wallet.busy} onClick={() => void wallet.switchTestnet()}>Switch to {executionNetwork(PROOFLINE_CHAIN_ID).name}</button>}
         <button className="button secondary full" onClick={wallet.disconnect}>Disconnect from PumpCoin</button>
       </> : <div className="wallet-options">
-        <h3><Fingerprint size={18} /> Passkey account</h3>
+        <h3>MetaMask</h3>
+        <button className="button full" disabled={wallet.busy || !metaMask} onClick={() => { if (metaMask) void wallet.connectBrowser(metaMask); }}>Connect MetaMask<ArrowRight size={16} /></button>
+        {!metaMask && <p className="small muted">MetaMask not detected. Enable it in this browser.</p>}
+        {otherWallets.length > 0 && <details><summary>Other browser wallets</summary>
+          {otherWallets.map((choice, i) => <button key={`${choice.id}-${i}`} className="button secondary full" disabled={wallet.busy} onClick={() => void wallet.connectBrowser(choice)}>Connect {choice.name}<ArrowRight size={16} /></button>)}
+        </details>}
+        <details><summary>Use a passkey account</summary><h3><Fingerprint size={18} /> Passkey account</h3>
         <p className="small muted">Use an existing passkey to recover the same account. Creating a passkey makes a new account.</p>
-        <button className="button full" disabled={wallet.busy} onClick={() => void wallet.connectMera(false)}>Use existing passkey<ArrowRight size={16} /></button>
-        <button className="button secondary full" disabled={wallet.busy} onClick={() => void wallet.connectMera(true)}>Create new passkey</button>
-        <h3>Browser wallet fallback</h3>
-        {wallet.choices.map((choice, i) => <button key={`${choice.id}-${i}`} className="button secondary full" disabled={wallet.busy} onClick={() => void wallet.connectBrowser(choice)}>Connect {choice.name}<ArrowRight size={16} /></button>)}
-        {!wallet.choices.length && <p className="small muted">No browser wallet detected.</p>}
+        <button className="button secondary full" disabled={wallet.busy} onClick={() => void wallet.connectMera(false)}>Use existing passkey<ArrowRight size={16} /></button>
+        <button className="button secondary full" disabled={wallet.busy} onClick={() => void wallet.connectMera(true)}>Create new passkey</button></details>
       </div>}
       {wallet.busy && <p className="small" role="status">Waiting for your wallet…</p>}
       {wallet.error && <p className="form-error" role="alert">{wallet.error}</p>}

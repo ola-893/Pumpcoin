@@ -21,7 +21,7 @@ function singleRuntime(options: { configFile?: string; run?: typeof runAutonomou
     if (!options.configFile) throw new Error('Configure a reviewed trading deployment on the server before starting this agent.');
     const c = JSON.parse(await readFile(options.configFile, 'utf8')) as WorkerConfig;
     if (c.registrationId?.toLowerCase() !== value.toLowerCase()) throw new Error('The server trading deployment belongs to another registration.');
-    if (c.deployment?.chainId !== 10143) throw new Error('Frontend trading is restricted to Monad testnet.');
+    if (![10143,11155111].includes(c.deployment?.chainId)) throw new Error('Frontend trading requires a reviewed public testnet.');
     autonomousDeployment(c.deployment);
     return c;
   }
@@ -51,7 +51,7 @@ function singleRuntime(options: { configFile?: string; run?: typeof runAutonomou
           ...(event.hash ? { transactionHash: event.hash } : {}), message: event.state === 'budget' ? event.budgetReason === 'cooldown' ? 'Waiting for the five-minute trade interval.' : event.budgetReason === 'daily-limit' ? 'Daily faucet gas or activity limit reached. Resumes next UTC day.' : event.budgetReason === 'gas-reserve' ? 'Preserving the execution wallet gas reserve. No new trade signed.' : 'Current transaction fee exceeds the faucet budget. Waiting for an affordable estimate.' : event.state === 'blocked'
             ? 'Trading blocked by permission, valuation, runtime or pending-transaction checks.'
             : event.state === 'hold' ? 'The current proposal produced no trade.'
-            : event.state === 'success' ? 'Agent trade confirmed. Inspect its Monad receipt below.'
+            : event.state === 'success' ? 'Agent trade confirmed. Inspect its chain receipt below.'
             : event.state === 'reverted' ? 'Agent transaction reverted. Inspect its receipt.' : 'Reconciling the agent transaction.' };
       } })).then(() => {
         status = { ...status, running: false, state: 'stopped', changedAt: now(), message: 'Trader stopped. Submitted transactions may still mine; stopping does not revoke on-chain permission.' };

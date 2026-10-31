@@ -13,7 +13,7 @@ export function agentStateService(
     if (!record) throw new Error('Agent registration not found.');
     const result: AgentState = { registrationId: record.id, manifestCommitment: record.commitment, vault: record.binding?.vault, checkedAt: new Date().toISOString() };
     const [chain, worker] = await Promise.allSettled([
-      record.binding?.chainId === 10143 ? live.inspect(id, { allowStale: true, force }) : Promise.reject(new Error(record.binding ? `Chain ${record.binding.chainId} is a local simulation; no Monad observation was requested.` : 'This signed registration has no recorded vault binding.')),
+      [10143,11155111].includes(record.binding?.chainId??0) ? live.inspect(id, { allowStale: true, force }) : Promise.reject(new Error(record.binding ? `Chain ${record.binding.chainId} is a local simulation; no public-testnet observation was requested.` : 'This signed registration has no recorded vault binding.')),
       runtime.status(id),
     ]);
     const safe = (e: unknown) => e instanceof Error && !('code' in e) && e.message.length < 300 && !/\/Users\/|\/private\/|https?:\/\//.test(e.message) ? e.message : 'The evidence source could not be read. Retry the observation.';

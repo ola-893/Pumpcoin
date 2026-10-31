@@ -1,0 +1,12 @@
+{
+  "scope": "Operator-recorded terminal output from independent curl health control; no HTTP response body was received.",
+  "url": "https://app-ryochan.com/api/mcp/health",
+  "method": "GET",
+  "configuredConnectTimeoutSeconds": 5,
+  "configuredTotalTimeoutSeconds": 15,
+  "exitCode": 28,
+  "httpCode": "000",
+  "connectSeconds": 0.231901,
+  "totalSeconds": 15.006486,
+  "error": "Operation timed out after 15006 milliseconds with 0 bytes received"
+}

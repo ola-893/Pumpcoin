@@ -1,0 +1,252 @@
+{
+  "scope": "Unsigned rehearsal of authentic source collection and local Muse inference. No saved policy/session/receipt, token movement or funded performance.",
+  "startedAt": "2026-10-30T19:19:42.036Z",
+  "status": "passed",
+  "capture": {
+    "at": "2026-10-30T19:19:48.996Z",
+    "hash": "0x6c8261b6627974101fc0127e6f3ac3d200de547fc7997122172231faa44c00ea",
+    "sources": [
+      {
+        "source": "coinbase-exchange:ETH",
+        "available": true,
+        "retrievedAt": "2026-10-30T19:19:43.310Z"
+      },
+      {
+        "source": "ryo-research:ETH",
+        "available": true,
+        "retrievedAt": "2026-10-30T19:19:46.486Z"
+      },
+      {
+        "source": "ryo:ETH",
+        "available": false,
+        "reason": "RYO research is separately attributed; this response does not establish an executable market/depth mapping.",
+        "retrievedAt": "2026-10-30T19:19:46.486Z"
+      },
+      {
+        "source": "ryo-sentiment",
+        "available": true,
+        "retrievedAt": "2026-10-30T19:19:48.260Z"
+      },
+      {
+        "source": "ryo-research",
+        "available": true,
+        "retrievedAt": "2026-10-30T19:19:48.260Z"
+      },
+      {
+        "source": "ryo",
+        "available": false,
+        "reason": "RYO priced watchlist coverage is incomplete. Raw tool responses are separate from executable quotes.",
+        "retrievedAt": "2026-10-30T19:19:48.260Z"
+      },
+      {
+        "source": "coinbase-exchange",
+        "available": true,
+        "retrievedAt": "2026-10-30T19:19:48.260Z"
+      },
+      {
+        "source": "news:https://decrypt.co/feed",
+        "available": true,
+        "retrievedAt": "2026-10-30T19:19:48.996Z"
+      },
+      {
+        "source": "news",
+        "available": true,
+        "retrievedAt": "2026-10-30T19:19:48.996Z"
+      }
+    ],
+    "research": [
+      {
+        "id": "0x2d405b0c81151c3b77b270049e7d57f91655a781f5e5fddf1e4eb7054ae3bea7",
+        "tool": "analyze_token",
+        "asOf": "2026-10-30T19:19:46.000Z",
+        "status": "partial",
+        "symbol": "ETH",
+        "price": "2223.462714723219",
+        "verdict": "avoid"
+      },
+      {
+        "id": "0xb9dd84117352b522634c9b44e655a5199d7ecb92ae8bfe33217903237d428241",
+        "tool": "monitor_market_sentiment_shift",
+        "asOf": "2026-10-30T19:19:47.000Z",
+        "status": "ok",
+        "symbol": null,
+        "price": null,
+        "verdict": null
+      }
+    ],
+    "markets": [
+      {
+        "id": "coinbase:ETH-USD",
+        "observedAt": "2026-10-30T19:19:42.464Z",
+        "price": "2222275000",
+        "liquidity": "745046280792"
+      }
+    ],
+    "news": {
+      "count": 38,
+      "freshWithinOneHour": 1
+    }
+  },
+  "inference": {
+    "model": "muse-glimmer-30b",
+    "startedAt": "2026-10-30T19:19:59.441Z",
+    "finishedAt": "2026-10-30T19:22:43.615Z",
+    "requestHash": "0xe74bd986fec0a9d70f02a2206237361b5b2c321746ba439f11470c56857fd487",
+    "responseHash": "0xda8f07009abf88137139dec51c86c7acf18089b6aebfa94e9e903181ebdac745",
+    "interpretation": {
+      "action": "HOLD",
+      "symbol": "ETH",
+      "factors": [
+        {
+          "evidenceId": "0x2d405b0c81151c3b77b270049e7d57f91655a781f5e5fddf1e4eb7054ae3bea7",
+          "stance": "oppose",
+          "explanation": "RYO research verdict is avoid for ETH with sustained downtrend -17% over 30d and trend down, blocking BUY per policy blockAvoidVerdict"
+        },
+        {
+          "evidenceId": "0x2d405b0c81151c3b77b270049e7d57f91655a781f5e5fddf1e4eb7054ae3bea7",
+          "stance": "oppose",
+          "explanation": "Performance negative: change_24h_pct -4.44, change_7d_pct -7.01, change_30d_pct -16.84"
+        },
+        {
+          "evidenceId": "0xb9dd84117352b522634c9b44e655a5199d7ecb92ae8bfe33217903237d428241",
+          "stance": "oppose",
+          "explanation": "Market sentiment shift shows fear_greed 34 fear with -13 point 7d drop, material shift down, long crowding and extreme liquidation pressure on BTC perpetuals"
+        },
+        {
+          "evidenceId": "0x8e7c9f9f0cbc797670de291183c12b3cf1f4236e6744c5c7d389555cbd0633b5",
+          "stance": "support",
+          "explanation": "Coinbase market data available with deep liquidity 745B notional, price observable"
+        }
+      ],
+      "classifications": [
+        {
+          "postId": "0x470aa0f0ce240e50ef2efcf011c9ee1310b22ef484cc486d084a777beffa28c4",
+          "symbol": "ETH",
+          "sentiment": "neutral",
+          "conviction": "low",
+          "urgency": "low"
+        }
+      ]
+    },
+    "entryGuard": {
+      "pass": false,
+      "reasons": [
+        "The signed policy blocks entries when RYO reports an avoid verdict.",
+        "A cited, fresh supporting news catalyst is required."
+      ],
+      "market": {
+        "id": "coinbase:ETH-USD",
+        "symbol": "ETH",
+        "network": "coinbase-exchange",
+        "price": "2222275000",
+        "liquidity": "745046280792",
+        "risk": {
+          "status": "unavailable"
+        },
+        "observedAt": "2026-10-30T19:19:42.464Z",
+        "observations": {
+          "price": "2026-10-30T19:19:42.464Z",
+          "liquidity": "2026-10-30T19:19:42.464Z"
+        },
+        "evidenceId": "0x8e7c9f9f0cbc797670de291183c12b3cf1f4236e6744c5c7d389555cbd0633b5",
+        "quote": {
+          "provider": "coinbase-exchange",
+          "bid": "2222270000",
+          "ask": "2222280000",
+          "depth": "minimum-two-sided-notional-within-10bps-mid"
+        }
+      }
+    }
+  },
+  "registration": {
+    "id": "0x26286ce4d945639b89e24022f35a6e6e7b1963f933126fc7332491e9acd5ff07",
+    "commitment": "0x92067204bc466d7b90f36a3882f00f4bfbdb055752e8408ef72191d19e3654b7",
+    "model": {
+      "id": "muse-glimmer-30b",
+      "source": "https://huggingface.co/unsloth/Muse-Glimmer-30B-GGUF/resolve/faa5b025c584459c13febfa5c59883516710ae39/Muse-Glimmer-30B-UD-Q4_K_XL.gguf",
+      "weightsDigest": "sha256:82bece304887a313ece08400bc030f6066c7bff5b906b0cd40308ec8a409fd38",
+      "runtimeDigest": "sha256:41f2fdddcb093047df14f70f8904c686f2ea99043348032d2386d54241068461",
+      "localMeasurements": {
+        "evidence": "locally-detected-not-attested",
+        "checkedAt": "2026-10-23T14:36:41.822Z",
+        "quantization": "Q4_K - Medium",
+        "context": 8192,
+        "weightsBytes": 15878222368,
+        "sourceStatus": "local-download-record-matched",
+        "runtimeManifest": {
+          "version": "PUMPCOIN-MAPPED-RUNTIME-v1",
+          "scope": "llama-server executable and mapped non-system native libraries; excludes OS, GPU driver, strategy and proof of execution",
+          "build": "b11429-d81235049",
+          "artifacts": [
+            {
+              "name": "libcrypto.3.dylib",
+              "sha256": "6c7139ae515b274286b2f62d662a173e32d34854e1fc26cca46ee08efe16ae45",
+              "bytes": 4874336
+            },
+            {
+              "name": "libggml-base.0.26.0.dylib",
+              "sha256": "0bb8b0aef84f3fe9d352e570ef58da97e736ecea15f9fba44ab4c3d4f951e324",
+              "bytes": 537424
+            },
+            {
+              "name": "libggml-blas.so",
+              "sha256": "b60f01874e149a4c67d9d171923cc28cb0add3ad9485de06d4a73f086bdb5a59",
+              "bytes": 59424
+            },
+            {
+              "name": "libggml-cpu-apple_m4.so",
+              "sha256": "46103dd30440b3eef9a54e732cb46e693fad148d58be587d3319f6c0e3e9c8a5",
+              "bytes": 589520
+            },
+            {
+              "name": "libggml-metal.so",
+              "sha256": "eb1ca2de17ea7663781b9b3012a95e39ecd9ae54db2c76968b346c9fc6fddac3",
+              "bytes": 5517520
+            },
+            {
+              "name": "libggml.0.26.0.dylib",
+              "sha256": "d9fdae8264f577300ecc8c3b634165dbac14b794a1399cdaa422b4ab8c925722",
+              "bytes": 61232
+            },
+            {
+              "name": "libllama-common.0.6.0.dylib",
+              "sha256": "fab2fde1a21bb9920b6f14cf39924b7379a3b789d1abcbeb3e9ca014fb145d33",
+              "bytes": 5060704
+            },
+            {
+              "name": "libllama-server-impl.dylib",
+              "sha256": "5fc7d59cc85e16adaa84211b63c60c17e33c0c8715624b23e2507a76e032b73a",
+              "bytes": 6538800
+            },
+            {
+              "name": "libllama.0.6.0.dylib",
+              "sha256": "810ad2c4e137dc75daa33297e1c8f32d1e35d72eccf4eaaa6fbf8793169253ab",
+              "bytes": 3130208
+            },
+            {
+              "name": "libmtmd.0.6.0.dylib",
+              "sha256": "5c503d28b9455466e85e20134b5febaa279a1cdf26a3850fd762c7f07aebab95",
+              "bytes": 1186816
+            },
+            {
+              "name": "libomp.dylib",
+              "sha256": "cb679440b0af57131274b6c0bcc11b8c18ef7ad45e2a6625ef57e90379fc2ae4",
+              "bytes": 725984
+            },
+            {
+              "name": "libssl.3.dylib",
+              "sha256": "2b343dc7a88d6e49720ae6b939a178b5e688912e682044250203770b8acc2a08",
+              "bytes": 890256
+            },
+            {
+              "name": "llama-server",
+              "sha256": "1579d2139003a9f1b5ddccbab0a019054859fa546f724657ca7c301819240cf5",
+              "bytes": 33616
+            }
+          ]
+        }
+      }
+    }
+  },
+  "finishedAt": "2026-10-30T19:22:43.620Z"
+}

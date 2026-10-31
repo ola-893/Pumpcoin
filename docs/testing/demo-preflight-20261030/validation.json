@@ -1,0 +1,66 @@
+{
+  "scope": "Current demo enrollment, policy, retained failure handling and deployment readiness; financial lifecycle remains pending",
+  "fullSuite": {
+    "passed": 206,
+    "failed": 0,
+    "log": ".local/research/demo-tests-current.log"
+  },
+  "finalPromptTargetedChecks": {
+    "passed": 8,
+    "failed": 0
+  },
+  "typecheck": "passed",
+  "frontendBuild": "passed",
+  "lint": "passed with existing warnings",
+  "liveRehearsal": "passed; unsigned HOLD; exact raw response and archived-source replay retained",
+  "remaining": "Accepted live Muse proposal; user confirmation and independent verification of the dedicated vault; configuration and actual new-agent investment/redemption.",
+  "unitClarification": "Current prompt states integer micro-USD explicitly. Captured rehearsal preserves the earlier model unit mistake. Verify updated prompt in the signed live session.",
+  "updatedAt": "2026-10-31T05:34:55.109577+00:00",
+  "currentSignedSession": {
+    "cycles": 5,
+    "inferenceErrors": 5,
+    "acceptedModelProposals": 0,
+    "orders": 0,
+    "positions": 0,
+    "cashMicroUSD": "10000000000",
+    "checkpointReplay": "passed",
+    "uiMatchesCountersAndPortfolio": true
+  },
+  "registrationRepair": {
+    "regressionTestsPassed": 206,
+    "subsequentFeeRepairTargetedTestsPassed": 4,
+    "typecheck": "passed",
+    "build": "passed",
+    "lint": "passed with existing warnings",
+    "liveCompactCreationSimulation": "passed",
+    "deployment": "confirmed"
+  },
+  "remainingAcceptanceChecks": [
+    "Accepted live Muse proposal under the signed policy",
+    "Controller configuration proposal, activation and enablement",
+    "New-agent test-ETH investment and Pump share mint",
+    "New-agent Pump redemption and returned test ETH reconciliation"
+  ],
+  "operatorDeployments": {
+    "trading": {
+      "address": "0xa7a1c721a7F2cD392Bd3d209FE9176D7c43f1C8D",
+      "receipt": "deployments/agents/19e7d9336937879d074a36f5abb7708ddde0ef701e06852484f3efac4daacf3c-trading.json"
+    },
+    "native": {
+      "address": "0x769CC5cBd4734E6bDdEa6D884DD4F5D2c8ae8f9D",
+      "receipt": "deployments/agents/19e7d9336937879d074a36f5abb7708ddde0ef701e06852484f3efac4daacf3c-native.json"
+    },
+    "signer": "root .env PRIVATE_KEY through operator CLI only",
+    "gasCapPerCreationWei": "100000000000000",
+    "boundaryAndRecoveryTestsPassed": 5
+  },
+  "postDeploymentReadiness": {
+    "blockNumber": "12031775",
+    "ready": false,
+    "blockers": [
+      "DEX spot price differs from the independent reference by more than 5%.",
+      "The complete trading configuration has not been applied through notice.",
+      "Vault is paused."
+    ]
+  }
+}

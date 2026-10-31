@@ -1,0 +1,30 @@
+{
+  "access": "Mobbin public landing-page examples; authenticated discovery redirected to login. No premium access claimed.",
+  "library": "https://mobbin.com/",
+  "inspected": [
+    {
+      "example": "Fey Web",
+      "category": "clean-dashboards",
+      "source": "https://mobbin.com/mobbin-marketing-pages/_next/image?dpl=dpl_EusRdQCNV1gx6H2x68853oWhMReT&q=75&url=%2Fimages%2Fproblem%2Fclean-dashboards%2FFey%2520Web.png&w=3840",
+      "viewed": true,
+      "localInspectionImageSha256": "8987be51af7aa750eb1e5af1d5a038b9c109699b43f6ad713c5b3dff98f6bd11",
+      "copiedIntoProduct": false
+    },
+    {
+      "example": "Cash App iOS",
+      "category": "multi-step-forms",
+      "source": "https://mobbin.com/mobbin-marketing-pages/_next/image?dpl=dpl_EusRdQCNV1gx6H2x68853oWhMReT&q=75&url=%2Fimages%2Fproblem%2Fmulti-step-forms%2FCash%2520App%2520iOS.png&w=3840",
+      "viewed": true,
+      "localInspectionImageSha256": "b7375251845bc6d42a289d371b3628adf887865b07cabd737c353bef52db209b",
+      "copiedIntoProduct": false
+    },
+    {
+      "example": "Phantom iOS",
+      "category": "delightful-onboarding",
+      "source": "https://mobbin.com/mobbin-marketing-pages/_next/image?dpl=dpl_EusRdQCNV1gx6H2x68853oWhMReT&q=75&url=%2Fimages%2Fproblem%2Fdelightful-onboarding%2FPhantom%2520iOS.png&w=3840",
+      "viewed": true,
+      "localInspectionImageSha256": "3fb6d368a4fd6d4aae981790b85598592f8d8c0fdd9d3cefe09e689aa9617520",
+      "copiedIntoProduct": false
+    }
+  ]
+}

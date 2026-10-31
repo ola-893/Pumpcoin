@@ -9,16 +9,16 @@ import { advancePortfolio,initialPortfolio } from '../practice/ledger.js';
 import { evidence,policy,interpretation } from './research-fixtures.js';
 const t=(n:number)=>new Date(Date.parse('2026-10-16T00:00:00Z')+n*1000).toISOString();
 // This is a deliberately test-owned mapping. It is NOT an authentic RYO schema.
-const fields=['id','symbol','network','price','liquidity','safe','observedAt','liquidityObservedAt','safetyObservedAt','mode'];
-function capture():Capture {const profile:RyoProfile={version:1,tools:{analyze_token:{arguments:{symbol:'{{symbol}}'}}},fields:Object.fromEntries(fields.map(f=>[f,{tool:'analyze_token',pointer:`/${f}`}])) as RyoProfile['fields']};
-  const result={id:'test:ETH',symbol:'ETH',network:'test',price:'100',liquidity:'100000',safe:true,mode:'live',observedAt:t(5),liquidityObservedAt:t(4),safetyObservedAt:t(1)};
+const fields=['id','symbol','network','price','liquidity','observedAt','liquidityObservedAt','mode'];
+function capture():Capture {const profile:RyoProfile={version:2,tools:{analyze_token:{arguments:{symbol:'{{symbol}}'}}},fields:Object.fromEntries(fields.map(f=>[f,{tool:'analyze_token',pointer:`/${f}`}])) as RyoProfile['fields']};
+  const result={id:'test:ETH',symbol:'ETH',network:'test',price:'100',liquidity:'100000',mode:'live',observedAt:t(5),liquidityObservedAt:t(4)};
   return {kind:'ryo',symbol:'ETH',profile,catalog:[{name:'analyze_token',inputSchema:{type:'object',properties:{symbol:{type:'string'}}}}],exchanges:[{method:'tools/call',params:{name:'analyze_token',arguments:{symbol:'ETH'}},id:7,body:JSON.stringify({jsonrpc:'2.0',id:7,result:{structuredContent:result}}),contentType:'application/json',receivedAt:t(6)}],receivedAt:t(6)};
 }
-test('raw market normalization replays exactly and uses the oldest price/liquidity/safety timestamp',()=>{
-  const c=capture(),normalized=normalizeCapture(c);assert.equal(normalized.markets[0].observedAt,t(1));assert.equal(normalized.markets[0].price,'100000000');
+test('raw market normalization replays exactly and uses the oldest price/liquidity timestamp; no safety verdict is fabricated',()=>{
+  const c=capture(),normalized=normalizeCapture(c);assert.equal(normalized.markets[0].observedAt,t(4));assert.equal(normalized.markets[0].price,'100000000');
   const e=evidence(t(7));e.posts=[];e.markets=normalized.markets;e.raw=[c];e.sources=[{source:'ryo',available:true,retrievedAt:t(6)}];
-  verifyNormalization(e,policy());e.markets[0].safe=false;assert.throws(()=>verifyNormalization(e,policy()),/Normalized/);
-  const bad=capture() as Extract<Capture,{kind:'ryo'}>;delete (bad.profile.fields as any).safetyObservedAt;assert.throws(()=>normalizeCapture(bad),/mapping/);
+  verifyNormalization(e,policy());e.markets[0].risk={status:'observed',flags:[],observedAt:t(1),evidenceId:'invented'};assert.throws(()=>verifyNormalization(e,policy()),/Normalized/);
+  const bad=capture() as Extract<Capture,{kind:'ryo'}>;delete (bad.profile.fields as any).liquidityObservedAt;assert.throws(()=>normalizeCapture(bad),/mapping/);
 });
 test('raw news/X transformation preserves originals while reproducing stripping, truncation and repost attribution',()=>{
   const c:Capture={kind:'news',feed:policy().newsFeeds[0],receivedAt:t(6),contentType:'application/feed+json',body:JSON.stringify({items:[{id:'test',url:'https://example.com/story',title:'<b>Headline</b>',content_text:'a'.repeat(4500),date_published:t(1)}]})};

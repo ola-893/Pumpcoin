@@ -24,14 +24,14 @@ export function liveVaultService(config: VaultNetwork, records: () => Promise<Re
   const network = vaultNetwork(config), cache = new Map<string, { at: number; value: LiveVaultObservation }>(), pending = new Map<string, Promise<LiveVaultObservation>>();
   const failures = new Map<string, { at: number; error: unknown }>(), scopes = new Map<string, string>();
   async function collect(record: RegistrationRecord) {
-    if (!record?.binding || record.binding.chainId !== 10143 || network.chainId !== 10143) throw new Error('Select a verified Monad testnet vault. Local simulations are excluded from live evidence.');
+    if (!record?.binding || record.binding.chainId !== network.chainId || ![10143,11155111].includes(network.chainId)) throw new Error('Select a verified supported-testnet vault. Local simulations are excluded from live evidence.');
     const vault = getAddress(record.binding.vault), block = await client.getBlock({ blockTag: 'latest' });
     if (block.number === null || !block.hash) throw new Error('Live evidence could not anchor a block.');
     await networkChecks(network, client, block.number);
     const code = await client.getCode({ address: vault, blockNumber: block.number });
     if (!code || code === '0x') throw new Error('The selected vault is not deployed at this block.');
     const read = (address: string, functionName: string, args: unknown[] = [], contractAbi: any = abi) => client.readContract({ address: getAddress(address), abi: contractAbi, functionName, args, blockNumber: block.number });
-    const artifact = vaultArtifact(!!record.manifest.vaultPolicy);
+    const artifact = vaultArtifact(!!record.manifest.vaultPolicy,network.chainId);
     if (code.length !== artifact.deployedBytecode.object.length || normalized(code, artifact.deployedBytecode.immutableReferences) !== normalized(artifact.deployedBytecode.object, artifact.deployedBytecode.immutableReferences)) throw new Error('Vault runtime differs from the reviewed artifact.');
     const names = ['registrationCommitment', 'asset', 'positionAsset', 'admin', 'manager', 'paused', 'currentConfigHash', 'totalSupply', 'decimals', 'valuationSource', 'perTradeCap', 'maxPositionValue', 'expenseBudget', 'strategyHash', 'riskHash', 'identityRegistry', 'agentId'];
     const values = await Promise.all(names.map(name => read(vault, name))), v = Object.fromEntries(names.map((name, i) => [name, values[i]]));
@@ -51,7 +51,7 @@ export function liveVaultService(config: VaultNetwork, records: () => Promise<Re
     const prepared = { manifest: record.manifest, commitment: record.commitment, privateRuntimeConfig: { inferenceBaseURL: '' } };
     const identity = { strategyHash: v.strategyHash, riskHash: v.riskHash, strategyMatchesDeclaration: v.strategyHash === strategyBindingHash(prepared), riskMatchesDeclaration: v.riskHash === riskBindingHash(prepared),
       mandateMatchesDeclaration: String(v.perTradeCap) === record.manifest.proposedMandate.perTradeQuoteUnits && String(v.maxPositionValue) === record.manifest.proposedMandate.maxPositionQuoteUnits, publishedManifestURI: uri, registry: v.identityRegistry, agentId: String(v.agentId), owner,
-      ownerMatchesDeclaration: same(owner, record.manifest.controller), manifestMatchesDeclaration: uri === identityURI(prepared),
+      ownerMatchesDeclaration: same(owner, record.manifest.controller), manifestMatchesDeclaration: uri === identityURI(prepared,record.binding?.identityPublication),
       bindingMatchesRecord: same(v.identityRegistry, record.binding.identityRegistry) && String(v.agentId) === record.binding.agentId,
       controllerMatchesDeclaration: same(controller, record.manifest.controller), managerMatchesDeclaration: same(manager, record.manifest.executionKey) };
     const valuation = { source: v.valuationSource, available: nav !== undefined && valuationResult.value?.[0] === true,
@@ -110,7 +110,7 @@ export function liveVaultService(config: VaultNetwork, records: () => Promise<Re
       deploymentBlock = String(deployment.blockNumber);
     }
     if ((await client.getBlock({ blockNumber: block.number })).hash !== block.hash) throw new Error('Chain changed during the live evidence check. Refresh.');
-    return { chainId: 10143 as const, vault, blockNumber: String(block.number), blockHash: block.hash, checkedAt: new Date().toISOString(), controller, manager, paused, configHash,
+    return { chainId: network.chainId as 10143 | 11155111, vault, blockNumber: String(block.number), blockHash: block.hash, checkedAt: new Date().toISOString(), controller, manager, paused, configHash,
       cash: String(cash), position: String(position), positionDecimals, shares: String(shares), shareDecimals, ...(nav !== undefined ? { nav } : {}),
       quote: { address: network.quote, decimals: quoteDecimals, symbol: quoteSymbol }, positionToken: { address: network.position, decimals: positionDecimals, symbol: positionSymbol },
       identity, valuation, mandate: { perTradeQuoteUnits: String(v.perTradeCap), maxPositionQuoteUnits: String(v.maxPositionValue), expenseBudget: String(v.expenseBudget), configurationNoticeSeconds: String(notice) }, activity,

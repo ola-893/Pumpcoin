@@ -47,7 +47,7 @@ test('unconfigured runtime reports setup required and cannot start a trader', as
 test('runtime rejects local simulation and missing dependency pins before launching', async () => fixture(async file => {
   let starts = 0; const runtime = autonomyRuntime({ configFile: file, run: async () => { starts++; } });
   await writeFile(file, JSON.stringify({ ...config, deployment: { ...config.deployment, chainId: 31337 } }));
-  await assert.rejects(runtime.start(registrationId), /Monad testnet/);
+  await assert.rejects(runtime.start(registrationId), /public testnet/);
   await writeFile(file, JSON.stringify({ ...config, deployment: { ...config.deployment, dependencies: [] } }));
   await assert.rejects(runtime.start(registrationId), /dependencies/); assert.equal(starts, 0);
 }));

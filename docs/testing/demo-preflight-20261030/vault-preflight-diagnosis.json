@@ -1,0 +1,27 @@
+{
+  "scope": "Read-only diagnostics and successful live creation simulation; not a deployment receipt",
+  "fork": {
+    "chainId": 11155111,
+    "blockNumber": 12028886,
+    "creationSucceeded": true,
+    "gasUsed": 11360519
+  },
+  "liveRpc": {
+    "publicNode": "eth_call reverted; estimate reports out of gas even with 50m cap",
+    "otherPublicEndpoints": "HTML, timeout or connection failures",
+    "diagnosis": "trace_call reports out-of-gas within ERC-8004 registry storage for the full manifest URI"
+  },
+  "at": "2026-10-30T19:55:16.559Z",
+  "repair": {
+    "publication": "commitment-only-v1",
+    "fullManifest": "unchanged; retained with signed authorizations in Pump and available for export",
+    "liveCreationCall": "success",
+    "estimatedGas": 42109784,
+    "preparedGasLimit": 46320762,
+    "estimatedFeeWei": "5373208392",
+    "canSubmit": true,
+    "tests": "21 targeted tests passed, including real local EVM creation and wrong-mode rejection",
+    "onChainTransactionSent": false
+  },
+  "updatedAt": "2026-10-30T20:09:47.407975+00:00"
+}

@@ -1,0 +1,21 @@
+{
+  "verified": true,
+  "checkpoint": "0x2f5cacfecfd5fa9a5b4715451374a84bd5015278f43fd263371ac6e322daeb6f",
+  "head": "0x40b10a1773a1c407b4884c34445aa83ea1849e7f9cd582a4329260014d276577",
+  "observations": 7,
+  "retainedErrors": 6,
+  "acceptedProposals": 1,
+  "latestOutcome": "hold",
+  "latestAt": "2026-10-31T13:41:47.123Z",
+  "traceStartedAt": "2026-10-31T13:39:39.857Z",
+  "traceFinishedAt": "2026-10-31T13:41:47.123Z",
+  "virtualCash": "10000000000",
+  "virtualCashDecimals": 6,
+  "fees": "0",
+  "realized": "0",
+  "positions": 0,
+  "pending": 0,
+  "valuationMarks": 7,
+  "tradeEvents": 0,
+  "scope": "Original signatures and policy, exact request/response, normalization, chronology, deterministic replay, unchanged six-receipt prefix and independent zero-order accounting. No fresh inference, provider-truth, complete coverage or hardware-attestation claim."
+}

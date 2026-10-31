@@ -1,3 +1,4 @@
+import { ACTIVE_CHAIN_ID,publicTestnet } from '../../../agent-registration/networks.js';
 import { validatePoolFundingTransaction } from './pool-funding-wallet.js';
 import type { PoolFundingAuthorization } from '../../../agent-registration/pool-funding-types.js';
 import { decodeFunctionData, parseAbi, getAddress, isAddress, recoverMessageAddress, stringToHex, type Address, type Hex } from 'viem';
@@ -5,7 +6,7 @@ import { decodeFunctionData, parseAbi, getAddress, isAddress, recoverMessageAddr
 import { validateNativeTransaction } from './native-wallet.js';
 import type { NativeAuthorization } from '../../../agent-registration/native-investment-types.js';
 
-export const PROOFLINE_CHAIN_ID = 10143;
+export const PROOFLINE_CHAIN_ID = ACTIVE_CHAIN_ID;
 export type Provider = {
   request(args: { method: string; params?: unknown[] }): Promise<unknown>;
   on?(event: string, callback: (value: unknown) => void): void;
@@ -38,7 +39,7 @@ export async function signChecked(args: {
 }) {
   const guard = () => { if (!sameWallet(args.current(), args.binding)) throw new Error('Wallet changed. Start a new ownership check.'); };
   guard();
-  if (args.binding.chainId !== PROOFLINE_CHAIN_ID) throw new Error('Select Monad testnet before signing.');
+  if (!publicTestnet(args.binding.chainId)) throw new Error('Select the registered execution testnet before signing.');
   await args.assertExternal(); guard();
   const signature = await args.sign(args.message);
   await args.assertExternal(); guard();
@@ -72,9 +73,10 @@ export function passkeyAvailability() {
   return '';
 }
 
-export type VaultWalletTransaction = { chainId: number; from: Address; to?: Address; data: Hex; value: '0x0'; gas: Hex };
+export type VaultWalletTransaction = { chainId: number; from: Address; to?: Address; data: Hex; value: '0x0'; gas: Hex; gasPrice?:Hex };
 export function validateVaultTransaction(tx: VaultWalletTransaction, binding: WalletBinding) {
-  if (tx.chainId !== PROOFLINE_CHAIN_ID || tx.value !== '0x0' || !/^0x[0-9a-f]+$/i.test(tx.data) || !/^0x[0-9a-f]+$/i.test(tx.gas) || tx.from.toLowerCase() !== binding.address.toLowerCase()) throw new Error('Invalid controller vault transaction.');
+  if ((!publicTestnet(tx.chainId)||tx.chainId!==binding.chainId) || tx.value !== '0x0' || !/^0x[0-9a-f]+$/i.test(tx.data) || !/^0x[0-9a-f]+$/i.test(tx.gas) || tx.from.toLowerCase() !== binding.address.toLowerCase()) throw new Error('Invalid controller vault transaction.');
+  if(tx.gasPrice!==undefined&&(!/^0x[0-9a-f]+$/i.test(tx.gasPrice)||BigInt(tx.gasPrice)<=0n))throw new Error('Invalid deployment gas price.');
   if (tx.to) {
     walletAddress(tx.to);
     const abi = parseAbi(['function grantTradingPermission(address,bytes32,uint64,uint256,uint16)', 'function revokeTradingPermission()']);
@@ -84,8 +86,8 @@ export function validateVaultTransaction(tx: VaultWalletTransaction, binding: Wa
 export async function sendBrowserVaultTransaction(provider: Provider, binding: WalletBinding, current: () => WalletBinding | undefined, tx: VaultWalletTransaction): Promise<Hex> {
   validateVaultTransaction(tx, binding);
   const actual = await readBrowserBinding(provider);
-  if (!sameWallet(current(), binding) || actual.address !== binding.address || actual.chainId !== tx.chainId) throw new Error('Connect the controller on Monad testnet before submitting.');
-  const hash = await provider.request({ method: 'eth_sendTransaction', params: [{ from: binding.address, ...(tx.to ? { to: tx.to } : {}), data: tx.data, value: tx.value, gas: tx.gas, chainId: '0x279f' }] });
+  if (!sameWallet(current(), binding) || actual.address !== binding.address || actual.chainId !== tx.chainId) throw new Error('Connect the controller on the transaction’s testnet before submitting.');
+  const hash = await provider.request({ method: 'eth_sendTransaction', params: [{ from: binding.address, ...(tx.to ? { to: tx.to } : {}), data: tx.data, value: tx.value, gas: tx.gas, ...(tx.gasPrice?{gasPrice:tx.gasPrice}:{}),chainId: `0x${tx.chainId.toString(16)}` }] });
   // Never discard a submitted hash because the user subsequently changes wallets.
   // The server verifies its sender, exact input, receipt and chain independently.
   if (typeof hash !== 'string' || !/^0x[0-9a-f]{64}$/i.test(hash)) throw new Error('Wallet did not return a deployment transaction hash. Check wallet activity before retrying.');
@@ -98,24 +100,25 @@ export function validateTradingQuote(tx: TradingWalletTransaction) {
 }
 export function validateTradingTransaction(tx: TradingWalletTransaction, binding: WalletBinding) {
   validateTradingQuote(tx);
+  if (!publicTestnet(tx.chainId) || tx.chainId !== binding.chainId) throw new Error('Transaction chain differs from the connected execution testnet.');
   if (!tx.to) throw new Error('Infrastructure creation is unavailable in the investment/trading wallet flow.');
   if ([tx.native, tx.funding, tx.executionFunding].filter(Boolean).length > 1) throw new Error('Conflicting transaction authorization.');
   if (tx.executionFunding) {
     const f = tx.executionFunding;
-    if (tx.chainId !== PROOFLINE_CHAIN_ID || tx.from !== binding.address || f.controller !== binding.address || tx.to !== f.manager || walletAddress(f.manager) !== f.manager || f.manager === f.controller
-        || !['10000000000000000','200000000000000000'].includes(f.amount) || !/^0x[0-9a-f]+$/i.test(tx.value) || BigInt(tx.value) !== BigInt(f.amount) || tx.data !== '0x' || !/^0x[0-9a-f]+$/i.test(tx.gas)) throw new Error('Invalid agent gas funding transaction.');
+    if ((!publicTestnet(tx.chainId)||tx.chainId!==binding.chainId) || tx.from !== binding.address || f.controller !== binding.address || tx.to !== f.manager || walletAddress(f.manager) !== f.manager || f.manager === f.controller
+        || !(tx.chainId === 11155111 ? ['100000000000000'] : ['10000000000000000','200000000000000000']).includes(f.amount) || !/^0x[0-9a-f]+$/i.test(tx.value) || BigInt(tx.value) !== BigInt(f.amount) || tx.data !== '0x' || !/^0x[0-9a-f]+$/i.test(tx.gas)) throw new Error('Invalid agent gas funding transaction.');
     return;
   }
   if (tx.funding) { validatePoolFundingTransaction(tx, binding.address); return; }
   if (tx.native) { validateNativeTransaction(tx, binding.address); return; }
-  if (tx.chainId !== PROOFLINE_CHAIN_ID || (!/^0x[0-9a-f]+$/i.test(tx.value) || BigInt(tx.value) > 1000000000000000n || (BigInt(tx.value) > 0n && tx.to?.toLowerCase() !== '0x2880ab155794e7179c9ee2e38200202908c17b43')) || !/^0x[0-9a-f]+$/i.test(tx.data) || !/^0x[0-9a-f]+$/i.test(tx.gas) || tx.from.toLowerCase() !== binding.address.toLowerCase() || (tx.to !== undefined && walletAddress(tx.to) !== tx.to)) throw new Error('Invalid testnet vault transaction.');
+  if ((!publicTestnet(tx.chainId)||tx.chainId!==binding.chainId) || (!/^0x[0-9a-f]+$/i.test(tx.value) || BigInt(tx.value) > 1000000000000000n || (BigInt(tx.value) > 0n && tx.to?.toLowerCase() !== '0x2880ab155794e7179c9ee2e38200202908c17b43')) || !/^0x[0-9a-f]+$/i.test(tx.data) || !/^0x[0-9a-f]+$/i.test(tx.gas) || tx.from.toLowerCase() !== binding.address.toLowerCase() || (tx.to !== undefined && walletAddress(tx.to) !== tx.to)) throw new Error('Invalid testnet vault transaction.');
 }
 export async function sendBrowserTradingTransaction(provider: Provider, binding: WalletBinding, current: () => WalletBinding | undefined, tx: TradingWalletTransaction): Promise<Hex> {
   validateTradingTransaction(tx, binding);
   const actual = await readBrowserBinding(provider);
   if (!sameWallet(current(), binding) || actual.address !== binding.address || actual.chainId !== tx.chainId) throw new Error('Wallet or network changed. Review this transaction again.');
   validateTradingQuote(tx);
-  const hash = await provider.request({ method: 'eth_sendTransaction', params: [{ from: binding.address, ...(tx.to ? { to: tx.to } : {}), data: tx.data, value: tx.value, gas: tx.gas, chainId: '0x279f' }] });
+  const hash = await provider.request({ method: 'eth_sendTransaction', params: [{ from: binding.address, ...(tx.to ? { to: tx.to } : {}), data: tx.data, value: tx.value, gas: tx.gas, chainId: `0x${tx.chainId.toString(16)}` }] });
   if (typeof hash !== 'string' || !/^0x[0-9a-f]{64}$/i.test(hash)) throw new Error('Wallet did not return a transaction hash. Check wallet activity before retrying.');
   return hash as Hex;
 }

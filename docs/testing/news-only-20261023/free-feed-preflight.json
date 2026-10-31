@@ -1,0 +1,22 @@
+{
+  "at": "2026-10-23T15:22:36.224Z",
+  "feedRequests": 1,
+  "xRequests": 0,
+  "ryoRequests": 0,
+  "newsItems": 25,
+  "freshWithinOneHour": 0,
+  "newsSources": [
+    {
+      "source": "news:https://www.coindesk.com/arc/outboundfeeds/rss",
+      "available": true,
+      "retrievedAt": "2026-10-23T15:22:36.224Z"
+    },
+    {
+      "source": "news",
+      "available": true,
+      "retrievedAt": "2026-10-23T15:22:36.224Z"
+    }
+  ],
+  "rawSha256": "91f167593824754619a92e06ce13f04fba1f91cd4f51fca2c24eca168d76e93d",
+  "scope": "Free feed retrieval and reproducible normalization only; not an agent decision, market-price verification or proof of news truth."
+}

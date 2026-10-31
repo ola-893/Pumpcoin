@@ -11,7 +11,7 @@ const binding: WalletBinding = { address: account.address, chainId: PROOFLINE_CH
 const source = readFileSync('app/public/evidence/vault-local-evidence.json', 'utf8'), scope = performanceScope(readDemo(source), source);
 const origin = 'http://localhost:5189';
 function mock() {
-  let current: WalletBinding | undefined = { ...binding }, actual = account.address, chain = 10143, signCalls = 0;
+  let current: WalletBinding | undefined = { ...binding }, actual = account.address, chain: number = PROOFLINE_CHAIN_ID, signCalls = 0;
   let hook = async () => {};
   const p: Provider = { request: async ({ method, params }) => {
     if (method === 'eth_accounts') return [actual];
@@ -31,7 +31,7 @@ test('Wrong chain and silent account/network changes fail before a wallet signat
     const m = mock(); setup(m); await assert.rejects(signBrowserMessage(m.p, binding, m.current, 'check')); assert.equal(m.calls(), 0);
   }
   const m = mock(), mainnet = { ...binding, chainId: 1 }; m.revise(mainnet);
-  await assert.rejects(signBrowserMessage(m.p, mainnet, m.current, 'check'), /Monad/); assert.equal(m.calls(), 0);
+  await assert.rejects(signBrowserMessage(m.p, mainnet, m.current, 'check'), /execution testnet/); assert.equal(m.calls(), 0);
 });
 test('Switching away and back, disconnecting, or changing account during prompt rejects a late signature', async () => {
   for (const change of [undefined, { ...binding, revision: 3 }, { ...binding, address: other.address }, { ...binding, chainId: 1 }]) {
@@ -49,7 +49,7 @@ test('A provider returning a different signer or malformed signature never verif
 test('Challenge pins origin, wallet, exact evidence, deployment, strategy and five-minute lifetime', () => {
   const message = createOwnershipChallenge(binding, scope, origin, 100, 'a'.repeat(64));
   validateOwnershipChallenge(message, binding, scope, origin, 101);
-  assert.equal(JSON.parse(message).evidence.evidenceChainId, 31337); assert.equal(JSON.parse(message).walletChainId, 10143);
+  assert.equal(JSON.parse(message).evidence.evidenceChainId, 31337); assert.equal(JSON.parse(message).walletChainId, PROOFLINE_CHAIN_ID);
   for (const field of ['vault', 'manager', 'configHash', 'strategyHash', 'bundleHash', 'fromBlock', 'toBlock', 'environment', 'evidenceChainId']) {
     const c = JSON.parse(message); c.evidence[field] = 'altered'; assert.throws(() => validateOwnershipChallenge(JSON.stringify(c), binding, scope, origin, 101));
   }

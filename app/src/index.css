@@ -129,3 +129,42 @@ p { line-height: 1.75; }
 .home-proof-list span { display: flex; align-items: center; gap: 10px; }
 .home-proof-list svg { flex-shrink: 0; color: var(--purple); }
 .hero-proof .proof-metric strong { font-size: clamp(20px, 2vw, 26px); line-height: 1.25; }
+/* Focused registration and wallet alternatives. */
+.registration-advanced { margin: 20px 0; border-top: 1px solid var(--line); padding-top: 12px; }
+.registration-advanced > summary,.registration-success summary,.wallet-options summary { cursor: pointer; min-height: 44px; align-content: center; color: #694398; font-size: 13px; }
+.registration-success h3 { margin: 16px 0 8px; }
+.registration-success > .button { margin: 20px 0; }
+.registration-success details { margin-top: 16px; }
+.registration-success .text-button { display: flex; min-height: 44px; gap: 8px; align-items: center; }
+.wallet-options > details { border-top: 1px solid var(--line); margin-top: 16px; padding-top: 8px; }
+.registered-agent-card .agent-card-stats { grid-template-columns: minmax(140px,1fr) auto; }
+.directory-scope { margin: 24px 0 0; }
+#root, main { min-width: 0; width: 100%; }
+@media(max-width:520px) {
+ .nav-shell { gap: 8px; }
+ .nav-actions { min-width: 0; }
+}
+.agent-directory .lede { font-size: 14px; }
+.agent-directory .directory-summary span { font-size: 12px; }
+.agent-directory .filter-pills button { font-size: 12px; min-height: 44px; }
+.agent-directory .search-box input { font-size: 13px; }
+.agent-directory .registered-agent-card p { font-size: 13px; line-height: 1.65; }
+.agent-directory .agent-tags span { font-size: 10px; }
+.agent-directory .agent-card-stats small { font-size: 12px; }
+.agent-directory .agent-card-stats span { font-size: 11px; }
+.registration-form .form-field label { font-size: 13px; }
+.registration-form .form-field small { font-size: 12px; line-height: 1.65; }
+.registration-sidebar li strong { font-size: 12px; }
+.wallet-button { min-height: 44px; }
+@media(max-width:520px) {
+ .agent-directory .toolbar { gap: 12px; }
+ .agent-directory .filter-pills { width: 100%; }
+ .agent-directory .filter-pills button { flex: 1; font-size: 11px; padding: 9px; }
+ .registration-sidebar li strong { font-size: 10px; }
+ .wallet-button { font-size: 11px; }
+}
+
+/* Registration network is supporting detail, not a warning banner. */
+.registration-network { margin: -16px 0 28px; color: var(--muted); font-size: 13px; }
+.registration-network summary { width: fit-content; min-height: 36px; padding: 8px 0; }
+.registration-network .copy-value { max-width: 560px; }

@@ -12,10 +12,12 @@ import { permissionStatus, permissionPlan, executionFundingPlan } from './permis
 import type { ExecutionSignerStore } from './signer.js';
 export type { RegistrationRecord } from './types.js';
 type Session = { challenge: Challenge; prepared: Prepared; job?: { status: 'running' | 'ready' | 'error'; result?: WorkerReceipt; error?: string }; checkedAt?: number; consumed: boolean };
-export function registrationService(options: { directory: string; signer?: () => Promise<ExecutionSignerStore | undefined>; config?: Deployment; vaultNetwork?: VaultNetwork; now?: () => number; worker?: typeof checkLocalWorker; detect?: typeof detectLocalModel; binding?: typeof verifyBinding; plan?: typeof identityPlan }) {
+export function registrationService(options: { directory: string; signer?: () => Promise<ExecutionSignerStore | undefined>; config?: Deployment; vaultNetwork?: VaultNetwork; historicalVaultNetworks?:VaultNetwork[]; now?: () => number; worker?: typeof checkLocalWorker; detect?: typeof detectLocalModel; binding?: typeof verifyBinding; plan?: typeof identityPlan }) {
   const sessions = new Map<string, Session>(), now = options.now ?? Date.now, worker = options.worker ?? checkLocalWorker, detect = options.detect ?? detectLocalModel;
   const config = options.config && deployment(options.config);
   const setup = options.vaultNetwork && vaultNetwork(options.vaultNetwork), confirming = new Set<string>();
+  const permissionNetworks=[...(setup?[setup]:[]),...(options.historicalVaultNetworks??[]).map(vaultNetwork)];
+  const permissionNetwork=(record:RegistrationRecord)=>{const network=permissionNetworks.find(n=>n.chainId===record.authorization.challenge.chainId);if(!network||record.binding?.chainId!==network.chainId)throw new Error('No reviewed network matches this signed vault permission scope.');return network;};
   if (setup && config && setup.chainId !== config.chainId) throw new Error("Vault setup and binding chains differ.");
   let working = false;
   const session = (id: string, origin: string) => { const s = sessions.get(id); if (!s || s.consumed || s.challenge.origin !== origin || now() >= s.challenge.expiresAt) throw new Error('Registration session is expired, consumed or belongs to another origin. Start again.'); return s; };
@@ -56,9 +58,11 @@ export function registrationService(options: { directory: string; signer?: () =>
       return signature;
     },
     vaultSetupConfigured: !!setup,
+    executionNetwork: setup ? {chainId:setup.chainId,quote:setup.quote,position:setup.position} : undefined,
     challenge(value: unknown, origin: string) {
       const p = checkedPrepared(value); new URL(origin);
-      if (p.manifest.vaultPolicy && (setup?.chainId ?? config?.chainId ?? 10143) !== 10143) throw new Error('Instant demo registration is restricted to Monad testnet.');
+      if(setup?.chainId===11155111&&!['ETH / USDC','WETH / USDC'].includes(p.manifest.strategy.pair))throw new Error('This helper targets Sepolia WETH/test-USDC. Create a new declaration for this market; historical Monad signatures are retained.');
+      if (p.manifest.vaultPolicy && (setup?.chainId ?? config?.chainId ?? 10143) !== p.manifest.vaultPolicy.chainId) throw new Error('Instant demo registration must match its signed testnet.');
       for (const [id, s] of sessions) if (s.consumed || s.challenge.expiresAt <= now()) sessions.delete(id);
       if (sessions.size >= 100) throw new Error('Too many pending registration sessions. Wait for them to expire.');
       const c: Challenge = { id: randomBytes(32).toString('hex'), origin, chainId: setup?.chainId ?? config?.chainId ?? 10143, commitment: p.commitment, runtimeConfigHash: runtimeConfigHash(p), controller: p.manifest.controller, executionKey: p.manifest.executionKey, expiresAt: now() + 600000, ...(p.manifest.vaultPolicy ? { demoMode: true as const } : {}) };
@@ -96,19 +100,19 @@ export function registrationService(options: { directory: string; signer?: () =>
       if (!setup) throw new Error('Vault network is not configured.');
       const { record, prepared } = await read(id);
       if (!record.binding) throw new Error('Create and verify the agent vault first.');
-      return executionFundingPlan(prepared, record.binding.vault, setup);
+      return executionFundingPlan(prepared, record.binding.vault, permissionNetwork(record));
     },
     async autonomyStatus(id: string) {
       if (!setup) throw new Error('Vault network is not configured.');
       const { record, prepared } = await read(id);
       if (!record.binding) throw new Error('Create and verify the agent vault first.');
-      return permissionStatus(prepared, record.binding.vault, setup);
+      return permissionStatus(prepared, record.binding.vault, permissionNetwork(record));
     },
     async autonomyPlan(id: string, action: 'grant' | 'revoke', days: number, dailyQuoteCap: string) {
       if (!setup) throw new Error('Vault network is not configured.');
       const { record, prepared } = await read(id);
       if (!record.binding) throw new Error('Create and verify the agent vault first.');
-      return permissionPlan(prepared, record.binding.vault, setup, action, { days, dailyQuoteCap });
+      return permissionPlan(prepared, record.binding.vault, permissionNetwork(record), action, { days, dailyQuoteCap });
     },
     async records() {
       let names: string[]; try { names = await readdir(options.directory); } catch (e) { if ((e as {code?: string}).code === 'ENOENT') return []; throw e; }

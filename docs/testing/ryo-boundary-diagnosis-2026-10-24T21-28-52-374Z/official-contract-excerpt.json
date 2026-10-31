@@ -1,0 +1,139 @@
+{
+  "guide": {
+    "url": "https://dev.ryobuild.com/docs/MCP-Builder-Guide.md",
+    "sha256": "c87611bd99d825bdb44f1b4f0ccafbb1d09b2f6c4cbbb13f965eaf65e182c77c",
+    "bytes": 12471,
+    "unchangedFromPreviouslyVerifiedGuide": true
+  },
+  "openapi": {
+    "url": "https://app-ryochan.com/api/openapi.json",
+    "sha256": "0db307fd6122c0e04a76d9a5e27222936ab1c962cffc5025c24b2dee287a8d5f",
+    "bytes": 492633,
+    "paths": {
+      "/api/mcp/tools/{tool_name}/call": {
+        "post": {
+          "tags": [
+            "mcp"
+          ],
+          "summary": "Call Tool Rest",
+          "description": "REST equivalent of ``tools/call``.\n\nUnlike JSON-RPC, a failing tool here surfaces as HTTP 400 with an\n``ErrorEnvelope`` — REST clients expect status codes to carry failure, and the\ntrace_id lands in the body either way.",
+          "operationId": "call_tool_rest_api_mcp_tools__tool_name__call_post",
+          "security": [
+            {
+              "HTTPBearer": []
+            }
+          ],
+          "parameters": [
+            {
+              "name": "tool_name",
+              "in": "path",
+              "required": true,
+              "schema": {
+                "type": "string",
+                "title": "Tool Name"
+              }
+            }
+          ],
+          "requestBody": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "anyOf": [
+                    {
+                      "type": "object"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ],
+                  "title": "Body"
+                }
+              }
+            }
+          },
+          "responses": {
+            "200": {
+              "description": "Successful Response",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "type": "object",
+                    "title": "Response Call Tool Rest Api Mcp Tools  Tool Name  Call Post"
+                  }
+                }
+              }
+            },
+            "422": {
+              "description": "Validation Error",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/HTTPValidationError"
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "/api/mcp/tools": {
+        "get": {
+          "tags": [
+            "mcp"
+          ],
+          "summary": "List Tools",
+          "description": "The published catalog. Authenticated — unlike ``GET /api/skills/``, this does\nnot expose the full chat-skill registry, and there is no reason to let anonymous\ncallers enumerate even the published builder tools.\n\nNot charged against either bucket, and so carries no ``X-RateLimit-*`` headers:\nthe catalog costs nothing upstream, and a client re-reading it should not spend\nits call budget on discovery. Read quota from ``/whoami`` or from a tool call.",
+          "operationId": "list_tools_api_mcp_tools_get",
+          "responses": {
+            "200": {
+              "description": "Successful Response",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "items": {
+                      "$ref": "#/components/schemas/McpToolInfo"
+                    },
+                    "type": "array",
+                    "title": "Response List Tools Api Mcp Tools Get"
+                  }
+                }
+              }
+            }
+          },
+          "security": [
+            {
+              "HTTPBearer": []
+            }
+          ]
+        }
+      },
+      "/api/mcp/whoami": {
+        "get": {
+          "tags": [
+            "mcp"
+          ],
+          "summary": "Whoami",
+          "description": "Confirm a credential and read remaining quota.\n\nUses ``peek``, not ``hit``: checking your own quota must not consume it.",
+          "operationId": "whoami_api_mcp_whoami_get",
+          "responses": {
+            "200": {
+              "description": "Successful Response",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/BuilderWhoAmI"
+                  }
+                }
+              }
+            }
+          },
+          "security": [
+            {
+              "HTTPBearer": []
+            }
+          ]
+        }
+      }
+    }
+  }
+}

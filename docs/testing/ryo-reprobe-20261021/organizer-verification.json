@@ -1,0 +1,128 @@
+{
+  "verifiedAt": "2026-10-21T10:07:42.659Z",
+  "scope": "Unauthenticated public documents and schemas only; no participant records, submissions, messages or financial actions",
+  "sources": [
+    {
+      "name": "organizer-dev-guide",
+      "url": "https://dev.ryobuild.com/docs/MCP-Builder-Guide.md",
+      "httpStatus": 200,
+      "contentType": "application/octet-stream",
+      "bytes": 12471,
+      "sha256": "c87611bd99d825bdb44f1b4f0ccafbb1d09b2f6c4cbbb13f965eaf65e182c77c",
+      "html": false
+    },
+    {
+      "name": "pinned-guide",
+      "url": "https://raw.githubusercontent.com/PugarHuda/nota/7f1189a9b9b3747acfcb09621df2acde30f10e13/docs/MCP-Builder-Guide.md",
+      "httpStatus": 200,
+      "contentType": "text/plain; charset=utf-8",
+      "bytes": 12471,
+      "sha256": "c87611bd99d825bdb44f1b4f0ccafbb1d09b2f6c4cbbb13f965eaf65e182c77c",
+      "html": false
+    },
+    {
+      "name": "organizer-root-guide",
+      "url": "https://ryobuild.com/MCP-Builder-Guide.md",
+      "httpStatus": 200,
+      "contentType": "text/html",
+      "bytes": 2034,
+      "sha256": "00125e616426f52b565450c9301bfa9a73a6fcf78dbc4e467e3748b890a5534f",
+      "html": true
+    },
+    {
+      "name": "official-hackathon",
+      "url": "https://ryobuild.com/hackathon",
+      "httpStatus": 200,
+      "contentType": "text/html",
+      "bytes": 2034,
+      "sha256": "00125e616426f52b565450c9301bfa9a73a6fcf78dbc4e467e3748b890a5534f",
+      "html": true
+    },
+    {
+      "name": "current-site",
+      "url": "https://ryobuild.com/assets/index-D5QU-JYw.js",
+      "httpStatus": 200,
+      "contentType": "application/javascript",
+      "bytes": 376741,
+      "sha256": "ab2de2c082de67d6aff117745ab6ece061581fd069e28a8f4b1ec2fa57af51b7",
+      "html": false
+    },
+    {
+      "name": "public-hackathon-config",
+      "url": "https://app-ryochan.com/api/hackathon/config",
+      "httpStatus": 200,
+      "contentType": "application/json",
+      "bytes": 1992,
+      "sha256": "fdb0629866a4f25dbad9057064f3c93ccc6afbd30b554b0eea1913fb1b7b66bb",
+      "html": false
+    },
+    {
+      "name": "current-openapi",
+      "url": "https://app-ryochan.com/api/openapi.json",
+      "httpStatus": 200,
+      "contentType": "application/json",
+      "bytes": 492633,
+      "sha256": "0db307fd6122c0e04a76d9a5e27222936ab1c962cffc5025c24b2dee287a8d5f",
+      "html": false
+    },
+    {
+      "name": "submission-form",
+      "url": "https://ryobuild.com/project-submission-form.pdf",
+      "httpStatus": 200,
+      "contentType": "text/html",
+      "bytes": 2034,
+      "sha256": "00125e616426f52b565450c9301bfa9a73a6fcf78dbc4e467e3748b890a5534f",
+      "html": true
+    }
+  ],
+  "guide": {
+    "expectedSha256": "c87611bd99d825bdb44f1b4f0ccafbb1d09b2f6c4cbbb13f965eaf65e182c77c",
+    "officialMatchesPinnedByteForByte": true,
+    "lines": 452,
+    "submissionRulesInGuide": false
+  },
+  "deadlines": {
+    "landing": "2026-11-11T23:59:00+09:00",
+    "api": "2026-11-11T23:59:59Z",
+    "apiServerTime": "2026-10-21T10:05:41.747636Z",
+    "apiCurrentPhase": "submission_open",
+    "resolved": false
+  },
+  "submission": {
+    "fields": [
+      "team_name",
+      "participant_name",
+      "email",
+      "discord_id",
+      "github_username",
+      "project_name",
+      "tracks",
+      "project_description",
+      "demo_video_url",
+      "repo_url",
+      "x_post_url",
+      "agree_rules",
+      "confirm_no_secrets"
+    ],
+    "fieldRequiredness": "Final-submit service enforces requiredness; its runtime validation was not exercised.",
+    "privateRepoRequestAdvertised": true,
+    "finalSubmitSecurity": [
+      {
+        "HTTPBearer": []
+      }
+    ],
+    "formResource": {
+      "title": "Project Submission Form",
+      "url": "https://ryobuild.com/project-submission-form.pdf"
+    },
+    "formDownloadIsPdf": false
+  },
+  "unverified": [
+    "Exact scoring weights",
+    "Disqualification wording",
+    "Reuse eligibility",
+    "Required main branch",
+    "Required PDF committed in repository",
+    "Definitive deadline timezone"
+  ]
+}

@@ -1,0 +1,58 @@
+{
+  "verifiedFinancialLifecycle": true,
+  "chainId": 11155111,
+  "financialGasWei": "499918483",
+  "approvedFinancialGasCeilingWei": "100000000000000",
+  "withinApprovedGasCeiling": true,
+  "externalChrome": {
+    "connectedWallet": "0xe26468ae02368a75DBDBea58F367B7313942ad26",
+    "network": "Ethereum Sepolia 11155111",
+    "afterDepositShares": "1.002239",
+    "afterRedemptionShares": "1",
+    "afterRedemptionNav": "1 USDC",
+    "receiptStatus": "Verified on execution testnet. Your balances will refresh.",
+    "fundedTradingPermission": "inactive"
+  },
+  "remainingAcceptance": [],
+  "checks": {
+    "targetedNativeTests": {
+      "passed": 6,
+      "sandboxAnvilAttempt": "timed out; rerun with working local-network permission passed"
+    },
+    "poolMaintenanceFork": "passed at block 12032079; simulation only",
+    "poolMaintenancePublicReceiptVerifier": "passed",
+    "investorPublicReceiptVerifier": "passed",
+    "build": "passed",
+    "typecheck": "passed",
+    "lint": "completed with existing warnings",
+    "signedHistoryReplay": "passed; seven observations, original six receipts/evidence unchanged",
+    "freshRegistrationVerification": "passed; signatures, admission receipt, source inventory and template bytes"
+  },
+  "scope": "No claim of a successful AI trade, trading profit, hardware attestation or independently verified source truth.",
+  "verifiedLiveDecision": {
+    "outcome": "hold",
+    "at": "2026-10-31T13:41:47.123Z",
+    "observations": 7,
+    "errorsRetained": 6,
+    "checkpoint": "0x2f5cacfecfd5fa9a5b4715451374a84bd5015278f43fd263371ac6e322daeb6f",
+    "virtualCash": "10000000000",
+    "virtualCashDecimals": 6,
+    "orders": 0,
+    "fills": 0,
+    "fundedTrades": 0
+  },
+  "verifiedFreshLocalRegistration": {
+    "name": "Muse RYO Recording",
+    "id": "0xa384593b92792730c20c6281adcbfa55c53bc9f601c9cf718f0ac1c653fc727d",
+    "at": "2026-10-31T13:46:02.288Z",
+    "separateFromFinancialAgent": true,
+    "vaultLinked": false
+  },
+  "recordingFileCompleteness": "not independently verified; browser scenes were performed",
+  "unexercised": [
+    "Multi-KOL without authorized X access",
+    "Practice BUY/SELL and delayed fill",
+    "Funded autonomous AI trading",
+    "Performance rating or supported strategy comparison"
+  ]
+}

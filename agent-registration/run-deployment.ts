@@ -4,7 +4,7 @@ import { fileURLToPath } from 'node:url';
 import { join, resolve } from 'node:path';
 import { createPublicClient, http, parseEther, keccak256, type Hex } from 'viem';
 import { privateKeyToAccount } from 'viem/accounts';
-import { monadTestnet } from 'viem/chains';
+import { monadTestnet,sepolia } from 'viem/chains';
 import { registrationService } from './service.js';
 import { tradingService } from './trading.js';
 import { nativeInvestmentService } from './native-investment.js';
@@ -15,12 +15,13 @@ import { deployReviewed, type DeploymentKind, type CreationPlan } from './operat
 const root = fileURLToPath(new URL('../', import.meta.url));
 async function main() {
   const [kind, id, ...flags] = process.argv.slice(2);
-  if (!['vault','trading','guard','native','native-guard','pool-funder'].includes(kind) || !/^0x[0-9a-f]{64}$/.test(id ?? '')) throw new Error('Use operator:deploy -- <vault|trading|guard|native|native-guard|pool-funder> <registration-id> [--broadcast] [--env path] [--max-cost MON].');
-  let broadcast = false, envFile = join(root,'.env'), maxCost = '0.3';
+  if (!['vault','trading','guard','native','native-guard','pool-funder'].includes(kind) || !/^0x[0-9a-f]{64}$/.test(id ?? '')) throw new Error('Use operator:deploy -- <vault|trading|guard|native|native-guard|pool-funder> <registration-id> [--broadcast] [--env path] [--max-cost native-tokens] [--chain 11155111|10143].');
+  let broadcast = false, envFile = join(root,'.env'), maxCost = '0.001', targetChain = 11155111;
   const seen = new Set<string>();
   for (let i = 0; i < flags.length; i++) {
     const flag = flags[i]; if (seen.has(flag)) throw new Error('Duplicate deployment option.'); seen.add(flag);
     if (flag === '--broadcast') broadcast = true;
+    else if(flag==='--chain'&&['11155111','10143'].includes(flags[i+1]))targetChain=Number(flags[++i]);
     else if (flag === '--env' && flags[i+1] && !flags[i+1].startsWith('--')) envFile = resolve(flags[++i]);
     else if (flag === '--max-cost' && /^(?:0|[1-9]\d*)(?:\.\d{1,18})?$/.test(flags[i+1] ?? '')) maxCost = flags[++i];
     else throw new Error('Invalid deployment option.');
@@ -31,8 +32,8 @@ async function main() {
   let account;
   try { account = privateKeyToAccount((key.startsWith('0x') ? key : '0x'+key) as Hex); } catch { throw new Error('The local deployment key is invalid.'); }
   const get = async (path:string) => JSON.parse(await readFile(join(root,path),'utf8'));
-  const network = await get('deployments/pumpcoin-vault-network.json'), market = await get('deployments/pumpcoin-trading-network.json');
-  if (network.chainId !== 10143 || market.chainId !== 10143) throw new Error('This deployment command only supports the reviewed Monad testnet.');
+  const network = await get(targetChain===11155111?'deployments/pumpcoin-sepolia-vault-network.json':'deployments/pumpcoin-vault-network.json'), market = await get(targetChain===11155111?'deployments/pumpcoin-sepolia-trading-network.json':'deployments/pumpcoin-trading-network.json');
+  if (network.chainId !== targetChain || market.chainId !== targetChain) throw new Error('Deployment profiles do not match the selected reviewed testnet.');
   const service = registrationService({ directory:join(root,'.local/agent-registrations'),vaultNetwork:network });
   const record = (await service.workerRegistration(id)).record;
   if (record.manifest.controller.toLowerCase() !== account.address.toLowerCase()) throw new Error('PRIVATE_KEY does not control this registration. No authority is substituted; use its controller key.');
@@ -52,15 +53,15 @@ async function main() {
     if (kind === 'pool-funder') return pool.receipt(id,plan.id!,hash);
     return kind === 'guard' ? trading.confirmGuard(id,hash) : trading.confirm(id,hash);
   };
-  console.log(JSON.stringify({state:'checking',kind,registrationId:id,chainId:10143,deployer:account.address,broadcast,maxCostMON:maxCost}));
-  const result = await deployReviewed({directory:join(root,'.local/deployments'),id:id as Hex,kind:kind as DeploymentKind,chainId:10143,account,client,
-    broadcastClient:createPublicClient({chain:monadTestnet,transport:http(network.rpcUrl,{retryCount:0,timeout:15000,methods:{include:['eth_sendRawTransaction']}})}),broadcast,maxCostWei:parseEther(maxCost),prepare,confirm});
+  console.log(JSON.stringify({state:'checking',kind,registrationId:id,chainId:targetChain as 10143|11155111,deployer:account.address,broadcast,maxCostNative:maxCost}));
+  const result = await deployReviewed({directory:join(root,'.local/deployments'),id:id as Hex,kind:kind as DeploymentKind,chainId:targetChain as 10143|11155111,account,client,
+    broadcastClient:createPublicClient({chain:targetChain===11155111?sepolia:monadTestnet,transport:http(network.rpcUrl,{retryCount:0,timeout:15000,methods:{include:['eth_sendRawTransaction']}})}),broadcast,maxCostWei:parseEther(maxCost),prepare,confirm});
   if (result.state === 'verified') {
     const receipt = await client.getTransactionReceipt({hash:result.hash!});
     const code = await client.getCode({address:result.address!,blockNumber:receipt.blockNumber});
     const tx = await client.getTransaction({hash:result.hash!});
     if (!code || code === '0x') throw new Error('Verified deployment runtime is unavailable.');
-    const manifest = {version:'PUMPCOIN-DEPLOYMENT-RECEIPT-v1',chainId:10143,registrationId:id,kind,deployer:account.address,address:result.address,transactionHash:result.hash,blockNumber:String(receipt.blockNumber),blockHash:receipt.blockHash,creationCodeHash:keccak256(tx.input),runtimeCodeHash:keccak256(code),gasPaidWei:result.gasPaidWei,scope:'Verified deployment only. Configuration activation, oracle warm-up and trading permissions are separate operations.'};
+    const manifest = {version:'PUMPCOIN-DEPLOYMENT-RECEIPT-v1',chainId:targetChain as 10143|11155111,registrationId:id,kind,deployer:account.address,address:result.address,transactionHash:result.hash,blockNumber:String(receipt.blockNumber),blockHash:receipt.blockHash,creationCodeHash:keccak256(tx.input),runtimeCodeHash:keccak256(code),gasPaidWei:result.gasPaidWei,scope:'Verified deployment only. Configuration activation, oracle warm-up and trading permissions are separate operations.'};
     const directory = join(root,'deployments/agents'), file = join(directory,`${id.slice(2)}-${kind}.json`);
     await mkdir(directory,{recursive:true});
     try { await writeFile(file,JSON.stringify(manifest,null,2)+'\n',{flag:'wx'}); }

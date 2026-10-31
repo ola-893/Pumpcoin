@@ -23,7 +23,7 @@ test('authenticated RYO contract: 2024-11-05 negotiation, advertised schemas, to
   const source=researchSources({url:endpoint,key:'fixture-key',newsFeeds:[feed]},fetcher);
   const catalog=await source.discover();assert.equal(catalog.length,6);assert(!catalog.some(t=>t.name==='check_safety'));assert(catalog.some(t=>t.name==='monitor_market_sentiment_shift'));
   const p={...policy(),symbols:['BTC'],voices:[],newsFeeds:[feed]};const e=await source.collect(p);
-  assert.equal(e.markets.length,0);assert.equal(e.posts.length,1);assert.equal(e.sources.find(s=>s.source==='ryo')?.available,false);assert.equal(e.sources.find(s=>s.source==='news')?.available,true);assert.equal(e.sources.find(s=>s.source==='x')?.available,false);
+  assert.equal(e.markets.length,0);assert.equal(e.posts.length,1);assert.equal(e.sources.find(s=>s.source==='ryo')?.available,false);assert.equal(e.sources.find(s=>s.source==='news')?.available,true);assert.equal(e.sources.some(s=>s.source==='x'),false);
   assert.equal((e.raw[0] as any).kind,'ryo-observation');verifyNormalization(e,p);
   const changed=structuredClone(e);changed.sources.find(s=>s.source==='ryo')!.available=true;assert.throws(()=>verifyNormalization(changed,p),/verified mapping/);
   const before=calls;await source.collect(p);assert.equal(calls,before,'Same-policy observations coalesce/cache without rewriting receipt timestamps');

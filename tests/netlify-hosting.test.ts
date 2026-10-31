@@ -1,0 +1,36 @@
+import {test} from 'node:test';
+import assert from 'node:assert/strict';
+import {readFile} from 'node:fs/promises';
+import handler from '../hosting/netlify.js';
+
+test('Netlify adapter preserves routes, verified research and the operator boundary',async()=>{
+  process.env.PUMPCOIN_HOSTED_SESSION_SECRET='netlify-test-session-'.repeat(3);
+  process.env.PUMPCOIN_HOSTED_READ_ONLY='true';
+  const base='https://pump-test.netlify.app';
+  const status=await handler(new Request(base+'/api/agent-registration/status'));
+  const session=await status.json() as any;
+  assert.equal(session.hosted,true);assert.equal(session.configured,false);
+  const headers={'Content-Type':'application/json','X-PumpCoin-Registration-Token':session.token};
+  const records=await handler(new Request(base+'/.netlify/functions/pump-api/api/agent-registration/records',{headers}));
+  const values=await records.json() as any;
+  assert.ok(values.records.some((r:any)=>r.authorization.challenge.chainId===11155111));
+  const [checkpoint]=JSON.parse(await readFile('deployments/hosted-research.json','utf8'));
+  const post=(route:string,body:unknown)=>handler(new Request(base+'/api/agent-registration/'+route,{method:'POST',headers,body:JSON.stringify(body)}));
+  const state=await post('research-state',{id:checkpoint.session.registrationId});
+  assert.equal(state.status,200);
+  const view=(await state.json() as any).research;
+  assert.equal(view.hosted,true);assert.equal(view.sessions[0].state,'stopped');
+  assert.equal(view.sessions[0].head,checkpoint.session.head);
+  assert.equal(view.sessions[0].cycles,checkpoint.session.cycles);
+  assert.equal(view.latest[0].receipt.hash,checkpoint.receipts.at(-1).hash);
+  assert.equal(view.capabilities.signer,false);
+  const history=await post('research-history',{id:checkpoint.session.registrationId,sessionId:checkpoint.session.id});
+  const rows=await history.json() as any;
+  assert.equal(rows.rows.length,checkpoint.receipts.length);assert.deepEqual(rows.events,checkpoint.events);
+  const exported=await post('research-export',{id:checkpoint.session.registrationId,sessionId:checkpoint.session.id});
+  assert.equal((await exported.json() as any).checkpoint.hash,checkpoint.hash);
+  assert.equal((await post('native-plan',{id:checkpoint.session.registrationId,account:'',action:'deposit',amount:'1'})).status,409);
+  assert.equal((await post('research-publish',{id:checkpoint.session.registrationId,checkpoint:{}})).status,400);
+  const foreign=await handler(new Request(base+'/api/agent-registration/status',{headers:{Origin:'https://evil.example'}}));
+  assert.equal(foreign.status,403);
+});

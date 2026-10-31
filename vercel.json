@@ -7,7 +7,7 @@
   "functions": {
     "api/[...path].ts": {
       "maxDuration": 60,
-      "includeFiles": "{deployments/hosted-public.json,deployments/pumpcoin-*-network.json,contracts/out/**/*.json,research/*.ts,practice/*.ts}"
+      "includeFiles": "{deployments/hosted-public.json,deployments/hosted-research.json,deployments/pumpcoin-*-network.json,contracts/out/**/*.json,research/*.ts,practice/*.ts}"
     }
   },
   "rewrites": [

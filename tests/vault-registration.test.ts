@@ -30,8 +30,17 @@ test('Real EVM deployment binds each agent atomically and refuses substituted re
   const config:VaultNetwork={chainId:31337,rpcUrl:`http://127.0.0.1:${port}`,identityRegistry:registry,identityCodeHash:await codeHash(registry),quote,quoteCodeHash:await codeHash(quote),position,positionCodeHash:await codeHash(position),positionDecimals:18};
   const prepared=prepareManifest({...initialDraft,name:'EVM vault test',controller:account.address,executionKey:manager.address,model:'fixture-local',modelSource:'https://example.com/model',weightsHash:'a'.repeat(64),runtimeHash:'b'.repeat(64),strategy:'Paper-only isolated test; no performance claims.',strategyCodeHash:'c'.repeat(64),pair:'WMON / USDC',tradeCap:'10',exposureCap:'50',selfHosted:true});
   const a=vaultArtifact(),plan=await prepareVault(prepared,config,client,a);assert.equal(plan.canSubmit,true);assert.equal(plan.from,account.address);assert.equal(plan.value,'0x0');
+  assert.equal(BigInt(plan.estimatedFee),BigInt(plan.gas)*BigInt(plan.gasPrice));assert.ok(BigInt(plan.gasPrice)>0n);
   const hash=await wallet.sendTransaction({data:plan.data,gas:BigInt(plan.gas),value:0n});await client.waitForTransactionReceipt({hash});
   const receipt=await confirmVault(prepared,hash,config,client,a);assert.equal(receipt.investmentEligible,false);assert.equal(receipt.tradingReady,false);assert.equal(receipt.deploymentTransaction,hash);
+  const compactConfig={...config,identityPublication:'commitment-only-v1' as const};
+  const compactPlan=await prepareVault(prepared,compactConfig,client,a);
+  assert.match(compactPlan.scope,/commitment only/);assert.notEqual(compactPlan.data,plan.data);
+  const compactHash=await wallet.sendTransaction({data:compactPlan.data,gas:BigInt(compactPlan.gas),value:0n});await client.waitForTransactionReceipt({hash:compactHash});
+  const compactReceipt=await confirmVault(prepared,compactHash,compactConfig,client,a);
+  assert.equal(compactReceipt.identityPublication,'commitment-only-v1');assert.equal(compactReceipt.investmentEligible,false);
+  await assert.rejects(confirmVault(prepared,compactHash,config,client,a),/exact/);
+  await assert.rejects(confirmVault(prepared,hash,compactConfig,client,a),/exact/);
   const totalSupply=await client.readContract({address:getAddress(receipt.vault),abi:parseAbi(['function totalSupply() view returns(uint256)']),functionName:'totalSupply'});assert.equal(totalSupply,0n);
   // Exercise persisted, signed registration through the same service used by the UI.
   const detected: Detection = { model: 'fixture-local', endpoint: prepared.privateRuntimeConfig.inferenceBaseURL, quantization: 'test', context: 16384, build: 'test', weightsHash: 'a'.repeat(64), runtimeHash: 'b'.repeat(64), weightsFilename: 'fixture.gguf', weightsBytes: 10, runtimeManifest: { version: 'test', scope: 'test', build: 'test', artifacts: [] }, checkedAt: new Date().toISOString(), evidence: 'locally-detected-not-attested', sourceStatus: 'unavailable' };

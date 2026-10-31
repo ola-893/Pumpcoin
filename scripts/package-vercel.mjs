@@ -13,9 +13,9 @@ async function tree(path, filter = () => true) {
 for (const p of ['package.json', 'package-lock.json', 'tsconfig.json']) await add(p);
 for (const p of ['api', 'hosting', 'agent-registration', 'local-inference', 'market-data', 'research', 'practice', 'vault', 'app/src/lib']) await tree(p, p => /\.(ts|tsx)$/.test(p));
 await tree('app/dist');
-for (const p of ['hosted-public.json', 'pumpcoin-vault-network.json', 'pumpcoin-trading-network.json']) await add('deployments/' + p);
+for (const p of ['hosted-public.json', 'hosted-research.json', 'pumpcoin-vault-network.json', 'pumpcoin-trading-network.json', 'pumpcoin-sepolia-vault-network.json', 'pumpcoin-sepolia-trading-network.json']) await add('deployments/' + p);
 // Only public runtime pins and ABI/bytecode are needed; omit compiler metadata.
-const names = ['PumpCoinRegisteredVault', 'PumpCoinDemoRegisteredVault', 'SupraPythVaultTradingBundle', 'ChainlinkVaultTradingBundle', 'VaultTradingBundle', 'RestrictedSpotAdapter', 'SupraPythVaultValuationSource', 'ChainlinkVaultValuationSource', 'PythVaultValuationSource', 'DexCheckedPythVaultValuationSource', 'UniswapV4VaultVenue', 'VaultInvestorGateway', 'GuardedHybridValuationSource', 'NativeVaultInvestorGateway', 'TestnetPoolFunder'];
+const names = ['PumpCoinRegisteredVault', 'PumpCoinDemoRegisteredVault', 'PumpCoinSepoliaDemoRegisteredVault', 'SupraPythVaultTradingBundle', 'ChainlinkVaultTradingBundle', 'SepoliaChainlinkVaultTradingBundle', 'VaultTradingBundle', 'RestrictedSpotAdapter', 'SupraPythVaultValuationSource', 'ChainlinkVaultValuationSource', 'SepoliaChainlinkVaultValuationSource', 'PythVaultValuationSource', 'DexCheckedPythVaultValuationSource', 'UniswapV4VaultVenue', 'VaultInvestorGateway', 'GuardedHybridValuationSource', 'NativeVaultInvestorGateway', 'TestnetPoolFunder'];
 for (const name of names) {
   const source = `contracts/out/${name === 'DexCheckedPythVaultValuationSource' ? 'PythVaultValuationSource' : name}.sol/${name}.json`;
   const a = JSON.parse(await readFile(source));

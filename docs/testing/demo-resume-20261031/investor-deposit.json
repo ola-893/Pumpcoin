@@ -1,0 +1,43 @@
+{
+  "scope": "Actual Sepolia investor deposit; independent from 1 Pump / 1 test-USDC controller seed.",
+  "chainId": 11155111,
+  "registrationId": "0x19e7d9336937879d074a36f5abb7708ddde0ef701e06852484f3efac4daacf3c",
+  "transactionHash": "0x394d8ce99fea7d76a609ec729e3ea800f5187e5142cfe1132a5efe11ec8e81a6",
+  "blockNumber": "12032307",
+  "blockHash": "0xbc57e8a541911250cb4a8b83b91fb90d696af01a8c4b66ff6cf03c87e45d4805",
+  "investor": "0xe26468ae02368a75dbdbea58f367b7313942ad26",
+  "gateway": "0x769cc5cbd4734e6bddea6d884dd4f5d2c8ae8f9d",
+  "valueWei": "1000000000000",
+  "inputHash": "0x481369fb9fb0bfa89e668dad779af773ccef4f246b397fcb1729ed602da6edd0",
+  "gasPaidWei": "59717315",
+  "shareDecimals": 12,
+  "quoteDecimals": 6,
+  "investorShares": "2239000000",
+  "quoteAssets": "2239",
+  "review": {
+    "id": "0x6396e6ad46402b25f137d4f5be1472f45df81d5b696c5fcee0e9b7e687a24c54",
+    "action": "deposit-mon",
+    "chainId": 11155111,
+    "from": "0xe26468ae02368a75DBDBea58F367B7313942ad26",
+    "to": "0x769CC5cBd4734E6bDdEa6D884DD4F5D2c8ae8f9D",
+    "data": "0xf2841bd100000000000000000000000000000000000000000000000000000000000008bc00000000000000000000000000000000000000000000000000000000855243a8000000000000000000000000000000000000000000000000000000006ae59790",
+    "value": "0xe8d4a51000",
+    "gas": "0xe32b9",
+    "estimatedFee": "20470758",
+    "native": {
+      "action": "deposit-mon",
+      "gateway": "0x769CC5cBd4734E6bDdEa6D884DD4F5D2c8ae8f9D",
+      "vault": "0x44E9E1a6A7eeDAfdA49f8F7d94AA1C2Bfa691ff6",
+      "amount": "1000000000000",
+      "minQuote": "2236",
+      "minOutput": "2236761000",
+      "deadline": 1793431440
+    },
+    "quote": {
+      "expiresAt": 1793431199629
+    },
+    "output": "2239000000",
+    "quoteAssets": "2239",
+    "scope": "Convert native tokens through the fixed pool and mint Pump shares at current vault value."
+  }
+}

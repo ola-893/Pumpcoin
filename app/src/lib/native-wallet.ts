@@ -3,7 +3,7 @@ import { nativeGatewayAbi, nativeShareAbi, type NativeAuthorization } from '../.
 
 export function validateNativeTransaction(tx:{chainId:number;from:Address;to?:Address;value:Hex;data:Hex;gas:Hex;native?:NativeAuthorization;quote?:{expiresAt:number}}, account:Address) {
  const n=tx.native;
- if(!n||tx.chainId!==10143||tx.from.toLowerCase()!==account.toLowerCase()||!/^0x[0-9a-f]+$/i.test(tx.gas)||BigInt(tx.gas)===0n||!/^0x[0-9a-f]+$/i.test(tx.value)||!/^0x(?:[0-9a-f]{2})+$/i.test(tx.data))throw new Error('Invalid MON investment transaction.');
+ if(!n||![10143,11155111].includes(tx.chainId)||tx.from.toLowerCase()!==account.toLowerCase()||!/^0x[0-9a-f]+$/i.test(tx.gas)||BigInt(tx.gas)===0n||!/^0x[0-9a-f]+$/i.test(tx.value)||!/^0x(?:[0-9a-f]{2})+$/i.test(tx.data))throw new Error('Invalid MON investment transaction.');
  for(const a of [n.gateway,n.vault])if(getAddress(a)!==a||/^0x0{40}$/i.test(a))throw new Error('Invalid MON gateway binding.');
  if(!/^[1-9][0-9]{0,38}$/.test(n.amount)||!/^\d+$/.test(n.minQuote)||!/^\d+$/.test(n.minOutput)||!Number.isSafeInteger(n.deadline)||n.deadline*1000<=Date.now()||!tx.quote||!Number.isSafeInteger(tx.quote.expiresAt)||tx.quote.expiresAt<=Date.now())throw new Error('MON review expired or contains invalid limits.');
  const amount=BigInt(n.amount),q=BigInt(n.minQuote),out=BigInt(n.minOutput),deadline=BigInt(n.deadline);

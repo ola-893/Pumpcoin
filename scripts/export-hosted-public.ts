@@ -3,7 +3,7 @@ import { join } from 'node:path';
 import { registrationService } from '../agent-registration/service.js';
 import { readDirectory } from '../app/src/lib/agent-directory.js';
 
-const records = (await registrationService({ directory: '.local/agent-registrations' }).records()).filter(r => r.authorization.challenge.chainId === 10143);
+const records = (await registrationService({ directory: '.local/agent-registrations' }).records()).filter(r => [10143,11155111].includes(r.authorization.challenge.chainId));
 await readDirectory({ records });
 const metadata: Record<string, unknown> = {};
 for (const kind of ['vault-native', 'vault-trading', 'vault-liquidity']) {
