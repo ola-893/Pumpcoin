@@ -1,0 +1,43 @@
+{
+  "checkedAt": "2026-10-31T18:17:52.711Z",
+  "url": "https://pump-ryo.netlify.app",
+  "health": {
+    "ok": true,
+    "chainId": 11155111,
+    "records": 10,
+    "reviewStorageConfigured": false,
+    "operatorRuntime": "local"
+  },
+  "signedRegistrationVersions": 10,
+  "research": {
+    "registrationId": "0x19e7d9336937879d074a36f5abb7708ddde0ef701e06852484f3efac4daacf3c",
+    "checkpointHash": "0x41531561340425ae647d92d6d37825578eda854d8b526714b63c815da4f0e455",
+    "head": "0x805d8809155f3695ee77a845a2a18a45ca244fe04ab2d5c2995a6aa7a1792d02",
+    "cycles": 8,
+    "historyMatches": true,
+    "exportMatches": true,
+    "hosted": true,
+    "runtime": "published historical checkpoint"
+  },
+  "routesVerified": [
+    "/",
+    "/agents",
+    "/agents/0x73cc7754ca5732756593d81a402ac41e5ce350284fce17809c3dc08c024887e0",
+    "/evidence",
+    "/register"
+  ],
+  "transactionReviewsDisabled": true,
+  "deployId": "6ae62feeb84f23ec686e66ea",
+  "browserVerification": {
+    "browser": "Google Chrome",
+    "directoryAgents": 8,
+    "profile": "Muse RYO Demo",
+    "strategy": "Market & news",
+    "latestProposal": "HOLD",
+    "observations": 8,
+    "inferenceErrors": 6,
+    "virtualEquityUSD": 10000,
+    "openPositions": 0,
+    "readOnlyNoticeVisible": true
+  }
+}

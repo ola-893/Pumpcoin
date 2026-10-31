@@ -14,6 +14,7 @@ Build from a clean checkout with Node 22:
 npm ci
 npm run build:netlify
 npx netlify deploy --prod --no-build
+node scripts/verify-netlify.mjs
 ```
 
 `netlify.toml` supplies API rewrites, SPA routing and asset/security headers. `build-netlify.mjs` packages the API with public data, reduced reviewed contract artifacts and original research source files required for engine-digest verification. Builds use committed public snapshots, without accessing a developer's `.local` directory or requiring Foundry on Netlify.

@@ -136,7 +136,7 @@ export async function hostedApi(req: IncomingMessage & { body?: unknown }, res: 
     }
     send(200, result);
   } catch (error) {
-    const message = error instanceof Error && error.message.length < 300 && !/\/Users\/|\/private\/|https?:\/\/|token|secret|password/i.test(error.message) ? error.message : 'The hosted service could not complete this request. Retry the observation.';
+    const message = error instanceof Error && error.message.length < 300 && !/ENOENT|EACCES|\/Users\/|\/private\/|\/var\/task\/|https?:\/\/|token|secret|password/i.test(error.message) ? error.message : 'The hosted service could not complete this request. Retry the observation.';
     send(400, { error: message });
   }
 }

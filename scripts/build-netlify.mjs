@@ -8,12 +8,12 @@ await mkdir(output,{recursive:true});
 // Preserve each source module's asset base after bundling. This is also required
 // for hashing the exact research source files committed by the signed policy.
 await build({entryPoints:['hosting/netlify.ts'],outfile:join(output,'pump-api.mjs'),bundle:true,platform:'node',format:'esm',target:'node22',
-  banner:{js:'import { createRequire as __createRequire } from "node:module"; const require = __createRequire(import.meta.url);'},
-  footer:{js:`export const config = {nodeBundler:"none",includedFiles:["${output}/**"],nodeVersion:"22"};`},
+  banner:{js:`import { createRequire as __createRequire } from "node:module"; import { existsSync as __existsSync } from "node:fs"; const require = __createRequire(import.meta.url); const __pumpAssetBase = __existsSync(new URL('./deployments/hosted-public.json', import.meta.url)) ? import.meta.url : new URL('./${output}/pump-api.mjs', import.meta.url).href;`},
+  footer:{js:`export const config = {nodeBundler:"none",includedFiles:["**/*"],nodeVersion:"22"};`},
   plugins:[{name:'module-assets',setup(b){b.onLoad({filter:/\.ts$/},async args=>{
     if(!args.path.startsWith(root+'/')||args.path.includes('/node_modules/'))return;
     const path=relative(root,args.path).replaceAll('\\','/');
-    const contents=(await readFile(args.path,'utf8')).replaceAll('import.meta.url',`new URL(${JSON.stringify('./'+path)}, import.meta.url).href`);
+    const contents=(await readFile(args.path,'utf8')).replaceAll('import.meta.url',`new URL(${JSON.stringify('./'+path)}, __pumpAssetBase).href`);
     return {contents,loader:'ts',resolveDir:dirname(args.path)};
   });}}]});
 async function copy(path){const dest=join(output,path);await mkdir(dirname(dest),{recursive:true});await copyFile(path,dest);}
@@ -25,4 +25,8 @@ for(const [path,value] of Object.entries(artifacts)){
   const dest=join(output,path);await mkdir(dirname(dest),{recursive:true});await writeFile(dest,JSON.stringify(value));
 }
 await unlink(join(output,'config.json')).catch(e=>{if(e.code!=='ENOENT')throw e;});
+// Netlify's custom-bundle manifest is named after the function entry point.
+// The globs are relative to the function directory, as set by Netlify
+// when it extracts the in-source configuration.
+await writeFile(join(output,'pump-api.json'),JSON.stringify({version:1,config:{nodeBundler:'none',includedFiles:['**/*'],nodeVersion:'22'}}));
 console.log('Netlify API packaged with verified public records, original research source and public contract artifacts.');
